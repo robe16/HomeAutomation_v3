@@ -1,6 +1,6 @@
 # HomeAutomation v3
 
-Rewrite of v2 of the Android application for home automation. v3 is being written in a server-client format with the intention to have the server side being run 25/7 on a Raspberry Pi, while seperate clients can be written for different devices and systems.
+Rewrite of v2 of the Android application for home automation. v3 is being written in a server-client format with the intention to have the server side being run 24/7 on a Raspberry Pi, while seperate clients can be written for different devices and systems.
 
 Where possible, all commands are sent over the internal network. Some devices (eg Nest) are controlled using APIs that are only accessible over the internet.
 
