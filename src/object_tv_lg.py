@@ -1,5 +1,7 @@
-from cmd_http import sendHTTP
 import httplib
+
+from src.cmd_http import sendHTTP
+
 
 class object_LGTV:
     '''LG TV object'''

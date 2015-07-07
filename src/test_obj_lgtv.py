@@ -1,4 +1,4 @@
-from object_tv_lg import object_LGTV
+from src.object_tv_lg import object_LGTV
 
 
 def testLGTV(ipaddress, port, key=None):

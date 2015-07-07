@@ -1,6 +1,7 @@
-from cmd_http import sendHTTP
 import urllib2
 import httplib
+
+from src.cmd_http import sendHTTP
 
 
 def testHTTP(ipaddress, path, connection, port=None, data=""):
