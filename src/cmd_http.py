@@ -22,9 +22,3 @@ def sendHTTP(ipaddress, path, connection, data=False):
     except urllib2.URLError as e:
         # Not an HTTP-specific error (e.g. connection refused)
         return e
-
-
-def sendTCP():
-    '''Send data via tcp to IP address over network conection'''
-    #do something
-    return False
