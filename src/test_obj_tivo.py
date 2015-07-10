@@ -1,4 +1,4 @@
-from src.object_tivo import object_TIVO
+from object_tivo import object_TIVO
 
 
 def testTIVO(ipaddress, port):

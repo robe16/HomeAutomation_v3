@@ -1,4 +1,4 @@
-from src.object_tv_lg import object_LGTV
+from object_tv_lg import object_LGTV
 
 
 def testLGTV(ipaddress, port, key=None):
@@ -6,52 +6,62 @@ def testLGTV(ipaddress, port, key=None):
         x = object_LGTV(ipaddress, port, STRpairingkey=key)
     else:
         x = object_LGTV(ipaddress, port)
-    result = False
 
     if ipaddress != x.getIP():
-        result = True
-        print ("Object IP Address: FAIL [E: " + ipaddress + "] [A: "+ x.getIP() + "]")
+        print ("*Object IP Address: FAIL [E: " + ipaddress + "] [A: "+ x.getIP() + "]")
     else:
-        print ("Object IP Address: PASS")
+        print ("*Object IP Address: PASS")
 
     if port != x.getPort():
-        result = True
-        print ("Object Port: FAIL [E: " + port + "] [A: "+ x.getPort() + "]")
+        print ("*Object Port: FAIL [E: " + port + "] [A: "+ x.getPort() + "]")
     else:
-        print ("Object Port: PASS")
+        print ("*Object Port: PASS")
 
     if key != x.getPairingkey():
-        result = True
-        print ("Object Pairing Key: FAIL [E: " + key + "] [A: "+ x.getPairingkey() + "]")
+        print ("*Object Pairing Key: FAIL [E: " + key + "] [A: "+ x.getPairingkey() + "]")
     else:
-        print ("Object Pairing Key: PASS")
-
-##    if result != True:
-##        print ("Object: Pass")
+        print ("*Object Pairing Key: PASS")
 
     result = x.showPairingkey()
-    if result==True:
-        print ("Show Key Test: PASS")
+    if not result:
+        print ("*Show Key Test: FAIL")
+        return
     else:
-        print ("Show Key Test: FAIL - "+result)
+        print ("*Show Key Test: PASS")
         
     print ("**Enter pairing key value:")
     inptX = input()
     x.setPairingkey(inptX)
     if inptX==x.getPairingkey():
-        print ("User Entered Pairing Key Test: PASS")
+        print ("*User Entered Pairing Key Test: PASS")
     else:
-        print ("User Entered Pairing Key Test: FAIL - [input: "+inptX+" stored: "+x.getPairingkey()+"]")
+        print ("*User Entered Pairing Key Test: FAIL - [input: "+inptX+" stored: "+x.getPairingkey()+"]")
 
     result = x._pairDevice()
-    if result==True:
-        print ("Pair Device Test: PASS")
+    if not result:
+        print ("*Pair Device Test: FAIL")
+        return
     else:
-        print ("Pair Device Test: FAIL - "+result)
+        print ("*Pair Device Test: PASS")
+
+    result = x.sendCmd("24")
+    if not result:
+        print ("*Volume Up test: FAIL")
+        return
+    else:
+        print ("*Volume Up test: PASS")
 
 
+print ("*****************************************")
 print ("**** Test 1: LGTV with no pairing key****")
-objX = testLGTV("192.168.0.111", "8080")
+print ("*****************************************")
+ipaddress = "192.168.0.111"
+port = "8080"
+print (ipaddress+":"+port)
+objX = testLGTV(ipaddress, port)
+print ("*****************************************")
+print ("****************TEST  END****************")
+print ("*****************************************")
 
 ##print ("**** Test 2: LGTV with pairing key****")
 ##objX = testLGTV("192.168.0.111", "8080", key="123")

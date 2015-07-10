@@ -4,35 +4,34 @@ import httplib
 from src.cmd_http import sendHTTP
 
 
-def testHTTP(ipaddress, path, connection, port=None, data=""):
+def testHTTP(ipaddress, path, connection, expected, port=None, data=""):
     if port==None:
         url = ipaddress
+        x = sendHTTP(ipaddress, path, connection, data=data)
     else:
         url = ipaddress+":"+port
+        x = sendHTTP(ipaddress, path, connection, data=data, port=port)
     print (url+path)
-    x = sendHTTP(url, path, connection, data)
 
-    if type(x)==httplib.HTTPResponse and str(x.getcode()).startswith("2"):
+    if expected and x!=False:
         print ("Test Result: PASS")
-    elif type(x)==urllib2.HTTPError:
-        print ("Test Result: FAIL - "+str(x.code)+" "+str(x.reason))
-    elif type(x)==urllib2.URLError:
-        print ("Test Result: FAIL - "+str(x.reason))
+    elif expected==x:
+        print ("Test Result: PASS")
     else:
-        print ("Error")
+        print ("Test Result: FAIL")
 
 
 print ("**** Test 1: Google & /search ****")
-testHTTP("https://www.google.co.uk", "/search", "close")
+testHTTP("https://www.google.co.uk", "/search", "close", True)
 
 print ("**** Test 2: Internal IP with port number ****")
-testHTTP("http://192.168.0.100", "/web/index.html", "close", port="32400")
+testHTTP("http://192.168.0.100", "/web/index.html", "close", True, port="32400")
 
 print ("**** Test 3: Redirect ****")
-testHTTP("http://steamcommunity.com", "/id/robe_16/home/", "close")
+testHTTP("http://steamcommunity.com", "/id/robe_16/home/", True, "close")
 
 print ("**** Test 4: Intentional HTTP Fail ****")
-testHTTP("https://www.google.co.uk", "/asdfg", "close")
+testHTTP("https://www.google.co.uk", "/asdfg", "close", False)
 
 print ("**** Test 5: 'http://' correction ****")
-testHTTP("www.google.co.uk", "/search", "close")
+testHTTP("www.google.co.uk", "/search", "close", True)

@@ -1,12 +1,11 @@
 import httplib
 
-from src.cmd_http import sendHTTP
+from cmd_http import sendHTTP
 
 
 class object_LGTV:
     '''LG TV object'''
 
-    STRtv_PATHshowkey = "/udap/api/pairing"
     STRtv_PATHpair = "/udap/api/pairing"
     STRtv_PATHcommand = "/udap/api/command"
     STRtv_PATHevent = "/udap/api/event"
@@ -40,15 +39,15 @@ class object_LGTV:
                     +"<envelope>"
                     +"<api type=\"pairing\">"
                     +"<name>hello</name>"
-                    +"<value>"+ self._STRpairingkey + "</value>"
-                    +"<port>"+ self._INTport +"</port>"
+                    +"<value>"+ str(self._STRpairingkey) + "</value>"
+                    +"<port>"+ str(self._INTport) +"</port>"
                     +"</api>"
                     +"</envelope>")
-        x = sendHTTP(self._STRipaddress+":"+self._INTport, "/udap/api/pairing", "close", data=STRxml)
-        if type(x)==httplib.HTTPResponse:
-            self._BOOLpaired = str(x.getcode()).startswith("2")
+        x = sendHTTP(self._STRipaddress, self.STRtv_PATHpair, "close", data=STRxml, port=self._INTport)
+        if not x==False:
+            self._BOOLpaired = True
         else:
-           self._BOOLpaired = False
+            self._BOOLpaired = False
         return self._BOOLpaired            
 
 
@@ -59,15 +58,35 @@ class object_LGTV:
                     +"<name>showKey</name>"
                     +"</api>"
                     +"</envelope>")
-        x = sendHTTP(self._STRipaddress+":"+self._INTport, "/udap/api/pairing", "close", data=STRxml)
-        if type(x)==httplib.HTTPResponse:
+        x = sendHTTP(self._STRipaddress, self.STRtv_PATHpair, "close", data=STRxml, port=self._INTport)
+        if not x==False:
             return str(x.getcode()).startswith("2")
         else:
-            print ("Error when showing pairing key: "+str(x.reason))
+            #print ("Error when showing pairing key: "+str(x.reason))
             return False
 
 
-    def sendCmd(self):
-        if self._BOOLpaired == False:
-            self._pairDevice()
+    def sendCmd(self, STRcommand):
+        count = 0
+        if not self._BOOLpaired:
+            while count < 5:
+                self._pairDevice()
+                if self._BOOLpaired:
+                    break
+                count=+1
+        if count==5 and not self._BOOLpaired:
+            return False
+        STRxml = ("<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                    +"<envelope>"
+                    +"<api type=\"command\">"
+                    +"<name>HandleKeyInput</name>"
+                    +"<value>"+ STRcommand + "</value>"
+                    +"</api>"
+                    +"</envelope>")
+        x = sendHTTP(self._STRipaddress, self.STRtv_PATHcommand, "close", data=STRxml, port=self._INTport)
+        if not x==False:
+            return str(x.getcode()).startswith("2")
+        else:
+            #print ("Error when sending command: "+str(x.reason))
+            return False
         #code to send command
