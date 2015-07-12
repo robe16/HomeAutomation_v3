@@ -22,29 +22,30 @@ def testLGTV(ipaddress, port, key=None):
     else:
         print ("*Object Pairing Key: PASS")
 
-    result = x.showPairingkey()
-    if not result:
-        print ("*Show Key Test: FAIL")
-        return
-    else:
-        print ("*Show Key Test: PASS")
-        
-    print ("**Enter pairing key value:")
-    inptX = input()
-    x.setPairingkey(inptX)
-    if inptX==x.getPairingkey():
-        print ("*User Entered Pairing Key Test: PASS")
-    else:
-        print ("*User Entered Pairing Key Test: FAIL - [input: "+inptX+" stored: "+x.getPairingkey()+"]")
+    if key==None:
+        result = x.showPairingkey()
+        if not result:
+            print ("*Show Key Test: FAIL")
+            return
+        else:
+            print ("*Show Key Test: PASS")
 
-    result = x._pairDevice()
-    if not result:
-        print ("*Pair Device Test: FAIL")
-        return
-    else:
-        print ("*Pair Device Test: PASS")
+        print ("**Enter pairing key value:")
+        inptX = input()
+        x.setPairingkey(inptX)
+        if inptX==x.getPairingkey():
+            print ("*User Entered Pairing Key Test: PASS")
+        else:
+            print ("*User Entered Pairing Key Test: FAIL - [input: "+inptX+" stored: "+x.getPairingkey()+"]")
 
-    result = x.sendCmd("24")
+        result = x._pairDevice()
+        if not result:
+            print ("*Pair Device Test: FAIL")
+            return
+        else:
+            print ("*Pair Device Test: PASS")
+
+    result = x.sendCmd("25")
     if not result:
         print ("*Volume Up test: FAIL")
         return
@@ -57,8 +58,9 @@ print ("**** Test 1: LGTV with no pairing key****")
 print ("*****************************************")
 ipaddress = "192.168.0.111"
 port = "8080"
+pairkey="397905"
 print (ipaddress+":"+port)
-objX = testLGTV(ipaddress, port)
+objX = testLGTV(ipaddress, port, key=pairkey)
 print ("*****************************************")
 print ("****************TEST  END****************")
 print ("*****************************************")

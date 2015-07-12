@@ -43,7 +43,7 @@ class object_LGTV:
                     +"<port>"+ str(self._INTport) +"</port>"
                     +"</api>"
                     +"</envelope>")
-        x = sendHTTP(self._STRipaddress, self.STRtv_PATHpair, "close", data=STRxml, port=self._INTport)
+        x = sendHTTP(self._STRipaddress+":"+self._INTport+self.STRtv_PATHpair, "close", data=STRxml)
         if not x==False:
             self._BOOLpaired = True
         else:
@@ -58,7 +58,7 @@ class object_LGTV:
                     +"<name>showKey</name>"
                     +"</api>"
                     +"</envelope>")
-        x = sendHTTP(self._STRipaddress, self.STRtv_PATHpair, "close", data=STRxml, port=self._INTport)
+        x = sendHTTP(self._STRipaddress+":"+self._INTport+self.STRtv_PATHpair, "close", data=STRxml)
         if not x==False:
             return str(x.getcode()).startswith("2")
         else:
@@ -83,7 +83,7 @@ class object_LGTV:
                     +"<value>"+ STRcommand + "</value>"
                     +"</api>"
                     +"</envelope>")
-        x = sendHTTP(self._STRipaddress, self.STRtv_PATHcommand, "close", data=STRxml, port=self._INTport)
+        x = sendHTTP(self._STRipaddress+":"+self._INTport+self.STRtv_PATHcommand, "close", data=STRxml)
         if not x==False:
             return str(x.getcode()).startswith("2")
         else:
