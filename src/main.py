@@ -19,8 +19,6 @@ STRnest_clientID = "170016da-432a-4ca0-aa37-426a2117d7a2"
 STRnest_clientSecret = "6NqNFOfF1BAHByR8T6dn0OLTI"
 
 
-
-
 def create_objects():
     #LG TV
     if not STRloungetv_lgtv_pairkey:
@@ -43,22 +41,3 @@ def read_config():
     STRloungetv_tivo_ipaddress = Config.options("Lounge")['TIVO_ipaddress']
     STRloungetv_tivo_mak = Config.options("Lounge")['TIVO_mak']
     STRrocki_ipaddress = Config.options("Kitchen")['Rocki_ipaddress']
-
-
-def write_config():
-    Config = ConfigParser.ConfigParser()
-    cfgfile = open("config.ini",'w')
-    #
-    Config.add_section('Lounge')
-    Config.set('Lounge','LGTV_ipaddress',"192.168.0.111")
-    Config.set('Lounge','LGTV_pairkey', "397905")
-    Config.set('Lounge','TIVO_ipaddress',"192.168.0.112")
-    Config.set('Lounge','TIVO_mak', "2531670703")
-    Config.add_section('Kitchen')
-    Config.set('Kitchen','Rocki_ipaddress',"192.168.0.121")
-    Config.add_section('Nest')
-    Config.set('Nest','Pincode',"")
-    Config.set('Nest','Token',"")
-    Config.set('Nest','Token_expiry',"")
-    Config.write(cfgfile)
-    cfgfile.close()
