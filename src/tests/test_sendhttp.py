@@ -1,6 +1,3 @@
-import urllib2
-import httplib
-
 from src.cmd_http import sendHTTP
 
 
