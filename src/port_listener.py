@@ -15,6 +15,15 @@ def listen():
         # establish connection
         (connection, client_address) = s.accept()
         #
+        #
+        # Most efficient way to to send the server a command is to pass through in the url string
+        # e.g. "https://192.168.0.x:1616?device=loungetv&cmd=volup"
+        # However, consideration will need to be taken into account when wanting to send data of
+        # a sensitive nature (e.g. passwords for Nest account)
+
+        #
+        #
+        # The below is for receiving data (e.g.xml, json, etc.)
         try:
             # Receive the data in small chunks and retransmit it
             while True:
