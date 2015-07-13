@@ -15,7 +15,7 @@ def testListing2():
 print ("*****************************************")
 print ("****** Test: TV Listing Retrieval *******")
 print ("*****************************************")
-testListing1([108, "BBC", "92"], "test")
+testListing1([108, "BBC", "92", "testimage.jpg", "tv"], "test")
 print ("*****************************************")
 print ("****** Test: Get details from enum ******")
 print ("*****************************************")

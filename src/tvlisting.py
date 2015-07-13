@@ -5,19 +5,19 @@ import cmd_http
 
 def getalllistings():
     channels = enum_channels.LSTchannels
-    STRxml = "<listings>"
+    STRxml = "<listings><timestamp>%s</timestamp>" % (datetime.now().strftime('%d/%m/%Y %H:%M'))
     x=0
     while x<len(channels):
         STRxml+= getlistings(channels[x], x)
         x+=1
-        print ("%s out of %s completed" % (x, len(channels)))
+        print ("Retrieving TV Listing information: %s out of %s completed" % (x, len(channels)))
     STRxml += "</listings>"
     return STRxml
 
 
 def getlistings(LSTchanneldetails, id):
     x = cmd_http.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[2]), "close")
-    STRxml = "<channel id=\"%s\"><details><tivo>%s</tivo><name>%s</name></details>" % (id, str(LSTchanneldetails[0]), str(LSTchanneldetails[1]))
+    STRxml = "<channel id=\"%s\"><details><tivo>%s</tivo><name>%s</name><logo>%s</logo><type>%s</type></details>" % (id, str(LSTchanneldetails[0]), str(LSTchanneldetails[1]), str(LSTchanneldetails[3]), str(LSTchanneldetails[4]))
     if not x==False:
         x = x.read()
         STRxml += sortlistings(x)
