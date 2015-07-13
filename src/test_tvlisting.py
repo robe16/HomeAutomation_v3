@@ -1,15 +1,12 @@
 import tvlisting
 
 
-def testListing1(channelID):
-    result = tvlisting.getlistings(channelID)
+def testListing1(channelID, id):
+    result = tvlisting.getlistings(channelID, id)
     if result==False:
         print("FAIL")
     else:
-        count = 0
-        while count < len(result):
-            print (result[count])
-            count+=1
+        print (result)
 
 def testListing2():
     print (tvlisting.getalllistings())
@@ -18,7 +15,7 @@ def testListing2():
 print ("*****************************************")
 print ("****** Test: TV Listing Retrieval *******")
 print ("*****************************************")
-testListing1("92")
+testListing1([108, "BBC", "92"], "test")
 print ("*****************************************")
 print ("****** Test: Get details from enum ******")
 print ("*****************************************")

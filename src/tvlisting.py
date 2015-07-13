@@ -5,20 +5,26 @@ import cmd_http
 
 def getalllistings():
     channels = enum_channels.LSTchannels
+    STRxml = "<listings>"
     x=0
     while x<len(channels):
-        channels[x].append(getlistings(channels[x][2]))
+        STRxml+= getlistings(channels[x], x)
         x+=1
-    return channels
+        print ("%s out of %s completed" % (x, len(channels)))
+    STRxml += "</listings>"
+    return STRxml
 
 
-def getlistings(RTchannelID):
-    x = cmd_http.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (RTchannelID), "close")
+def getlistings(LSTchanneldetails, id):
+    x = cmd_http.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[2]), "close")
+    STRxml = "<channel id=\"%s\"><details><tivo>%s</tivo><name>%s</name></details>" % (id, str(LSTchanneldetails[0]), str(LSTchanneldetails[1]))
     if not x==False:
         x = x.read()
-        return sortlistings(x)
+        STRxml += sortlistings(x)
     else:
-        return ["--"]
+        STRxml += "<listing>--</listing>"
+    STRxml += "</channel>"
+    return STRxml
 
 
 def sortlistings(result):
@@ -28,7 +34,7 @@ def sortlistings(result):
     count=2
     while count<max(ARRresultlines):
         resultbreakdown = ARRresultlines[count].split('~')
-        #String date will be in format "dd/MM/yyyy HH:mm"
+        # String date will be in format "dd/MM/yyyy HH:mm"
         DATETIMEstart = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[20], '%d/%m/%Y %H:%M')
         DATETIMEend = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[21], '%d/%m/%Y %H:%M')
 
@@ -37,18 +43,14 @@ def sortlistings(result):
 
         if DATETIMEstart<=datetime.now() and DATETIMEend>=datetime.now():
             #
-            response=[]
-            response.append([DATETIMEstart, DATETIMEend, resultbreakdown[0], resultbreakdown[17]])
-            #now get next listed item
-            next=1
+            STRxml = ""
+            next=0
             while next<=5:
                 resultbreakdown = ARRresultlines[count+next].split('~')
-                DATETIMEstart = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[20], '%d/%m/%Y %H:%M')
-                DATETIMEend = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[21], '%d/%m/%Y %H:%M')
-                response.append([DATETIMEstart, DATETIMEend, resultbreakdown[0], resultbreakdown[17]])
+                STRxml += "<listing><start>%s</start><end>%s</end><name>%s</name><blurb>%s</blurb></listing>" % (resultbreakdown[19]+" "+resultbreakdown[20], resultbreakdown[19]+" "+resultbreakdown[21], resultbreakdown[0], resultbreakdown[17])
                 next+=1
-            return response
-
+            #
+            return STRxml
         count+=1
 
-    return False
+    return "<listing>--</listing>"
