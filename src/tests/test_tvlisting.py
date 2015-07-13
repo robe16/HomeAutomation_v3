@@ -1,15 +1,15 @@
-import tvlisting
+import src.tvlisting
 
 
 def testListing1(channelID, id):
-    result = tvlisting.getlistings(channelID, id)
+    result = src.tvlisting.getlistings(channelID, id)
     if result==False:
         print("FAIL")
     else:
         print (result)
 
 def testListing2():
-    print (tvlisting.getalllistings())
+    print (src.tvlisting.getalllistings())
 
 
 print ("*****************************************")
