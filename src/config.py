@@ -1,12 +1,12 @@
 from ConfigParser import ConfigParser
 import dataholder
+import os
 
 
 def read_config():
     cfg = ConfigParser()
-    #cfg.read("config.ini")
-    if not cfg.read("config.ini"): #TODO fix bug - won't open file
-        print 'cannot load config.ini'
+    if not cfg.read(os.path.join(os.path.dirname(__file__), "config.ini")):
+        print 'Error: cannot load config.ini'
         return
     #
     dataholder.STRloungetv_lgtv_ipaddress = cfg.get('Lounge', 'LGTV_ipaddress')
