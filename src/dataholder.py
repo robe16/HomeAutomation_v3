@@ -1,6 +1,3 @@
-#from config import read_config
-#from main_createobjects import create_objects
-
 #Lounge TV
 STRloungetv_lgtv_ipaddress = None
 STRloungetv_lgtv_pairkey = None
@@ -20,7 +17,3 @@ STRnest_clientSecret = "6NqNFOfF1BAHByR8T6dn0OLTI"
 #
 OBJloungetv = None
 OBJloungetivo = None
-
-
-#read_config()
-#create_objects()
