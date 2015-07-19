@@ -87,6 +87,4 @@ class object_LGTV:
         if not x==False:
             return str(x.getcode()).startswith("2")
         else:
-            #print ("Error when sending command: "+str(x.reason))
             return False
-        #code to send command
