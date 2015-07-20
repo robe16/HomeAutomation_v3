@@ -1,5 +1,7 @@
+#TODO currently code gets listings on a request basis - need to amend so that will store once and then 'sort listings' each time request made by client
+
 from datetime import datetime, timedelta
-from enum_tvlistings import enum_channels
+import enum_channels
 import cmd_http
 
 
@@ -19,8 +21,7 @@ def getlistings(LSTchanneldetails, id):
     x = cmd_http.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[2]), "close")
     STRxml = "<channel id=\"%s\"><details><tivo>%s</tivo><name>%s</name><logo>%s</logo><type>%s</type></details>" % (id, str(LSTchanneldetails[0]), str(LSTchanneldetails[1]), str(LSTchanneldetails[3]), str(LSTchanneldetails[4]))
     if not x==False:
-        x = x.read()
-        STRxml += sortlistings(x)
+        STRxml += sortlistings(x.read())
     else:
         STRxml += "<listing>--</listing>"
     STRxml += "</channel>"
