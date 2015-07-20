@@ -1,27 +1,39 @@
-#TODO currently code gets listings on a request basis - need to amend so that will store once and then 'sort listings' each time request made by client
-
 from datetime import datetime, timedelta
 import enum_channels
 import cmd_http
 
 
-def getalllistings():
+def getall_listings():
+    channels = enum_channels.LSTchannels
+    x=0
+    while x<len(channels):
+        channels[x].append(get_listings(channels[x]))
+        x+=1
+        print ("Retrieving TV Listing information: %s out of %s completed" % (x, len(channels)))
+    return [channels, datetime.now()]
+
+def get_listings(LSTchanneldetails):
+    x = cmd_http.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[1]), "close")
+    if not x==False:
+        return x.read()
+    else:
+        return None
+
+
+def getall_xmllistings(data):
     channels = enum_channels.LSTchannels
     STRxml = "<listings><timestamp>%s</timestamp>" % (datetime.now().strftime('%d/%m/%Y %H:%M'))
     x=0
     while x<len(channels):
-        STRxml+= getlistings(channels[x], x)
+        STRxml+= get_xmllistings(x, channels[x], data[x][5])
         x+=1
-        print ("Retrieving TV Listing information: %s out of %s completed" % (x, len(channels)))
     STRxml += "</listings>"
     return STRxml
 
-
-def getlistings(LSTchanneldetails, id):
-    x = cmd_http.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[2]), "close")
-    STRxml = "<channel id=\"%s\"><details><tivo>%s</tivo><name>%s</name><logo>%s</logo><type>%s</type></details>" % (id, str(LSTchanneldetails[0]), str(LSTchanneldetails[1]), str(LSTchanneldetails[3]), str(LSTchanneldetails[4]))
-    if not x==False:
-        STRxml += sortlistings(x.read())
+def get_xmllistings(id, LSTchanneldetails, data):
+    STRxml = "<channel id=\"%s\"><details><name>%s</name><logo>%s</logo><type>%s</type><tivo>%s</tivo></details>" % (id, str(LSTchanneldetails[0]), str(LSTchanneldetails[2]), str(LSTchanneldetails[3]), str(LSTchanneldetails[4]))
+    if not data==False and not data==None:
+        STRxml += sortlistings(data)
     else:
         STRxml += "<listing>--</listing>"
     STRxml += "</channel>"

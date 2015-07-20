@@ -17,3 +17,6 @@ STRnest_clientSecret = "6NqNFOfF1BAHByR8T6dn0OLTI"
 #
 OBJloungetv = None
 OBJloungetivo = None
+#
+TVlistings = None
+TVlistings_timestamp = None

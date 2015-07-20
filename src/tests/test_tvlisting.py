@@ -1,15 +1,16 @@
 import src.tvlisting
 
+#TODO rewrite for new method of dealing with listing data
 
 def testListing1(channelID, id):
-    result = src.tvlisting.getlistings(channelID, id)
+    result = src.tvlisting.get_xmllistings(channelID, id)
     if result==False:
         print("FAIL")
     else:
         print (result)
 
 def testListing2():
-    print (src.tvlisting.getalllistings())
+    print (src.tvlisting.getall_xmllistings())
 
 
 print ("*****************************************")
