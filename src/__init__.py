@@ -18,7 +18,7 @@ def send_command(room="-", device="-", command="-"):
     else:
         return "Error"
 
-@route('/image/<category>/<filename:re:.*\.png>')
+@route('/img/<category>/<filename:re:.*\.png>')
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/%s' % category)
     return static_file(filename, root=root, mimetype='image/png')
@@ -31,8 +31,8 @@ def get_tvlistings():
 read_config()
 
 #Create objects
-#dataholder.object_LGTV = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
-#dataholder.object_TIVO = create_objects.create_lgtv(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
+dataholder.object_LGTV = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
+dataholder.object_TIVO = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
 
 #Get and store TV Listings
 x = getall_listings()
