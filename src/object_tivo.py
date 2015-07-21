@@ -1,4 +1,4 @@
-#from cmd_tcp import sendTCP
+from cmd_tcp import sendTCP
 
 class object_TIVO:
     '''TiVo object'''
@@ -21,7 +21,6 @@ class object_TIVO:
     def setPairingkey(self, STRaccesskey):
         self._STRaccesskey = STRaccesskey
 
-    
-    def sendCmd(self):
-        #TODO
-        return False
+
+    def sendCmd(self, command):
+        return sendTCP(self._STRipaddress, self._INTport, command)

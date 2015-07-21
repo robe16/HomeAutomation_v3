@@ -1,12 +1,11 @@
 import dataholder
 from config import read_config
 import create_objects
-from src.bottle import route, run, static_file, HTTPResponse
+from bottle import route, run, static_file, HTTPResponse
 import os
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from tvlisting import getall_listings, getall_xmllistings
-
 
 
 @route('/device/<room>/<device>/<command>')
@@ -18,9 +17,9 @@ def send_command(room="-", device="-", command="-"):
     elif room=="lounge" and device=="tivo":
         BOOLsucces = dataholder.object_TIVO.sendCmd(command)
     if BOOLsucces:
-        return HTTPResponse(body=str(BOOLsucces),status=200)
+        return HTTPResponse(status=200)
     else:
-        return HTTPResponse(body=str(BOOLsucces),status=400)
+        return HTTPResponse(status=400)
 
 @route('/tvlistings')
 def get_tvlistings():
@@ -30,8 +29,6 @@ def get_tvlistings():
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/%s' % category)
     return static_file(filename, root=root, mimetype='image/png')
-
-
 
 
 read_config()
@@ -46,4 +43,4 @@ dataholder.TVlistings = x[0]
 dataholder.TVlistings_timestamp = x[1]
 
 
-run(host='localhost', port=8080, debug=True)
+#run(host='localhost', port=8080, debug=True)
