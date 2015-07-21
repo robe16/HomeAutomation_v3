@@ -1,5 +1,3 @@
-import httplib
-
 from cmd_http import sendHTTP
 
 

@@ -1,15 +1,11 @@
-import urllib
 import urllib2
-import httplib
 
 
-def sendHTTP(ipaddress, connection, data=False, port=False):
-    '''Send data via http to IP address over network conection'''
+def sendHTTP(ipaddress, connection, data=False):
+    # Send data via http to IP address over network conection
     if not ipaddress.startswith("http"):
         ipaddress = "http://" + ipaddress
     if data:
-        #data = urllib.quote_plus(data)
-        #data = urllib2.urlencode(data)
         req = urllib2.Request(ipaddress, data=data)
     else:
         req = urllib2.Request(ipaddress)
