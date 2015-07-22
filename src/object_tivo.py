@@ -1,4 +1,5 @@
 from cmd_tcp import sendTCP
+from enum_remoteTIVO import LSTremote_tivo
 
 class object_TIVO:
     '''TiVo object'''
@@ -22,5 +23,9 @@ class object_TIVO:
         self._STRaccesskey = STRaccesskey
 
 
-    def sendCmd(self, command):
-        return sendTCP(self._STRipaddress, self._INTport, command)
+    def sendCmd(self, STRcommand):
+        comms = LSTremote_tivo
+        for x in range(len(comms)):
+            if comms[x][0]==STRcommand:
+                return sendTCP(self._STRipaddress, self._INTport, comms[x][1])
+        return False

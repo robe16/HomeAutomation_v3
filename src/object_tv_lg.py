@@ -1,4 +1,5 @@
 from cmd_http import sendHTTP
+from enum_remoteLGTV import LSTremote_lgtv
 
 
 class object_LGTV:
@@ -74,15 +75,19 @@ class object_LGTV:
                 count=+1
         if count==5 and not self._BOOLpaired:
             return False
-        STRxml = ("<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                    +"<envelope>"
-                    +"<api type=\"command\">"
-                    +"<name>HandleKeyInput</name>"
-                    +"<value>"+ STRcommand + "</value>"
-                    +"</api>"
-                    +"</envelope>")
-        x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
-        if not x==False:
-            return str(x.getcode()).startswith("2")
-        else:
-            return False
+        comms = LSTremote_lgtv
+        for x in range(len(comms)):
+            if comms[x][0]==STRcommand:
+                STRxml = ("<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                            +"<envelope>"
+                            +"<api type=\"command\">"
+                            +"<name>HandleKeyInput</name>"
+                            +"<value>"+ comms[x][1] + "</value>"
+                            +"</api>"
+                            +"</envelope>")
+                x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                if not x==False:
+                    return str(x.getcode()).startswith("2")
+                else:
+                    return False
+        return False
