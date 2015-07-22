@@ -13,13 +13,13 @@ def testTIVO(ipaddress, port, STRaccesskey="2531670703"):
     if result != True:
         print ("TIVO Object Creation: Pass")
 
-    result = x.sendCmd("IRCODE PAUSE\n\r")
+    result = x.sendCmd("pause")
     if not result:
         print ("Pause test: FAIL")
     else:
         print ("Pause test: PASS")
 
-    result = x.sendCmd("IRCODE PLAY\n\r")
+    result = x.sendCmd("channelup")
     if not result:
         print ("Play test: FAIL")
     else:

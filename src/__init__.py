@@ -6,6 +6,7 @@ import os
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from tvlisting import getall_listings, getall_xmllistings
+import time, threading
 
 
 @route('/device/<room>/<device>/<command>')
@@ -31,6 +32,14 @@ def get_image(category, filename):
     return static_file(filename, root=root, mimetype='image/png')
 
 
+def tvlistings():
+    x = getall_listings()
+    dataholder.TVlistings = x[0]
+    dataholder.TVlistings_timestamp = x[1]
+    # 604800 secs = 7 days
+    threading.Timer(604800, tvlistings).start()
+
+
 read_config()
 
 #Create objects
@@ -38,9 +47,7 @@ dataholder.object_LGTV = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_
 dataholder.object_TIVO = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
 
 #Get and store TV Listings
-x = getall_listings()
-dataholder.TVlistings = x[0]
-dataholder.TVlistings_timestamp = x[1]
+tvlistings()
 
 
-#run(host='localhost', port=8080, debug=True)
+run(host='localhost', port=8080, debug=True)
