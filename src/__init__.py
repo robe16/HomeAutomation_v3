@@ -14,9 +14,9 @@ def send_command(room="-", device="-", command="-"):
     #TODO
     BOOLsucces = False
     if room=="lounge" and device=="lgtv":
-        BOOLsucces = dataholder.object_LGTV.sendCmd(command)
+        BOOLsucces = dataholder.OBJloungetv.sendCmd(command)
     elif room=="lounge" and device=="tivo":
-        BOOLsucces = dataholder.object_TIVO.sendCmd(command)
+        BOOLsucces = dataholder.OBJloungetivo.sendCmd(command)
     if BOOLsucces:
         return HTTPResponse(status=200)
     else:
@@ -43,8 +43,8 @@ def tvlistings():
 read_config()
 
 #Create objects
-dataholder.object_LGTV = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
-dataholder.object_TIVO = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
+dataholder.OBJloungetv = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
+dataholder.OBJloungetivo = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
 
 #Get and store TV Listings
 tvlistings()
