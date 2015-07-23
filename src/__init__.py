@@ -6,7 +6,20 @@ import os
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from tvlisting import getall_listings, getall_xmllistings
-import time, threading
+import threading
+from multiprocessing import Process
+
+
+def server_start():
+    run(host='localhost', port=8090, debug=True)
+
+
+def tvlistings():
+    x = getall_listings()
+    dataholder.TVlistings = x[0]
+    dataholder.TVlistings_timestamp = x[1]
+    # 604800 secs = 7 days
+    threading.Timer(604800, tvlistings).start()
 
 
 @route('/device/<room>/<device>/<command>')
@@ -31,23 +44,22 @@ def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/%s' % category)
     return static_file(filename, root=root, mimetype='image/png')
 
-
-def tvlistings():
-    x = getall_listings()
-    dataholder.TVlistings = x[0]
-    dataholder.TVlistings_timestamp = x[1]
-    # 604800 secs = 7 days
-    threading.Timer(604800, tvlistings).start()
+#TODO - code does not yet work
+@route('/server/end')
+def end_server():
+    p2.terminate()
+    return HTTPResponse(status=200)
 
 
+# Get configuration
 read_config()
-
-#Create objects
+# Create objects
 dataholder.OBJloungetv = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
 dataholder.OBJloungetivo = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
-
-#Get and store TV Listings
-tvlistings()
-
-
-run(host='localhost', port=8080, debug=True)
+# Get and store TV Listings
+p1 = Process(target=tvlistings)
+# Start server
+p2 = Process(target=server_start)
+#
+p1.start()
+p2.start()
