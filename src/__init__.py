@@ -1,25 +1,38 @@
 import dataholder
 from config import read_config
 import create_objects
-from bottle import route, run, static_file, HTTPResponse
-import os
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
+import os, time, threading
 from tvlisting import getall_listings, getall_xmllistings
-import threading
+from bottle import route, run, static_file, HTTPResponse
 from multiprocessing import Process
 
 
-def server_start():
+def start_bottle():
     run(host='localhost', port=8090, debug=True)
 
+def server_start():
+    tvlistings_startprocess()
+    p2.start()
+
+def server_end():
+    p1.terminate()
+    p2.terminate()
+
+def tvlistings_startprocess():
+    p1.start()
+
+def tvlistings_process():
+    # 604800 secs = 7 days
+    while True:
+        tvlistings()
+        time.sleep(604800)
 
 def tvlistings():
     x = getall_listings()
     dataholder.TVlistings = x[0]
     dataholder.TVlistings_timestamp = x[1]
-    # 604800 secs = 7 days
-    threading.Timer(604800, tvlistings).start()
 
 
 @route('/device/<room>/<device>/<command>')
@@ -44,22 +57,14 @@ def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/%s' % category)
     return static_file(filename, root=root, mimetype='image/png')
 
-#TODO - code does not yet work
-@route('/server/end')
-def end_server():
-    p2.terminate()
-    return HTTPResponse(status=200)
-
 
 # Get configuration
 read_config()
 # Create objects
 dataholder.OBJloungetv = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
 dataholder.OBJloungetivo = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
-# Get and store TV Listings
-p1 = Process(target=tvlistings)
+# GCreate processes for TV Listing code and code to start bottle server
+p1 = Process(target=tvlistings_process)
+p2 = Process(target=start_bottle)
 # Start server
-p2 = Process(target=server_start)
-#
-p1.start()
-p2.start()
+server_start()
