@@ -13,13 +13,7 @@ def sendHTTP(ipaddress, connection, data=False):
     req.add_header("Connection", connection)
     req.add_header("User-Agent","Linux/2.6.18 UDAP/2.0 CentOS/5.8")
     try:
-        x = urllib2.urlopen(req)
-        if not str(x.getcode()).startswith("2"):
-            return False
-        else:
-            return x
-    except urllib2.HTTPError as e:
-        return False
-    except urllib2.URLError as e:
-        # Not an HTTP-specific error (e.g. connection refused)
+        x = urllib2.urlopen(req, timeout=5)
+        return False if not str(x.getcode()).startswith("2") else x
+    except:
         return False

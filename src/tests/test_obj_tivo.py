@@ -3,27 +3,12 @@ from src.object_tivo import object_TIVO
 
 def testTIVO(ipaddress, port, STRaccesskey="2531670703"):
     x = object_TIVO(ipaddress, port, STRaccesskey=STRaccesskey)
-    result = False
-    if ipaddress != x.getIP():
-        result = True
-        print ("TIVO Object Creation: Fail: - IP Address [E: " + ipaddress + "] [A: "+ x.getIP() + "]")
-    if port != x.getPort():
-        result = True
-        print ("TIVO Object Creation: Fail - Port [E: " + port + "] [A: "+ x.getPort() + "]")
-    if result != True:
-        print ("TIVO Object Creation: Pass")
 
-    result = x.sendCmd("pause")
-    if not result:
-        print ("Pause test: FAIL")
-    else:
-        print ("Pause test: PASS")
+    print "*Object IP Address: %s" % ("PASS" if ipaddress==x.getIP() else ("FAIL [E: %s] [A: %s]" % (ipaddress, x.getIP())))
+    print "*Object Port: %s" % ("PASS" if port==x.getPort() else ("FAIL [E: %s] [A: %s]" % (port, x.getPort())))
 
-    result = x.sendCmd("channelup")
-    if not result:
-        print ("Play test: FAIL")
-    else:
-        print ("Play test: PASS")
+    print "Pause test: %s" % ("PASS" if x.sendCmd("pause") else "FAIL")
+    print "Play test: %s" % ("PASS" if x.sendCmd("play") else "FAIL")
 
 
 print ("**** Test 1: TIVO ****")

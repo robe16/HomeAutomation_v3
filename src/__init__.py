@@ -5,12 +5,12 @@ from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 import os, time, threading
 from tvlisting import getall_listings, getall_xmllistings
-from bottle import route, run, static_file, HTTPResponse
+from bottle import route, request, run, static_file, HTTPResponse
 from multiprocessing import Process
 
 
 def start_bottle():
-    run(host='localhost', port=8090, debug=True)
+    run(host='localhost', port=8080, debug=True)
 
 def server_start():
     tvlistings_startprocess()
@@ -38,19 +38,23 @@ def tvlistings():
 @route('/device/<room>/<device>/<command>')
 def send_command(room="-", device="-", command="-"):
     #TODO
-    BOOLsucces = False
-    if room=="lounge" and device=="lgtv":
-        BOOLsucces = dataholder.OBJloungetv.sendCmd(command)
+    BOOLsuccess = False
+    if room=="lounge" and device=="lgtv" and command=="appslist":
+        APPtype = request.query.type or 3
+        APPindex = request.query.index or 0
+        APPnumber = request.query.number or 0
+        x = dataholder.OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
+        return HTTPResponse(data=x, status=200) if bool(x) else HTTPResponse(status=400)
+    elif room=="lounge" and device=="lgtv":
+        BOOLsuccess = dataholder.OBJloungetv.sendCmd(command)
     elif room=="lounge" and device=="tivo":
-        BOOLsucces = dataholder.OBJloungetivo.sendCmd(command)
-    if BOOLsucces:
-        return HTTPResponse(status=200)
-    else:
-        return HTTPResponse(status=400)
+        BOOLsuccess = dataholder.OBJloungetivo.sendCmd(command)
+    return HTTPResponse(status=200) if BOOLsuccess else HTTPResponse(status=400)
 
 @route('/tvlistings')
 def get_tvlistings():
-    return getall_xmllistings(dataholder.TVlistings)
+    x = getall_xmllistings(dataholder.TVlistings)
+    return HTTPResponse(data=x, status=200) if bool(x) else HTTPResponse(status=400)
 
 @route('/img/<category>/<filename:re:.*\.png>')
 def get_image(category, filename):
