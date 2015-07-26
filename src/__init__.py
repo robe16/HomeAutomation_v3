@@ -7,6 +7,7 @@ import os, time, threading
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse
 from multiprocessing import Process, Queue
+from io import BytesIO
 
 
 def start_bottle():
@@ -40,16 +41,14 @@ def send_command(room="-", device="-", command="-"):
         APPindex = request.query.index or 0
         APPnumber = request.query.number or 0
         x = dataholder.OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
-        print bool(x)
-        print x
         return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
     elif room=="lounge" and device=="lgtv" and command=="appicon":
-        STRappid = request.query.type or False
-        STRappname = request.query.index or False
-        if not STRappid or not STRappname:
+        auid = request.query.auid or False
+        name = request.query.name or False
+        if not bool(auid) or not bool(name):
             return HTTPResponse(status=400)
-        x = dataholder.OBJloungetv.getAppicon(STRappid=STRappid, STRappname=STRappname)
-        return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
+        x = dataholder.OBJloungetv.getAppicon(auid, name)
+        return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
     elif room=="lounge" and device=="lgtv":
         return HTTPResponse(status=200) if dataholder.OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
     elif room=="lounge" and device=="tivo":
