@@ -7,9 +7,9 @@ def getall_listings():
     channels = enum_channels.LSTchannels
     x=0
     while x<len(channels):
+        print ("Retrieving TV Listing information: %s out of %s completed - %s" % (x+1, len(channels), channels[x][0]))
         channels[x].append(get_listings(channels[x]))
         x+=1
-        print ("Retrieving TV Listing information: %s out of %s completed" % (x, len(channels)))
     return [channels, datetime.now()]
 
 def get_listings(LSTchanneldetails):
@@ -21,19 +21,18 @@ def get_listings(LSTchanneldetails):
 
 
 def getall_xmllistings(data):
-    channels = enum_channels.LSTchannels
     STRxml = "<listings><timestamp>%s</timestamp>" % (datetime.now().strftime('%d/%m/%Y %H:%M'))
     x=0
-    while x<len(channels):
-        STRxml+= get_xmllistings(x, channels[x], data[x][5])
+    while x<len(data):
+        STRxml+= get_xmllistings(x, data[x])
         x+=1
     STRxml += "</listings>"
     return STRxml
 
-def get_xmllistings(id, LSTchanneldetails, data):
-    STRxml = "<channel id=\"%s\"><details><name>%s</name><logo>%s</logo><type>%s</type><tivo>%s</tivo></details>" % (id, str(LSTchanneldetails[0]), str(LSTchanneldetails[2]), str(LSTchanneldetails[3]), str(LSTchanneldetails[4]))
-    if not data==False and not data==None:
-        STRxml += sortlistings(data)
+def get_xmllistings(id, data):
+    STRxml = "<channel id=\"%s\"><details><name>%s</name><logo>%s</logo><type>%s</type><tivo>%s</tivo></details>" % (id, str(data[0]), str(data[2]), str(data[3]), str(data[4]))
+    if not data[5]==False and not data[5]==None:
+        STRxml += sortlistings(data[5])
     else:
         STRxml += "<listing>--</listing>"
     STRxml += "</channel>"

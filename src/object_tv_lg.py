@@ -73,11 +73,17 @@ class object_LGTV:
         #             This value has to be greater than or equal to the index value. The value can be from 1 to 1024.
         STRurl = "/udap/api/data?target=applist_get&type=%s&index=%s&number=%s" % (str(APPtype), str(APPindex), str(APPnumber))
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+STRurl, "keep-alive")
-        return x.read() if (str(x.getcode()).startswith("2") and bool(x)) else False
+        if bool(x):
+            return x.read() if str(x.getcode()).startswith("2") else False
+        else:
+            return False
 
     def getAppicon (self, STRappid, STRappname):
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
 		# appname = App name
         STRurl = "/udap/api/data?target=appicon_get&auid=%s&appname=%s" % STRappid, urlencode(STRappname)
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+STRurl, "keep-alive")
-        return x.read() if (str(x.getcode()).startswith("2") and bool(x)) else False
+        if bool(x):
+            return x.read() if str(x.getcode()).startswith("2") else False
+        else:
+            return False

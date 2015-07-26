@@ -4,9 +4,9 @@ import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 import os, time, threading
-from tvlisting import getall_listings, getall_xmllistings
+from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 
 
 def start_bottle():
@@ -23,38 +23,44 @@ def server_end():
 def tvlistings_startprocess():
     p1.start()
 
-def tvlistings_process():
+def tvlistings_process(q):
     # 604800 secs = 7 days
     while True:
-        tvlistings()
+        tvlistings(q)
         time.sleep(604800)
 
-def tvlistings():
-    x = getall_listings()
-    dataholder.TVlistings = x[0]
-    dataholder.TVlistings_timestamp = x[1]
+def tvlistings(q):
+    q.put(getall_listings())
 
 
 @route('/device/<room>/<device>/<command>')
 def send_command(room="-", device="-", command="-"):
-    #TODO
-    BOOLsuccess = False
     if room=="lounge" and device=="lgtv" and command=="appslist":
         APPtype = request.query.type or 3
         APPindex = request.query.index or 0
         APPnumber = request.query.number or 0
         x = dataholder.OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
-        return HTTPResponse(data=x, status=200) if bool(x) else HTTPResponse(status=400)
+        print bool(x)
+        print x
+        return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
+    elif room=="lounge" and device=="lgtv" and command=="appicon":
+        STRappid = request.query.type or False
+        STRappname = request.query.index or False
+        if not STRappid or not STRappname:
+            return HTTPResponse(status=400)
+        x = dataholder.OBJloungetv.getAppicon(STRappid=STRappid, STRappname=STRappname)
+        return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
     elif room=="lounge" and device=="lgtv":
-        BOOLsuccess = dataholder.OBJloungetv.sendCmd(command)
+        return HTTPResponse(status=200) if dataholder.OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
     elif room=="lounge" and device=="tivo":
-        BOOLsuccess = dataholder.OBJloungetivo.sendCmd(command)
-    return HTTPResponse(status=200) if BOOLsuccess else HTTPResponse(status=400)
+        return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
+    return HTTPResponse(status=400)
 
 @route('/tvlistings')
 def get_tvlistings():
-    x = getall_xmllistings(dataholder.TVlistings)
-    return HTTPResponse(data=x, status=200) if bool(x) else HTTPResponse(status=400)
+    channel = request.query.id or False    # TODO - code to bring listing for one channel only
+    x = get_xmllistings(q.get()[0]) if bool(channel) else getall_xmllistings(q.get()[0])
+    return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
 
 @route('/img/<category>/<filename:re:.*\.png>')
 def get_image(category, filename):
@@ -68,7 +74,8 @@ read_config()
 dataholder.OBJloungetv = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
 dataholder.OBJloungetivo = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
 # GCreate processes for TV Listing code and code to start bottle server
-p1 = Process(target=tvlistings_process)
-p2 = Process(target=start_bottle)
+q = Queue()
+p1 = Process(target=tvlistings_process, args=(q,))
+p2 = Process(target=start_bottle, args=())
 # Start server
 server_start()
