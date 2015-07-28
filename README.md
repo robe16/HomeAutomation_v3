@@ -4,10 +4,12 @@ Rewrite of v2 of the Android application for home automation. v3 is being writte
 
 Where possible, all commands are sent over the internal network. Some devices (eg Nest) are controlled using APIs that are only accessible over the internet.
 
-Elements that have started to be developed:
+Elements that have been developed:
 - LG TV control
 - Virgin Media TiVo control
 - TV listings from RadioTimes
+
+Elements to be developed:
 - Nest thermostat
 - Nest smoke detectors
 
