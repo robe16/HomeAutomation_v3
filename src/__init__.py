@@ -57,7 +57,7 @@ def send_command(room="-", device="-", command="-"):
 
 @route('/tvlistings')
 def get_tvlistings():
-    channel = request.query.id or False    # TODO - code to bring listing for one channel only
+    channel = request.query.id or False
     x = get_xmllistings(q.get()[0]) if bool(channel) else getall_xmllistings(q.get()[0])
     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
 
