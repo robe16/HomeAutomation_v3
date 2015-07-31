@@ -1,6 +1,5 @@
 from cmd_http import sendHTTP
 from enum_remoteLGTV import LSTremote_lgtv
-from urllib import urlencode
 
 
 class object_LGTV:
