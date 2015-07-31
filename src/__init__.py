@@ -33,6 +33,11 @@ def tvlistings_process(q):
 def tvlistings(q):
     q.put(getall_listings())
 
+@route('/index')
+def index():
+    x = "Message"
+    return HTTPResponse(body=x, status=200)
+
 
 @route('/device/<room>/<device>/<command>')
 def send_command(room="-", device="-", command="-"):
