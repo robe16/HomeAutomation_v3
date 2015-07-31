@@ -3,11 +3,11 @@ from config import read_config
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
+from web_index import create_index
 import os, time, threading
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse
 from multiprocessing import Process, Queue
-from io import BytesIO
 
 
 def start_bottle():
@@ -35,9 +35,16 @@ def tvlistings(q):
 
 @route('/index')
 def index():
-    x = "Message"
+    x = create_index()
     return HTTPResponse(body=x, status=200)
 
+@route('/codefiles/<filename>')
+def get_image(filename):
+    root = os.path.join(os.path.dirname(__file__), 'web_templates/codefiles')
+    resp = static_file(filename, root=root)
+    resp.set_header('Last-Modified', '')
+    return resp
+#, mimetype='image/png'
 
 @route('/device/<room>/<device>/<command>')
 def send_command(room="-", device="-", command="-"):
