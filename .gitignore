@@ -1,5 +1,5 @@
 # Home Auto configuration file (specific to user setup incl IP addresses etc)
-config.ini
+**/config.ini
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
