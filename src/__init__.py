@@ -6,7 +6,7 @@ from object_tivo import object_TIVO
 from web_index import create_index
 import os, time, threading
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
-from bottle import route, request, run, static_file, HTTPResponse
+from bottle import route, request, run, static_file, HTTPResponse, template
 from multiprocessing import Process, Queue
 
 
@@ -38,9 +38,13 @@ def index():
     x = create_index()
     return HTTPResponse(body=x, status=200)
 
-@route('/codefiles/<filename>')
+@route('/testpage')
+def index():
+    return template('web/test.html')
+
+@route('/static/<filename>')
 def get_image(filename):
-    root = os.path.join(os.path.dirname(__file__), 'web_templates/codefiles')
+    root = os.path.join(os.path.dirname(__file__), 'web/static')
     resp = static_file(filename, root=root)
     resp.set_header('Last-Modified', '')
     return resp
