@@ -35,20 +35,16 @@ def tvlistings(q):
 
 @route('/web/<page>')
 def web(page=""):
-    if page=="index":
+    if page=="home":
         return HTTPResponse(body=create_home(), status=200)
     elif page=="loungetv":
         return HTTPResponse(body=create_loungetv(), status=200)
     else:
         return HTTPResponse(body="An error has occurred", status=400)
 
-@route('/static/<filename>')
+@route('/web/static/<filename>')
 def get_image(filename):
-    root = os.path.join(os.path.dirname(__file__), 'web/static')
-    resp = static_file(filename, root=root)
-    resp.set_header('Last-Modified', '')
-    return resp
-#, mimetype='image/png'
+    return static_file(filename, root=os.path.join(os.path.dirname(__file__), 'web/static/'))
 
 @route('/device/<room>/<device>/<command>')
 def send_command(room="-", device="-", command="-"):
