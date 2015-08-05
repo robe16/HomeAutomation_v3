@@ -3,7 +3,7 @@ from config import read_config
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_index import create_index
+from web_index import create_home, create_loungetv
 import os, time, threading
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template
@@ -33,14 +33,14 @@ def tvlistings_process(q):
 def tvlistings(q):
     q.put(getall_listings())
 
-@route('/index')
-def index():
-    x = create_index()
-    return HTTPResponse(body=x, status=200)
-
-@route('/testpage')
-def index():
-    return template('web/test.html')
+@route('/web/<page>')
+def web(page=""):
+    if page=="index":
+        return HTTPResponse(body=create_home(), status=200)
+    elif page=="loungetv":
+        return HTTPResponse(body=create_loungetv(), status=200)
+    else:
+        return HTTPResponse(body="An error has occurred", status=400)
 
 @route('/static/<filename>')
 def get_image(filename):
