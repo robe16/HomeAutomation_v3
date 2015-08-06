@@ -8,7 +8,7 @@ def create_home():
 
 def create_loungetv():
     return urlopen('web/header.html').read().encode('utf-8')+\
-           urlopen('web/loungetv.html').read().encode('utf-8') % (buttons_lgtv("lounge"))+\
+           urlopen('web/loungetv.html').read().encode('utf-8').format(urlopen('web/loungetv-lgtv.html').read().encode('utf-8'), urlopen('web/loungetv-tivo.html').read().encode('utf-8'))+\
            urlopen('web/footer.html').read().encode('utf-8')
 
 def buttons_lgtv(room):
