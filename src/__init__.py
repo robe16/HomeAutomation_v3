@@ -3,7 +3,7 @@ from config import read_config
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_index import create_home, create_loungetv
+from web_createpages import create_home, create_loungetv
 import os, time
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
@@ -46,9 +46,9 @@ def web(page=""):
     else:
         return HTTPResponse(body="An error has occurred", status=400)
 
-@route('/web/static/<filename>')
-def get_image(filename):
-    return static_file(filename, root=os.path.join(os.path.dirname(__file__), 'web/static/'))
+@route('/web/static/<folder>/<filename>')
+def get_image(folder, filename):
+    return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/%s' % folder)))
 
 @route('/device/<room>/<device>/<command>')
 def send_command(room="-", device="-", command="-"):
