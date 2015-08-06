@@ -4,9 +4,9 @@ import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_index import create_home, create_loungetv
-import os, time, threading
+import os, time
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
-from bottle import route, request, run, static_file, HTTPResponse, template
+from bottle import route, request, run, static_file, HTTPResponse, template, redirect
 from multiprocessing import Process, Queue
 
 
@@ -32,6 +32,10 @@ def tvlistings_process(q):
 
 def tvlistings(q):
     q.put(getall_listings())
+
+@route('/')
+def web_redirect():
+    redirect("/web/home")
 
 @route('/web/<page>')
 def web(page=""):
