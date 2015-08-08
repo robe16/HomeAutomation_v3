@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import enum_channels
-import cmd_http
+import send_cmds
 
 
 def getall_listings():
@@ -13,7 +13,7 @@ def getall_listings():
     return [channels, datetime.now()]
 
 def get_listings(LSTchanneldetails):
-    x = cmd_http.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[1]), "close")
+    x = send_cmds.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[1]), "close")
     if not x==False:
         return x.read()
     else:
