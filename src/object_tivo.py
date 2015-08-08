@@ -1,4 +1,4 @@
-from cmd_tcp import sendTCP
+from send_cmds import sendSOCKET
 from enum_remoteTIVO import LSTremote_tivo
 
 class object_TIVO:
@@ -27,5 +27,5 @@ class object_TIVO:
         comms = LSTremote_tivo
         for x in range(len(comms)):
             if comms[x][0]==STRcommand:
-                return sendTCP(self._STRipaddress, self._INTport, comms[x][1])
+                return sendSOCKET(self._STRipaddress, self._INTport, comms[x][1])
         return False

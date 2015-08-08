@@ -1,4 +1,4 @@
-from cmd_http import sendHTTP
+from send_cmds import sendHTTP
 from enum_remoteLGTV import LSTremote_lgtv
 
 
