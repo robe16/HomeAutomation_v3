@@ -12,7 +12,7 @@ from multiprocessing import Process, Queue
 BOOLlistings=False
 
 def start_bottle():
-    run(host='localhost', port=8080, debug=True)
+    run(host='192.168.0.6', port=8080, debug=True)
 
 def server_start():
     tvlistings_startprocess()
@@ -46,7 +46,6 @@ def web(page=""):
     elif page=="loungetv":
         return HTTPResponse(body=create_loungetv(), status=200)
     elif page=="tvguide":
-        print BOOLlistings
         return HTTPResponse(body=create_tvguide(q.get()[0], BOOLlistings), status=200)
     else:
         return HTTPResponse(body="An error has occurred", status=400)
