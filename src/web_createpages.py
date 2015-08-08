@@ -13,11 +13,17 @@ def create_loungetv():
            urlopen('web/loungetv.html').read().encode('utf-8').format(_lgtv(), _tivo())+\
            urlopen('web/footer.html').read().encode('utf-8')
 
-def create_tvguide(listings):
-    return urlopen('web/header.html').read().encode('utf-8')+\
-           urlopen('web/alert.html').read().encode('utf-8')+\
-           urlopen('web/tvguide.html').read().encode('utf-8').format(_listings(listings))+\
-           urlopen('web/footer.html').read().encode('utf-8')
+def create_tvguide(listings, BOOLlistings):
+    if BOOLlistings:
+        return urlopen('web/header.html').read().encode('utf-8')+\
+               urlopen('web/alert.html').read().encode('utf-8')+\
+               urlopen('web/tvguide.html').read().encode('utf-8').format(_listings(listings))+\
+               urlopen('web/footer.html').read().encode('utf-8')
+    else:
+        return urlopen('web/header.html').read().encode('utf-8')+\
+               urlopen('web/alert.html').read().encode('utf-8')+\
+               urlopen('web/tvguide-nodata.html').read().encode('utf-8')+\
+               urlopen('web/footer.html').read().encode('utf-8')
 
 def _lgtv():
     return urlopen('web/loungetv-lgtv.html').read().encode('utf-8')
