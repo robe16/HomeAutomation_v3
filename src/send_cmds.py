@@ -21,8 +21,8 @@ def sendSOCKET(ipaddress, port, data):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((ipaddress, port))
-        sock.send(bytes(data, 'UTF-8'))
+        sock.send(bytes(data))
         sock.close()
         return True
-    except:
+    except Exception as e:
         return False
