@@ -44,7 +44,7 @@ def web(page=""):
     elif page=="loungetv":
         return HTTPResponse(body=create_loungetv(), status=200)
     elif page=="tvguide":
-        return HTTPResponse(body=create_tvguide(), status=200)
+        return HTTPResponse(body=create_tvguide(q.get()[0]), status=200)
     else:
         return HTTPResponse(body="An error has occurred", status=400)
 
@@ -67,11 +67,14 @@ def send_command(room="-", device="-", command="-"):
             return HTTPResponse(status=400)
         x = dataholder.OBJloungetv.getAppicon(auid, name)
         return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
+    # TV Command
     elif room=="lounge" and device=="lgtv":
         return HTTPResponse(status=200) if dataholder.OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
+    # TiVo Command
     elif room=="lounge" and device=="tivo":
         return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
-    return HTTPResponse(status=400)
+    else:
+        return HTTPResponse(status=400)
 
 @route('/tvlistings')
 def get_tvlistings():
