@@ -1,4 +1,5 @@
 function sendCommand(cmd) {
+    try {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open("GET", cmd, false);
         xmlHttp.send(null);
@@ -13,3 +14,10 @@ function sendCommand(cmd) {
         v.style.visibility="visible";
         setTimeout(function(){v.style.visibility="hidden"}, 2000);
     }
+    catch(err) {
+        v.innerHTML = "<strong>Error!!</strong> The command has not been successful being sent to the device";
+        v.setAttribute('class', 'alert alert-danger');
+        v.style.visibility="visible";
+        setTimeout(function(){v.style.visibility="hidden"}, 2000);
+    }
+}
