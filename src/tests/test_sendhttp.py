@@ -1,4 +1,4 @@
-from src.cmd_http import sendHTTP
+from src.send_cmds import sendHTTP
 
 
 def testHTTP(ipaddress, connection, expected, data=""):

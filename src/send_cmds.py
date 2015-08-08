@@ -1,8 +1,7 @@
 import urllib2
-
+import socket
 
 def sendHTTP(ipaddress, connection, data=False):
-    # Send data via http to IP address over network conection
     if not ipaddress.startswith("http"):
         ipaddress = "http://" + ipaddress
     if data:
@@ -15,5 +14,15 @@ def sendHTTP(ipaddress, connection, data=False):
     try:
         x = urllib2.urlopen(req, timeout=5)
         return False if not str(x.getcode()).startswith("2") else x
+    except:
+        return False
+
+def sendSOCKET(ipaddress, port, data):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((ipaddress, port))
+        sock.send(bytes(data, 'UTF-8'))
+        sock.close()
+        return True
     except:
         return False
