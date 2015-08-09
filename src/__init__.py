@@ -10,7 +10,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 from multiprocessing import Process, Queue
 
 def start_bottle():
-    run(host='localhost', port=8094, debug=True)
+    run(host='localhost', port=8080, debug=True)
 
 def server_start():
     tvlistings_startprocess()
