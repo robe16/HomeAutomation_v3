@@ -24,8 +24,11 @@ class object_TIVO:
 
 
     def sendCmd(self, STRcommand):
-        comms = LSTremote_tivo
-        for x in range(len(comms)):
-            if comms[x][0]==STRcommand:
-                return sendSOCKET(self._STRipaddress, self._INTport, comms[x][1])
-        return False
+        if STRcommand.startswith("FORCECH"):
+            return sendSOCKET(self._STRipaddress, self._INTport, STRcommand)
+        else:
+            comms = LSTremote_tivo
+            for x in range(len(comms)):
+                if comms[x][0]==STRcommand:
+                    return sendSOCKET(self._STRipaddress, self._INTport, comms[x][1])
+            return False

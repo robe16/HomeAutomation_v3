@@ -10,7 +10,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 from multiprocessing import Process, Queue
 
 def start_bottle():
-    run(host='localhost', port=8080, debug=True)
+    run(host='localhost', port=8094, debug=True)
 
 def server_start():
     tvlistings_startprocess()
@@ -71,7 +71,15 @@ def send_command(room="-", device="-", command="-"):
         return HTTPResponse(status=200) if dataholder.OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
     # TiVo Command
     elif room=="lounge" and device=="tivo":
-        return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
+        if command=="channel":
+            channo = request.query.id or False
+            print request.query.id
+            if channo:
+                return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(("FORCECH {}\r").format(channo)) else HTTPResponse(status=400)
+            else:
+                HTTPResponse(status=400)
+        else:
+            return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
     else:
         return HTTPResponse(status=400)
 
