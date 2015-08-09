@@ -9,10 +9,8 @@ from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
 from multiprocessing import Process, Queue
 
-BOOLlistings=False
-
 def start_bottle():
-    run(host='192.168.0.6', port=8080, debug=True)
+    run(host='localhost', port=8080, debug=True)
 
 def server_start():
     tvlistings_startprocess()
@@ -33,7 +31,6 @@ def tvlistings_process(q):
 
 def tvlistings(q):
     q.put(getall_listings())
-    BOOLlistings=True
 
 @route('/')
 def web_redirect():
@@ -44,9 +41,9 @@ def web(page=""):
     if page=="home":
         return HTTPResponse(body=create_home(), status=200)
     elif page=="loungetv":
-        return HTTPResponse(body=create_loungetv(), status=200)
+        return HTTPResponse(body=create_loungetv(q.get()[0]), status=200)
     elif page=="tvguide":
-        return HTTPResponse(body=create_tvguide(q.get()[0], BOOLlistings), status=200)
+        return HTTPResponse(body=create_tvguide(q.get()[0]), status=200)
     else:
         return HTTPResponse(body="An error has occurred", status=400)
 
@@ -80,7 +77,7 @@ def send_command(room="-", device="-", command="-"):
 
 @route('/tvlistings')
 def get_tvlistings():
-    if not BOOLlistings:
+    if not q.get()[0]:
         return HTTPResponse(status=400)
     channel = request.query.id or False
     x = get_xmllistings(q.get()[0]) if bool(channel) else getall_xmllistings(q.get()[0])
