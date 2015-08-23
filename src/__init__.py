@@ -10,7 +10,8 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 from multiprocessing import Process, Queue
 
 def start_bottle():
-    run(host='localhost', port=8080, debug=True)
+    run(host='0.0.0.0', port=1616, debug=True) # '0.0.0.0' will listen on all interfaces including the external one
+    #run(host='localhost', port=8080, debug=True)
 
 def server_start():
     tvlistings_startprocess()
@@ -23,14 +24,11 @@ def server_end():
 def tvlistings_startprocess():
     p1.start()
 
-def tvlistings_process(q):
+def tvlistings_process(LSTlistings):
     # 604800 secs = 7 days
     while True:
-        tvlistings(q)
+        LSTlistings.put(getall_listings())
         time.sleep(604800)
-
-def tvlistings(q):
-    q.put(getall_listings())
 
 @route('/')
 def web_redirect():
@@ -38,12 +36,18 @@ def web_redirect():
 
 @route('/web/<page>')
 def web(page=""):
+    if not LSTlistings.empty():
+        temp = LSTlistings.get()
+        LSTlistings.put(temp)
+        listings=temp[0]
+    else:
+        listings = False
     if page=="home":
         return HTTPResponse(body=create_home(), status=200)
     elif page=="loungetv":
-        return HTTPResponse(body=create_loungetv(q.get()[0]), status=200)
+        return HTTPResponse(body=create_loungetv(listings), status=200)
     elif page=="tvguide":
-        return HTTPResponse(body=create_tvguide(q.get()[0]), status=200)
+        return HTTPResponse(body=create_tvguide(listings), status=200)
     else:
         return HTTPResponse(body="An error has occurred", status=400)
 
@@ -85,11 +89,17 @@ def send_command(room="-", device="-", command="-"):
 
 @route('/tvlistings')
 def get_tvlistings():
-    if not q.get()[0]:
+    if not LSTlistings.get()[0]:
         return HTTPResponse(status=400)
     channel = request.query.id or False
-    x = get_xmllistings(q.get()[0]) if bool(channel) else getall_xmllistings(q.get()[0])
+    x = get_xmllistings(LSTlistings.get()[0]) if bool(channel) else getall_xmllistings(LSTlistings.get()[0])
     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
+
+@route('/favicon.ico')
+def send_favicon():
+    return HTTPResponse(status=400)
+    #root = os.path.join(os.path.dirname(__file__), '..', 'img/favicon.ico')
+    #return static_file(filename, root=root)
 
 @route('/img/<category>/<filename:re:.*\.png>')
 def get_image(category, filename):
@@ -102,9 +112,9 @@ read_config()
 # Create objects
 dataholder.OBJloungetv = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
 dataholder.OBJloungetivo = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
-# GCreate processes for TV Listing code and code to start bottle server
-q = Queue()
-p1 = Process(target=tvlistings_process, args=(q,))
+# Create processes for TV Listing code and code to start bottle server
+LSTlistings = Queue()
+p1 = Process(target=tvlistings_process, args=(LSTlistings, ))
 p2 = Process(target=start_bottle, args=())
 # Start server
 server_start()
