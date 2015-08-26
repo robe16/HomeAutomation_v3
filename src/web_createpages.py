@@ -31,6 +31,16 @@ def create_tvguide(listings):
                urlopen('web/tvguide.html').read().encode('utf-8').format(urlopen('web/tvguide-nodata.html').read().encode('utf-8'))+\
                urlopen('web/footer.html').read().encode('utf-8')
 
+def create_settings():
+    return urlopen('web/header.html').read().encode('utf-8')+\
+           urlopen('web/settings.html').read().encode('utf-8')+\
+           urlopen('web/footer.html').read().encode('utf-8')
+
+def create_about():
+    return urlopen('web/header.html').read().encode('utf-8')+\
+           urlopen('web/about.html').read().encode('utf-8')+\
+           urlopen('web/footer.html').read().encode('utf-8')
+
 def _lgtv():
     return urlopen('web/loungetv-lgtv.html').read().encode('utf-8')
 

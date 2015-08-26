@@ -3,7 +3,7 @@ from config import read_config
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_createpages import create_home, create_loungetv, create_tvguide
+from web_createpages import create_home, create_loungetv, create_tvguide, create_settings, create_about
 import os, time
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
@@ -48,6 +48,10 @@ def web(page=""):
         return HTTPResponse(body=create_loungetv(listings), status=200)
     elif page=="tvguide":
         return HTTPResponse(body=create_tvguide(listings), status=200)
+    elif page=="settings":
+        return HTTPResponse(body=create_settings(), status=200)
+    elif page=="about":
+        return HTTPResponse(body=create_about(), status=200)
     else:
         return HTTPResponse(body="An error has occurred", status=400)
 
