@@ -31,9 +31,12 @@ def create_tvguide(listings):
                urlopen('web/tvguide.html').read().encode('utf-8').format(urlopen('web/tvguide-nodata.html').read().encode('utf-8'))+\
                urlopen('web/footer.html').read().encode('utf-8')
 
-def create_settings():
+def create_settings(clientID, STRnest_pincode, random):
+    nesturl = ("https://home.nest.com/login/oauth2?client_id=" + clientID + "&state=" + "26GA-" + random)
+    pincode = ("value=\""+STRnest_pincode+"\"") if bool(STRnest_pincode) else ""
     return urlopen('web/header.html').read().encode('utf-8')+\
-           urlopen('web/settings.html').read().encode('utf-8')+\
+           urlopen('web/alert.html').read().encode('utf-8')+\
+           urlopen('web/settings.html').read().encode('utf-8').format(nesturl, pincode)+\
            urlopen('web/footer.html').read().encode('utf-8')
 
 def create_about():

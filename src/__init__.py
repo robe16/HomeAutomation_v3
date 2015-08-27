@@ -1,5 +1,5 @@
 import dataholder
-from config import read_config
+from config import read_config, write_config
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
@@ -8,6 +8,8 @@ import os, time
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
 from multiprocessing import Process, Queue
+import string
+import random
 
 def start_bottle():
     run(host='0.0.0.0', port=1616, debug=True) # '0.0.0.0' will listen on all interfaces including the external one
@@ -49,7 +51,7 @@ def web(page=""):
     elif page=="tvguide":
         return HTTPResponse(body=create_tvguide(listings), status=200)
     elif page=="settings":
-        return HTTPResponse(body=create_settings(), status=200)
+        return HTTPResponse(body=create_settings(dataholder.STRnest_clientID, dataholder.STRnest_pincode, dataholder.randomstring), status=200)
     elif page=="about":
         return HTTPResponse(body=create_about(), status=200)
     else:
@@ -99,6 +101,18 @@ def get_tvlistings():
     x = get_xmllistings(LSTlistings.get()[0]) if bool(channel) else getall_xmllistings(LSTlistings.get()[0])
     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
 
+@route('/settings/<x>')
+def save_settings(x="-"):
+    if x=="nest":
+        pincode = request.query.pincode
+        if not bool(pincode):
+            return HTTPResponse(status=400)
+        dataholder.STRnest_pincode = pincode
+        write_config()
+        return HTTPResponse(status=200)
+    else:
+        return HTTPResponse(status=400)
+
 @route('/favicon.ico')
 def send_favicon():
     return HTTPResponse(status=400)
@@ -114,6 +128,7 @@ def get_image(category, filename):
 # Get configuration
 read_config()
 # Create objects
+dataholder.randomstring = (''.join(random.choice(string.ascii_lowercase) for i in range(5)))
 dataholder.OBJloungetv = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
 dataholder.OBJloungetivo = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
 # Create processes for TV Listing code and code to start bottle server

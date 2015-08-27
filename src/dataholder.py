@@ -15,5 +15,6 @@ STRnest_clientID = "170016da-432a-4ca0-aa37-426a2117d7a2"
 STRnest_clientSecret = "6NqNFOfF1BAHByR8T6dn0OLTI"
 #
 #
+randomstring = None
 OBJloungetv = None
 OBJloungetivo = None
