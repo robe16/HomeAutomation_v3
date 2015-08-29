@@ -115,9 +115,8 @@ def save_settings(x="-"):
 
 @route('/favicon.ico')
 def send_favicon():
-    return HTTPResponse(status=400)
-    #root = os.path.join(os.path.dirname(__file__), '..', 'img/favicon.ico')
-    #return static_file(filename, root=root)
+    root = os.path.join(os.path.dirname(__file__), '..', 'img/logo/favicon.ico')
+    return static_file('favicon.ico', root=root)
 
 @route('/img/<category>/<filename:re:.*\.png>')
 def get_image(category, filename):
