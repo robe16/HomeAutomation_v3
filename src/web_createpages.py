@@ -11,7 +11,7 @@ def create_loungetv(listings):
     if listings:
         return urlopen('web/header.html').read().encode('utf-8')+\
                urlopen('web/alert.html').read().encode('utf-8')+\
-               urlopen('web/loungetv.html').read().encode('utf-8').format(_lgtv(), _tivo(), urlopen('web/tvguide-data.html').read().encode('utf-8').format(_listings(listings)))+\
+               urlopen('web/loungetv.html').read().encode('utf-8').format(_lgtv(), _tivo(), urlopen('web/tvguide-data.html').read().encode('utf-8').format(_listings(listings, "lounge/tivo")))+\
                urlopen('web/footer.html').read().encode('utf-8')
     else:
         return urlopen('web/header.html').read().encode('utf-8')+\
@@ -22,23 +22,31 @@ def create_loungetv(listings):
 def create_tvguide(listings):
     if listings:
         return urlopen('web/header.html').read().encode('utf-8')+\
-               urlopen('web/alert.html').read().encode('utf-8')+\
-               urlopen('web/tvguide.html').read().encode('utf-8').format(urlopen('web/tvguide-data.html').read().encode('utf-8').format(_listings(listings)))+\
+               urlopen('web/tvguide.html').read().encode('utf-8').format(urlopen('web/tvguide-data.html').read().encode('utf-8').format(_listings(listings, False)))+\
                urlopen('web/footer.html').read().encode('utf-8')
     else:
         return urlopen('web/header.html').read().encode('utf-8')+\
-               urlopen('web/alert.html').read().encode('utf-8')+\
                urlopen('web/tvguide.html').read().encode('utf-8').format(urlopen('web/tvguide-nodata.html').read().encode('utf-8'))+\
                urlopen('web/footer.html').read().encode('utf-8')
 
-def create_settings(clientID, STRnest_pincode, random):
+def create_settings_rooms():
+    return urlopen('web/header.html').read().encode('utf-8')+\
+           urlopen('web/alert.html').read().encode('utf-8')+\
+           urlopen('web/settings_rooms.html').read().encode('utf-8')+\
+           urlopen('web/footer.html').read().encode('utf-8')
+
+def create_settings_devices():
+    return urlopen('web/header.html').read().encode('utf-8')+\
+           urlopen('web/alert.html').read().encode('utf-8')+\
+           urlopen('web/settings_devices.html').read().encode('utf-8')+\
+           urlopen('web/footer.html').read().encode('utf-8')
+
+def create_settings_nest(clientID, STRnest_pincode, random):
     nesturl = ("https://home.nest.com/login/oauth2?client_id=" + clientID + "&state=" + "26GA-" + random)
     pincode = ("value=\""+STRnest_pincode+"\"") if bool(STRnest_pincode) else ""
     return urlopen('web/header.html').read().encode('utf-8')+\
            urlopen('web/alert.html').read().encode('utf-8')+\
-           urlopen('web/settings.html').read().encode('utf-8').format(urlopen('web/settings_rooms.html').read().encode('utf-8'),
-                                                                      urlopen('web/settings_devices.html').read().encode('utf-8'),
-                                                                      urlopen('web/settings_nest.html').read().encode('utf-8').format(nesturl, pincode))+\
+           urlopen('web/settings_nest.html').read().encode('utf-8').format(nesturl, pincode)+\
            urlopen('web/footer.html').read().encode('utf-8')
 
 def create_about():
@@ -52,13 +60,13 @@ def _lgtv():
 def _tivo():
     return urlopen('web/loungetv-tivo.html').read().encode('utf-8')
 
-def _listings(listings):
+def _listings(listings, device):
     STRlistings = ""
     for x in range(len(listings)):
-        STRlistings+=(_listingsrow(x, listings[x]))
+        STRlistings+=(_listingsrow(x, listings[x], device))
     return STRlistings
 
-def _listingsrow(x, item):
+def _listingsrow(x, item, device):
     if item[5]:
         nownext = ARRsortlistings(item[5])
         now = ("{} {}").format(nownext[0][1], nownext[0][4])
@@ -70,12 +78,8 @@ def _listingsrow(x, item):
         color="#e8e8e8"
     else:
         color="#ffffff"
-    return urlopen('web/tvguide-row.html').read().encode('utf-8').format(color, item[2], item[0], now, next, item[3], item[4])
-
-def buttons_lgtv(room):
-        comms = LSTremote_lgtv
-        STRbuttons = "<div>"
-        for x in range(len(comms)):
-            STRbuttons+=(urlopen('web/button.html').read().encode('utf-8')).format(("/device/{}/lgtv/{}").format(room, comms[x][0]), "btn-default", comms[x][0])
-        STRbuttons+="</div>"
-        return STRbuttons
+    if device:
+        go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device, item[4])
+    else:
+        go = ""
+    return urlopen('web/tvguide-row.html').read().encode('utf-8').format(color, item[3], item[2], item[0], now, next, go)

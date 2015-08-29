@@ -1,12 +1,19 @@
-<br>
-<div class="row">
-    <div class="col-md-2 col-md-offset-2"><h5>Room</h5></div>
-    <div class="col-md-2"><input type="text" class="form-control" placeholder="Name"></div>
-</div>
-<div class="row">
-    <div class="col-md-1 col-md-offset-10">
-        <button class="btn" type="button" style="width:100%" onclick="sendNestPin()">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        </button>
+<script src="static/js/settings_rooms.js"></script>
+<script  type="text/javascript">
+    document.getElementById('settings').setAttribute('class', 'active');
+    document.getElementById('settings_rooms').setAttribute('class', 'active');
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2 col-md-offset-2"><h5>Room</h5></div>
+        <div class="col-md-2"><input type="text" class="form-control" placeholder="Name"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 col-md-offset-10">
+            <button class="btn" type="button" style="width:100%" onclick="sendNestPin()">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </button>
+        </div>
     </div>
 </div>
