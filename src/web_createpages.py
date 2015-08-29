@@ -36,7 +36,9 @@ def create_settings(clientID, STRnest_pincode, random):
     pincode = ("value=\""+STRnest_pincode+"\"") if bool(STRnest_pincode) else ""
     return urlopen('web/header.html').read().encode('utf-8')+\
            urlopen('web/alert.html').read().encode('utf-8')+\
-           urlopen('web/settings.html').read().encode('utf-8').format(nesturl, pincode)+\
+           urlopen('web/settings.html').read().encode('utf-8').format(urlopen('web/settings_rooms.html').read().encode('utf-8'),
+                                                                      urlopen('web/settings_devices.html').read().encode('utf-8'),
+                                                                      urlopen('web/settings_nest.html').read().encode('utf-8').format(nesturl, pincode))+\
            urlopen('web/footer.html').read().encode('utf-8')
 
 def create_about():
