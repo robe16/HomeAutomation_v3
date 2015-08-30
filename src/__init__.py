@@ -12,8 +12,7 @@ import string
 import random
 
 def start_bottle():
-    run(host='0.0.0.0', port=1616, debug=True) # '0.0.0.0' will listen on all interfaces including the external one
-    #run(host='localhost', port=8080, debug=True)
+    run(host='0.0.0.0', port=1616, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
 
 def server_start():
     tvlistings_startprocess()
@@ -45,21 +44,35 @@ def web(page=""):
     else:
         listings = False
     if page=="home":
-        return HTTPResponse(body=create_home(), status=200)
+        return HTTPResponse(body=create_home(ARRobjects), status=200)
     elif page=="loungetv":
-        return HTTPResponse(body=create_device_group(listings, [dataholder.OBJloungetv, dataholder.OBJloungetivo]), status=200)
+        return HTTPResponse(body=create_device_group(listings, [OBJloungetv, OBJloungetivo]), status=200)
     elif page=="tvguide":
-        return HTTPResponse(body=create_tvguide(listings), status=200)
+        return HTTPResponse(body=create_tvguide(listings, ARRobjects), status=200)
     elif page=="settings_rooms":
-        return HTTPResponse(body=create_settings_rooms(), status=200)
+        return HTTPResponse(body=create_settings_rooms(ARRobjects), status=200)
     elif page=="settings_devices":
-        return HTTPResponse(body=create_settings_devices(), status=200)
+        return HTTPResponse(body=create_settings_devices(ARRobjects), status=200)
     elif page=="settings_nest":
-        return HTTPResponse(body=create_settings_nest(dataholder.STRnest_clientID, dataholder.STRnest_pincode, dataholder.randomstring), status=200)
+        return HTTPResponse(body=create_settings_nest(ARRobjects, dataholder.STRnest_clientID, dataholder.STRnest_pincode, randomstring), status=200)
     elif page=="about":
-        return HTTPResponse(body=create_about(), status=200)
+        return HTTPResponse(body=create_about(ARRobjects), status=200)
     else:
         return HTTPResponse(body="An error has occurred", status=400)
+
+@route('/web/<room>/<group>')
+def web(room="", group=""):
+    if not LSTlistings.empty():
+        temp = LSTlistings.get()
+        LSTlistings.put(temp)
+        listings=temp[0]
+    else:
+        listings = False
+    return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
+    '''try:
+        return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
+    except:
+        return HTTPResponse(body="An error has occurred", status=400)'''
 
 @route('/web/static/<folder>/<filename>')
 def get_image(folder, filename):
@@ -71,28 +84,28 @@ def send_command(room="-", device="-", command="-"):
         APPtype = request.query.type or 3
         APPindex = request.query.index or 0
         APPnumber = request.query.number or 0
-        x = dataholder.OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
+        x = OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
         return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
     elif room=="lounge" and device=="lgtv" and command=="appicon":
         auid = request.query.auid or False
         name = request.query.name or False
         if not bool(auid) or not bool(name):
             return HTTPResponse(status=400)
-        x = dataholder.OBJloungetv.getAppicon(auid, name)
+        x = OBJloungetv.getAppicon(auid, name)
         return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
     # TV Command
     elif room=="lounge" and device=="lgtv":
-        return HTTPResponse(status=200) if dataholder.OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
+        return HTTPResponse(status=200) if OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
     # TiVo Command
     elif room=="lounge" and device=="tivo":
         if command=="channel":
             channo = request.query.id or False
             if channo:
-                return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(("FORCECH {}\r").format(channo)) else HTTPResponse(status=400)
+                return HTTPResponse(status=200) if OBJloungetivo.sendCmd(("FORCECH {}\r").format(channo)) else HTTPResponse(status=400)
             else:
                 HTTPResponse(status=400)
         else:
-            return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
+            return HTTPResponse(status=200) if OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
     else:
         return HTTPResponse(status=400)
 
@@ -126,16 +139,35 @@ def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/%s' % category)
     return static_file(filename, root=root, mimetype='image/png')
 
-
 # Get configuration
 read_config()
 # Create objects
-dataholder.randomstring = (''.join(random.choice(string.ascii_lowercase) for i in range(5)))
-dataholder.OBJloungetv = create_objects.create_lgtv("LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge')
-dataholder.OBJloungetivo = create_objects.create_tivo("Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')
+randomstring = (''.join(random.choice(string.ascii_lowercase) for i in range(5)))
+ARRobjects = [['Lounge', [['TV', [create_objects.create_lgtv("LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge'),
+                                create_objects.create_tivo("Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')]
+                           ]]
+              ]]
+#
+OBJloungetv = create_objects.create_lgtv("LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge')
+OBJloungetivo = create_objects.create_tivo("Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')
 # Create processes for TV Listing code and code to start bottle server
 LSTlistings = Queue()
 p1 = Process(target=tvlistings_process, args=(LSTlistings, ))
 p2 = Process(target=start_bottle, args=())
 # Start server
 server_start()
+
+# Code template for iterating through object array
+def foobar(ARRobjects):
+    x=0
+    while x<len(ARRobjects):
+        room=ARRobjects[x][0]
+        y=0
+        while y<len(ARRobjects[x][1]):
+            group=ARRobjects[x][1][y][0]
+            z=0
+            while y<len(ARRobjects[x][1][y][1]):
+                device=ARRobjects[x][1][y][1][z]
+                z+=1
+            y+=1
+        x+=1
