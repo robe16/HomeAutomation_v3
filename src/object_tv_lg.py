@@ -9,12 +9,19 @@ class object_LGTV:
     STRtv_PATHcommand = "/udap/api/command"
     STRtv_PATHevent = "/udap/api/event"
 
-    def __init__ (self, STRipaddress, INTport, STRpairingkey=None):
+    def __init__ (self, STRname, STRipaddress, INTport, STRpairingkey=None, BOOLtvguide_use=False, STRgroup=None):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRpairingkey = STRpairingkey
+        self._tvguide_use = BOOLtvguide_use
+        self._group = STRgroup
+        self._device = "lgtv"
+        self._chan_array_no = False
         if self._STRpairingkey!=None:
             self._pairDevice()
+        self._name = STRname
+        self._html = "object-lgtv.html"
+        self._img = "logo_lg.png"
 
     def getIP(self):
         return self._STRipaddress
@@ -28,6 +35,27 @@ class object_LGTV:
     def setPairingkey(self, STRpairingkey):
         self._STRpairingkey = STRpairingkey
         self._pairDevice()
+
+    def getChan_array_no(self):
+        return self._chan_array_no
+
+    def getTvguide_use(self):
+        return self._tvguide_use
+
+    def getGroup(self):
+        return self._group
+
+    def getDevice(self):
+        return self._device
+
+    def getName(self):
+        return self._name
+
+    def getHtml(self):
+        return self._html
+
+    def getLogo(self):
+        return self._img
 
     def isPaired(self):
         return self._BOOLpaired

@@ -4,11 +4,17 @@ from enum_remoteTIVO import LSTremote_tivo
 class object_TIVO:
     '''TiVo object'''
 
-    def __init__ (self, STRipaddress, INTport, STRaccesskey=""):
+    def __init__ (self, STRname, STRipaddress, INTport, STRaccesskey="", BOOLtvguide_use=False, STRgroup=None):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRaccesskey = STRaccesskey
+        self._tvguide_use = BOOLtvguide_use
+        self._group = STRgroup
+        self._device = "tivo"
         self._chan_array_no = 0
+        self._name = STRname
+        self._html = "object-tivo.html"
+        self._img = "logo_virgin.png"
 
 
     def getIP(self):
@@ -25,6 +31,24 @@ class object_TIVO:
 
     def getChan_array_no(self):
         return self._chan_array_no
+
+    def getTvguide_use(self):
+        return self._tvguide_use
+
+    def getGroup(self):
+        return self._group
+
+    def getDevice(self):
+        return self._device
+
+    def getName(self):
+        return self._name
+
+    def getHtml(self):
+        return self._html
+
+    def getLogo(self):
+        return self._img
 
 
     def sendCmd(self, STRcommand):

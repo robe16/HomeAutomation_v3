@@ -44,7 +44,7 @@ def XMLsortlistings(result):
     ARRresultlines = filter(None, result.split('\n'))
 
     count=2
-    while count<max(ARRresultlines):
+    while count<len(ARRresultlines):
         resultbreakdown = ARRresultlines[count].split('~')
         # String date will be in format "dd/MM/yyyy HH:mm"
         DATETIMEstart = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[20], '%d/%m/%Y %H:%M')

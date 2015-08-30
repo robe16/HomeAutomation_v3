@@ -47,7 +47,7 @@ def web(page=""):
     if page=="home":
         return HTTPResponse(body=create_home(), status=200)
     elif page=="loungetv":
-        return HTTPResponse(body=create_device_group(listings), status=200)
+        return HTTPResponse(body=create_device_group(listings, [dataholder.OBJloungetv, dataholder.OBJloungetivo]), status=200)
     elif page=="tvguide":
         return HTTPResponse(body=create_tvguide(listings), status=200)
     elif page=="settings_rooms":
@@ -131,8 +131,8 @@ def get_image(category, filename):
 read_config()
 # Create objects
 dataholder.randomstring = (''.join(random.choice(string.ascii_lowercase) for i in range(5)))
-dataholder.OBJloungetv = create_objects.create_lgtv(dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey)
-dataholder.OBJloungetivo = create_objects.create_tivo(dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak)
+dataholder.OBJloungetv = create_objects.create_lgtv("LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge')
+dataholder.OBJloungetivo = create_objects.create_tivo("Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')
 # Create processes for TV Listing code and code to start bottle server
 LSTlistings = Queue()
 p1 = Process(target=tvlistings_process, args=(LSTlistings, ))
