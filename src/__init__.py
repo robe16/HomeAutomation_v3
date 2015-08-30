@@ -3,7 +3,7 @@ from config import read_config, write_config
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_createpages import create_home, create_loungetv, create_tvguide, create_settings_rooms, create_settings_devices, create_settings_nest, create_about
+from web_createpages import create_home, create_device_group, create_tvguide, create_settings_rooms, create_settings_devices, create_settings_nest, create_about
 import os, time
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
@@ -47,7 +47,7 @@ def web(page=""):
     if page=="home":
         return HTTPResponse(body=create_home(), status=200)
     elif page=="loungetv":
-        return HTTPResponse(body=create_loungetv(listings), status=200)
+        return HTTPResponse(body=create_device_group(listings), status=200)
     elif page=="tvguide":
         return HTTPResponse(body=create_tvguide(listings), status=200)
     elif page=="settings_rooms":
@@ -87,7 +87,6 @@ def send_command(room="-", device="-", command="-"):
     elif room=="lounge" and device=="tivo":
         if command=="channel":
             channo = request.query.id or False
-            print request.query.id
             if channo:
                 return HTTPResponse(status=200) if dataholder.OBJloungetivo.sendCmd(("FORCECH {}\r").format(channo)) else HTTPResponse(status=400)
             else:

@@ -8,6 +8,7 @@ class object_TIVO:
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRaccesskey = STRaccesskey
+        self._chan_array_no = 0
 
 
     def getIP(self):
@@ -21,6 +22,9 @@ class object_TIVO:
 
     def setPairingkey(self, STRaccesskey):
         self._STRaccesskey = STRaccesskey
+
+    def getChan_array_no(self):
+        return self._chan_array_no
 
 
     def sendCmd(self, STRcommand):
