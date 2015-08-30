@@ -89,8 +89,8 @@ def ARRsortlistings(result):
         if DATETIMEstart<=datetime.now() and DATETIMEend>=datetime.now():
             #
             ARRlisting = [[DATETIMEstart.strftime('%d/%m/%Y'),
-                           DATETIMEend.strftime('%H:%M'),
-                           DATETIMEstart.strftime('%d/%m/%Y'),
+                           DATETIMEstart.strftime('%H:%M'),
+                           DATETIMEend.strftime('%d/%m/%Y'),
                            DATETIMEend.strftime('%H:%M'),
                            resultbreakdown[0],
                            resultbreakdown[17]]]
