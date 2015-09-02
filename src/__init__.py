@@ -1,5 +1,5 @@
 import dataholder
-from config import read_config, write_config, config
+from config import read_config, write_config, config_json
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
@@ -33,7 +33,7 @@ def tvlistings_process(LSTlistings):
 
 @route('/test/config')
 def get_config():
-    return HTTPResponse(body=config(ARRobjects), status=200)
+    return HTTPResponse(body=config_json(ARRobjects), status=200)
 
 @route('/')
 def web_redirect():

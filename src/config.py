@@ -1,6 +1,7 @@
 from ConfigParser import ConfigParser
 import dataholder
 import os
+import json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 
@@ -41,50 +42,46 @@ def write_config():
     cfg.write(cfgfile)
     cfgfile.close()
 
+def config_json(ARRobjects):
+    data = ({'devices': config_json_room(ARRobjects), 'nest': config_json_nest()})
+    with open('config.json', 'w') as outfile:
+        outfile.write(json.dumps(data, outfile, indent=4, separators=(',', ': ')))
+    return data
 
-def config(ARRobjects):
-    return "{\"devices\":\r"+config_room(ARRobjects)+", \r\"nest\":\r"+config_nest()+"}"
-
-def config_room(ARRobjects):
+def config_json_room(ARRobjects):
+    DICTrooms={}
     x=0
     while x<len(ARRobjects):
-        STRconfig="," if x>0 else "["
-        STRconfig+="{\""+ARRobjects[x][0]+"\":"
+        DICTgroups={}
         y=0
         while y<len(ARRobjects[x][1]):
-            STRconfig+="," if y>0 else "["
-            STRconfig+="{\""+ARRobjects[x][1][y][0]+"\":"
+            DICTdevices={}
             z=0
             while z<len(ARRobjects[x][1][y][1]):
-                STRconfig+="," if z>0 else "["
                 #
                 object=ARRobjects[x][1][y][1][z]
                 #
                 if isinstance(object, object_LGTV):
-                    STRconfig+="{\"type\":\"lgtv\","
-                    STRconfig+="\"ipaddress\":\"%s\"," % object.getIP()
-                    STRconfig+="\"pairingkey\":\"%s\"," % object.getPairingkey()
-                    STRconfig+="\"usetvguide\":\"%s\"}" % object.getTvguide_use()
+                    DICTdevices[object.getName()] = {'type':'lgtv',
+                                                     'ipaddress':object.getIP(),
+                                                     'pairingkey':object.getPairingkey(),
+                                                     'usetvguide':object.getTvguide_use()}
                 elif isinstance(object, object_TIVO):
-                    STRconfig+="{\"type\":\"tivo\","
-                    STRconfig+="\"ipaddress\":\"%s\"," % object.getIP()
-                    STRconfig+="\"mak\":\"%s\"," % object.getAccesskey()
-                    STRconfig+="\"usetvguide\":\"%s\"}" % object.getTvguide_use()
-                else:
-                    STRconfig+="{\"value\": \"0\"}"
+                    DICTdevices[object.getName()] = {'type':'tivo',
+                                                          'ipaddress':object.getIP(),
+                                                          'mak':object.getAccesskey(),
+                                                          'usetvguide':object.getTvguide_use()}
                 #
                 z+=1
-            STRconfig+="]}"
+            print DICTdevices
+            DICTgroups[ARRobjects[x][1][y][0]] = DICTdevices
             y+=1
-        STRconfig+="]}"
+        DICTrooms[ARRobjects[x][0]] = DICTgroups
         x+=1
-    STRconfig+="]}"
-    return STRconfig
+    return DICTrooms
 
-def config_nest():
-    return "{\"pincode\":\"%s\", \"token\": \"%s\", \"tokenexpiry\": \"%s\"}" % (dataholder.STRnest_pincode,
-                                                                                                      dataholder.STRnest_token,
-                                                                                                      dataholder.STRnest_tokenexp)
+def config_json_nest():
+    return {'pincode': dataholder.STRnest_pincode, 'token': dataholder.STRnest_token, 'tokenexpiry': dataholder.STRnest_tokenexp}
 
 '''
 ******** Example JSON ********
