@@ -23,10 +23,10 @@ class object_TIVO:
     def getPort(self):
         return self._INTport
 
-    def getPairingkey(self):
+    def getAccesskey(self):
         return self._STRaccesskey
 
-    def setPairingkey(self, STRaccesskey):
+    def setAccesskey(self, STRaccesskey):
         self._STRaccesskey = STRaccesskey
 
     def getChan_array_no(self):

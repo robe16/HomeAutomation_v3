@@ -1,5 +1,5 @@
 import dataholder
-from config import read_config, write_config
+from config import read_config, write_config, config
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
@@ -30,6 +30,10 @@ def tvlistings_process(LSTlistings):
     while True:
         LSTlistings.put(getall_listings())
         time.sleep(604800)
+
+@route('/test/config')
+def get_config():
+    return HTTPResponse(body=config(ARRobjects), status=200)
 
 @route('/')
 def web_redirect():
@@ -68,11 +72,10 @@ def web(room="", group=""):
         listings=temp[0]
     else:
         listings = False
-    return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
-    '''try:
+    try:
         return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
     except:
-        return HTTPResponse(body="An error has occurred", status=400)'''
+        return HTTPResponse(body="An error has occurred", status=400)
 
 @route('/web/static/<folder>/<filename>')
 def get_image(folder, filename):
@@ -143,13 +146,13 @@ def get_image(category, filename):
 read_config()
 # Create objects
 randomstring = (''.join(random.choice(string.ascii_lowercase) for i in range(5)))
-ARRobjects = [['Lounge', [['TV', [create_objects.create_lgtv("LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge'),
-                                create_objects.create_tivo("Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')]
+ARRobjects = [['Lounge', [['TV', [create_objects.create_lgtv("lgtv", "LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge'),
+                                create_objects.create_tivo("tivo", "Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')]
                            ]]
               ]]
 #
-OBJloungetv = create_objects.create_lgtv("LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge')
-OBJloungetivo = create_objects.create_tivo("Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')
+OBJloungetv = create_objects.create_lgtv("lgtv", "LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge')
+OBJloungetivo = create_objects.create_tivo("tivo", "Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')
 # Create processes for TV Listing code and code to start bottle server
 LSTlistings = Queue()
 p1 = Process(target=tvlistings_process, args=(LSTlistings, ))
@@ -166,8 +169,8 @@ def foobar(ARRobjects):
         while y<len(ARRobjects[x][1]):
             group=ARRobjects[x][1][y][0]
             z=0
-            while y<len(ARRobjects[x][1][y][1]):
-                device=ARRobjects[x][1][y][1][z]
+            while z<len(ARRobjects[x][1][y][1]):
+                deviceobject=ARRobjects[x][1][y][1][z]
                 z+=1
             y+=1
         x+=1
