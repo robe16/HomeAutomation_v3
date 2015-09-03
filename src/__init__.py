@@ -1,5 +1,5 @@
 import dataholder
-from config import read_config, write_config, config_json
+from config import read_config, write_config_json
 import create_objects
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
@@ -33,7 +33,7 @@ def tvlistings_process(LSTlistings):
 
 @route('/test/config')
 def get_config():
-    return HTTPResponse(body=config_json(ARRobjects), status=200)
+    return HTTPResponse(body=write_config_json(ARRobjects), status=200)
 
 @route('/')
 def web_redirect():
@@ -49,8 +49,6 @@ def web(page=""):
         listings = False
     if page=="home":
         return HTTPResponse(body=create_home(ARRobjects), status=200)
-    elif page=="loungetv":
-        return HTTPResponse(body=create_device_group(listings, [OBJloungetv, OBJloungetivo]), status=200)
     elif page=="tvguide":
         return HTTPResponse(body=create_tvguide(listings, ARRobjects), status=200)
     elif page=="settings_rooms":
@@ -127,7 +125,7 @@ def save_settings(x="-"):
         if not bool(pincode):
             return HTTPResponse(status=400)
         dataholder.STRnest_pincode = pincode
-        write_config()
+        write_config_json(ARRobjects)
         return HTTPResponse(status=200)
     else:
         return HTTPResponse(status=400)
@@ -151,6 +149,7 @@ ARRobjects = [['Lounge', [['TV', [create_objects.create_lgtv("lgtv", "LG TV", da
                            ]]
               ]]
 #
+# To remove these two objects once the device-command api has been written against ARRobjects
 OBJloungetv = create_objects.create_lgtv("lgtv", "LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge')
 OBJloungetivo = create_objects.create_tivo("tivo", "Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')
 # Create processes for TV Listing code and code to start bottle server
