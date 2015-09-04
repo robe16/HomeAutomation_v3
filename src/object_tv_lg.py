@@ -9,12 +9,11 @@ class object_LGTV:
     STRtv_PATHcommand = "/udap/api/command"
     STRtv_PATHevent = "/udap/api/event"
 
-    def __init__ (self, STRname, STRipaddress, INTport, STRpairingkey=None, BOOLtvguide_use=False, STRgroup=None):
+    def __init__ (self, STRname, STRipaddress, INTport, STRpairingkey=None, BOOLtvguide_use=False):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRpairingkey = STRpairingkey
         self._tvguide_use = BOOLtvguide_use
-        self._group = STRgroup
         self._device = "lgtv"
         self._chan_array_no = False
         if self._STRpairingkey!=None:
@@ -41,9 +40,6 @@ class object_LGTV:
 
     def getTvguide_use(self):
         return self._tvguide_use
-
-    def getGroup(self):
-        return self._group
 
     def getDevice(self):
         return self._device

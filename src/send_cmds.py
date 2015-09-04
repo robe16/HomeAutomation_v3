@@ -1,5 +1,6 @@
 import urllib2
 import socket
+import telnetlib
 
 def sendHTTP(ipaddress, connection, data=False):
     if not ipaddress.startswith("http"):
@@ -17,6 +18,7 @@ def sendHTTP(ipaddress, connection, data=False):
     except:
         return False
 
+#stopped working for unknown reason - sendTELNET added for use instead by tivo
 def sendSOCKET(ipaddress, port, data):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,5 +26,14 @@ def sendSOCKET(ipaddress, port, data):
         sock.send(bytes(data))
         sock.close()
         return True
-    except Exception as e:
+    except:
+        return False
+
+def sendTELNET(ipaddress, port, data):
+    try:
+        tn = telnetlib.Telnet(ipaddress, port)
+        tn.write(data+"\n")
+        tn.close()
+        return True
+    except:
         return False

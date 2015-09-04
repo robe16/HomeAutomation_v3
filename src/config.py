@@ -1,32 +1,59 @@
-from ConfigParser import ConfigParser
 import dataholder
-import os
 import json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 
 
-def read_config():
-    cfg = ConfigParser()
-    if not cfg.read(os.path.join(os.path.dirname(__file__), "config.ini")):
-        print 'Error: cannot load config.ini'
-        return
+def read_config_json():
+    with open('config.json', 'r') as data_file:
+        data = json.load(data_file)
+    data_allrooms = data["rooms"]
     #
-    dataholder.STRloungetv_lgtv_ipaddress = cfg.get('Lounge', 'LGTV_ipaddress')
-    dataholder.STRloungetv_lgtv_pairkey = cfg.get('Lounge', 'LGTV_pairkey')
-    dataholder.STRloungetv_tivo_ipaddress = cfg.get('Lounge', 'TIVO_ipaddress')
-    dataholder.STRloungetv_tivo_mak = cfg.get('Lounge', 'TIVO_mak')
-    dataholder.STRrocki_ipaddress = cfg.get('Kitchen', 'Rocki_ipaddress')
-    dataholder.STRnest_pincode = cfg.get('Nest', 'Pincode')
-    dataholder.STRnest_token = cfg.get('Nest', 'Token')
-    dataholder.STRnest_tokenexp = cfg.get('Nest', 'Token_expiry')
+    x=0
+    ARRobjects = []
+    while x<len(data_allrooms):
+        y=0
+        groups=[]
+        data_room=data_allrooms[x]
+        while y<len(data_room["groups"]):
+            z=0
+            devices=[]
+            data_group=data_room["groups"][y]
+            while z<len(data_group["devices"]):
+                #
+                data_device=data_group["devices"][z]
+                if data_device["type"]=="lgtv":
+                    devices.append(object_LGTV(data_device["name"].encode('ascii'),
+                                               data_device["ipaddress"].encode('ascii'),
+                                               8080,
+                                               STRpairingkey=data_device["pairingkey"].encode('ascii'),
+                                               BOOLtvguide_use=data_device["usetvguide"]))
+                elif data_device["type"]=="tivo":
+                    devices.append(object_TIVO(data_device["name"].encode('ascii'),
+                                               data_device["ipaddress"].encode('ascii'),
+                                               31339,
+                                               STRaccesskey=data_device["mak"].encode('ascii'),
+                                               BOOLtvguide_use=data_device["usetvguide"]))
+                #
+                z+=1
+            groups.append([data_group["name"].encode('ascii'), devices])
+            y+=1
+        ARRobjects.append([data_room["name"].encode('ascii'), groups])
+        x+=1
+    data_nest = data["nest"]
+    return ARRobjects
 
 
 def write_config_json(ARRobjects):
-    data = ({'rooms': config_json_room(ARRobjects), 'nest': config_json_nest()})
-    with open('config.json', 'w') as outfile:
-        outfile.write(json.dumps(data, outfile, indent=4, separators=(',', ': ')))
-    return data
+    try:
+        with open('config.json', 'w') as outfile:
+            outfile.write(json.dumps(create_config_json(ARRobjects), outfile, indent=4, separators=(',', ': ')))
+        return True
+    except:
+        return False
+
+def create_config_json(ARRobjects):
+    return ({'rooms': config_json_room(ARRobjects), 'nest': config_json_nest()})
 
 def config_json_room(ARRobjects):
     DICTrooms=[]

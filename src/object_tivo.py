@@ -1,15 +1,14 @@
-from send_cmds import sendSOCKET
+from send_cmds import sendSOCKET, sendTELNET
 from enum_remoteTIVO import LSTremote_tivo
 
 class object_TIVO:
     '''TiVo object'''
 
-    def __init__ (self, STRname, STRipaddress, INTport, STRaccesskey="", BOOLtvguide_use=False, STRgroup=None):
+    def __init__ (self, STRname, STRipaddress, INTport, STRaccesskey="", BOOLtvguide_use=False):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRaccesskey = STRaccesskey
         self._tvguide_use = BOOLtvguide_use
-        self._group = STRgroup
         self._device = "tivo"
         self._chan_array_no = 0
         self._name = STRname
@@ -35,9 +34,6 @@ class object_TIVO:
     def getTvguide_use(self):
         return self._tvguide_use
 
-    def getGroup(self):
-        return self._group
-
     def getDevice(self):
         return self._device
 
@@ -52,11 +48,13 @@ class object_TIVO:
 
 
     def sendCmd(self, STRcommand):
-        if STRcommand.startswith("FORCECH"):
-            return sendSOCKET(self._STRipaddress, self._INTport, STRcommand)
+        if STRcommand.isdigit():
+            return sendTELNET(self._STRipaddress, self._INTport, ("FORCECH {}\r").format(STRcommand))
         else:
             comms = LSTremote_tivo
-            for x in range(len(comms)):
+            x=0
+            while x <len(comms):
                 if comms[x][0]==STRcommand:
-                    return sendSOCKET(self._STRipaddress, self._INTport, comms[x][1])
+                    return sendTELNET(self._STRipaddress, self._INTport, comms[x][1])
+                x+=1
             return False

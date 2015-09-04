@@ -20,24 +20,24 @@ def create_device_group(listings, ARRobjects, room, group):
         x+=1
     #
     x=0
-    tvguide_device=False
+    device_url=False
     chan_array_no=None
     STRdevicehtml=""
     while x<len(LSTobjects):
+        device_url="device/"+room+"/"+group+"/"+LSTobjects[x].getName().replace(" ", "").lower()
         if LSTobjects[x].getLogo:
             STRpanel=("<img src=\"/img/logo/{}\" style=\"height:25px;\"/> {}").format(LSTobjects[x].getLogo(), LSTobjects[x].getName())
         else:
             STRpanel=LSTobjects[x].getName()
-        STRobjhtml=urlopen(('web/{}').format(LSTobjects[x].getHtml())).read().encode('utf-8')
+        STRobjhtml=urlopen(('web/{}').format(LSTobjects[x].getHtml())).read().encode('utf-8').format(url=device_url)
         STRdevicehtml+=urlopen('web/comp_panel.html').read().encode('utf-8').format(STRpanel, STRobjhtml)
         STRdevicehtml+="<br>"
         if LSTobjects[x].getTvguide_use:
-            tvguide_device=LSTobjects[x].getGroup()+"/"+LSTobjects[x].getDevice()
             chan_array_no=LSTobjects[x].getChan_array_no()
         x+=1
     return _header(ARRobjects)+\
            urlopen('web/comp_alert.html').read().encode('utf-8')+\
-           urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room, room+group, STRdevicehtml, _listings_html(listings, tvguide_device, chan_array_no=chan_array_no))+\
+           urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room, room+group, STRdevicehtml, _listings_html(listings, device_url, chan_array_no=chan_array_no))+\
            urlopen('web/footer.html').read().encode('utf-8')
 
 def create_tvguide(listings, ARRobjects):
@@ -76,9 +76,9 @@ def _header(ARRobjects):
 def _headerdrops(ARRobjects):
     x=0
     STRhtml=""
-    items=""
     while x<len(ARRobjects):
         room=(ARRobjects[x][0]).lower()
+        items=""
         y=0
         while y<len(ARRobjects[x][1]):
             group=(ARRobjects[x][1][y][0]).lower()

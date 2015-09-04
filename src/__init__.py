@@ -1,6 +1,5 @@
 import dataholder
-from config import read_config, write_config_json
-import create_objects
+from config import write_config_json, read_config_json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_createpages import create_home, create_device_group, create_tvguide, create_settings_rooms, create_settings_devices, create_settings_nest, create_about
@@ -12,7 +11,7 @@ import string
 import random
 
 def start_bottle():
-    run(host='0.0.0.0', port=1616, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
+    run(host='0.0.0.0', port=1613, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
 
 def server_start():
     tvlistings_startprocess()
@@ -31,9 +30,13 @@ def tvlistings_process(LSTlistings):
         LSTlistings.put(getall_listings())
         time.sleep(604800)
 
-@route('/test/config')
-def get_config():
+@route('/test/config/write')
+def get_config_write():
     return HTTPResponse(body=write_config_json(ARRobjects), status=200)
+
+@route('/test/config/read')
+def get_config_read():
+    return HTTPResponse(body=read_config_json(), status=200)
 
 @route('/')
 def web_redirect():
@@ -79,9 +82,27 @@ def web(room="", group=""):
 def get_image(folder, filename):
     return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/%s' % folder)))
 
-@route('/device/<room>/<device>/<command>')
-def send_command(room="-", device="-", command="-"):
-    if room=="lounge" and device=="lgtv" and command=="appslist":
+@route('/device/<room>/<group>/<device>/<command>')
+def send_command(room="-", group="-", device="-", command="-"):
+    #
+    x=0
+    while x<len(ARRobjects):
+        if ARRobjects[x][0]==room:
+            y=0
+            while y<len(ARRobjects[x][1]):
+                if ARRobjects[x][1][y][0]==group:
+                    LSTdevices=ARRobjects[x][1][y][1]
+                    z=0
+                    while z<len(LSTdevices):
+                        if LSTdevices[z].getName().replace(" ", "").lower()==device:
+                            command = request.query.id if command=="channel" else command
+                            return HTTPResponse(status=200) if LSTdevices[z].sendCmd(command) else HTTPResponse(status=400)
+                        z+=1
+                y+=1
+        x+=1
+    #
+    return HTTPResponse(status=400)
+    '''if room=="lounge" and device=="lgtv" and command=="appslist":
         APPtype = request.query.type or 3
         APPindex = request.query.index or 0
         APPnumber = request.query.number or 0
@@ -95,20 +116,20 @@ def send_command(room="-", device="-", command="-"):
         x = OBJloungetv.getAppicon(auid, name)
         return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
     # TV Command
-    elif room=="lounge" and device=="lgtv":
+    if room=="lounge" and device=="lgtv":
         return HTTPResponse(status=200) if OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
     # TiVo Command
     elif room=="lounge" and device=="tivo":
         if command=="channel":
             channo = request.query.id or False
             if channo:
-                return HTTPResponse(status=200) if OBJloungetivo.sendCmd(("FORCECH {}\r").format(channo)) else HTTPResponse(status=400)
+                return HTTPResponse(status=200) if OBJloungetivo.sendCmd(channo) else HTTPResponse(status=400)
             else:
                 HTTPResponse(status=400)
         else:
             return HTTPResponse(status=200) if OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
     else:
-        return HTTPResponse(status=400)
+        return HTTPResponse(status=400)'''
 
 @route('/tvlistings')
 def get_tvlistings():
@@ -141,17 +162,11 @@ def get_image(category, filename):
     return static_file(filename, root=root, mimetype='image/png')
 
 # Get configuration
-read_config()
-# Create objects
+#read_config()
+# Create objects from configuration file
 randomstring = (''.join(random.choice(string.ascii_lowercase) for i in range(5)))
-ARRobjects = [['Lounge', [['TV', [create_objects.create_lgtv("lgtv", "LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge'),
-                                create_objects.create_tivo("tivo", "Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')]
-                           ]]
-              ]]
+ARRobjects = read_config_json()
 #
-# To remove these two objects once the device-command api has been written against ARRobjects
-OBJloungetv = create_objects.create_lgtv("lgtv", "LG TV", dataholder.STRloungetv_lgtv_ipaddress,dataholder.STRloungetv_lgtv_pairkey, BOOLtvguide_use=False, STRgroup='lounge')
-OBJloungetivo = create_objects.create_tivo("tivo", "Virgin Media", dataholder.STRloungetv_tivo_ipaddress, dataholder.STRloungetv_tivo_mak, BOOLtvguide_use=True, STRgroup='lounge')
 # Create processes for TV Listing code and code to start bottle server
 LSTlistings = Queue()
 p1 = Process(target=tvlistings_process, args=(LSTlistings, ))
