@@ -104,7 +104,8 @@ def _headerdrops(ARRobjects):
 
 def _listings_html (listings, device, chan_array_no=-1, chan_current=False):
     if listings:
-        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(listings=_listings(listings, device, chan_array_no, chan_current))
+        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(style="<style>trhighlight {border:#FFBF47;border-radius=7px}</style>",
+                                                                              listings=_listings(listings, device, chan_array_no, chan_current))
     else:
         return urlopen('web/tvguide-nodata.html').read().encode('utf-8')
 
@@ -127,17 +128,18 @@ def _listingsrow(x, item, device, chan_array_no, chan_current):
     else:
         color="#ffffff"
     if bool(chan_current) and item[4][chan_array_no]==chan_current:
-        chan_highlight="; border: 2px solid #FFBF47; border-radius: 7px;"
+        chan_highlight="class=\"trhighlight\""
+        #chan_highlight="; border: 2px solid #FFBF47; border-radius: 7px;"
     else:
         chan_highlight=""
     if device and not chan_array_no==-1:
         go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device=device,
                                                                               channo=item[4][chan_array_no],
-                                                                              tr_id="chan"+str(item[4][chan_array_no]))
+                                                                              trid="chan"+str(item[4][chan_array_no]))
     else:
         go = ""
     return urlopen('web/tvguide-row.html').read().encode('utf-8').format(id=("chan"+str(item[4][chan_array_no])),
-                                                                         style=chan_highlight,
+                                                                         cls=chan_highlight,
                                                                          color=color,
                                                                          imgtype=item[3],
                                                                          imgchan=item[2],

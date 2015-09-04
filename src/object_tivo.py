@@ -50,7 +50,8 @@ class object_TIVO:
     def getChan(self):
         x = sendTELNET(self._STRipaddress, self._INTport, response=True)
         nums = [int(s) for s in x.split() if s.isdigit()]
-        return nums[0]
+        l = len(nums)
+        return nums[0] if len(nums)>0 else False
 
 
     def sendCmd(self, STRcommand):
