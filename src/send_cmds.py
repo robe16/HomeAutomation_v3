@@ -1,6 +1,7 @@
 import urllib2
 import socket
 import telnetlib
+import time
 
 def sendHTTP(ipaddress, connection, data=False):
     if not ipaddress.startswith("http"):
@@ -29,11 +30,17 @@ def sendSOCKET(ipaddress, port, data):
     except:
         return False
 
-def sendTELNET(ipaddress, port, data):
+def sendTELNET(ipaddress, port, data=None, response=False):
     try:
         tn = telnetlib.Telnet(ipaddress, port)
-        tn.write(data+"\n")
+        time.sleep(0.1)
+        output = tn.read_eager() if response else None
+        if not data==None:
+            tn.write(data+"\n")
+            time.sleep(0.1)
+            output = tn.read_eager()
+            output = output if (response and not bool(output)) else True
         tn.close()
-        return True
+        return output
     except:
         return False

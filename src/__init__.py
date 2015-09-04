@@ -11,7 +11,7 @@ import string
 import random
 
 def start_bottle():
-    run(host='0.0.0.0', port=1613, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
+    run(host='0.0.0.0', port=1616, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
 
 def server_start():
     tvlistings_startprocess()
@@ -96,7 +96,7 @@ def send_command(room="-", group="-", device="-", command="-"):
                     while z<len(LSTdevices):
                         if LSTdevices[z].getName().replace(" ", "").lower()==device:
                             command = request.query.id if command=="channel" else command
-                            return HTTPResponse(status=200) if LSTdevices[z].sendCmd(command) else HTTPResponse(status=400)
+                            return HTTPResponse(status=200) if bool(LSTdevices[z].sendCmd(command)) else HTTPResponse(status=400)
                         z+=1
                 y+=1
         x+=1

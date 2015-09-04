@@ -49,12 +49,12 @@ class object_TIVO:
 
     def sendCmd(self, STRcommand):
         if STRcommand.isdigit():
-            return sendTELNET(self._STRipaddress, self._INTport, ("FORCECH {}\r").format(STRcommand))
+            return sendTELNET(self._STRipaddress, self._INTport, data=("FORCECH {}\r").format(STRcommand), response=True)
         else:
             comms = LSTremote_tivo
             x=0
             while x <len(comms):
                 if comms[x][0]==STRcommand:
-                    return sendTELNET(self._STRipaddress, self._INTport, comms[x][1])
+                    return sendTELNET(self._STRipaddress, self._INTport, data=comms[x][1])
                 x+=1
             return False
