@@ -132,7 +132,8 @@ def _listingsrow(x, item, device, chan_array_no, chan_current):
         chan_highlight=""
     if device and not chan_array_no==-1:
         go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device=device,
-                                                                              channo=item[4][chan_array_no])
+                                                                              channo=item[4][chan_array_no],
+                                                                              tr_id="chan"+str(item[4][chan_array_no]))
     else:
         go = ""
     return urlopen('web/tvguide-row.html').read().encode('utf-8').format(id=("chan"+str(item[4][chan_array_no])),
