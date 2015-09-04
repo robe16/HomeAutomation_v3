@@ -22,6 +22,7 @@ def create_device_group(listings, ARRobjects, room, group):
     x=0
     device_url=False
     chan_array_no=None
+    chan_current=False
     STRdevicehtml=""
     while x<len(LSTobjects):
         device_url="device/"+room+"/"+group+"/"+LSTobjects[x].getName().replace(" ", "").lower()
@@ -30,19 +31,32 @@ def create_device_group(listings, ARRobjects, room, group):
         else:
             STRpanel=LSTobjects[x].getName()
         STRobjhtml=urlopen(('web/{}').format(LSTobjects[x].getHtml())).read().encode('utf-8').format(url=device_url)
-        STRdevicehtml+=urlopen('web/comp_panel.html').read().encode('utf-8').format(STRpanel, STRobjhtml)
+        STRdevicehtml+=urlopen('web/comp_panel.html').read().encode('utf-8').format(title=STRpanel,
+                                                                                    body=STRobjhtml)
         STRdevicehtml+="<br>"
         if LSTobjects[x].getTvguide_use:
             chan_array_no=LSTobjects[x].getChan_array_no()
+            chan_current=LSTobjects[x].getChan()
         x+=1
-    return _header(ARRobjects)+\
-           urlopen('web/comp_alert.html').read().encode('utf-8')+\
-           urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room, room+group, STRdevicehtml, _listings_html(listings, device_url, chan_array_no=chan_array_no))+\
-           urlopen('web/footer.html').read().encode('utf-8')
+    if not chan_array_no==None:
+        return _header(ARRobjects)+\
+               urlopen('web/comp_alert.html').read().encode('utf-8')+\
+               urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room=room,
+                                                                                    roomgroup=room+group,
+                                                                                    devices=STRdevicehtml,
+                                                                                    tvguide=_listings_html(listings, device_url, chan_array_no=chan_array_no, chan_current=chan_current))+\
+               urlopen('web/footer.html').read().encode('utf-8')
+    else:
+        return _header(ARRobjects)+\
+               urlopen('web/comp_alert.html').read().encode('utf-8')+\
+               urlopen('web/group_no-tvguide.html').read().encode('utf-8').format(room=room,
+                                                                                  roomgroup=room+group,
+                                                                                  devices=STRdevicehtml)+\
+               urlopen('web/footer.html').read().encode('utf-8')
 
 def create_tvguide(listings, ARRobjects):
     return _header(ARRobjects)+\
-           urlopen('web/tvguide.html').read().encode('utf-8').format(_listings_html(listings, False))+\
+           urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False))+\
            urlopen('web/footer.html').read().encode('utf-8')
 
 def create_settings_rooms(ARRobjects):
@@ -88,19 +102,19 @@ def _headerdrops(ARRobjects):
         x+=1
     return STRhtml
 
-def _listings_html (listings, device, chan_array_no=-1):
+def _listings_html (listings, device, chan_array_no=-1, chan_current=False):
     if listings:
-        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(_listings(listings, device, chan_array_no))
+        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(listings=_listings(listings, device, chan_array_no, chan_current))
     else:
         return urlopen('web/tvguide-nodata.html').read().encode('utf-8')
 
-def _listings(listings, device, chan_array_no):
+def _listings(listings, device, chan_array_no, chan_current):
     STRlistings = ""
     for x in range(len(listings)):
-        STRlistings+=(_listingsrow(x, listings[x], device, chan_array_no))
+        STRlistings+=(_listingsrow(x, listings[x], device, chan_array_no, chan_current))
     return STRlistings
 
-def _listingsrow(x, item, device, chan_array_no):
+def _listingsrow(x, item, device, chan_array_no, chan_current):
     if item[5]:
         nownext = ARRsortlistings(item[5])
         now = ("{} {}").format(nownext[0][1], nownext[0][4])
@@ -112,8 +126,21 @@ def _listingsrow(x, item, device, chan_array_no):
         color="#e8e8e8"
     else:
         color="#ffffff"
+    if bool(chan_current) and item[4][chan_array_no]==chan_current:
+        chan_highlight="; border: 2px solid #FFBF47; border-radius: 7px;"
+    else:
+        chan_highlight=""
     if device and not chan_array_no==-1:
-        go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device, item[4][chan_array_no])
+        go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device=device,
+                                                                              channo=item[4][chan_array_no])
     else:
         go = ""
-    return urlopen('web/tvguide-row.html').read().encode('utf-8').format(color, item[3], item[2], item[0], now, next, go)
+    return urlopen('web/tvguide-row.html').read().encode('utf-8').format(id=("chan"+str(item[4][chan_array_no])),
+                                                                         style=chan_highlight,
+                                                                         color=color,
+                                                                         imgtype=item[3],
+                                                                         imgchan=item[2],
+                                                                         channame=item[0],
+                                                                         now=now,
+                                                                         next=next,
+                                                                         go=go)

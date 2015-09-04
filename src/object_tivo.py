@@ -47,6 +47,12 @@ class object_TIVO:
         return self._img
 
 
+    def getChan(self):
+        x = sendTELNET(self._STRipaddress, self._INTport, response=True)
+        nums = [int(s) for s in x.split() if s.isdigit()]
+        return nums[0]
+
+
     def sendCmd(self, STRcommand):
         if STRcommand.isdigit():
             return sendTELNET(self._STRipaddress, self._INTport, data=("FORCECH {}\r").format(STRcommand), response=True)

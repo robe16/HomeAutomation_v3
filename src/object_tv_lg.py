@@ -8,6 +8,7 @@ class object_LGTV:
     STRtv_PATHpair = "/udap/api/pairing"
     STRtv_PATHcommand = "/udap/api/command"
     STRtv_PATHevent = "/udap/api/event"
+    STRtv_PATHquery = "/udap/api/data"
 
     def __init__ (self, STRname, STRipaddress, INTport, STRpairingkey=None, BOOLtvguide_use=False):
         self._STRipaddress = STRipaddress
@@ -66,6 +67,11 @@ class object_LGTV:
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHpair), "close", data=STRxml)
         return str(x.getcode()).startswith("2") if bool(x) else False
+
+
+    def getChan(self):
+        # sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHquery)+"?target=cur_channel", "close")
+        return False
 
     def sendCmd(self, STRcommand):
         count = 0
