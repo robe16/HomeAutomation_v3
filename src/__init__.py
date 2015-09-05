@@ -73,8 +73,6 @@ def web(room="", group=""):
         listings=temp[0]
     else:
         listings = False
-    print create_device_group(listings, ARRobjects, room, group)
-    return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
     try:
         return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
     except:
