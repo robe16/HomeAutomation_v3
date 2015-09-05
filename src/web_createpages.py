@@ -59,12 +59,6 @@ def create_tvguide(listings, ARRobjects):
            urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False))+\
            urlopen('web/footer.html').read().encode('utf-8')
 
-def create_settings_rooms(ARRobjects):
-    return _header(ARRobjects)+\
-           urlopen('web/comp_alert.html').read().encode('utf-8')+\
-           urlopen('web/settings_rooms.html').read().encode('utf-8')+\
-           urlopen('web/footer.html').read().encode('utf-8')
-
 def create_settings_devices(ARRobjects):
     return _header(ARRobjects)+\
            urlopen('web/comp_alert.html').read().encode('utf-8')+\

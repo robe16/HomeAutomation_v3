@@ -11,7 +11,7 @@ import string
 import random
 
 def start_bottle():
-    run(host='0.0.0.0', port=1614, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
+    run(host='0.0.0.0', port=1613, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
 
 def server_start():
     tvlistings_startprocess()
