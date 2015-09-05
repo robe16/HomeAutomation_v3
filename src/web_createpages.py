@@ -104,7 +104,7 @@ def _headerdrops(ARRobjects):
 
 def _listings_html (listings, device, chan_array_no=-1, chan_current=False):
     if listings:
-        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(style="<style>trhighlight {border:#FFBF47;border-radius=7px}</style>",
+        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(style="<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>",
                                                                               listings=_listings(listings, device, chan_array_no, chan_current))
     else:
         return urlopen('web/tvguide-nodata.html').read().encode('utf-8')
@@ -128,7 +128,7 @@ def _listingsrow(x, item, device, chan_array_no, chan_current):
     else:
         color="#ffffff"
     if bool(chan_current) and item[4][chan_array_no]==chan_current:
-        chan_highlight="class=\"trhighlight\""
+        chan_highlight="class=\"highlight\""
         #chan_highlight="; border: 2px solid #FFBF47; border-radius: 7px;"
     else:
         chan_highlight=""
