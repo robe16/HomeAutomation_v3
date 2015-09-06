@@ -2,7 +2,7 @@ import dataholder
 from config import write_config_json, read_config_json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_createpages import create_home, create_device_group, create_tvguide, create_settings_rooms, create_settings_devices, create_settings_nest, create_about
+from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, create_settings_nest, create_about
 import os, time
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect

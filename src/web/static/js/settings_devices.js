@@ -7,8 +7,7 @@ function addRoom(addroomBtnId)
         //
         var div = document.createElement("DIV");
         div.setAttribute('id', 'room'+roomNum);
-        var divRow = document.createElement("DIV");
-        divRow.setAttribute('style', "margin-top:10px; margin-bottom:10px");
+        div.setAttribute('style', "margin-top:10px; margin-bottom:10px");
         //
         var divGrp = document.createElement("DIV");
         divGrp.setAttribute('id', "childdiv-room"+roomNum);
@@ -18,9 +17,8 @@ function addRoom(addroomBtnId)
         //
         div.appendChild(inptroom);
         div.appendChild(divGrp);
-        divRow.appendChild(div);
         //
-        document.getElementById('allrooms').appendChild(divRow);
+        document.getElementById('allrooms').appendChild(div);
         //
         document.getElementById(addroomBtnId).setAttribute('id', 'addroom'+roomNum);
         //
@@ -35,8 +33,7 @@ function addDevicegroup(roomNum, addgroupBtnId)
         //
         var div = document.createElement("DIV");
         div.setAttribute('id', 'room'+roomNum+'group'+groupNum);
-        var divRow = document.createElement("DIV");
-        divRow.setAttribute('style', "margin-top:5px; margin-bottom:5px");
+        div.setAttribute('style', "margin-top:5px; margin-bottom:5px");
         //
         var divDvcs = document.createElement("DIV");
         divDvcs.setAttribute('id', "childdiv-room"+roomNum+"group"+groupNum);
@@ -46,9 +43,8 @@ function addDevicegroup(roomNum, addgroupBtnId)
         //
         div.appendChild(inptgroup);
         div.appendChild(divDvcs);
-        divRow.appendChild(div);
         //
-        document.getElementById("childdiv-room"+roomNum).appendChild(divRow);
+        document.getElementById("childdiv-room"+roomNum).appendChild(div);
         //
         document.getElementById(addgroupBtnId).setAttribute('id', 'addroom'+roomNum+'group'+groupNum);
         //
@@ -63,23 +59,26 @@ function addDevice(roomNum, groupNum, adddeviceBtnId)
         //
         var div = document.createElement("DIV");
         div.setAttribute('id', 'room'+roomNum+'group'+groupNum+'device'+deviceNum);
-        var divRow = document.createElement("DIV");
-        divRow.setAttribute('style', "margin-top:5px; margin-bottom:5px");
+        div.setAttribute('style', "margin-top:5px; margin-bottom:5px");
         //
         var divDvcProps = document.createElement("DIV");
         divDvcProps.setAttribute('id', "childdiv-room"+roomNum+"group"+groupNum+'device'+deviceNum);
         divDvcProps.setAttribute('style', "width:90%; float:right;");
         //
-        inptdevice = createDeviceInput();
+        inptdevice = createDeviceInput(roomNum, groupNum, deviceNum);
         //
         div.appendChild(inptdevice);
         div.appendChild(divDvcProps);
-        divRow.appendChild(div);
         //
-        document.getElementById("childdiv-room"+roomNum+"group"+groupNum).appendChild(divRow);
+        document.getElementById("childdiv-room"+roomNum+"group"+groupNum).appendChild(div);
         //
         document.getElementById(adddeviceBtnId).setAttribute('id', 'addroom'+roomNum+'group'+groupNum+'device'+deviceNum);
         //
+    }
+
+function removeItem(removedivId)
+    {
+        document.getElementById(removedivId).remove();
     }
 
 function createRoomInput(roomNum)
@@ -99,6 +98,7 @@ function createRoomInput(roomNum)
         btnremove.setAttribute('class', 'btn btn-danger');
         btnremove.setAttribute('button', 'button');
         btnremove.innerHTML = '&nbsp;';
+        btnremove.setAttribute('onclick', 'removeItem("room'+roomNum+'")')
         //
         btnremove.appendChild(glyphremove);
         //
@@ -168,6 +168,7 @@ function createDevicegroupInput(roomNum, groupNum)
         btnremove.setAttribute('class', 'btn btn-danger');
         btnremove.setAttribute('button', 'button');
         btnremove.innerHTML = '&nbsp;';
+        btnremove.setAttribute('onclick', 'removeItem("room'+roomNum+'group'+groupNum+'")')
         //
         btnremove.appendChild(glyphremove);
         //
@@ -237,6 +238,7 @@ function createDeviceInput(roomNum, groupNum, deviceNum)
         btnremove.setAttribute('class', 'btn btn-danger');
         btnremove.setAttribute('button', 'button');
         btnremove.innerHTML = '&nbsp;';
+        btnremove.setAttribute('onclick', 'removeItem("room'+roomNum+'group'+groupNum+'device'+deviceNum+'")')
         //
         btnremove.appendChild(glyphremove);
         //
