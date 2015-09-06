@@ -1,5 +1,5 @@
 from urllib import urlopen
-from tvlisting import ARRsortlistings
+from tvlisting import sort_arrlistings
 
 def create_home(ARRobjects):
     return _header(ARRobjects)+\
@@ -153,7 +153,7 @@ def _listings(listings, device, chan_array_no, chan_current):
 
 def _listingsrow(x, item, device, chan_array_no, chan_current):
     if item[5]:
-        nownext = ARRsortlistings(item[5])
+        nownext = sort_arrlistings(item[5])
         now = ("{} {}").format(nownext[0][1], nownext[0][4])
         next = ("{} {}").format(nownext[1][1], nownext[1][4])
     else:

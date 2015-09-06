@@ -5,110 +5,107 @@ import send_cmds
 
 def getall_listings():
     channels = enum_channels.LSTchannels
-    x=0
-    while x<len(channels):
-        print ("Retrieving TV Listing information: %s out of %s completed - %s" % (x+1, len(channels), channels[x][0]))
+    x = 0
+    while x < len(channels):
+        print ('Retrieving TV Listing information: {} out of {} completed - {}'.format(x + 1, len(channels), channels[x][0]))
         channels[x].append(get_listings(channels[x]))
-        x+=1
+        x += 1
     return [channels, datetime.now()]
 
-def get_listings(LSTchanneldetails):
-    x = send_cmds.sendHTTP("http://xmltv.radiotimes.com/xmltv/%s.dat" % (LSTchanneldetails[1]), "close")
-    if not x==False:
-        return x.read()
-    else:
-        return None
+
+def get_listings(list_channeldetails):
+    x = send_cmds.sendHTTP('http://xmltv.radiotimes.com/xmltv/{}.dat'.format(list_channeldetails[1]), "close")
+    return x.read() if not bool(x) else None
 
 
 def getall_xmllistings(data):
-    STRxml = "<listings><timestamp>%s</timestamp>" % (datetime.now().strftime('%d/%m/%Y %H:%M'))
-    x=0
-    while x<len(data):
-        STRxml+= get_xmllistings(x, data[x])
-        x+=1
-    STRxml += "</listings>"
-    return STRxml
+    str_xml = '<listings><timestamp>{}</timestamp>'.format(datetime.now().strftime('%d/%m/%Y %H:%M'))
+    x = 0
+    while x < len(data):
+        str_xml += get_xmllistings(data[x], x)
+        x += 1
+    str_xml += "</listings>"
+    return str_xml
 
-def get_xmllistings(id, data):
-    STRxml = "<channel id=\"%s\"><details><name>%s</name><logo>%s</logo><type>%s</type><tivo>%s</tivo></details>" % (id, str(data[0]), str(data[2]), str(data[3]), str(data[4]))
-    if not data[5]==False and not data[5]==None:
-        STRxml += XMLsortlistings(data[5])
+
+def get_xmllistings(data, id):
+    str_xml = '<channel id="{}"><details><name>{}</name><logo>{}</logo><type>{}</type><tivo>{}</tivo></details>'.format(id, str(data[0]), str(data[2]), str(data[3]), str(data[4]))
+    if not data[5] == False and not data[5] == None:
+        str_xml += sort_xmllistings(data[5])
     else:
-        STRxml += "<listing>--</listing>"
-    STRxml += "</channel>"
-    return STRxml
+        str_xml += "<listing>--</listing>"
+    str_xml += "</channel>"
+    return str_xml
 
 
-def XMLsortlistings(result):
+def sort_xmllistings(result):
+    arr_resultlines = filter(None, result.split('\n'))
 
-    ARRresultlines = filter(None, result.split('\n'))
-
-    count=2
-    while count<len(ARRresultlines):
-        resultbreakdown = ARRresultlines[count].split('~')
+    count = 2
+    while count < len(arr_resultlines):
+        resultbreakdown = arr_resultlines[count].split('~')
         # String date will be in format "dd/MM/yyyy HH:mm"
-        DATETIMEstart = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[20], '%d/%m/%Y %H:%M')
-        DATETIMEend = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[21], '%d/%m/%Y %H:%M')
+        datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
+        datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
 
-        if not DATETIMEstart <= DATETIMEend:
-            DATETIMEend = DATETIMEend + timedelta(days=1)
+        if not datetime_start <= datetime_end:
+            datetime_end = datetime_end + timedelta(days=1)
 
-        if DATETIMEstart<=datetime.now() and DATETIMEend>=datetime.now():
+        if datetime_start <= datetime.now() <= datetime_end:
             #
-            STRxml = ""
-            next=0
-            while next<=5:
-                resultbreakdown = ARRresultlines[count+next].split('~')
-                DATETIMEstart = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[20], '%d/%m/%Y %H:%M')
-                DATETIMEend = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[21], '%d/%m/%Y %H:%M')
-                if not DATETIMEstart <= DATETIMEend:
-                    DATETIMEend = DATETIMEend + timedelta(days=1)
-                STRxml += "<listing><start>%s</start><end>%s</end><name>%s</name><blurb>%s</blurb></listing>" % (DATETIMEstart.strftime('%d/%m/%Y %H:%M'), DATETIMEend.strftime('%d/%m/%Y %H:%M'), resultbreakdown[0], resultbreakdown[17])
-                next+=1
+            str_xml = ""
+            next = 0
+            while next <= 5:
+                resultbreakdown = arr_resultlines[count + next].split('~')
+                datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
+                datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
+                if not datetime_start <= datetime_end:
+                    datetime_end = datetime_end + timedelta(days=1)
+                str_xml += '<listing><start>{}</start><end>{}</end><name>{}</name><blurb>{}</blurb></listing>'.format(datetime_start.strftime('%d/%m/%Y %H:%M'), datetime_end.strftime('%d/%m/%Y %H:%M'), resultbreakdown[0], resultbreakdown[17])
+                next += 1
             #
-            return STRxml
-        count+=1
+            return str_xml
+        count += 1
 
     return "<listing>--</listing>"
 
 
-def ARRsortlistings(result):
+def sort_arrlistings(result):
+    arr_resultlines = filter(None, result.split('\n'))
 
-    ARRresultlines = filter(None, result.split('\n'))
-
-    count=2
-    while count<max(ARRresultlines):
-        resultbreakdown = ARRresultlines[count].split('~')
+    count = 2
+    while count < max(arr_resultlines):
+        resultbreakdown = arr_resultlines[count].split('~')
         # String date will be in format "dd/MM/yyyy HH:mm"
-        DATETIMEstart = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[20], '%d/%m/%Y %H:%M')
-        DATETIMEend = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[21], '%d/%m/%Y %H:%M')
+        datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
+        datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
 
-        if not DATETIMEstart <= DATETIMEend:
-            DATETIMEend = DATETIMEend + timedelta(days=1)
+        if not datetime_start <= datetime_end:
+            datetime_end = datetime_end + timedelta(days=1)
 
-        if DATETIMEstart<=datetime.now() and DATETIMEend>=datetime.now():
+        if datetime_start <= datetime.now() <= datetime_end:
             #
-            ARRlisting = [[DATETIMEstart.strftime('%d/%m/%Y'),
-                           DATETIMEstart.strftime('%H:%M'),
-                           DATETIMEend.strftime('%d/%m/%Y'),
-                           DATETIMEend.strftime('%H:%M'),
+            arr_listing = [[datetime_start.strftime('%d/%m/%Y'),
+                           datetime_start.strftime('%H:%M'),
+                           datetime_end.strftime('%d/%m/%Y'),
+                           datetime_end.strftime('%H:%M'),
                            resultbreakdown[0],
                            resultbreakdown[17]]]
-            next=1
-            while next<=5:
-                resultbreakdown = ARRresultlines[count+next].split('~')
-                DATETIMEstart = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[20], '%d/%m/%Y %H:%M')
-                DATETIMEend = datetime.strptime(resultbreakdown[19]+" "+resultbreakdown[21], '%d/%m/%Y %H:%M')
-                if not DATETIMEstart <= DATETIMEend:
-                    DATETIMEend = DATETIMEend + timedelta(days=1)
-                ARRlisting.append([DATETIMEstart.strftime('%d/%m/%Y'),
-                                   DATETIMEstart.strftime('%H:%M'),
-                                   DATETIMEend.strftime('%d/%m/%Y'),
-                                   DATETIMEend.strftime('%H:%M'),
+            next = 1
+            while next <= 5:
+                resultbreakdown = arr_resultlines[count + next].split('~')
+                datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
+                datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
+                if not datetime_start <= datetime_end:
+                    datetime_end = datetime_end + timedelta(days=1)
+                arr_listing.append([datetime_start.strftime('%d/%m/%Y'),
+                                   datetime_start.strftime('%H:%M'),
+                                   datetime_end.strftime('%d/%m/%Y'),
+                                   datetime_end.strftime('%H:%M'),
                                    resultbreakdown[0],
                                    resultbreakdown[17]])
-                next+=1
+                next += 1
             #
-            return ARRlisting
-        count+=1
+            return arr_listing
+        count += 1
     return False
