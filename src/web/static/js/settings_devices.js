@@ -1,7 +1,7 @@
 function addRoom(addroomBtnId)
     {
         //
-        var roomNum = parseInt(addroomBtnId.substr(addroomBtnId.indexOf("room") + 4))+1
+        var roomNum = parseInt(addroomBtnId.substr(addroomBtnId.indexOf("room") + 4))+1;
         //
         //var txtnode = document.createTextNode("Room "+roomNum+":");
         //
@@ -27,7 +27,7 @@ function addRoom(addroomBtnId)
 function addDevicegroup(roomNum, addgroupBtnId)
     {
         //
-        var groupNum = parseInt(addgroupBtnId.substr(addgroupBtnId.indexOf("group") + 5))+1
+        var groupNum = parseInt(addgroupBtnId.substr(addgroupBtnId.indexOf("group") + 5))+1;
         //
         //var txtnode = document.createTextNode("Device group "+groupNum+":");
         //
@@ -53,7 +53,7 @@ function addDevicegroup(roomNum, addgroupBtnId)
 function addDevice(roomNum, groupNum, adddeviceBtnId)
     {
         //
-        var deviceNum = parseInt(adddeviceBtnId.substr(adddeviceBtnId.indexOf("device") + 6))+1
+        var deviceNum = parseInt(adddeviceBtnId.substr(adddeviceBtnId.indexOf("device") + 6))+1;
         //
         //var txtnode = document.createTextNode("Device "+deviceNum+":");
         //
@@ -63,7 +63,7 @@ function addDevice(roomNum, groupNum, adddeviceBtnId)
         //
         var divDvcProps = document.createElement("DIV");
         divDvcProps.setAttribute('id', "childdiv-room"+roomNum+"group"+groupNum+'device'+deviceNum);
-        divDvcProps.setAttribute('style', "width:90%; float:right;");
+        divDvcProps.setAttribute('style', "width:95%; float:right;");
         //
         inptdevice = createDeviceInput(roomNum, groupNum, deviceNum);
         //
@@ -73,6 +73,23 @@ function addDevice(roomNum, groupNum, adddeviceBtnId)
         document.getElementById("childdiv-room"+roomNum+"group"+groupNum).appendChild(div);
         //
         document.getElementById(adddeviceBtnId).setAttribute('id', 'addroom'+roomNum+'group'+groupNum+'device'+deviceNum);
+        //
+    }
+
+function changeDevice(id, roomNum, groupNum, deviceNum)
+    {
+        //
+        var childDiv = document.getElementById("childdiv-room"+roomNum+"group"+groupNum+'device'+deviceNum);
+        childDiv.innerHTML = ''
+        //
+        var select = document.getElementById(id);
+        var deviceType = select.options[select.selectedIndex].id
+        //
+        if (deviceType=="lgtv") {
+            childDiv.appendChild(createDvcpropsLGTV(deviceType));
+        } else if (deviceType=="tivo") {
+            childDiv.appendChild(createDvcpropsTIVO(deviceType));
+        }
         //
     }
 
@@ -98,7 +115,7 @@ function createRoomInput(roomNum)
         btnremove.setAttribute('class', 'btn btn-danger');
         btnremove.setAttribute('button', 'button');
         btnremove.innerHTML = '&nbsp;';
-        btnremove.setAttribute('onclick', 'removeItem("room'+roomNum+'")')
+        btnremove.setAttribute('onclick', 'removeItem("room'+roomNum+'")');
         //
         btnremove.appendChild(glyphremove);
         //
@@ -114,7 +131,7 @@ function createRoomInput(roomNum)
         btnadd.setAttribute('class', 'btn btn-success');
         btnadd.setAttribute('button', 'button');
         btnadd.innerHTML = '&nbsp;';
-        btnadd.setAttribute('onclick', 'addDevicegroup("'+roomNum+'", this.id)')
+        btnadd.setAttribute('onclick', 'addDevicegroup("'+roomNum+'", this.id)');
         //
         var txtnodeadd = document.createTextNode(" Add device group");
         //
@@ -145,7 +162,7 @@ function createRoomInput(roomNum)
         //
         ////////////////////////////////
         //
-        return inptgrp
+        return inptgrp;
         //
         ////////////////////////////////
         //
@@ -168,7 +185,7 @@ function createDevicegroupInput(roomNum, groupNum)
         btnremove.setAttribute('class', 'btn btn-danger');
         btnremove.setAttribute('button', 'button');
         btnremove.innerHTML = '&nbsp;';
-        btnremove.setAttribute('onclick', 'removeItem("room'+roomNum+'group'+groupNum+'")')
+        btnremove.setAttribute('onclick', 'removeItem("room'+roomNum+'group'+groupNum+'")');
         //
         btnremove.appendChild(glyphremove);
         //
@@ -184,7 +201,7 @@ function createDevicegroupInput(roomNum, groupNum)
         btnadd.setAttribute('class', 'btn btn-success');
         btnadd.setAttribute('button', 'button');
         btnadd.innerHTML = '&nbsp;';
-        btnadd.setAttribute('onclick', 'addDevice("'+roomNum+'", "'+groupNum+'", this.id)')
+        btnadd.setAttribute('onclick', 'addDevice("'+roomNum+'", "'+groupNum+'", this.id)');
         //
         var txtnodeadd = document.createTextNode(" Add device");
         //
@@ -215,7 +232,7 @@ function createDevicegroupInput(roomNum, groupNum)
         //
         ////////////////////////////////
         //
-        return inptgrp
+        return inptgrp;
         //
         ////////////////////////////////
         //
@@ -246,16 +263,18 @@ function createDeviceInput(roomNum, groupNum, deviceNum)
         //
         // Input element for selecting device
         var inputdevice = document.createElement("SELECT");
+        inputdevice.setAttribute('id', 'select-room'+roomNum+'group'+groupNum+'device'+deviceNum);
         inputdevice.setAttribute('class', 'form-control');
+        inputdevice.setAttribute('onChange', 'changeDevice(this.id, '+roomNum+', '+groupNum+', '+deviceNum+')');
         //
         var options
-        var devicesArr = [["lgtv", "LGTV"],["tivo", "Virgin Media"]]
+        var devicesArr = [["-", "-- Please select device --"],["lgtv", "LGTV"],["tivo", "Virgin Media"]]
         //
         for (var i = 0; i < devicesArr.length; i++) {
             options = document.createElement("OPTION")
             options.setAttribute('id', devicesArr[i][0]);
             options.innerHTML = devicesArr[i][1];
-            inputdevice.appendChild(options)
+            inputdevice.appendChild(options);
         }
         //
         //
@@ -273,7 +292,123 @@ function createDeviceInput(roomNum, groupNum, deviceNum)
         //
         ////////////////////////////////
         //
-        return inptgrp
+        return inptgrp;
+        //
+        ////////////////////////////////
+        //
+    }
+
+function createDvcpropsLGTV(roomNum, groupNum, deviceNum)
+    {
+        //
+        ////////////////////////////////
+        //
+        var inputName = document.createElement("INPUT");
+        inputName.setAttribute('id', 'name');
+        inputName.setAttribute('type', 'text');
+        inputName.setAttribute('class', 'form-control');
+        inputName.setAttribute('placeholder', 'Enter device Name');
+        //
+        var inputIpaddress = document.createElement("INPUT");
+        inputName.setAttribute('id', 'ipaddress');
+        inputIpaddress.setAttribute('type', 'text');
+        inputIpaddress.setAttribute('class', 'form-control');
+        inputIpaddress.setAttribute('placeholder', 'Enter device IP Address');
+        //
+        var inputPrky = document.createElement("INPUT");
+        inputName.setAttribute('id', 'pairingkey');
+        inputPrky.setAttribute('type', 'text');
+        inputPrky.setAttribute('class', 'form-control');
+        inputPrky.setAttribute('placeholder', 'Enter device Pairing Key');
+        //
+        //
+        var toggleTvguide = document.createElement("INPUT");
+        inputName.setAttribute('id', 'usetvguide');
+        toggleTvguide.setAttribute('type', 'checkbox');
+        toggleTvguide.setAttribute('class', 'form-control');
+        toggleTvguide.setAttribute('data-toggle', 'toggle');
+        toggleTvguide.setAttribute('style', 'margin-right:20px;');
+        toggleTvguide.setAttribute('data-on', 'Yes');
+        toggleTvguide.setAttribute('data-off', 'No');
+        //
+        var lbl = document.createElement("H5");
+        var tLbl = document.createTextNode("Use device for TV Guide ");
+        var note = document.createElement("SMALL");
+        var tNote = document.createTextNode(" (Only ONE device per group should have TV Guide use enabled)");
+        lbl.appendChild(tLbl);
+        note.appendChild(tLbl);
+        lbl.appendChild(note);
+        //
+        //
+        var div = document.createElement("DIV");
+        div.setAttribute('style', 'margin-top: 5px');
+        div.appendChild(inputName);
+        div.appendChild(inputPrky);
+        div.appendChild(inputIpaddress);
+        div.appendChild(toggleTvguide);
+        div.appendChild(lbl);
+        //
+        ////////////////////////////////
+        //
+        return div;
+        //
+        ////////////////////////////////
+        //
+    }
+
+function createDvcpropsTIVO(roomNum, groupNum, deviceNum)
+    {
+        //
+        ////////////////////////////////
+        //
+        var inputName = document.createElement("INPUT");
+        inputName.setAttribute('id', 'name');
+        inputName.setAttribute('type', 'text');
+        inputName.setAttribute('class', 'form-control');
+        inputName.setAttribute('placeholder', 'Enter device Name');
+        //
+        var inputIpaddress = document.createElement("INPUT");
+        inputName.setAttribute('id', 'ipaddress');
+        inputIpaddress.setAttribute('type', 'text');
+        inputIpaddress.setAttribute('class', 'form-control');
+        inputIpaddress.setAttribute('placeholder', 'Enter device IP Address');
+        //
+        var inputPrky = document.createElement("INPUT");
+        inputName.setAttribute('id', 'mak');
+        inputPrky.setAttribute('type', 'text');
+        inputPrky.setAttribute('class', 'form-control');
+        inputPrky.setAttribute('placeholder', 'Enter device Media Access Key');
+        //
+        //
+        var toggleTvguide = document.createElement("INPUT");
+        inputName.setAttribute('id', 'usetvguide');
+        toggleTvguide.setAttribute('type', 'checkbox');
+        toggleTvguide.setAttribute('class', 'form-control');
+        toggleTvguide.setAttribute('data-toggle', 'toggle');
+        toggleTvguide.setAttribute('style', 'margin-right:20px;');
+        toggleTvguide.setAttribute('data-on', 'Yes');
+        toggleTvguide.setAttribute('data-off', 'No');
+        //
+        var lbl = document.createElement("H5");
+        var tLbl = document.createTextNode("Use device for TV Guide ");
+        var note = document.createElement("SMALL");
+        var tNote = document.createTextNode(" (Only ONE device per group should have TV Guide use enabled)");
+        lbl.appendChild(tLbl);
+        note.appendChild(tLbl);
+        lbl.appendChild(note);
+        //
+        //
+        var div = document.createElement("DIV");
+        div.setAttribute('style', 'margin-top: 5px');
+        div.appendChild(inputName);
+        div.appendChild(inputPrky);
+        div.appendChild(inputIpaddress);
+        div.appendChild(toggleTvguide);
+        div.appendChild(lbl);
+        //
+        ////////////////////////////////
+        //
+        return div;
         //
         ////////////////////////////////
         //
