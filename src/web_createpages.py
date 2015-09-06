@@ -44,7 +44,7 @@ def create_device_group(listings, ARRobjects, room, group):
                urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                     roomgroup=room+group,
                                                                                     devices=STRdevicehtml,
-                                                                                    tvguide=_listings_html(listings, device_url, chan_array_no=chan_array_no, chan_current=chan_current))+\
+                                                                                    tvguide=_listings_html(listings, device_url, chan_array_no=chan_array_no, chan_current=chan_current, room=room, group=group))+\
                urlopen('web/footer.html').read().encode('utf-8')
     else:
         return _header(ARRobjects)+\
@@ -78,6 +78,29 @@ def create_about(ARRobjects):
            urlopen('web/about.html').read().encode('utf-8')+\
            urlopen('web/footer.html').read().encode('utf-8')
 
+def get_tvlistings_for_device(listings, ARRobjects, room, group):
+    chan_array_no=None
+    chan_current=False
+    device_url=False
+    x=0
+    while x<len(ARRobjects):
+        if room==(ARRobjects[x][0]).lower():
+            y=0
+            while y<len(ARRobjects[x][1]):
+                if group==(ARRobjects[x][1][y][0]).lower():
+                    LSTobjects=ARRobjects[x][1][y][1]
+                    z=0
+                    while z<len(LSTobjects):
+                        device_url="device/"+room+"/"+group+"/"+LSTobjects[x].getName().replace(" ", "").lower()
+                        if ARRobjects[x][1][y][1][z].getTvguide_use:
+                            chan_array_no=ARRobjects[x][1][y][1][z].getChan_array_no()
+                            chan_current=ARRobjects[x][1][y][1][z].getChan()
+                        z+=1
+                y+=1
+        x+=1
+    #
+    return _listings_html(listings, device_url, chan_array_no=chan_array_no, chan_current=chan_current, room=room, group=group)
+
 def _header(ARRobjects):
     return urlopen('web/header.html').read().encode('utf-8') % (_headerdrops(ARRobjects))
 
@@ -96,12 +119,31 @@ def _headerdrops(ARRobjects):
         x+=1
     return STRhtml
 
-def _listings_html (listings, device, chan_array_no=-1, chan_current=False):
+def _listings_html (listings, device, chan_array_no=-1, chan_current=False, room=False, group=True):
     if listings:
-        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(style="<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>",
+        if room and group:
+            script=("<script>setTimeout(function () {getChannel('/"+device+"/getchannel', true);}, 10000);</script>")
+        else:
+            script=""
+        return urlopen('web/tvguide-data.html').read().encode('utf-8').format(script=script,
+                                                                              style="<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>",
                                                                               listings=_listings(listings, device, chan_array_no, chan_current))
     else:
-        return urlopen('web/tvguide-nodata.html').read().encode('utf-8')
+        if room and group:
+            script=("<script>"+
+                        "setTimeout(function () {checkListings();}, 5000);function checkListings(){"+
+                            "var xmlHttp = new XMLHttpRequest();"+
+                            "xmlHttp.open('GET', '/web/"+room+"/"+group+"?tvguide=True', false);"+\
+                            "xmlHttp.send(null);"+
+                            "if (xmlHttp.status==200) {"+
+                                                        "document.getElementById('alert-tvguide').remove();"+
+                                                        "document.getElementById('tvguide-panelbody').innerHTML=xmlHttp.responseText}"+
+                            "else {setTimeout(function () {checkListings();}, 5000);}"+
+                        "}"+
+                    "</script>")
+        else:
+            script=""
+        return urlopen('web/tvguide-nodata.html').read().encode('utf-8').format(script=script)
 
 def _listings(listings, device, chan_array_no, chan_current):
     STRlistings = ""

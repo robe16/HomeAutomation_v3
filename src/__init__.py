@@ -2,7 +2,7 @@ import dataholder
 from config import write_config_json, read_config_json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, create_settings_nest, create_about
+from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, create_settings_nest, create_about, get_tvlistings_for_device
 import os, time
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
@@ -11,7 +11,7 @@ import string
 import random
 
 def start_bottle():
-    run(host='0.0.0.0', port=1613, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
+    run(host='0.0.0.0', port=1610, debug=True) # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
 
 def server_start():
     tvlistings_startprocess()
@@ -65,12 +65,18 @@ def web(page=""):
 
 @route('/web/<room>/<group>')
 def web(room="", group=""):
+    # Check listings in queue
     if not LSTlistings.empty():
         temp = LSTlistings.get()
         LSTlistings.put(temp)
         listings=temp[0]
     else:
         listings = False
+    # If query for tv listings availability, return html code
+    available = bool(request.query.tvguide) or False
+    if available:
+        return HTTPResponse(body=get_tvlistings_for_device(listings, ARRobjects, room, group), status=200) if bool(listings) else HTTPResponse(status=400)
+    # Create and return web interface page
     try:
         return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
     except:
@@ -132,10 +138,14 @@ def send_command(room="-", group="-", device="-", command="-"):
 
 @route('/tvlistings')
 def get_tvlistings():
-    if not LSTlistings.get()[0]:
+    if LSTlistings.empty():
         return HTTPResponse(status=400)
+    else:
+        temp = LSTlistings.get()
+        LSTlistings.put(temp)
+        listings=temp[0]
     channel = request.query.id or False
-    x = get_xmllistings(LSTlistings.get()[0]) if bool(channel) else getall_xmllistings(LSTlistings.get()[0])
+    x = get_xmllistings(listings) if bool(channel) else getall_xmllistings(listings)
     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
 
 @route('/settings/<x>')

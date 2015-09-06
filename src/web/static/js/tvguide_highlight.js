@@ -11,7 +11,7 @@ function channelhighlight(channo) {
         };
 }
 
-function getChannel(cmd) {
+function getChannel(cmd, auto) {
     //
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", cmd, false);
@@ -19,5 +19,7 @@ function getChannel(cmd) {
     if (xmlHttp.status==200) {
         channelhighlight('chan'+(xmlHttp.responseText))
     }
+    //
+    if (auto) {setTimeout(function () {getChannel(cmd);}, 10000);}
     //
 }
