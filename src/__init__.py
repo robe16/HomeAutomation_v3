@@ -205,7 +205,7 @@ ARRobjects = read_config_json()
 #
 # Create processes for TV Listing code and code to start bottle server
 list_listings = Queue()
-p1 = Process(target=tvlistings_process, args=(list_listings,))
-p2 = Process(target=start_bottle, args=())
+p1 = Process(target=tvlistings_process)
+p2 = Process(target=start_bottle)
 # Start server
 server_start()

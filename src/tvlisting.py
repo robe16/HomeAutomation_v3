@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 import enum_channels
-import send_cmds
+from send_cmds import sendHTTP
 
 
 def getall_listings():
@@ -14,8 +14,8 @@ def getall_listings():
 
 
 def get_listings(list_channeldetails):
-    x = send_cmds.sendHTTP('http://xmltv.radiotimes.com/xmltv/{}.dat'.format(list_channeldetails[1]), "close")
-    return x.read() if not bool(x) else None
+    x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{}.dat'.format(list_channeldetails[1]), "close")
+    return x.read() if bool(x) else None
 
 
 def getall_xmllistings(data):
