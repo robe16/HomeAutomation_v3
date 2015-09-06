@@ -4,7 +4,7 @@ function sendNestPin() {
         xmlHttp.open("GET", '/settings/nest?pincode='+document.getElementById('nestpin').value, false);
         xmlHttp.send(null);
         var v = document.getElementById('alert')
-        if (xmlHttp.responseText=200){
+        if (xmlHttp.status==200){
             v.innerHTML = "The command has been successfully sent";
             v.setAttribute('class', 'alert alert-success');
         } else {

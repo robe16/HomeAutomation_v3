@@ -49,13 +49,17 @@ class object_TIVO:
 
     def getChan(self):
         x = sendTELNET(self._STRipaddress, self._INTport, response=True)
+        print (("Channel request for TiVo device %s - %s") % (self._STRipaddress, x))
+        if not bool(x):
+            return False
         nums = [int(s) for s in x.split() if s.isdigit()]
-        l = len(nums)
         return nums[0] if len(nums)>0 else False
 
 
     def sendCmd(self, STRcommand):
-        if STRcommand.isdigit():
+        if STRcommand=="getchannel":
+            return self.getChan()
+        elif STRcommand.isdigit():
             return sendTELNET(self._STRipaddress, self._INTport, data=("FORCECH {}\r").format(STRcommand), response=True)
         else:
             comms = LSTremote_tivo

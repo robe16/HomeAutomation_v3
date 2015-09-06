@@ -54,8 +54,6 @@ def web(page=""):
         return HTTPResponse(body=create_home(ARRobjects), status=200)
     elif page=="tvguide":
         return HTTPResponse(body=create_tvguide(listings, ARRobjects), status=200)
-    elif page=="settings_rooms":
-        return HTTPResponse(body=create_settings_rooms(ARRobjects), status=200)
     elif page=="settings_devices":
         return HTTPResponse(body=create_settings_devices(ARRobjects), status=200)
     elif page=="settings_nest":
@@ -96,7 +94,8 @@ def send_command(room="-", group="-", device="-", command="-"):
                     while z<len(LSTdevices):
                         if LSTdevices[z].getName().replace(" ", "").lower()==device:
                             command = request.query.id if command=="channel" else command
-                            return HTTPResponse(status=200) if bool(LSTdevices[z].sendCmd(command)) else HTTPResponse(status=400)
+                            response=LSTdevices[z].sendCmd(command)
+                            return HTTPResponse(body=str(response), status=200) if bool(response) else HTTPResponse(status=400)
                         z+=1
                 y+=1
         x+=1

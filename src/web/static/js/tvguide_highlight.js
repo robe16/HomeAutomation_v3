@@ -10,3 +10,14 @@ function channelhighlight(channo) {
             };
         };
 }
+
+function getChannel(cmd) {
+    //
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", cmd, false);
+    xmlHttp.send(null);
+    if (xmlHttp.status==200) {
+        channelhighlight('chan'+(xmlHttp.responseText))
+    }
+    //
+}
