@@ -302,27 +302,33 @@ function createDvcpropsLGTV(roomNum, groupNum, deviceNum)
         inputName.setAttribute('type', 'text');
         inputName.setAttribute('class', 'form-control');
         inputName.setAttribute('placeholder', 'Enter device Name');
+        divInputName = document.createElement('DIV');
+        divInputName.setAttribute('style', 'width:100%;');
+        divInputName.appendChild(inputName);
         //
         var inputIpaddress = document.createElement('INPUT');
         inputIpaddress.setAttribute('id', 'ipaddress');
         inputIpaddress.setAttribute('type', 'text');
         inputIpaddress.setAttribute('class', 'form-control');
         inputIpaddress.setAttribute('placeholder', 'Enter device IP Address');
+        divInputIpaddress = document.createElement('DIV');
+        divInputIpaddress.setAttribute('style', 'width:100%;');
+        divInputIpaddress.appendChild(inputIpaddress);
         //
         var inputPrky = document.createElement('INPUT');
         inputPrky.setAttribute('id', 'pairingkey');
         inputPrky.setAttribute('type', 'text');
         inputPrky.setAttribute('class', 'form-control');
         inputPrky.setAttribute('placeholder', 'Enter device Pairing Key');
+        divInputPrky = document.createElement('DIV');
+        divInputPrky.setAttribute('style', 'width:100%;');
+        divInputPrky.appendChild(inputPrky);
         //
         //
         var toggleTvguide = document.createElement('INPUT');
         toggleTvguide.setAttribute('id', 'usetvguide');
         toggleTvguide.setAttribute('type', 'checkbox');
-        toggleTvguide.setAttribute('data-toggle', 'toggle');
         toggleTvguide.setAttribute('style', 'margin-right:20px;');
-        toggleTvguide.setAttribute('data-on', 'Yes');
-        toggleTvguide.setAttribute('data-off', 'No');
         //
         var lbl = document.createElement('LABEL');
         var hFive = document.createElement('H5');
@@ -339,9 +345,9 @@ function createDvcpropsLGTV(roomNum, groupNum, deviceNum)
         //
         var div = document.createElement('DIV');
         div.setAttribute('style', 'margin-top: 5px');
-        div.appendChild(inputName);
-        div.appendChild(inputPrky);
-        div.appendChild(inputIpaddress);
+        div.appendChild(divInputName);
+        div.appendChild(divInputPrky);
+        div.appendChild(divInputIpaddress);
         div.appendChild(toggleTvguide);
         div.appendChild(lbl);
         //
@@ -363,27 +369,33 @@ function createDvcpropsTIVO(roomNum, groupNum, deviceNum)
         inputName.setAttribute('type', 'text');
         inputName.setAttribute('class', 'form-control');
         inputName.setAttribute('placeholder', 'Enter device Name');
+        divInputName = document.createElement('DIV');
+        divInputName.setAttribute('style', 'width:100%;');
+        divInputName.appendChild(inputName);
         //
         var inputIpaddress = document.createElement('INPUT');
         inputIpaddress.setAttribute('id', 'ipaddress');
         inputIpaddress.setAttribute('type', 'text');
         inputIpaddress.setAttribute('class', 'form-control');
         inputIpaddress.setAttribute('placeholder', 'Enter device IP Address');
+        divInputIpaddress = document.createElement('DIV');
+        divInputIpaddress.setAttribute('style', 'width:100%;');
+        divInputIpaddress.appendChild(inputIpaddress);
         //
         var inputPrky = document.createElement('INPUT');
         inputPrky.setAttribute('id', 'mak');
         inputPrky.setAttribute('type', 'text');
         inputPrky.setAttribute('class', 'form-control');
         inputPrky.setAttribute('placeholder', 'Enter device Media Access Key');
+        divInputPrky = document.createElement('DIV');
+        divInputPrky.setAttribute('style', 'width:100%;');
+        divInputPrky.appendChild(inputPrky);
         //
         //
         var toggleTvguide = document.createElement('INPUT');
         toggleTvguide.setAttribute('id', 'usetvguide');
         toggleTvguide.setAttribute('type', 'checkbox');
-        toggleTvguide.setAttribute('data-toggle', 'toggle');
         toggleTvguide.setAttribute('style', 'margin-right:20px;');
-        toggleTvguide.setAttribute('data-on', 'Yes');
-        toggleTvguide.setAttribute('data-off', 'No');
         //
         var lbl = document.createElement('LABEL');
         var hFive = document.createElement('H5');
@@ -400,9 +412,9 @@ function createDvcpropsTIVO(roomNum, groupNum, deviceNum)
         //
         var div = document.createElement('DIV');
         div.setAttribute('style', 'margin-top: 5px');
-        div.appendChild(inputName);
-        div.appendChild(inputPrky);
-        div.appendChild(inputIpaddress);
+        div.appendChild(divInputName);
+        div.appendChild(divInputPrky);
+        div.appendChild(divInputIpaddress);
         div.appendChild(toggleTvguide);
         div.appendChild(lbl);
         //
@@ -418,6 +430,8 @@ function createDvcpropsTIVO(roomNum, groupNum, deviceNum)
 function buildJson()
     {
         //
+        errorFound = false;
+        //
         var inptsRms = document.getElementsByClassName('form-control settings-room');
         //
         json = '{"rooms": [';
@@ -430,6 +444,11 @@ function buildJson()
                 //
                 inptsGrps = childDivRm.getElementsByClassName('form-control settings-group');
                 //
+                if (inptsRms[i].value=='')
+                    {inptsRms[i].parentElement.className='input-group has-error'; errorFound=true;}
+                else
+                    {inptsRms[i].parentElement.className='input-group';}
+                //
                 if (j > 0) {json+=', '};
                 json += '{"name": "'+inptsRms[i].value+'", "groups": [';
                 //
@@ -441,6 +460,11 @@ function buildJson()
                         //
                         inptsDvcs = childDivGrp.getElementsByClassName('form-control settings-device');
                         //
+                        if (inptsGrps[j].value=="")
+                            {inptsGrps[j].parentElement.className='input-group has-error'; errorFound=true;}
+                        else
+                            {inptsGrps[j].parentElement.className='input-group';}
+                        //
                         if (j > 0) {json+='', ''};
                         json += '{"name": "'+inptsGrps[j].value+'", "devices": [';
                         //
@@ -448,26 +472,48 @@ function buildJson()
                             {
                                 //
                                 deviceNum = i + 1;
-                                childDivDvc = document.getElementById('childdiv-room'+roomNum+'group'+groupNum+'device'+deviceNum).children[0];
                                 //
-                                dvcType = inptsDvcs[k].getElementsByTagName("option")[inptsDvcs[k].selectedIndex].id;
+                                if (inptsDvcs[k].value=='-- Please select device --')
+                                    {inptsDvcs[k].parentElement.className='input-group has-error'; errorFound=true;}
+                                else
+                                    {inptsDvcs[k].parentElement.className='input-group';}
                                 //
-                                if (dvcType == 'lgtv' || dvcType == 'tivo')
+                                if (inptsDvcs[k].value!='-- Please select device --')
                                     {
                                         //
-                                        inptsProps = childDivDvc.getElementsByTagName('input');
-                                        json += '{';
+                                        childDivDvc = document.getElementById('childdiv-room'+roomNum+'group'+groupNum+'device'+deviceNum).children[0];
                                         //
-                                        for (var l = 0; l < inptsProps.length; l++)
+                                        dvcType = inptsDvcs[k].getElementsByTagName("option")[inptsDvcs[k].selectedIndex].id;
+                                        //
+                                        if (dvcType == 'lgtv' || dvcType == 'tivo')
                                             {
                                                 //
-                                                if (l > 0) {json+=', '};
-                                                test = inptsProps[l];
-                                                json += '"'+inptsProps[l].id+'": "'+inptsProps[l].value+'"';
+                                                inptsProps = childDivDvc.getElementsByTagName('input');
+                                                json += '{';
+                                                //
+                                                for (var l = 0; l < inptsProps.length; l++)
+                                                    {
+                                                        //
+                                                        if (inptsProps[l].id != 'usetvguide')
+                                                            {
+                                                            if ((inptsProps[l].value=="")
+                                                                || (inptsProps[l].id=='ipaddress' && validateIpaddress(inptsProps[l].value)==false))
+                                                                    {inptsProps[l].parentElement.className='has-error'; errorFound=true;}
+                                                            else
+                                                                {inptsProps[l].parentElement.className='';}
+                                                            }
+                                                        //
+                                                        if (l > 0) {json+=', '};
+                                                        if (inptsProps[l].type=='text')
+                                                            {json += '"'+inptsProps[l].id+'": "'+inptsProps[l].value+'"';}
+                                                        else if (inptsProps[l].type=='checkbox')
+                                                            {json += '"'+inptsProps[l].id+'": "'+inptsProps[l].checked+'"';}
+                                                        //
+                                                    }
+                                                //
+                                                json += '}';
                                                 //
                                             }
-                                        //
-                                        json += '}';
                                         //
                                     }
                                 //
@@ -485,14 +531,14 @@ function buildJson()
         //
         //return json;
         //
-        alert(json);
+        if (errorFound) {alert('Error!! See highlighted fields for incorrect entry');} else {alert(json);}
         //
     }
 
 
 function validateIpaddress(ipaddress)
     {
-        if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(myForm.emailAddr.value))
+        if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
             {return (true)}
         else
             {return (false)}
