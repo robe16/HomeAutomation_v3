@@ -11,15 +11,11 @@ function channelhighlight(channo) {
         };
 }
 
-function getChannel(cmd, auto) {
+function getChannel(url, auto) {
     //
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", cmd, false);
-    xmlHttp.send(null);
-    if (xmlHttp.status==200) {
-        channelhighlight('chan'+(xmlHttp.responseText))
-    }
+    response = sendHttp(url, null, 'GET', true, false);
+    if (response) {channelhighlight('chan'+response)}
     //
-    if (auto) {setTimeout(function () {getChannel(cmd);}, 10000);}
+    if (auto) {setTimeout(function () {getChannel(url);}, 10000);}
     //
 }

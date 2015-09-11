@@ -9,7 +9,7 @@ from config import write_config_json, read_config_json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, \
-    create_settings_nest, create_about, get_tvlistings_for_device
+    create_about, get_tvlistings_for_device, create_settings_tvguide, create_settings_nest
 from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
 
@@ -69,6 +69,8 @@ def web(page=""):
         return HTTPResponse(body=create_tvguide(listings, ARRobjects), status=200)
     elif page == 'settings_devices':
         return HTTPResponse(body=create_settings_devices(ARRobjects), status=200)
+    elif page == 'settings_tvguide':
+        return HTTPResponse(body=create_settings_tvguide(ARRobjects), status=200)
     elif page == 'settings_nest':
         return HTTPResponse(body=create_settings_nest(ARRobjects,
                                                       dataholder.STRnest_clientID,

@@ -1,8 +1,8 @@
 <table style="width:100%">
     <tr>
-        <td style="width: 10%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/power')"><span class="glyphicon glyphicon-off" aria-hidden="true"/></button></td>
+        <td style="width: 10%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/power', null, 'GET', false, true)"><span class="glyphicon glyphicon-off" aria-hidden="true"/></button></td>
         <td style="width: 70%"></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/channelup')"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"/></button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/channelup', null, 'GET', false, true)"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"/></button></td>
     </tr>
 </table>
 <table style="width:100%">
@@ -14,93 +14,93 @@
 <table style="width:100%">
     <tr>
         <td style="width: 80%"></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/channeldown')"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"/></button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/channeldown', null, 'GET', false, true)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"/></button></td>
     </tr>
 </table>
 <br>
 <table style="width:100%">
     <tr>
         <td style="width: 20%"></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/up')"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"/></button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/up', null, 'GET', false, true)"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"/></button></td>
         <td style="width: 40%"></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/livetv')">Live TV</button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/livetv', null, 'GET', false, true)">Live TV</button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/left')"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"/></button></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/select')">Select</button></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/right')"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"/></button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/left', null, 'GET', false, true)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"/></button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/select', null, 'GET', false, true)">Select</button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/right', null, 'GET', false, true)"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"/></button></td>
         <td style="width: 20%"></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/guide')">Guide</button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/guide', null, 'GET', false, true)">Guide</button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
         <td style="width: 20%"></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/down')"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/></button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/down', null, 'GET', false, true)"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/></button></td>
         <td style="width: 40%"></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/myshows')">My Shows</button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/myshows', null, 'GET', false, true)">My Shows</button></td>
     </tr>
 </table>
 <br>
 <table style="width:100%">
     <tr>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/thumbsdown')"><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" style="color:red"/></button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/play')"><span class="glyphicon glyphicon-play" aria-hidden="true"/></button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/thumbsup')"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" style="color:green"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/thumbsdown', null, 'GET', false, true)"><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" style="color:red"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/play', null, 'GET', false, true)"><span class="glyphicon glyphicon-play" aria-hidden="true"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/thumbsup', null, 'GET', false, true)"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" style="color:green"/></button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
-        <td style="width: 7%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/record')"><span class="glyphicon glyphicon-record" aria-hidden="true"/></button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/reverse')"><span class="glyphicon glyphicon-backward" aria-hidden="true"/></button></td>
-        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/pause')"><span class="glyphicon glyphicon-pause" aria-hidden="true"/></button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/forward')"><span class="glyphicon glyphicon-forward" aria-hidden="true"/></button></td>
-        <td style="width: 7%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/slow')"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"/></button></td>
+        <td style="width: 7%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/record', null, 'GET', false, true)"><span class="glyphicon glyphicon-record" aria-hidden="true"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/reverse', null, 'GET', false, true)"><span class="glyphicon glyphicon-backward" aria-hidden="true"/></button></td>
+        <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/pause', null, 'GET', false, true)"><span class="glyphicon glyphicon-pause" aria-hidden="true"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/forward', null, 'GET', false, true)"><span class="glyphicon glyphicon-forward" aria-hidden="true"/></button></td>
+        <td style="width: 7%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/slow', null, 'GET', false, true)"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"/></button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/skipbackward')"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"/></button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/stop')"><span class="glyphicon glyphicon-stop" aria-hidden="true"/></button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/skipforward')"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/skipbackward', null, 'GET', false, true)"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/stop', null, 'GET', false, true)"><span class="glyphicon glyphicon-stop" aria-hidden="true"/></button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/skipforward', null, 'GET', false, true)"><span class="glyphicon glyphicon-step-forward" aria-hidden="true"/></button></td>
     </tr>
 </table>
 <br>
 <table style="width:100%">
     <tr>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/1')">1</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/2')">2</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/3')">3</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/1', null, 'GET', false, true)">1</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/2', null, 'GET', false, true)">2</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/3', null, 'GET', false, true)">3</button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/4')">4</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/5')">5</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/6')">6</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/4', null, 'GET', false, true)">4</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/5', null, 'GET', false, true)">5</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/6', null, 'GET', false, true)">6</button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/7')">7</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/8')">8</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/9')">9</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/7', null, 'GET', false, true)">7</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/8', null, 'GET', false, true)">8</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/9', null, 'GET', false, true)">9</button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/back')">Clear</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/0')">0</button></td>
-        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/clear')">Last Channel</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/back', null, 'GET', false, true)">Clear</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/0', null, 'GET', false, true)">0</button></td>
+        <td style="width: 33%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/clear', null, 'GET', false, true)">Last Channel</button></td>
     </tr>
 </table>
 <table style="width:100%">
     <tr>
-        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/actionA')"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:red"/></button></td>
-        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/actionB')"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:green"/></button></td>
-        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/actionC')"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:yellow"/></button></td>
-        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendCommand('/{url}/actionD')"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:blue"/></button></td>
+        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/actionA', null, 'GET', false, true)"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:red"/></button></td>
+        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/actionB', null, 'GET', false, true)"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:green"/></button></td>
+        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/actionC', null, 'GET', false, true)"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:yellow"/></button></td>
+        <td style="width: 25%"><button class="btn btn-block btn-default" onclick="sendHttp('/{url}/actionD', null, 'GET', false, true)"><span class="glyphicon glyphicon-certificate" aria-hidden="true" style="color:blue"/></button></td>
     </tr>
 </table>
