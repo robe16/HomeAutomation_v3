@@ -1,6 +1,9 @@
 # Home Auto configuration file (specific to user setup incl IP addresses etc)
 *.ini
 config.json
+config_devices.json
+config_nest.json
+config_tvguide.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
