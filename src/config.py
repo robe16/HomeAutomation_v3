@@ -1,11 +1,11 @@
-import dataholder
+import nest_static_vars
 import json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 
 
-def read_config_json():
-    with open('config.json', 'r') as data_file:
+def read_config_devices():
+    with open('config_devices.json', 'r') as data_file:
         data = json.load(data_file)
     data_allrooms = data["rooms"]
     #
@@ -40,22 +40,38 @@ def read_config_json():
             y+=1
         ARRobjects.append([data_room["name"].encode('ascii'), groups])
         x+=1
-    data_nest = data["nest"]
     return ARRobjects
 
 
-def write_config_json(ARRobjects):
+def read_config_nest():
+    with open('config_nest.json', 'r') as data_file:
+        data = json.load(data_file)
+    ARRnestData = []
+    ARRnestData.append(data['nest']['pincode'])
+    ARRnestData.append(data['nest']['token'])
+    ARRnestData.append(data['nest']['tokenexpiry'])
+    return ARRnestData
+
+
+def write_config_devices(ARRobjects):
     try:
-        with open('config.json', 'w') as outfile:
-            outfile.write(json.dumps(create_config_json(ARRobjects), outfile, indent=4, separators=(',', ': ')))
+        with open('config_devices.json', 'w') as outfile:
+            outfile.write(json.dumps(create_json_devices(ARRobjects), outfile, indent=4, separators=(',', ': ')))
         return True
     except:
         return False
 
-def create_config_json(ARRobjects):
-    return ({'rooms': config_json_room(ARRobjects), 'nest': config_json_nest()})
 
-def config_json_room(ARRobjects):
+def write_config_nest(ARRnestData):
+    try:
+        with open('config_nest.json', 'w') as outfile:
+            outfile.write(json.dumps(create_json_nest(ARRnestData), outfile, indent=4, separators=(',', ': ')))
+        return True
+    except:
+        return False
+
+
+def create_json_devices(ARRobjects):
     DICTrooms=[]
     x=0
     while x<len(ARRobjects):
@@ -86,10 +102,12 @@ def config_json_room(ARRobjects):
             y+=1
         DICTrooms.append({"name": ARRobjects[x][0], "groups": DICTgroups})
         x+=1
-    return DICTrooms
+    return {'rooms': DICTrooms}
 
-def config_json_nest():
-    return {'pincode': dataholder.STRnest_pincode, 'token': dataholder.STRnest_token, 'tokenexpiry': dataholder.STRnest_tokenexp}
+
+def create_json_nest(ARRnestData):
+    return {'nest': {'pincode': ARRnestData[0], 'token': ARRnestData[1], 'tokenexpiry': ARRnestData[2]}}
+
 
 '''
 ******** Example JSON ********
@@ -124,8 +142,9 @@ def config_json_nest():
         }
         ]
     }
-    ],
-"nest":
+    ]
+}
+{"nest":
     {
     "pincode": "xxxxxx",
     "token": "45678-gfsas-2354656u-hgfds-eretry",

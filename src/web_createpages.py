@@ -72,8 +72,9 @@ def create_settings_tvguide(listings, ARRobjects):
            urlopen('web/footer.html').read().encode('utf-8')
 
 def create_settings_nest(ARRobjects, clientID, STRnest_pincode, random):
-    nesturl = ("https://home.nest.com/login/oauth2?client_id=" + clientID + "&state=" + "26GA-" + random)
-    pincode = ("value=\""+STRnest_pincode+"\"") if bool(STRnest_pincode) else ""
+    nesturl = ('https://home.nest.com/login/oauth2?client_id={}&state={}').format(clientID, random)
+    pincode = (' value="{}"').format(STRnest_pincode) if bool(STRnest_pincode) else ''
+    print STRnest_pincode
     return _header(ARRobjects)+\
            urlopen('web/comp_alert.html').read().encode('utf-8')+\
            urlopen('web/settings_nest.html').read().encode('utf-8').format(nesturl, pincode)+\

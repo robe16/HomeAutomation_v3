@@ -4,8 +4,8 @@ import time
 import string
 import random
 
-import dataholder
-from config import write_config_json, read_config_json
+import nest_static_vars
+from config import write_config_devices, read_config_devices, read_config_nest
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, \
@@ -40,16 +40,6 @@ def tvlistings_process():
         time.sleep(604800)
 
 
-@route('/test/config/write')
-def get_config_write():
-    return HTTPResponse(body=write_config_json(ARRobjects), status=200)
-
-
-@route('/test/config/read')
-def get_config_read():
-    return HTTPResponse(body=read_config_json(), status=200)
-
-
 @route('/')
 def web_redirect():
     redirect('/web/home')
@@ -73,8 +63,8 @@ def web(page=""):
         return HTTPResponse(body=create_settings_tvguide(ARRobjects), status=200)
     elif page == 'settings_nest':
         return HTTPResponse(body=create_settings_nest(ARRobjects,
-                                                      dataholder.STRnest_clientID,
-                                                      dataholder.STRnest_pincode,
+                                                      nest_static_vars.STRnest_clientID,
+                                                      ARRnestData[0],
                                                       randomstring),
                             status=200)
     elif page == 'about':
@@ -183,8 +173,8 @@ def save_settings(x="-"):
         pincode = request.query.pincode
         if not bool(pincode):
             return HTTPResponse(status=400)
-        dataholder.STRnest_pincode = pincode
-        write_config_json(ARRobjects)
+        nest_static_vars.STRnest_pincode = pincode
+        write_config_devices(ARRobjects)
         return HTTPResponse(status=200)
     else:
         return HTTPResponse(status=400)
@@ -201,9 +191,13 @@ def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/{}'.format(category))
     return static_file(filename, root=root, mimetype='image/png')
 
+
+#TODO temp variable here with property postcode (replace with settings page input etc.)
+postcode='ls27'
 # Create objects from configuration file
-randomstring = (''.join(random.choice(string.ascii_lowercase) for i in range(5)))
-ARRobjects = read_config_json()
+randomstring = (postcode.join('-').join(random.choice(string.ascii_lowercase) for i in range(5)))
+ARRobjects = read_config_devices()
+ARRnestData = read_config_nest()
 #
 # Create processes for TV Listing code and code to start bottle server
 list_listings = Queue()
