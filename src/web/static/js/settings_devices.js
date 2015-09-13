@@ -489,7 +489,7 @@ function buildJson()
                                             {
                                                 //
                                                 inptsProps = childDivDvc.getElementsByTagName('input');
-                                                json += '{"type": "'+dvcType+'", ';
+                                                json += '{"type": "'+dvcType+'"';
                                                 //
                                                 for (var l = 0; l < inptsProps.length; l++)
                                                     {
@@ -507,7 +507,7 @@ function buildJson()
                                                         if (inptsProps[l].type=='text')
                                                             {json += '"'+inptsProps[l].id+'": "'+inptsProps[l].value+'"';}
                                                         else if (inptsProps[l].type=='checkbox')
-                                                            {json += '"'+inptsProps[l].id+'": "'+inptsProps[l].checked+'"';}
+                                                            {json += '"'+inptsProps[l].id+'": '+inptsProps[l].checked;}
                                                         //
                                                     }
                                                 //

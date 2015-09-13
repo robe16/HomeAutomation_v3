@@ -182,12 +182,12 @@ def save_settings(x="-"):
     elif x == 'devices':
         #TODO json data
         data = request.body
-        print data
+        print data.getvalue()
         if data:
-            tempARR = read_json_devices(data)
+            tempARR = read_json_devices(data.getvalue())
             if write_config_devices(tempARR):
                 ARRobjects = tempARR
-                return HTTPResponse(status=400)
+                return HTTPResponse(status=200)
             else:
                 return HTTPResponse(status=400)
         else:

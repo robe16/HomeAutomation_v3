@@ -1,4 +1,3 @@
-import ast
 import json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
@@ -10,12 +9,11 @@ def read_config_devices():
     return read_json_devices(data)
 
 
-def read_json_devices(x):
-    if not isinstance(x, dict):
-        #TODO need to convert string into dict/json format as will not loop through further down
-        data = ast.literal_eval(x.getvalue())
+def read_json_devices(dataX):
+    if not isinstance(dataX, dict):
+        data = json.loads(dataX)
     else:
-        data = x
+        data = dataX
     data_allrooms = data["rooms"]
     #
     x=0
