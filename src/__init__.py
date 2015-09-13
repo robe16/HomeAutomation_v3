@@ -5,7 +5,8 @@ import string
 import random
 
 import nest_static_vars
-from config import write_config_devices, read_json_devices, read_config_devices, write_config_nest, read_config_nest
+from config_devices import write_config_devices, read_json_devices, read_config_devices
+from config_nest import write_config_nest, read_config_nest
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, \

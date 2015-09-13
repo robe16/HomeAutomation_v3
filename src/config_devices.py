@@ -50,29 +50,10 @@ def read_json_devices(dataX):
     return ARRobjects
 
 
-def read_config_nest():
-    with open('config_nest.json', 'r') as data_file:
-        data = json.load(data_file)
-    ARRnestData = []
-    ARRnestData.append(data['nest']['pincode'])
-    ARRnestData.append(data['nest']['token'])
-    ARRnestData.append(data['nest']['tokenexpiry'])
-    return ARRnestData
-
-
 def write_config_devices(ARRobjects):
     try:
         with open('config_devices.json', 'w') as outfile:
             outfile.write(json.dumps(create_json_devices(ARRobjects), outfile, indent=4, separators=(',', ': ')))
-        return True
-    except:
-        return False
-
-
-def write_config_nest(ARRnestData):
-    try:
-        with open('config_nest.json', 'w') as outfile:
-            outfile.write(json.dumps(create_json_nest(ARRnestData), outfile, indent=4, separators=(',', ': ')))
         return True
     except:
         return False
@@ -112,45 +93,8 @@ def create_json_devices(ARRobjects):
     return {'rooms': DICTrooms}
 
 
-def create_json_nest(ARRnestData):
-    return {'nest': {'pincode': ARRnestData[0], 'token': ARRnestData[1], 'tokenexpiry': ARRnestData[2]}}
-
-
 '''
 ******** Example JSON ********
-{"rooms":
-    [
-    {"name": "lounge",
-    "groups":
-        [
-        {"name": "TV",
-        "devices":
-            [
-            {
-            "name": "LGTV",
-            "type": "lgtv",
-            "ipaddress": dataholder.STRloungetv_lgtv_ipaddress,
-            "pairingkey": dataholder.STRloungetv_lgtv_pairkey
-            "usetvguide": true/false
-            },
-            {
-            "name": "TIVO",
-            "type": "tivo",
-            "ipaddress": dataholder.STRloungetv_tivo_ipaddress,
-            "mak": dataholder.STRloungetv_tivo_mak
-            "usetvguide": true/false
-            }
-            ]
-        },
-        {
-        "Music":
-            [
-            ]
-        }
-        ]
-    }
-    ]
-}
 {"nest":
     {
     "pincode": "xxxxxx",
