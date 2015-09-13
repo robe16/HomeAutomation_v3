@@ -489,7 +489,7 @@ function buildJson()
                                             {
                                                 //
                                                 inptsProps = childDivDvc.getElementsByTagName('input');
-                                                json += '{';
+                                                json += '{"type": "'+dvcType+'", ';
                                                 //
                                                 for (var l = 0; l < inptsProps.length; l++)
                                                     {
@@ -503,7 +503,7 @@ function buildJson()
                                                                 {inptsProps[l].parentElement.className='';}
                                                             }
                                                         //
-                                                        if (l > 0) {json+=', '};
+                                                        json+=', '
                                                         if (inptsProps[l].type=='text')
                                                             {json += '"'+inptsProps[l].id+'": "'+inptsProps[l].value+'"';}
                                                         else if (inptsProps[l].type=='checkbox')
@@ -529,10 +529,21 @@ function buildJson()
         //
         json += ']}';
         //
-        //return json;
+        if (errorFound)
+            {
+            alert('Error!! See highlighted fields for incorrect entry');
+            return false;
+            }
+        else
+            {return json;}
         //
-        if (errorFound) {alert('Error!! See highlighted fields for incorrect entry');} else {alert(json);}
-        //
+    }
+
+
+function sendJson()
+    {
+    jsonDvc = buildJson();
+    if (jsonDvc) {sendHttp('/settings/devices', jsonDvc, 'POST', false, true)}
     }
 
 

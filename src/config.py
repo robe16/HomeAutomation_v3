@@ -1,4 +1,4 @@
-import nest_static_vars
+import ast
 import json
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
@@ -7,6 +7,15 @@ from object_tivo import object_TIVO
 def read_config_devices():
     with open('config_devices.json', 'r') as data_file:
         data = json.load(data_file)
+    return read_json_devices(data)
+
+
+def read_json_devices(x):
+    if not isinstance(x, dict):
+        #TODO need to convert string into dict/json format as will not loop through further down
+        data = ast.literal_eval(x.getvalue())
+    else:
+        data = x
     data_allrooms = data["rooms"]
     #
     x=0

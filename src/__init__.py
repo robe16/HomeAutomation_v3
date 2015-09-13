@@ -5,7 +5,7 @@ import string
 import random
 
 import nest_static_vars
-from config import write_config_devices, read_config_devices, read_config_nest
+from config import write_config_devices, read_json_devices, read_config_devices, write_config_nest, read_config_nest
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, \
@@ -167,15 +167,31 @@ def get_tvlistings():
     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
 
 
-@route('/settings/<x>')
+@route('/settings/<x>', method='GET')
+@route('/settings/<x>', method='POST')
 def save_settings(x="-"):
     if x == 'nest':
         pincode = request.query.pincode
         if not bool(pincode):
             return HTTPResponse(status=400)
-        nest_static_vars.STRnest_pincode = pincode
-        write_config_devices(ARRobjects)
-        return HTTPResponse(status=200)
+        if write_config_nest([pincode, ARRnestData[1], ARRnestData[2]]):
+            ARRnestData[0] = pincode
+            return HTTPResponse(status=200)
+        else:
+            return HTTPResponse(status=400)
+    elif x == 'devices':
+        #TODO json data
+        data = request.body
+        print data
+        if data:
+            tempARR = read_json_devices(data)
+            if write_config_devices(tempARR):
+                ARRobjects = tempARR
+                return HTTPResponse(status=400)
+            else:
+                return HTTPResponse(status=400)
+        else:
+            return HTTPResponse(status=400)
     else:
         return HTTPResponse(status=400)
 
