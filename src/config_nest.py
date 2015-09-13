@@ -4,6 +4,15 @@ import json
 def read_config_nest():
     with open('config_nest.json', 'r') as data_file:
         data = json.load(data_file)
+    return read_json_nest(data)
+
+
+def read_json_nest(dataX):
+    if not isinstance(dataX, dict):
+        data = json.loads(dataX)
+    else:
+        data = dataX
+    #
     ARRnestData = []
     ARRnestData.append(data['nest']['pincode'])
     ARRnestData.append(data['nest']['token'])
