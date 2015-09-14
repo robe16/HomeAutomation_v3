@@ -6,12 +6,12 @@ import random
 
 import nest_static_vars
 from config_devices import write_config_devices, read_json_devices, read_config_devices
-from config_nest import write_config_nest, read_config_nest
+from config_nest import write_config_nest, read_json_nest, read_config_nest
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, \
     create_about, get_tvlistings_for_device, create_settings_tvguide, create_settings_nest
-from tvlisting import getall_listings, getall_xmllistings, get_xmllistings
+from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
 
 
@@ -35,9 +35,11 @@ def tvlistings_startprocess():
 
 
 def tvlistings_process():
+    time.sleep(5)
     # 604800 secs = 7 days
     while True:
-        list_listings.put(getall_listings())
+        #list_listings.put(getall_listings())
+        list_listings.put(build_channel_array())
         time.sleep(604800)
 
 
@@ -51,7 +53,7 @@ def web(page=""):
     if not list_listings.empty():
         temp = list_listings.get()
         list_listings.put(temp)
-        listings = temp[0]
+        listings = temp
     else:
         listings = False
     if page == 'home':
@@ -61,7 +63,7 @@ def web(page=""):
     elif page == 'settings_devices':
         return HTTPResponse(body=create_settings_devices(ARRobjects), status=200)
     elif page == 'settings_tvguide':
-        return HTTPResponse(body=create_settings_tvguide(ARRobjects), status=200)
+        return HTTPResponse(body=create_settings_tvguide(listings, ARRobjects), status=200)
     elif page == 'settings_nest':
         return HTTPResponse(body=create_settings_nest(ARRobjects,
                                                       nest_static_vars.STRnest_clientID,
@@ -80,7 +82,7 @@ def web(room="", group=""):
     if not list_listings.empty():
         temp = list_listings.get()
         list_listings.put(temp)
-        listings = temp[0]
+        listings = temp
     else:
         listings = False
     # If query for tv listings availability, return html code
@@ -125,34 +127,34 @@ def send_command(room="-", group="-", device="-", command="-"):
         x += 1
     #
     return HTTPResponse(status=400)
-    '''if room=="lounge" and device=="lgtv" and command=="appslist":
-        APPtype = request.query.type or 3
-        APPindex = request.query.index or 0
-        APPnumber = request.query.number or 0
-        x = OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
-        return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
-    elif room=="lounge" and device=="lgtv" and command=="appicon":
-        auid = request.query.auid or False
-        name = request.query.name or False
-        if not bool(auid) or not bool(name):
-            return HTTPResponse(status=400)
-        x = OBJloungetv.getAppicon(auid, name)
-        return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
-    # TV Command
-    if room=="lounge" and device=="lgtv":
-        return HTTPResponse(status=200) if OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
-    # TiVo Command
-    elif room=="lounge" and device=="tivo":
-        if command=="channel":
-            channo = request.query.id or False
-            if channo:
-                return HTTPResponse(status=200) if OBJloungetivo.sendCmd(channo) else HTTPResponse(status=400)
-            else:
-                HTTPResponse(status=400)
-        else:
-            return HTTPResponse(status=200) if OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
-    else:
-        return HTTPResponse(status=400)'''
+    # if room=="lounge" and device=="lgtv" and command=="appslist":
+    #     APPtype = request.query.type or 3
+    #     APPindex = request.query.index or 0
+    #     APPnumber = request.query.number or 0
+    #     x = OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
+    #     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
+    # elif room=="lounge" and device=="lgtv" and command=="appicon":
+    #     auid = request.query.auid or False
+    #     name = request.query.name or False
+    #     if not bool(auid) or not bool(name):
+    #         return HTTPResponse(status=400)
+    #     x = OBJloungetv.getAppicon(auid, name)
+    #     return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
+    # # TV Command
+    # if room=="lounge" and device=="lgtv":
+    #     return HTTPResponse(status=200) if OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
+    # # TiVo Command
+    # elif room=="lounge" and device=="tivo":
+    #     if command=="channel":
+    #         channo = request.query.id or False
+    #         if channo:
+    #             return HTTPResponse(status=200) if OBJloungetivo.sendCmd(channo) else HTTPResponse(status=400)
+    #         else:
+    #             HTTPResponse(status=400)
+    #     else:
+    #         return HTTPResponse(status=200) if OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
+    # else:
+    #     return HTTPResponse(status=400)
 
 
 @route('/tvlistings')
@@ -162,9 +164,9 @@ def get_tvlistings():
     else:
         temp = list_listings.get()
         list_listings.put(temp)
-        listings = temp[0]
-    channel = request.query.id or False
-    x = get_xmllistings(listings, channel) if bool(channel) else getall_xmllistings(listings)
+        listings = temp
+    channel = request.query.id or None
+    x = returnnonext_xml_all(listings, channel)
     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
 
 

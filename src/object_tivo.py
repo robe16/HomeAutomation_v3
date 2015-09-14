@@ -9,8 +9,7 @@ class object_TIVO:
         self._INTport = INTport
         self._STRaccesskey = STRaccesskey
         self._tvguide_use = BOOLtvguide_use
-        self._device = "tivo"
-        self._chan_array_no = 0
+        self._type = "tivo"
         self._name = STRname
         self._html = "object-tivo.html"
         self._img = "logo_virgin.png"
@@ -28,14 +27,11 @@ class object_TIVO:
     def setAccesskey(self, STRaccesskey):
         self._STRaccesskey = STRaccesskey
 
-    def getChan_array_no(self):
-        return self._chan_array_no
-
     def getTvguide_use(self):
         return self._tvguide_use
 
-    def getDevice(self):
-        return self._device
+    def getType(self):
+        return self._type
 
     def getName(self):
         return self._name

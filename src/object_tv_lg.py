@@ -15,8 +15,7 @@ class object_LGTV:
         self._INTport = INTport
         self._STRpairingkey = STRpairingkey
         self._tvguide_use = BOOLtvguide_use
-        self._device = "lgtv"
-        self._chan_array_no = False
+        self._type = "lgtv"
         if self._STRpairingkey!=None:
             self._pairDevice()
         self._name = STRname
@@ -36,14 +35,11 @@ class object_LGTV:
         self._STRpairingkey = STRpairingkey
         self._pairDevice()
 
-    def getChan_array_no(self):
-        return self._chan_array_no
-
     def getTvguide_use(self):
         return self._tvguide_use
 
-    def getDevice(self):
-        return self._device
+    def getType(self):
+        return self._type
 
     def getName(self):
         return self._name

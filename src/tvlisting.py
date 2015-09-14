@@ -1,111 +1,121 @@
 from datetime import datetime, timedelta
-import enum_channels
+import json
 from send_cmds import sendHTTP
+from object_channel import object_channel
 
 
-def getall_listings():
-    channels = enum_channels.LSTchannels
+def build_channel_array():
+    with open('list_channels.json', 'r') as data_file:
+        data = json.load(data_file)
+    data_channels = data["channels"]
+    #
+    dict_channels = {}
     x = 0
-    while x < len(channels):
-        print ('Retrieving TV Listing information: {} out of {} completed - {}'.format(x + 1, len(channels), channels[x][0]))
-        channels[x].append(get_listings(channels[x]))
+    while x < len(data_channels):
+        #
+        chan = data_channels[x]
+        #
+        print (
+            'Building channels and retrieving TV Listing information: {} out of {} - {}'.format(x + 1, len(data_channels),
+                                                                                                chan['name']))
+        #
+        dict_devicekeys = {}
+        for k, v in chan['devicekeys'].items():
+            dict_devicekeys[k] = v
+        #
+        dict_listingsrc = {}
+        dict_listings = {}
+        for k, v in chan['listingsrc'].items():
+            dict_listingsrc[k] = v
+            dict_listings[k] = getlisting(k, v)
+        #
+        objchan = object_channel(chan['name'], chan['logo'], chan['type'], dict_devicekeys, dict_listingsrc,
+                                 dict_listings, datetime.now())
+        #
+        dict_channels[x] = objchan
+        #
         x += 1
-    return [channels, datetime.now()]
+        #
+    return dict_channels
 
 
-def get_listings(list_channeldetails):
-    x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{}.dat'.format(list_channeldetails[1]), "close")
-    return x.read() if bool(x) else None
-
-
-def getall_xmllistings(data):
-    str_xml = '<listings><timestamp>{}</timestamp>'.format(datetime.now().strftime('%d/%m/%Y %H:%M'))
-    x = 0
-    while x < len(data):
-        str_xml += get_xmllistings(data[x], x)
-        x += 1
-    str_xml += "</listings>"
-    return str_xml
-
-
-def get_xmllistings(data, id):
-    str_xml = '<channel id="{}"><details><name>{}</name><logo>{}</logo><type>{}</type><tivo>{}</tivo></details>'.format(id, str(data[0]), str(data[2]), str(data[3]), str(data[4]))
-    if not data[5] == False and not data[5] == None:
-        str_xml += sort_xmllistings(data[5])
+def getlisting(src, value):
+    if src == 'radiotimes':
+        x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{}.dat'.format(value), "close")
+        data = x.read() if bool(x) else None
     else:
-        str_xml += "<listing>--</listing>"
-    str_xml += "</channel>"
+        data = None
+    return data
+
+
+def returnnownext(src, data):
+    if src == 'radiotimes':
+        arr_data_alllines = filter(None, data.split('\n'))
+        count = 2
+        while count < max(arr_data_alllines):
+            arr_data_oneline = arr_data_alllines[count].split('~')
+            # String date will be in format "dd/MM/yyyy HH:mm"
+            datetime_start = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[20], '%d/%m/%Y %H:%M')
+            datetime_end = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[21], '%d/%m/%Y %H:%M')
+
+            if not datetime_start <= datetime_end:
+                datetime_end = datetime_end + timedelta(days=1)
+
+            if datetime_start <= datetime.now() <= datetime_end:
+                #
+                dict_nownext = {}
+                next = 0
+                while next <= 5:
+                    arr_data_oneline = arr_data_alllines[count + next].split('~')
+                    datetime_start = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[20],
+                                                       '%d/%m/%Y %H:%M')
+                    datetime_end = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[21],
+                                                     '%d/%m/%Y %H:%M')
+                    if not datetime_start <= datetime_end:
+                        datetime_end = datetime_end + timedelta(days=1)
+                    #
+                    dict_listing = {}
+                    dict_listing['startdate'] = datetime_start.strftime('%d/%m/%Y')
+                    dict_listing['starttime'] = datetime_start.strftime('%H:%M')
+                    dict_listing['enddate'] = datetime_end.strftime('%d/%m/%Y')
+                    dict_listing['endtime'] = datetime_end.strftime('%H:%M')
+                    dict_listing['title'] = arr_data_oneline[0]
+                    dict_listing['desc'] = arr_data_oneline[17]
+                    #
+                    dict_nownext[next] = dict_listing
+                    #
+                    next += 1
+                #
+                return dict_nownext
+            count += 1
+    return None
+
+
+def returnnonext_xml_all(dict_channels, chan=None):
+    str_xml = '<timestamp>{}</timestamp>'.format(datetime.now().strftime('%d/%m/%Y %H:%M'))
+    if chan:
+        str_xml += returnnownext_xml(dict_channels[chan])
+    else:
+        for chan in dict_channels.items():
+            str_xml += returnnownext_xml(dict_channels[chan])
     return str_xml
 
 
-def sort_xmllistings(result):
-    arr_resultlines = filter(None, result.split('\n'))
-
-    count = 2
-    while count < len(arr_resultlines):
-        resultbreakdown = arr_resultlines[count].split('~')
-        # String date will be in format "dd/MM/yyyy HH:mm"
-        datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
-        datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
-
-        if not datetime_start <= datetime_end:
-            datetime_end = datetime_end + timedelta(days=1)
-
-        if datetime_start <= datetime.now() <= datetime_end:
-            #
-            str_xml = ""
-            next = 0
-            while next <= 5:
-                resultbreakdown = arr_resultlines[count + next].split('~')
-                datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
-                datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
-                if not datetime_start <= datetime_end:
-                    datetime_end = datetime_end + timedelta(days=1)
-                str_xml += '<listing><start>{}</start><end>{}</end><name>{}</name><blurb>{}</blurb></listing>'.format(datetime_start.strftime('%d/%m/%Y %H:%M'), datetime_end.strftime('%d/%m/%Y %H:%M'), resultbreakdown[0], resultbreakdown[17])
-                next += 1
-            #
-            return str_xml
-        count += 1
-
-    return "<listing>--</listing>"
-
-
-def sort_arrlistings(result):
-    arr_resultlines = filter(None, result.split('\n'))
-
-    count = 2
-    while count < max(arr_resultlines):
-        resultbreakdown = arr_resultlines[count].split('~')
-        # String date will be in format "dd/MM/yyyy HH:mm"
-        datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
-        datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
-
-        if not datetime_start <= datetime_end:
-            datetime_end = datetime_end + timedelta(days=1)
-
-        if datetime_start <= datetime.now() <= datetime_end:
-            #
-            arr_listing = [[datetime_start.strftime('%d/%m/%Y'),
-                           datetime_start.strftime('%H:%M'),
-                           datetime_end.strftime('%d/%m/%Y'),
-                           datetime_end.strftime('%H:%M'),
-                           resultbreakdown[0],
-                           resultbreakdown[17]]]
-            next = 1
-            while next <= 5:
-                resultbreakdown = arr_resultlines[count + next].split('~')
-                datetime_start = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[20], '%d/%m/%Y %H:%M')
-                datetime_end = datetime.strptime(resultbreakdown[19] + " " + resultbreakdown[21], '%d/%m/%Y %H:%M')
-                if not datetime_start <= datetime_end:
-                    datetime_end = datetime_end + timedelta(days=1)
-                arr_listing.append([datetime_start.strftime('%d/%m/%Y'),
-                                   datetime_start.strftime('%H:%M'),
-                                   datetime_end.strftime('%d/%m/%Y'),
-                                   datetime_end.strftime('%H:%M'),
-                                   resultbreakdown[0],
-                                   resultbreakdown[17]])
-                next += 1
-            #
-            return arr_listing
-        count += 1
-    return False
+def returnnownext_xml(objchan):
+    str_xml = '<channel><details><name>{}</name><logo>{}</logo><type>{}</type></details>'.format(id, objchan.name(),
+                                                                                                 objchan.logo(),
+                                                                                                 objchan.type())
+    if not objchan.getListings() == None:
+        for src, data in objchan.getListings().items():
+            if data:
+                dict_nownextlisting = returnnownext(src, data)
+                for dict_listing in dict_nownextlisting.items():
+                    str_xml += '<listing><start>{}</start><end>{}</end><name>{}</name><desc>{}</desc></listing>'.format(
+                        dict_listing['startdate'] + " " + dict_listing['starttime'],
+                        dict_listing['enddate'] + " " + dict_listing['endtime'], dict_listing['title'],
+                        dict_listing['desc'])
+                str_xml += '</channel>'
+                return str_xml
+    str_xml += '<listing>--</listing></channel>'
+    return str_xml
+# <listingtimestamp>{}</listingtimestamp>
