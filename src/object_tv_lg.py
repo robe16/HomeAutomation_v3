@@ -1,5 +1,5 @@
 from send_cmds import sendHTTP
-from enum_remoteLGTV import LSTremote_lgtv
+from list_remotes_retriever import read_list_remotes
 
 
 class object_LGTV:
@@ -54,7 +54,7 @@ class object_LGTV:
         return self._BOOLpaired
 
     def _pairDevice(self):
-        STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>%s</value><port>%s</port></api></envelope>" % (self._STRpairingkey, str(self._INTport))
+        STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._STRpairingkey, str(self._INTport))
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHpair), "close", data=STRxml)
         self._BOOLpaired = bool(x)
         return self._BOOLpaired            
@@ -63,7 +63,6 @@ class object_LGTV:
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHpair), "close", data=STRxml)
         return str(x.getcode()).startswith("2") if bool(x) else False
-
 
     def getChan(self):
         # sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHquery)+"?target=cur_channel", "close")
@@ -79,13 +78,13 @@ class object_LGTV:
                 count+=1
         if count==5 and not self._BOOLpaired:
             return False
-        comms = LSTremote_lgtv
-        for x in range(len(comms)):
-            if comms[x][0]==STRcommand:
-                STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"command\"><name>HandleKeyInput</name><value>%s</value></api></envelope>" % (comms[x][1])
-                x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
-                return str(x.getcode()).startswith("2") if bool(x) else False
-        return False
+        data = read_list_remotes(self._type, STRcommand)
+        if data:
+            STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"command\"><name>HandleKeyInput</name><value>{}</value></api></envelope>".format(data)
+            x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+            return str(x.getcode()).startswith("2") if bool(x) else False
+        else:
+            return False
 
     def getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         # Note - If both index and number are 0, the list of all apps in the category specified by type is fetched.
@@ -96,7 +95,7 @@ class object_LGTV:
         # 'APPindex' specifies the starting index of the apps list. The value range is from 1 to 1024.
         # 'APPnumber' specifies the number of apps to be obtained from the starting index.
         #             This value has to be greater than or equal to the index value. The value can be from 1 to 1024.
-        STRurl = "/udap/api/data?target=applist_get&type=%s&index=%s&number=%s" % (str(APPtype), str(APPindex), str(APPnumber))
+        STRurl = "/udap/api/data?target=applist_get&type={}&index={}&number={}".format(str(APPtype), str(APPindex), str(APPnumber))
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+STRurl, "keep-alive")
         if bool(x):
             return x.read() if str(x.getcode()).startswith("2") else False
@@ -105,8 +104,8 @@ class object_LGTV:
 
     def getAppicon (self, auid, name):
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
-		# name = App name
-        STRurl = "/udap/api/data?target=appicon_get&auid=%s&appname=%s" % (auid, name)
+        # name = App name
+        STRurl = "/udap/api/data?target=appicon_get&auid={}&appname={}".format(auid, name)
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+STRurl, "keep-alive")
         if bool(x):
             return x.read() if str(x.getcode()).startswith("2") else False

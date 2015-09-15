@@ -1,5 +1,5 @@
-from send_cmds import sendSOCKET, sendTELNET
-from enum_remoteTIVO import LSTremote_tivo
+from send_cmds import sendTELNET
+from list_remotes_retriever import read_list_remotes
 
 class object_TIVO:
     '''TiVo object'''
@@ -58,10 +58,5 @@ class object_TIVO:
         elif STRcommand.isdigit():
             return sendTELNET(self._STRipaddress, self._INTport, data=("FORCECH {}\r").format(STRcommand), response=True)
         else:
-            comms = LSTremote_tivo
-            x=0
-            while x <len(comms):
-                if comms[x][0]==STRcommand:
-                    return sendTELNET(self._STRipaddress, self._INTport, data=comms[x][1])
-                x+=1
-            return False
+            data = read_list_remotes(self._type, STRcommand)
+            return sendTELNET(self._STRipaddress, self._INTport, data=data) if data else False

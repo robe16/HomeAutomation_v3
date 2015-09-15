@@ -35,8 +35,8 @@ def sendTELNET(ipaddress, port, data=None, response=False):
         tn = telnetlib.Telnet(ipaddress, port)
         time.sleep(0.1)
         output = tn.read_eager() if response else None
-        if not data==None:
-            tn.write(data+"\n")
+        if data:
+            tn.write(str(data)+"\n")
             time.sleep(0.1)
             output = tn.read_eager()
             output = output if (response and not bool(output)) else True
