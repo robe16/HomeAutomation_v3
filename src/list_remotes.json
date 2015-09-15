@@ -1,0 +1,644 @@
+{
+  "remotes": [
+    {
+      "lgtv": [
+        {
+          "name": "power",
+          "command": "1"
+        },
+        {
+          "name": "0",
+          "command": "2"
+        },
+        {
+          "name": "1",
+          "command": "3"
+        },
+        {
+          "name": "2",
+          "command": "4"
+        },
+        {
+          "name": "3",
+          "command": "5"
+        },
+        {
+          "name": "4",
+          "command": "6"
+        },
+        {
+          "name": "5",
+          "command": "7"
+        },
+        {
+          "name": "6",
+          "command": "8"
+        },
+        {
+          "name": "7",
+          "command": "9"
+        },
+        {
+          "name": "8",
+          "command": "10"
+        },
+        {
+          "name": "9",
+          "command": "11"
+        },
+        {
+          "name": "up",
+          "command": "12"
+        },
+        {
+          "name": "down",
+          "command": "13"
+        },
+        {
+          "name": "left",
+          "command": "14"
+        },
+        {
+          "name": "right",
+          "command": "15"
+        },
+        {
+          "name": "ok",
+          "command": "20"
+        },
+        {
+          "name": "home",
+          "command": "21"
+        },
+        {
+          "name": "menu",
+          "command": "22"
+        },
+        {
+          "name": "prev",
+          "command": "23"
+        },
+        {
+          "name": "volup",
+          "command": "24"
+        },
+        {
+          "name": "voldown",
+          "command": "25"
+        },
+        {
+          "name": "mute",
+          "command": "26"
+        },
+        {
+          "name": "chanup",
+          "command": "27"
+        },
+        {
+          "name": "chandown",
+          "command": "28"
+        },
+        {
+          "name": "blue",
+          "command": "29"
+        },
+        {
+          "name": "green",
+          "command": "30"
+        },
+        {
+          "name": "red",
+          "command": "31"
+        },
+        {
+          "name": "yellow",
+          "command": "32"
+        },
+        {
+          "name": "play",
+          "command": "33"
+        },
+        {
+          "name": "pause",
+          "command": "34"
+        },
+        {
+          "name": "stop",
+          "command": "35"
+        },
+        {
+          "name": "fastforward",
+          "command": "36"
+        },
+        {
+          "name": "rewind",
+          "command": "37"
+        },
+        {
+          "name": "skipforward",
+          "command": "38"
+        },
+        {
+          "name": "skipbackward",
+          "command": "39"
+        },
+        {
+          "name": "record",
+          "command": "40"
+        },
+        {
+          "name": "recordinglist",
+          "command": "41"
+        },
+        {
+          "name": "repeat",
+          "command": "42"
+        },
+        {
+          "name": "livetv",
+          "command": "43"
+        },
+        {
+          "name": "epg",
+          "command": "44"
+        },
+        {
+          "name": "currentprograminfo",
+          "command": "45"
+        },
+        {
+          "name": "aspectratio",
+          "command": "46"
+        },
+        {
+          "name": "externalinput",
+          "command": "47"
+        },
+        {
+          "name": "pipsecondaryvideo",
+          "command": "48"
+        },
+        {
+          "name": "showchangesubtitle",
+          "command": "49"
+        },
+        {
+          "name": "programlist",
+          "command": "50"
+        },
+        {
+          "name": "teletext",
+          "command": "51"
+        },
+        {
+          "name": "mark",
+          "command": "52"
+        },
+        {
+          "name": "3dvideo",
+          "command": "400"
+        },
+        {
+          "name": "3dlr",
+          "command": "401"
+        },
+        {
+          "name": "dash",
+          "command": "402"
+        },
+        {
+          "name": "previouschannelflashback",
+          "command": "403"
+        },
+        {
+          "name": "favouritechannel",
+          "command": "404"
+        },
+        {
+          "name": "quickmenu",
+          "command": "405"
+        },
+        {
+          "name": "textoption",
+          "command": "406"
+        },
+        {
+          "name": "audiodescription",
+          "command": "407"
+        },
+        {
+          "name": "netcastkey",
+          "command": "408"
+        },
+        {
+          "name": "energysaving",
+          "command": "409"
+        },
+        {
+          "name": "avmode",
+          "command": "410"
+        },
+        {
+          "name": "simplink",
+          "command": "411"
+        },
+        {
+          "name": "exit",
+          "command": "412"
+        },
+        {
+          "name": "reservationprogramslist",
+          "command": "413"
+        },
+        {
+          "name": "pipchannelup",
+          "command": "414"
+        },
+        {
+          "name": "pipchanneldown",
+          "command": "415"
+        },
+        {
+          "name": "switchprimarysecondaryvideo",
+          "command": "416"
+        },
+        {
+          "name": "myapps",
+          "command": "417"
+        }
+      ]
+    },
+    {
+      "samsungtv": [
+        {
+          "name": "power",
+          "command": "KEY_POWEROFF"
+        },
+        {
+          "name": "0",
+          "command": "KEY_0"
+        },
+        {
+          "name": "1",
+          "command": "KEY_1"
+        },
+        {
+          "name": "2",
+          "command": "KEY_2"
+        },
+        {
+          "name": "3",
+          "command": "KEY_3"
+        },
+        {
+          "name": "4",
+          "command": "KEY_4"
+        },
+        {
+          "name": "5",
+          "command": "KEY_5"
+        },
+        {
+          "name": "6",
+          "command": "KEY_6"
+        },
+        {
+          "name": "7",
+          "command": "KEY_7"
+        },
+        {
+          "name": "8",
+          "command": "KEY_8"
+        },
+        {
+          "name": "9",
+          "command": "KEY_9"
+        },
+        {
+          "name": "aspect",
+          "command": "KEY_ASPECT"
+        },
+        {
+          "name": "ratio43",
+          "command": "KEY_4_3"
+        },
+        {
+          "name": "ratio169",
+          "command": "KEY_16_9"
+        },
+        {
+          "name": "applist",
+          "command": "KEY_APP_LIST"
+        },
+        {
+          "name": "inputav1",
+          "command": "KEY_AV1"
+        },
+        {
+          "name": "inputav2",
+          "command": "KEY_AV2"
+        },
+        {
+          "name": "inputav3",
+          "command": "KEY_AV3"
+        },
+        {
+          "name": "inputcomponent1",
+          "command": "KEY_COMPONENT1"
+        },
+        {
+          "name": "inputcomponent2",
+          "command": "KEY_COMPONENT2"
+        },
+        {
+          "name": "hdmi",
+          "command": "KEY_HDMI"
+        },
+        {
+          "name": "hdmi1",
+          "command": "KEY_HDMI1"
+        },
+        {
+          "name": "hdmi2",
+          "command": "KEY_HDMI2"
+        },
+        {
+          "name": "hdmi3",
+          "command": "KEY_HDMI3"
+        },
+        {
+          "name": "hdmi4",
+          "command": "KEY_HDMI4"
+        },
+        {
+          "name": "up",
+          "command": "KEY_UP"
+        },
+        {
+          "name": "down",
+          "command": "KEY_DOWN"
+        },
+        {
+          "name": "left",
+          "command": "KEY_LEFT"
+        },
+        {
+          "name": "right",
+          "command": "KEY_RIGHT"
+        },
+        {
+          "name": "enter",
+          "command": "KEY_ENTER"
+        },
+        {
+          "name": "home",
+          "command": "KEY_HOME"
+        },
+        {
+          "name": "menu",
+          "command": "KEY_MENU"
+        },
+        {
+          "name": "tools",
+          "command": "KEY_TOOLS"
+        },
+        {
+          "name": "clear",
+          "command": "KEY_CLEAR"
+        },
+        {
+          "name": "return",
+          "command": "KEY_RETURN"
+        },
+        {
+          "name": "volup",
+          "command": "KEY_UP"
+        },
+        {
+          "name": "voldown",
+          "command": "KEY_VOLDOWN"
+        },
+        {
+          "name": "mute",
+          "command": "KEY_MUTE"
+        },
+        {
+          "name": "chanup",
+          "command": "KEY_CHUP"
+        },
+        {
+          "name": "chandown",
+          "command": "KEY_CHDOWN"
+        },
+        {
+          "name": "blue",
+          "command": "KEY_CYAN"
+        },
+        {
+          "name": "green",
+          "command": "KEY_GREEN"
+        },
+        {
+          "name": "red",
+          "command": "KEY_RED"
+        },
+        {
+          "name": "yellow",
+          "command": "KEY_YELLOW"
+        },
+        {
+          "name": "play",
+          "command": "KEY_PLAY"
+        },
+        {
+          "name": "pause",
+          "command": "KEY_PAUSE"
+        },
+        {
+          "name": "stop",
+          "command": "KEY_STOP"
+        },
+        {
+          "name": "rewind",
+          "command": "KEY_REWIND"
+        },
+        {
+          "name": "record",
+          "command": "KEY_REC"
+        }
+      ]
+    },
+    {
+      "tivo": [
+        {
+          "name": "power",
+          "command": "IRCODE STANDBY\r"
+        },
+        {
+          "name": "1",
+          "command": "IRCODE NUM1\r"
+        },
+        {
+          "name": "2",
+          "command": "IRCODE NUM2\r"
+        },
+        {
+          "name": "3",
+          "command": "IRCODE NUM3\r"
+        },
+        {
+          "name": "4",
+          "command": "IRCODE NUM4\r"
+        },
+        {
+          "name": "5",
+          "command": "IRCODE NUM5\r"
+        },
+        {
+          "name": "6",
+          "command": "IRCODE NUM6\r"
+        },
+        {
+          "name": "7",
+          "command": "IRCODE NUM7\r"
+        },
+        {
+          "name": "8",
+          "command": "IRCODE NUM8\r"
+        },
+        {
+          "name": "9",
+          "command": "IRCODE NUM9\r"
+        },
+        {
+          "name": "0",
+          "command": "IRCODE NUM0\r"
+        },
+        {
+          "name": "home",
+          "command": "IRCODE TIVO\r"
+        },
+        {
+          "name": "livetv",
+          "command": "IRCODE LIVETV\r"
+        },
+        {
+          "name": "myshows",
+          "command": "IRCODE NOWSHOWING\r"
+        },
+        {
+          "name": "info",
+          "command": "IRCODE INFO\r"
+        },
+        {
+          "name": "zoom",
+          "command": "IRCODE ZOOM\r"
+        },
+        {
+          "name": "guide",
+          "command": "IRCODE GUIDE\r"
+        },
+        {
+          "name": "subtitles",
+          "command": "IRCODE CC_ON\r"
+        },
+        {
+          "name": "up",
+          "command": "IRCODE UP\r"
+        },
+        {
+          "name": "down",
+          "command": "IRCODE DOWN\r"
+        },
+        {
+          "name": "left",
+          "command": "IRCODE LEFT\r"
+        },
+        {
+          "name": "right",
+          "command": "IRCODE RIGHT\r"
+        },
+        {
+          "name": "select",
+          "command": "IRCODE SELECT\r"
+        },
+        {
+          "name": "channelup",
+          "command": "IRCODE CHANNELUP\r"
+        },
+        {
+          "name": "channeldown",
+          "command": "IRCODE CHANNELDOWN\r"
+        },
+        {
+          "name": "thumbsup",
+          "command": "IRCODE THUMBSUP\r"
+        },
+        {
+          "name": "thumbsdown",
+          "command": "IRCODE THUMBSDOWN\r"
+        },
+        {
+          "name": "record",
+          "command": "IRCODE RECORD\r"
+        },
+        {
+          "name": "play",
+          "command": "IRCODE PLAY\r"
+        },
+        {
+          "name": "pause",
+          "command": "IRCODE PAUSE\r"
+        },
+        {
+          "name": "stop",
+          "command": "IRCODE STOP\r"
+        },
+        {
+          "name": "reverse",
+          "command": "IRCODE REVERSE\r"
+        },
+        {
+          "name": "forward",
+          "command": "IRCODE FORWARD\r"
+        },
+        {
+          "name": "slow",
+          "command": "IRCODE SLOW\r"
+        },
+        {
+          "name": "back",
+          "command": "IRCODE REPLAY\r"
+        },
+        {
+          "name": "next",
+          "command": "IRCODE ADVANCE\r"
+        },
+        {
+          "name": "actiona",
+          "command": "IRCODE ACTION_A\r"
+        },
+        {
+          "name": "actionb",
+          "command": "IRCODE ACTION_B\r"
+        },
+        {
+          "name": "actionc",
+          "command": "IRCODE ACTION_C\r"
+        },
+        {
+          "name": "actiond",
+          "command": "IRCODE ACTION_D\r"
+        },
+        {
+          "name": "clear",
+          "command": "IRCODE CLEAR\r"
+        },
+        {
+          "name": "enter",
+          "command": "IRCODE ENTER\r"
+        }
+      ]
+    }
+  ]
+}
