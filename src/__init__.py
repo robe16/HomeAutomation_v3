@@ -9,8 +9,9 @@ from config_devices import write_config_devices, read_json_devices, read_config_
 from config_nest import write_config_nest, read_json_nest, read_config_nest
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_createpages import create_home, create_device_group, create_tvguide, create_settings_devices, \
-    create_about, get_tvlistings_for_device, create_settings_tvguide, create_settings_nest
+from web_pages import create_home, create_device_group, create_tvguide, create_about
+from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
+from web_tvlistings import get_tvlistings_for_device
 from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect
 
