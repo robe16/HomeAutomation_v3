@@ -3,7 +3,8 @@ from tvlisting import returnnownext
 
 
 def create_home(arr_objects):
-    return _header(arr_objects) + \
+    return urlopen('web/header.html').read().encode('utf-8') + \
+           _menu(arr_objects) + \
            urlopen('web/index.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
 
@@ -46,7 +47,8 @@ def create_device_group(listings, arr_objects, room, group):
             tvguide = True
         x += 1
     if tvguide:
-        return _header(arr_objects) + \
+        return urlopen('web/header.html').read().encode('utf-8') +\
+               _menu(arr_objects) + \
                urlopen('web/comp_alert.html').read().encode('utf-8') + \
                urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                     roomgroup=room + group,
@@ -59,7 +61,8 @@ def create_device_group(listings, arr_objects, room, group):
                                                                                                            group=group)) + \
                urlopen('web/footer.html').read().encode('utf-8')
     else:
-        return _header(arr_objects) + \
+        return urlopen('web/header.html').read().encode('utf-8') +\
+               _menu(arr_objects) + \
                urlopen('web/comp_alert.html').read().encode('utf-8') + \
                urlopen('web/group_no-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                   roomgroup=room + group,
@@ -68,13 +71,15 @@ def create_device_group(listings, arr_objects, room, group):
 
 
 def create_tvguide(listings, arr_objects):
-    return _header(arr_objects) + \
+    return urlopen('web/header.html').read().encode('utf-8') +\
+           _menu(arr_objects) + \
            urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False)) + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 
 def create_settings_devices(arr_objects):
-    return _header(arr_objects) + \
+    return urlopen('web/header.html').read().encode('utf-8') +\
+           _menu(arr_objects) + \
            urlopen('web/comp_alert.html').read().encode('utf-8') + \
            urlopen('web/settings_devices.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
@@ -82,7 +87,8 @@ def create_settings_devices(arr_objects):
 
 # TODO
 def create_settings_tvguide(listings, arr_objects):
-    return _header(arr_objects) + \
+    return urlopen('web/header.html').read().encode('utf-8') +\
+           _menu(arr_objects) + \
            urlopen('web/comp_alert.html').read().encode('utf-8') + \
            urlopen('web/settings_tvguide.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
@@ -92,14 +98,16 @@ def create_settings_nest(arr_objects, clientID, STRnest_pincode, random):
     nesturl = 'https://home.nest.com/login/oauth2?client_id={}&state={}'.format(clientID, random)
     pincode = ' value="{}"'.format(STRnest_pincode) if bool(STRnest_pincode) else ''
     print STRnest_pincode
-    return _header(arr_objects) + \
+    return urlopen('web/header.html').read().encode('utf-8') +\
+           _menu(arr_objects) + \
            urlopen('web/comp_alert.html').read().encode('utf-8') + \
            urlopen('web/settings_nest.html').read().encode('utf-8').format(nesturl, pincode) + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 
 def create_about(arr_objects):
-    return _header(arr_objects) + \
+    return urlopen('web/header.html').read().encode('utf-8') +\
+           _menu(arr_objects) + \
            urlopen('web/about.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
 
@@ -127,8 +135,8 @@ def get_tvlistings_for_device(listings, arr_objects, room, group):
     return _listings_html(listings, device_url, chan_current=chan_current, room=room, group=group)
 
 
-def _header(arr_objects):
-    return urlopen('web/header.html').read().encode('utf-8') % (_headerdrops(arr_objects))
+def _menu(arr_objects):
+    return urlopen('web/menu.html').read().encode('utf-8') % (_headerdrops(arr_objects))
 
 
 def _headerdrops(arr_objects):
