@@ -1,16 +1,23 @@
 from urllib import urlopen
 from web_menu import _menu
+from web_users import html_users
 from web_tvlistings import _listings_html
 
 
-def create_home(arr_objects):
+def create_login():
     return urlopen('web/header.html').read().encode('utf-8') + \
-           _menu(arr_objects) + \
+           html_users() + \
+           urlopen('web/footer.html').read().encode('utf-8')
+
+
+def create_home(user, arr_objects):
+    return urlopen('web/header.html').read().encode('utf-8') + \
+           _menu(user, arr_objects) + \
            urlopen('web/index.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 
-def create_device_group(listings, arr_objects, room, group):
+def create_device_group(user, listings, arr_objects, room, group):
     #
     tvguide = False
     list_objects = None
@@ -49,7 +56,7 @@ def create_device_group(listings, arr_objects, room, group):
         x += 1
     if tvguide:
         return urlopen('web/header.html').read().encode('utf-8') +\
-               _menu(arr_objects) + \
+               _menu(user, arr_objects) + \
                urlopen('web/comp_alert.html').read().encode('utf-8') + \
                urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                     roomgroup=room + group,
@@ -63,7 +70,7 @@ def create_device_group(listings, arr_objects, room, group):
                urlopen('web/footer.html').read().encode('utf-8')
     else:
         return urlopen('web/header.html').read().encode('utf-8') +\
-               _menu(arr_objects) + \
+               _menu(user, arr_objects) + \
                urlopen('web/comp_alert.html').read().encode('utf-8') + \
                urlopen('web/group_no-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                   roomgroup=room + group,
@@ -71,15 +78,15 @@ def create_device_group(listings, arr_objects, room, group):
                urlopen('web/footer.html').read().encode('utf-8')
 
 
-def create_tvguide(listings, arr_objects):
+def create_tvguide(user, listings, arr_objects):
     return urlopen('web/header.html').read().encode('utf-8') +\
-           _menu(arr_objects) + \
+           _menu(user, arr_objects) + \
            urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False)) + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 
-def create_about(arr_objects):
+def create_about(user, arr_objects):
     return urlopen('web/header.html').read().encode('utf-8') +\
-           _menu(arr_objects) + \
+           _menu(user, arr_objects) + \
            urlopen('web/about.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')

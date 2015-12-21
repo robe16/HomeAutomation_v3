@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "name": "Rob",
+      "theme": "light",
+      "tvlistings": []
+    },
+    {
+      "name": "Katie",
+      "theme": "dark",
+      "tvlistings": []
+    }
+  ]
+}

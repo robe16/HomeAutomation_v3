@@ -7,18 +7,19 @@ import random
 import nest_static_vars
 from config_devices import write_config_devices, read_json_devices, read_config_devices
 from config_nest import write_config_nest, read_json_nest, read_config_nest
+from config_users import check_user
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
-from web_pages import create_home, create_device_group, create_tvguide, create_about
+from web_pages import create_login, create_home, create_device_group, create_tvguide, create_about
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
 from web_tvlistings import get_tvlistings_for_device
 from tvlisting import build_channel_array, returnnonext_xml_all
-from bottle import route, request, run, static_file, HTTPResponse, template, redirect
+from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1610, debug=True)
+    run(host='0.0.0.0', port=1619, debug=True)
 
 
 def server_start():
@@ -45,58 +46,73 @@ def tvlistings_process():
 
 
 @route('/')
+@route('/web/')
 def web_redirect():
     redirect('/web/home')
 
 
+@route('/web/login')
+@route('/web/login.php')
+def web():
+    user = request.query.user
+    if not user:
+        return HTTPResponse(body=create_login(), status=200)
+    else:
+        response.set_cookie('user', user, path='/', secret=None)
+        return redirect('/web/home')
+
+
+@route('/web/logout')
+def web():
+    response.delete_cookie('user')
+    return redirect('/web/login')
+
+
 @route('/web/<page>')
 def web(page=""):
-    if not list_listings.empty():
-        temp = list_listings.get()
-        list_listings.put(temp)
-        listings = temp
-    else:
-        listings = False
+    user = _check_user(request.get_cookie('user'))
+    if not user and page != 'login':
+        redirect('/web/login')
+    listings = _check_tvlistingsqueue()
     if page == 'home':
-        return HTTPResponse(body=create_home(ARRobjects), status=200)
+        return HTTPResponse(body=create_home(user, ARRobjects), status=200)
     elif page == 'tvguide':
-        return HTTPResponse(body=create_tvguide(listings, ARRobjects), status=200)
+        return HTTPResponse(body=create_tvguide(user, listings, ARRobjects), status=200)
     elif page == 'settings_devices':
-        return HTTPResponse(body=create_settings_devices(ARRobjects), status=200)
+        return HTTPResponse(body=create_settings_devices(user, ARRobjects), status=200)
     elif page == 'settings_tvguide':
-        return HTTPResponse(body=create_settings_tvguide(listings, ARRobjects), status=200)
+        return HTTPResponse(body=create_settings_tvguide(user, listings, ARRobjects), status=200)
     elif page == 'settings_nest':
-        return HTTPResponse(body=create_settings_nest(ARRobjects,
+        return HTTPResponse(body=create_settings_nest(user,
+                                                      ARRobjects,
                                                       nest_static_vars.STRnest_clientID,
                                                       ARRnestData[0],
                                                       randomstring),
                             status=200)
     elif page == 'about':
-        return HTTPResponse(body=create_about(ARRobjects), status=200)
+        return HTTPResponse(body=create_about(user, ARRobjects), status=200)
     else:
         return HTTPResponse(body='An error has occurred', status=400)
 
 
 @route('/web/<room>/<group>')
 def web(room="", group=""):
-    # Check listings in queue
-    if not list_listings.empty():
-        temp = list_listings.get()
-        list_listings.put(temp)
-        listings = temp
-    else:
-        listings = False
+    user = _check_user(request.get_cookie('user'))
+    if not user:
+        return HTTPResponse(body=create_login(), status=200)
+    listings = _check_tvlistingsqueue()
     # If query for tv listings availability, return html code
     available = bool(request.query.tvguide) or False
     if available:
-        return HTTPResponse(body=get_tvlistings_for_device(listings,
+        return HTTPResponse(body=get_tvlistings_for_device(user,
+                                                           listings,
                                                            ARRobjects,
                                                            room,
                                                            group),
                             status=200) if bool(listings) else HTTPResponse(status=400)
     # Create and return web interface page
     try:
-        return HTTPResponse(body=create_device_group(listings, ARRobjects, room, group), status=200)
+        return HTTPResponse(body=create_device_group(user, listings, ARRobjects, room, group), status=200)
     except:
         return HTTPResponse(body='An error has occurred', status=400)
 
@@ -160,12 +176,9 @@ def send_command(room="-", group="-", device="-", command="-"):
 
 @route('/tvlistings')
 def get_tvlistings():
-    if list_listings.empty():
-        return HTTPResponse(status=400)
-    else:
-        temp = list_listings.get()
-        list_listings.put(temp)
-        listings = temp
+    listings = _check_tvlistingsqueue()
+    if not listings:
+        HTTPResponse(status=400)
     channel = request.query.id or None
     x = returnnonext_xml_all(listings, channel)
     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
@@ -208,6 +221,26 @@ def send_favicon():
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/{}'.format(category))
     return static_file(filename, root=root, mimetype='image/png')
+
+
+def _check_tvlistingsqueue():
+    # Check listings in queue
+    if not list_listings.empty():
+        temp = list_listings.get()
+        list_listings.put(temp)
+        return temp
+    else:
+        return False
+
+
+def _check_user(user_cookie):
+    if not user_cookie:
+        return False
+    else:
+        if check_user(user_cookie):
+            return user_cookie
+        else:
+            return 'Guest'
 
 
 #TODO temp variable here with property postcode (replace with settings page input etc.)

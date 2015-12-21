@@ -1,7 +1,7 @@
 from urllib import urlopen
 from web_menu import _menu
 
-def create_settings_devices(arr_objects):
+def create_settings_devices(user, arr_objects):
     return urlopen('web/header.html').read().encode('utf-8') +\
            _menu(arr_objects) + \
            urlopen('web/comp_alert.html').read().encode('utf-8') + \
@@ -10,7 +10,7 @@ def create_settings_devices(arr_objects):
 
 
 # TODO
-def create_settings_tvguide(listings, arr_objects):
+def create_settings_tvguide(user, listings, arr_objects):
     return urlopen('web/header.html').read().encode('utf-8') +\
            _menu(arr_objects) + \
            urlopen('web/comp_alert.html').read().encode('utf-8') + \
@@ -18,7 +18,7 @@ def create_settings_tvguide(listings, arr_objects):
            urlopen('web/footer.html').read().encode('utf-8')
 
 
-def create_settings_nest(arr_objects, clientID, STRnest_pincode, random):
+def create_settings_nest(user, arr_objects, clientID, STRnest_pincode, random):
     nesturl = 'https://home.nest.com/login/oauth2?client_id={}&state={}'.format(clientID, random)
     pincode = ' value="{}"'.format(STRnest_pincode) if bool(STRnest_pincode) else ''
     print STRnest_pincode

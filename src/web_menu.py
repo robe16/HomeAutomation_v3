@@ -1,7 +1,8 @@
 from urllib import urlopen
 
-def _menu(arr_objects):
-    return urlopen('web/menu.html').read().encode('utf-8') % (_menudrops(arr_objects))
+def _menu(user, arr_objects):
+    return urlopen('web/menu.html').read().encode('utf-8').format(menus=_menudrops(arr_objects),
+                                                                  user=user)
 
 
 def _menudrops(arr_objects):
