@@ -7,7 +7,7 @@ import random
 import nest_static_vars
 from config_devices import write_config_devices, read_json_devices, read_config_devices
 from config_nest import write_config_nest, read_json_nest, read_config_nest
-from config_users import check_user
+from config_users import check_user, get_usertheme
 from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_pages import create_login, create_home, create_device_group, create_tvguide, create_about
@@ -73,24 +73,27 @@ def web(page=""):
     user = _check_user(request.get_cookie('user'))
     if not user and page != 'login':
         redirect('/web/login')
+    else:
+        theme = get_usertheme(user)
     listings = _check_tvlistingsqueue()
     if page == 'home':
-        return HTTPResponse(body=create_home(user, ARRobjects), status=200)
+        return HTTPResponse(body=create_home(user, theme, ARRobjects), status=200)
     elif page == 'tvguide':
-        return HTTPResponse(body=create_tvguide(user, listings, ARRobjects), status=200)
+        return HTTPResponse(body=create_tvguide(user, theme, listings, ARRobjects), status=200)
     elif page == 'settings_devices':
-        return HTTPResponse(body=create_settings_devices(user, ARRobjects), status=200)
+        return HTTPResponse(body=create_settings_devices(user, theme, ARRobjects), status=200)
     elif page == 'settings_tvguide':
-        return HTTPResponse(body=create_settings_tvguide(user, listings, ARRobjects), status=200)
+        return HTTPResponse(body=create_settings_tvguide(user, theme, listings, ARRobjects), status=200)
     elif page == 'settings_nest':
         return HTTPResponse(body=create_settings_nest(user,
+                                                      theme,
                                                       ARRobjects,
                                                       nest_static_vars.STRnest_clientID,
                                                       ARRnestData[0],
                                                       randomstring),
                             status=200)
     elif page == 'about':
-        return HTTPResponse(body=create_about(user, ARRobjects), status=200)
+        return HTTPResponse(body=create_about(user, theme, ARRobjects), status=200)
     else:
         return HTTPResponse(body='An error has occurred', status=400)
 
@@ -100,19 +103,20 @@ def web(room="", group=""):
     user = _check_user(request.get_cookie('user'))
     if not user:
         return HTTPResponse(body=create_login(), status=200)
+    else:
+        theme = get_usertheme(user)
     listings = _check_tvlistingsqueue()
     # If query for tv listings availability, return html code
     available = bool(request.query.tvguide) or False
     if available:
-        return HTTPResponse(body=get_tvlistings_for_device(user,
-                                                           listings,
+        return HTTPResponse(body=get_tvlistings_for_device(listings,
                                                            ARRobjects,
                                                            room,
                                                            group),
                             status=200) if bool(listings) else HTTPResponse(status=400)
     # Create and return web interface page
     try:
-        return HTTPResponse(body=create_device_group(user, listings, ARRobjects, room, group), status=200)
+        return HTTPResponse(body=create_device_group(user, theme, listings, ARRobjects, room, group), status=200)
     except:
         return HTTPResponse(body='An error has occurred', status=400)
 

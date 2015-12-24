@@ -1,7 +1,12 @@
 from urllib import urlopen
 
-def _menu(user, arr_objects):
-    return urlopen('web/menu.html').read().encode('utf-8').format(menus=_menudrops(arr_objects),
+def _menu(user, theme, arr_objects):
+    if theme=="dark":
+        theme_navbar = "navbar-inverse"
+    else:
+        theme_navbar = "navbar-default"
+    return urlopen('web/menu.html').read().encode('utf-8').format(theme_navbar=theme_navbar,
+                                                                  menus=_menudrops(arr_objects),
                                                                   user=user)
 
 
