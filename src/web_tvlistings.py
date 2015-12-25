@@ -13,8 +13,9 @@ def get_tvlistings_for_device(listings, arr_objects, room, group):
                     LSTobjects = arr_objects[x][1][y][1]
                     z = 0
                     while z < len(LSTobjects):
-                        device_url = "device/{}/{}/{}".format(room, group,
-                                                              LSTobjects[x].getName().replace(" ", "")).lower()
+                        device_url = "device/{room}/{group}/{name}".format(room=room,
+                                                                           group=group,
+                                                                           name=LSTobjects[x].getName().replace(" ", "")).lower()
                         if arr_objects[x][1][y][1][z].getTvguide_use:
                             chan_current = arr_objects[x][1][y][1][z].getChan()
                         z += 1
@@ -26,10 +27,9 @@ def get_tvlistings_for_device(listings, arr_objects, room, group):
 
 def _listings_html(listings, deviceurl, device=False, chan_current=False, room=False, group=False):
     if listings:
+        script = ""
         if room and group:
             script = "<script>setTimeout(function () {getChannel('/" + deviceurl + "/getchannel', true);}, 10000);</script>"
-        else:
-            script = ""
         return urlopen('web/tvguide-data.html').read().encode('utf-8').format(script=script,
                                                                               style="<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>",
                                                                               listings=_listings(listings, device, deviceurl, chan_current))

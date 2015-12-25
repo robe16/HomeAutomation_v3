@@ -2,6 +2,7 @@ from urllib import urlopen
 from web_menu import _menu
 from web_users import html_users
 from web_tvlistings import _listings_html
+from config_users import get_userchannels
 
 
 def create_login():
@@ -55,18 +56,42 @@ def create_device_group(user, theme, listings, arr_objects, room, group):
             tvguide = True
         x += 1
     if tvguide:
-        return urlopen('web/header.html').read().encode('utf-8') +\
+        user_channels = get_userchannels(user)
+        if user_channels:
+            temp_listings=[]
+            for i in listings:
+                if i.name() in user_channels:
+                    temp_listings.append(i)
+            html_tvguide_all = _listings_html(listings,
+                                              devicetv_url,
+                                              device=devicetv,
+                                              chan_current=chan_current,
+                                              room=room,
+                                              group=group)
+            html_tvguide_user = _listings_html(temp_listings,
+                                               devicetv_url,
+                                               device=devicetv,
+                                               chan_current=chan_current,
+                                               room=room,
+                                               group=group)
+            html_tvguide = urlopen('web/user_tabs.html').read().encode('utf-8').format(title_all="All channels",
+                                                                                       title_user=user+"'s favourites",
+                                                                                       body_all=html_tvguide_all,
+                                                                                       body_user=html_tvguide_user)
+        else:
+            html_tvguide = _listings_html(listings,
+                                          devicetv_url,
+                                          device=devicetv,
+                                          chan_current=chan_current,
+                                          room=room,
+                                          group=group)
+        return urlopen('web/header.html').read().encode('utf-8') + \
                _menu(user, theme, arr_objects) + \
                urlopen('web/comp_alert.html').read().encode('utf-8') + \
                urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                     roomgroup=room + group,
                                                                                     devices=str_devicehtml,
-                                                                                    tvguide=_listings_html(listings,
-                                                                                                           devicetv_url,
-                                                                                                           device=devicetv,
-                                                                                                           chan_current=chan_current,
-                                                                                                           room=room,
-                                                                                                           group=group)) + \
+                                                                                    tvguide=html_tvguide) + \
                urlopen('web/footer.html').read().encode('utf-8')
     else:
         return urlopen('web/header.html').read().encode('utf-8') +\
@@ -79,6 +104,7 @@ def create_device_group(user, theme, listings, arr_objects, room, group):
 
 
 def create_tvguide(user, theme, listings, arr_objects):
+    #TODO TV favourites for users
     return urlopen('web/header.html').read().encode('utf-8') +\
            _menu(user, theme, arr_objects) + \
            urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False)) + \

@@ -9,7 +9,7 @@ def build_channel_array():
         data = json.load(data_file)
     data_channels = data["channels"]
     #
-    dict_channels = {}
+    list_channels = []
     x = 0
     while x < len(data_channels):
         #
@@ -32,11 +32,11 @@ def build_channel_array():
         objchan = object_channel(chan['name'], chan['logo'], chan['type'], dict_devicekeys, dict_listingsrc,
                                  dict_listings, datetime.now())
         #
-        dict_channels[x] = objchan
+        list_channels.append(objchan)
         #
         x += 1
         #
-    return dict_channels
+    return list_channels
 
 
 def getlisting(src, value):

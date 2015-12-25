@@ -19,7 +19,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1619, debug=True)
+    run(host='0.0.0.0', port=1620, debug=True)
 
 
 def server_start():
@@ -73,8 +73,7 @@ def web(page=""):
     user = _check_user(request.get_cookie('user'))
     if not user and page != 'login':
         redirect('/web/login')
-    else:
-        theme = get_usertheme(user)
+    theme = get_usertheme(user)
     listings = _check_tvlistingsqueue()
     if page == 'home':
         return HTTPResponse(body=create_home(user, theme, ARRobjects), status=200)
@@ -103,8 +102,7 @@ def web(room="", group=""):
     user = _check_user(request.get_cookie('user'))
     if not user:
         return HTTPResponse(body=create_login(), status=200)
-    else:
-        theme = get_usertheme(user)
+    theme = get_usertheme(user)
     listings = _check_tvlistingsqueue()
     # If query for tv listings availability, return html code
     available = bool(request.query.tvguide) or False
