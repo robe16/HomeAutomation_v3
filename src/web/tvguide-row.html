@@ -1,4 +1,4 @@
-<tr id="{id}" {cls} style="height:35px; padding-bottom:2px; padding-top:2px" bgcolor="{color}">
+<tr id="{id}" {cls} style="height:35px; padding-bottom:2px; padding-top:2px" bgcolor="{color}" data-toggle="collapse" data-target="#collapse_{chan_id}">
     <td style="width: 5%; vertical-align: center" valign="center" align="right"><img src="/img/icon/ic_{imgtype}.png" style="height:20px;"/></td>
     <td style="width: 10%; vertical-align: center" align="center"><img src="/img/channel/{imgchan}" style="height:25px;"/></td>
     <td style="width: 10%;">{channame}</td>
@@ -12,4 +12,7 @@
             </div>
         </div>
     </td>{go}
+</tr>
+<tr id="collapse_{chan_id}" class="collapse out" style="height:35px; padding-bottom:2px; padding-top:2px" bgcolor="{color}">
+    <td style="width: 5%; padding:10px; vertical-align: center" colspan="4">{blurb}</td>{go_desc}
 </tr>

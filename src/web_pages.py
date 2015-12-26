@@ -57,27 +57,28 @@ def create_device_group(user, theme, listings, arr_objects, room, group):
         x += 1
     if tvguide:
         user_channels = get_userchannels(user)
-        if user_channels:
+        if listings and user_channels:
             temp_listings=[]
             for i in listings:
+                html_tvguide_user = _listings_html(temp_listings,
+                                                   devicetv_url,
+                                                   device=devicetv,
+                                                   chan_current=chan_current,
+                                                   room=room,
+                                                   group=group,
+                                                   user=user)
+                html_tvguide_all = _listings_html(listings,
+                                                  devicetv_url,
+                                                  device=devicetv,
+                                                  chan_current=chan_current,
+                                                  room=room,
+                                                  group=group)
                 if i.name() in user_channels:
                     temp_listings.append(i)
-            html_tvguide_all = _listings_html(listings,
-                                              devicetv_url,
-                                              device=devicetv,
-                                              chan_current=chan_current,
-                                              room=room,
-                                              group=group)
-            html_tvguide_user = _listings_html(temp_listings,
-                                               devicetv_url,
-                                               device=devicetv,
-                                               chan_current=chan_current,
-                                               room=room,
-                                               group=group)
-            html_tvguide = urlopen('web/user_tabs.html').read().encode('utf-8').format(title_all="All channels",
-                                                                                       title_user=user+"'s favourites",
-                                                                                       body_all=html_tvguide_all,
-                                                                                       body_user=html_tvguide_user)
+            html_tvguide = urlopen('web/user_tabs.html').read().encode('utf-8').format(title_user=user+"'s favourites",
+                                                                                       title_all="All channels",
+                                                                                       body_user=html_tvguide_user,
+                                                                                       body_all=html_tvguide_all)
         else:
             html_tvguide = _listings_html(listings,
                                           devicetv_url,
@@ -107,7 +108,7 @@ def create_tvguide(user, theme, listings, arr_objects):
     #TODO TV favourites for users
     return urlopen('web/header.html').read().encode('utf-8') +\
            _menu(user, theme, arr_objects) + \
-           urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False)) + \
+           urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False, user=user)) + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 

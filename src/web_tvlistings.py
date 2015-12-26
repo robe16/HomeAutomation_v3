@@ -1,7 +1,7 @@
 from urllib import urlopen
 from tvlisting import returnnownext
 
-def get_tvlistings_for_device(listings, arr_objects, room, group):
+def get_tvlistings_for_device(listings, arr_objects, room, group, user=""):
     chan_current = False
     device_url = False
     x = 0
@@ -22,17 +22,17 @@ def get_tvlistings_for_device(listings, arr_objects, room, group):
                 y += 1
         x += 1
     #
-    return _listings_html(listings, device_url, chan_current=chan_current, room=room, group=group)
+    return _listings_html(listings, device_url, chan_current=chan_current, room=room, group=group, user=user)
 
 
-def _listings_html(listings, deviceurl, device=False, chan_current=False, room=False, group=False):
+def _listings_html(listings, deviceurl, device=False, chan_current=False, room=False, group=False, user=False):
     if listings:
         script = ""
         if room and group:
             script = "<script>setTimeout(function () {getChannel('/" + deviceurl + "/getchannel', true);}, 10000);</script>"
         return urlopen('web/tvguide-data.html').read().encode('utf-8').format(script=script,
                                                                               style="<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>",
-                                                                              listings=_listings(listings, device, deviceurl, chan_current))
+                                                                              listings=_listings(listings, device, deviceurl, chan_current, user=user))
     else:
         if room and group:
             script = ("<script>" +
@@ -51,18 +51,18 @@ def _listings_html(listings, deviceurl, device=False, chan_current=False, room=F
         return urlopen('web/tvguide-nodata.html').read().encode('utf-8').format(script=script)
 
 
-def _listings(listings, device, deviceurl, chan_current):
+def _listings(listings, device, deviceurl, chan_current, user=False):
     STRlistings = ""
     x = 0
     while x < len(listings):
         lstg = listings[x]
-        STRlistings += _listingsrow(x, lstg, device, deviceurl, chan_current)
+        STRlistings += _listingsrow(x, lstg, device, deviceurl, chan_current, user=user)
         x += 1
     return STRlistings
 
 
 # TODO - entire section to redo in line with new chan object
-def _listingsrow(x, channelitem, device, deviceurl, chan_current):
+def _listingsrow(x, channelitem, device, deviceurl, chan_current, user=False):
     #
     try:
         chan = channelitem.devicekeys(device.getType())
@@ -71,6 +71,8 @@ def _listingsrow(x, channelitem, device, deviceurl, chan_current):
     #
     now = "-"
     next = "-"
+    blurb = ""
+    chan_id = ""
     #
     try:
         if channelitem and channelitem.getListings():
@@ -79,6 +81,13 @@ def _listingsrow(x, channelitem, device, deviceurl, chan_current):
                 if nownext:
                     now = "{} {}".format(nownext[0]['starttime'], nownext[0]['title'])
                     next = "{} {}".format(nownext[1]['starttime'], nownext[1]['title'])
+                    for a in range(0, 5):
+                        if a > 0:
+                            blurb += '<br>'
+                        blurb += '<b>{start}-{end} {title}</b><br>{desc}<br>'.format(start=nownext[a]['starttime'],
+                                                                        end=nownext[a]['endtime'],
+                                                                        title=nownext[a]['title'],
+                                                                        desc=nownext[a]['desc'])
                     break
     except:
         now = "-"
@@ -95,9 +104,15 @@ def _listingsrow(x, channelitem, device, deviceurl, chan_current):
     if deviceurl and chan:
         go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device=deviceurl,
                                                                               channo=chan)
+        go_desc = "<td></td>"
     else:
         go = ""
+        go_desc = ""
+    if user:
+        chan_id = str(user).lower()+"_"
+    chan_id += channelitem.name().replace(" ", "").lower()
     return urlopen('web/tvguide-row.html').read().encode('utf-8').format(id=("chan" + str(chan)),
+                                                                         chan_id=chan_id,
                                                                          cls=chan_highlight,
                                                                          color=color,
                                                                          imgtype=channelitem.type(),
@@ -105,4 +120,6 @@ def _listingsrow(x, channelitem, device, deviceurl, chan_current):
                                                                          channame=channelitem.name(),
                                                                          now=now,
                                                                          next=next,
-                                                                         go=go)
+                                                                         blurb=blurb,
+                                                                         go=go,
+                                                                         go_desc=go_desc)

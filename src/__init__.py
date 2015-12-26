@@ -19,7 +19,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1620, debug=True)
+    run(host='0.0.0.0', port=1622, debug=True)
 
 
 def server_start():
@@ -110,7 +110,8 @@ def web(room="", group=""):
         return HTTPResponse(body=get_tvlistings_for_device(listings,
                                                            ARRobjects,
                                                            room,
-                                                           group),
+                                                           group,
+                                                           user=user),
                             status=200) if bool(listings) else HTTPResponse(status=400)
     # Create and return web interface page
     try:
