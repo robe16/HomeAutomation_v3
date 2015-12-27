@@ -1,8 +1,7 @@
 from urllib import urlopen
-from web_menu import _menu
+from web_menu import html_menu
 from web_users import html_users
-from web_tvlistings import _listings_html
-from config_users import get_userchannels
+from web_tvlistings import listings_html, html_listings_user_and_all
 
 
 def create_login():
@@ -13,7 +12,7 @@ def create_login():
 
 def create_home(user, theme, arr_objects):
     return urlopen('web/header.html').read().encode('utf-8') + \
-           _menu(user, theme, arr_objects) + \
+           html_menu(user, theme, arr_objects) + \
            urlopen('web/index.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
 
@@ -34,70 +33,37 @@ def create_device_group(user, theme, listings, arr_objects, room, group):
     #
     x = 0
     chan_current = False
-    devicetv = None
-    devicetv_url = False
+    device = None
+    device_url = False
     str_devicehtml = ""
     while x < len(list_objects):
-        device_url = "device/{}/{}/{}".format(room, group, list_objects[x].getName().replace(" ", "")).lower()
-        if list_objects[x].getLogo:
-            str_panel = "<img src=\"/img/logo/{}\" style=\"height:25px;\"/> {}".format(list_objects[x].getLogo(),
-                                                                                       list_objects[x].getName())
-        else:
-            str_panel = list_objects[x].getName()
-        str_objhtml = urlopen(('web/{}').format(list_objects[x].getHtml())).read().encode('utf-8').format(
-            url=device_url)
-        str_devicehtml += urlopen('web/comp_panel.html').read().encode('utf-8').format(title=str_panel,
-                                                                                       body=str_objhtml)
-        str_devicehtml += "<br>"
+        str_devicehtml += _html_build_device_panels(list_objects[x], room, group)
         if list_objects[x].getTvguide_use():
             chan_current = list_objects[x].getChan()
-            devicetv = list_objects[x]
-            devicetv_url = "device/{}/{}/{}".format(room, group, list_objects[x].getName().replace(" ", "")).lower()
+            device = list_objects[x]
+            device_url = "device/{}/{}/{}".format(room, group, list_objects[x].getName().replace(" ", "")).lower()
             tvguide = True
         x += 1
     if tvguide:
-        user_channels = get_userchannels(user)
-        if listings and user_channels:
-            temp_listings=[]
-            for i in listings:
-                html_tvguide_user = _listings_html(temp_listings,
-                                                   devicetv_url,
-                                                   device=devicetv,
-                                                   chan_current=chan_current,
+        html_tvguide = html_listings_user_and_all (listings,
                                                    room=room,
                                                    group=group,
+                                                   device_url=device_url,
+                                                   device=device,
+                                                   chan_current=chan_current,
                                                    user=user)
-                html_tvguide_all = _listings_html(listings,
-                                                  devicetv_url,
-                                                  device=devicetv,
-                                                  chan_current=chan_current,
-                                                  room=room,
-                                                  group=group)
-                if i.name() in user_channels:
-                    temp_listings.append(i)
-            html_tvguide = urlopen('web/user_tabs.html').read().encode('utf-8').format(title_user=user+"'s favourites",
-                                                                                       title_all="All channels",
-                                                                                       body_user=html_tvguide_user,
-                                                                                       body_all=html_tvguide_all)
-        else:
-            html_tvguide = _listings_html(listings,
-                                          devicetv_url,
-                                          device=devicetv,
-                                          chan_current=chan_current,
-                                          room=room,
-                                          group=group)
         return urlopen('web/header.html').read().encode('utf-8') + \
-               _menu(user, theme, arr_objects) + \
-               urlopen('web/comp_alert.html').read().encode('utf-8') + \
+               html_menu(user, theme, arr_objects) + \
+               urlopen('web/comp_alert.html').read().encode('utf-8').format(body="-") + \
                urlopen('web/group_with-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                     roomgroup=room + group,
                                                                                     devices=str_devicehtml,
                                                                                     tvguide=html_tvguide) + \
                urlopen('web/footer.html').read().encode('utf-8')
     else:
-        return urlopen('web/header.html').read().encode('utf-8') +\
-               _menu(user, theme, arr_objects) + \
-               urlopen('web/comp_alert.html').read().encode('utf-8') + \
+        return urlopen('web/header.html').read().encode('utf-8') + \
+               html_menu(user, theme, arr_objects) + \
+               urlopen('web/comp_alert.html').read().encode('utf-8').format(body="-") + \
                urlopen('web/group_no-tvguide.html').read().encode('utf-8').format(room=room,
                                                                                   roomgroup=room + group,
                                                                                   devices=str_devicehtml) + \
@@ -107,13 +73,27 @@ def create_device_group(user, theme, listings, arr_objects, room, group):
 def create_tvguide(user, theme, listings, arr_objects):
     #TODO TV favourites for users
     return urlopen('web/header.html').read().encode('utf-8') +\
-           _menu(user, theme, arr_objects) + \
-           urlopen('web/tvguide.html').read().encode('utf-8').format(listings=_listings_html(listings, False, user=user)) + \
+           html_menu(user, theme, arr_objects) + \
+           urlopen('web/tvguide.html').read().encode('utf-8').format(listings=html_listings_user_and_all(listings, device_url=False, user=user)) + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 
 def create_about(user, theme, arr_objects):
     return urlopen('web/header.html').read().encode('utf-8') +\
-           _menu(user, theme, arr_objects) + \
+           html_menu(user, theme, arr_objects) + \
            urlopen('web/about.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
+
+
+def _html_build_device_panels (device, room, group):
+    device_url = "device/{}/{}/{}".format(room, group, device.getName().replace(" ", "")).lower()
+    if device.getLogo:
+        str_panel = "<img src=\"/img/logo/{}\" style=\"height:25px;\"/> {}".format(device.getLogo(),
+                                                                                   device.getName())
+    else:
+        str_panel = device.getName()
+    str_objhtml = urlopen(('web/{}').format(device.getHtml())).read().encode('utf-8').format(url=device_url)
+    str_devicehtml = urlopen('web/comp_panel.html').read().encode('utf-8').format(title=str_panel,
+                                                                                   body=str_objhtml)
+    str_devicehtml += "<br>"
+    return str_devicehtml

@@ -1,6 +1,6 @@
 from urllib import urlopen
 
-def _menu(user, theme, arr_objects):
+def html_menu(user, theme, arr_objects):
     if theme=="dark":
         theme_navbar = "navbar-inverse"
     else:

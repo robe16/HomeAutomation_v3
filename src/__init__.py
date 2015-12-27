@@ -12,14 +12,14 @@ from object_tv_lg import object_LGTV
 from object_tivo import object_TIVO
 from web_pages import create_login, create_home, create_device_group, create_tvguide, create_about
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
-from web_tvlistings import get_tvlistings_for_device
+from web_tvlistings import html_listings_user_and_all, listings_html
 from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1622, debug=True)
+    run(host='0.0.0.0', port=1601, debug=True)
 
 
 def server_start():
@@ -105,13 +105,13 @@ def web(room="", group=""):
     theme = get_usertheme(user)
     listings = _check_tvlistingsqueue()
     # If query for tv listings availability, return html code
-    available = bool(request.query.tvguide) or False
-    if available:
-        return HTTPResponse(body=get_tvlistings_for_device(listings,
-                                                           ARRobjects,
-                                                           room,
-                                                           group,
-                                                           user=user),
+    tvguide_request = bool(request.query.tvguide) or False
+    if tvguide_request:
+        return HTTPResponse(body=html_listings_user_and_all(listings,
+                                                            arr_objects=ARRobjects,
+                                                            room=room,
+                                                            group=group,
+                                                            user=user),
                             status=200) if bool(listings) else HTTPResponse(status=400)
     # Create and return web interface page
     try:

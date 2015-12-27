@@ -1,38 +1,41 @@
 from urllib import urlopen
 from tvlisting import returnnownext
+from config_users import get_userchannels
+from datetime import datetime
 
-def get_tvlistings_for_device(listings, arr_objects, room, group, user=""):
-    chan_current = False
-    device_url = False
-    x = 0
-    while x < len(arr_objects):
-        if room == arr_objects[x][0].lower():
-            y = 0
-            while y < len(arr_objects[x][1]):
-                if group == arr_objects[x][1][y][0].lower():
-                    LSTobjects = arr_objects[x][1][y][1]
-                    z = 0
-                    while z < len(LSTobjects):
-                        device_url = "device/{room}/{group}/{name}".format(room=room,
-                                                                           group=group,
-                                                                           name=LSTobjects[x].getName().replace(" ", "")).lower()
-                        if arr_objects[x][1][y][1][z].getTvguide_use:
-                            chan_current = arr_objects[x][1][y][1][z].getChan()
-                        z += 1
-                y += 1
-        x += 1
-    #
-    return _listings_html(listings, device_url, chan_current=chan_current, room=room, group=group, user=user)
-
-
-def _listings_html(listings, deviceurl, device=False, chan_current=False, room=False, group=False, user=False):
+def listings_html(listings, device_url=False, arr_objects=None, device=None, chan_current=False, room=False, group=False, user=False):
+    if arr_objects:
+        x = 0
+        while x < len(arr_objects):
+            if room == arr_objects[x][0].lower():
+                y = 0
+                while y < len(arr_objects[x][1]):
+                    if group == arr_objects[x][1][y][0].lower():
+                        list_objects = arr_objects[x][1][y][1]
+                        z = 0
+                        while z < len(list_objects):
+                            if list_objects[z].getTvguide_use:
+                                device_url = "device/{room}/{group}/{name}".format(room=room,
+                                                                                   group=group,
+                                                                                   name=list_objects[z].getName().replace(" ", "")).lower()
+                                device = list_objects[z]
+                                try:
+                                    chan_current = list_objects[z].getChan()
+                                except:
+                                    chan_current = False
+                                break
+                            z += 1
+                        break
+                    y += 1
+                break
+            x += 1
     if listings:
         script = ""
         if room and group:
-            script = "<script>setTimeout(function () {getChannel('/" + deviceurl + "/getchannel', true);}, 10000);</script>"
+            script = "<script>setTimeout(function () {getChannel('/" + device_url + "/getchannel', true);}, 10000);</script>"
         return urlopen('web/tvguide-data.html').read().encode('utf-8').format(script=script,
                                                                               style="<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>",
-                                                                              listings=_listings(listings, device, deviceurl, chan_current, user=user))
+                                                                              listings=_listings(listings, device=device, device_url=device_url, chan_current=chan_current, user=user))
     else:
         if room and group:
             script = ("<script>" +
@@ -48,21 +51,22 @@ def _listings_html(listings, deviceurl, device=False, chan_current=False, room=F
                       "</script>")
         else:
             script = ""
-        return urlopen('web/tvguide-nodata.html').read().encode('utf-8').format(script=script)
+        return urlopen('web/tvguide-nodata.html').read().encode('utf-8').format(script=script,
+                                                                                type="alert-danger",
+                                                                                body="<strong>An error has occurred!!</strong> The programme listings are still being retrieved - please wait and refresh shortly.")
 
 
-def _listings(listings, device, deviceurl, chan_current, user=False):
+def _listings(listings, device=None, device_url=None, chan_current=False, user=False):
     STRlistings = ""
     x = 0
     while x < len(listings):
         lstg = listings[x]
-        STRlistings += _listingsrow(x, lstg, device, deviceurl, chan_current, user=user)
+        STRlistings += _listingsrow(x, lstg, device, device_url, chan_current, user=user)
         x += 1
     return STRlistings
 
 
-# TODO - entire section to redo in line with new chan object
-def _listingsrow(x, channelitem, device, deviceurl, chan_current, user=False):
+def _listingsrow(x, channelitem, device, device_url, chan_current, user=False):
     #
     try:
         chan = channelitem.devicekeys(device.getType())
@@ -101,8 +105,8 @@ def _listingsrow(x, channelitem, device, deviceurl, chan_current, user=False):
         # chan_highlight="; border: 2px solid #FFBF47; border-radius: 7px;"
     else:
         chan_highlight = ""
-    if deviceurl and chan:
-        go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device=deviceurl,
+    if device_url and chan:
+        go = urlopen('web/tvguide-row_go.html').read().encode('utf-8').format(device=device_url,
                                                                               channo=chan)
         go_desc = "<td></td>"
     else:
@@ -123,3 +127,36 @@ def _listingsrow(x, channelitem, device, deviceurl, chan_current, user=False):
                                                                          blurb=blurb,
                                                                          go=go,
                                                                          go_desc=go_desc)
+
+
+def html_listings_user_and_all (listings, arr_objects=None, room=False, group=False, device_url=None, device=None, chan_current=False, user=False):
+    html_tvguide = '<p style="text-align: right">Last updated {timestamp}</p>'.format(timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+    html_tvguide_all = listings_html(listings,
+                                     arr_objects=arr_objects,
+                                     device_url=device_url,
+                                     device=device,
+                                     chan_current=chan_current,
+                                     room=room,
+                                     group=group)
+    user_channels = get_userchannels(user)
+    if listings and user_channels:
+        temp_listings=[]
+        for i in listings:
+            if i.name() in user_channels:
+                temp_listings.append(i)
+        html_tvguide_user = listings_html(temp_listings,
+                                          arr_objects=arr_objects,
+                                          device_url=device_url,
+                                          device=device,
+                                          chan_current=chan_current,
+                                          room=room,
+                                          group=group,
+                                          user=user)
+        html_tvguide += urlopen('web/user_tabs.html').read().encode('utf-8').format(title_user=str(user)+"'s favourites",
+                                                                                   title_all="All channels",
+                                                                                   body_user=html_tvguide_user,
+                                                                                   body_all=html_tvguide_all)
+        return html_tvguide
+    else:
+        html_tvguide += html_tvguide_all
+        return html_tvguide
