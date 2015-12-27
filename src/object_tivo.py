@@ -46,9 +46,9 @@ class object_TIVO:
 
     def getChan(self):
         x = sendTELNET(self._STRipaddress, self._INTport, response=True)
-        print ("{timestamp} Channel request for TiVo device {ipadress} - {response}").format(timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-                                                                                            ipaddress=self._STRipaddress,
-                                                                                            response=x)
+        print ("{timestamp} Channel request for TiVo device {ipaddress} - {response}").format(timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                                                                                              ipaddress=self._STRipaddress,
+                                                                                              response=x)
         if not bool(x):
             return False
         nums = [int(s) for s in x.split() if s.isdigit()]
