@@ -1,5 +1,6 @@
 from send_cmds import sendTELNET
 from list_remotes_retriever import read_list_remotes
+from datetime import datetime
 
 class object_TIVO:
     '''TiVo object'''
@@ -45,7 +46,9 @@ class object_TIVO:
 
     def getChan(self):
         x = sendTELNET(self._STRipaddress, self._INTport, response=True)
-        print (("Channel request for TiVo device %s - %s") % (self._STRipaddress, x))
+        print ("{timestamp} Channel request for TiVo device {ipadress} - {response}").format(timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                                                                                            ipaddress=self._STRipaddress,
+                                                                                            response=x)
         if not bool(x):
             return False
         nums = [int(s) for s in x.split() if s.isdigit()]
