@@ -101,7 +101,7 @@ def web(page=""):
 def web(room="", group=""):
     user = _check_user(request.get_cookie('user'))
     if not user:
-        return HTTPResponse(body=create_login(), status=200)
+        redirect('/web/login')
     theme = get_usertheme(user)
     listings = _check_tvlistingsqueue()
     # If query for tv listings availability, return html code

@@ -71,7 +71,6 @@ def create_device_group(user, theme, listings, arr_objects, room, group):
 
 
 def create_tvguide(user, theme, listings, arr_objects):
-    #TODO TV favourites for users
     return urlopen('web/header.html').read().encode('utf-8') +\
            html_menu(user, theme, arr_objects) + \
            urlopen('web/tvguide.html').read().encode('utf-8').format(listings=html_listings_user_and_all(listings, device_url=False, user=user)) + \
