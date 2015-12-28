@@ -4,6 +4,7 @@ config.json
 config_devices.json
 config_nest.json
 config_tvguide.json
+config_users.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
