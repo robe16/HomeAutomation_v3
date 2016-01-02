@@ -2,6 +2,8 @@
 *.ini
 config.json
 config_devices.json
+config_devices_new.json
+config_devices_new_avrecs.json
 config_nest.json
 config_tvguide.json
 config_users.json
