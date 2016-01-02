@@ -1,28 +1,46 @@
+import json
 from urllib import urlopen
+from config_users import get_usertheme, get_userrole, get_userimage
 
-def html_menu(user, theme, arr_objects):
-    if theme=="dark":
-        theme_navbar = "navbar-inverse"
-    else:
-        theme_navbar = "navbar-default"
+
+def html_menu(user):
+    theme_navbar = _user_theme(user)
+    user_image = _user_image(user)
+    settings = _user_settings(user)
     return urlopen('web/menu.html').read().encode('utf-8').format(theme_navbar=theme_navbar,
-                                                                  menus=_menudrops(arr_objects),
-                                                                  user=user)
+                                                                  menus=_menudrops(),
+                                                                  settings=settings,
+                                                                  user=user,
+                                                                  user_image=user_image)
 
 
-def _menudrops(arr_objects):
-    x = 0
+def _menudrops():
+    #
+    with open('config_devices.json', 'r') as data_file:
+        data = json.load(data_file)
+    #
     STRhtml = ""
-    while x < len(arr_objects):
-        room = arr_objects[x][0].lower()
-        items = ""
-        y = 0
-        while y < len(arr_objects[x][1]):
-            group = arr_objects[x][1][y][0].lower()
-            items += urlopen('web/header_dropdown_items.html').read().encode('utf-8').format(room + group,
-                                                                                             room + '/' + group,
-                                                                                             group.upper())
-            y += 1
-        STRhtml += urlopen('web/header_dropdown.html').read().encode('utf-8').format(room, room.capitalize(), items)
-        x += 1
+    for devicegroup in data:
+        name = devicegroup['group']
+        STRhtml += urlopen('web/menu_button.html').read().encode('utf-8').format(id=name.lower().replace(" ",""),
+                                                                                 href='/web/devices/'+name.lower().replace(" ",""),
+                                                                                 label=name)
     return STRhtml
+
+
+def _user_theme(user):
+    if get_usertheme(user) == "dark":
+        return "navbar-inverse"
+    else:
+        return "navbar-default"
+
+
+def _user_settings(user):
+    if get_userrole(user) == "admin":
+        return urlopen('web/menu_settings.html').read().encode('utf-8')
+    else:
+        return ""
+
+
+def _user_image(user):
+    return get_userimage(user)

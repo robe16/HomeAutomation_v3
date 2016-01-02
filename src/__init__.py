@@ -5,12 +5,13 @@ import string
 import random
 
 import nest_static_vars
-from config_devices import write_config_devices, read_json_devices, read_config_devices
+from config_devices import write_config_devices, create_device_object_array
 from config_nest import write_config_nest, read_json_nest, read_config_nest
-from config_users import check_user, get_usertheme
-from object_tv_lg import object_LGTV
-from object_tivo import object_TIVO
-from web_pages import create_login, create_home, create_device_group, create_tvguide, create_about
+from config_users import check_user, get_userrole
+from object_tv_lg_netcast import object_tv_lg_netcast
+from object_tivo import object_tivo
+from web_pages import create_login, create_home, create_tvguide, create_about
+from web_devices import create_device_page
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
 from web_tvlistings import html_listings_user_and_all, listings_html
 from tvlisting import build_channel_array, returnnonext_xml_all
@@ -19,7 +20,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1601, debug=True)
+    run(host='0.0.0.0', port=1605, debug=True)
 
 
 def server_start():
@@ -73,49 +74,68 @@ def web(page=""):
     user = _check_user(request.get_cookie('user'))
     if not user and page != 'login':
         redirect('/web/login')
-    theme = get_usertheme(user)
     listings = _check_tvlistingsqueue()
     if page == 'home':
-        return HTTPResponse(body=create_home(user, theme, ARRobjects), status=200)
+        return HTTPResponse(body=create_home(user), status=200)
     elif page == 'tvguide':
-        return HTTPResponse(body=create_tvguide(user, theme, listings, ARRobjects), status=200)
+        return HTTPResponse(body=create_tvguide(user, listings), status=200)
     elif page == 'settings_devices':
-        return HTTPResponse(body=create_settings_devices(user, theme, ARRobjects), status=200)
+        return HTTPResponse(body=create_settings_devices(user), status=200)
     elif page == 'settings_tvguide':
-        return HTTPResponse(body=create_settings_tvguide(user, theme, listings, ARRobjects), status=200)
+        return HTTPResponse(body=create_settings_tvguide(user, listings), status=200)
     elif page == 'settings_nest':
         return HTTPResponse(body=create_settings_nest(user,
-                                                      theme,
-                                                      ARRobjects,
                                                       nest_static_vars.STRnest_clientID,
                                                       ARRnestData[0],
                                                       randomstring),
                             status=200)
     elif page == 'about':
-        return HTTPResponse(body=create_about(user, theme, ARRobjects), status=200)
+        return HTTPResponse(body=create_about(user), status=200)
     else:
         return HTTPResponse(body='An error has occurred', status=400)
 
 
-@route('/web/<room>/<group>')
-def web(room="", group=""):
+@route('/web/settings/<page>')
+def web(page=""):
+    user = _check_user(request.get_cookie('user'))
+    if not user and page != 'login':
+        redirect('/web/login')
+    if get_userrole(user) != 'admin':
+        #TODO - page for users without authority
+        return HTTPResponse(body='An error has occurred', status=400)
+    listings = _check_tvlistingsqueue()
+    if page == 'devices':
+        return HTTPResponse(body=create_settings_devices(user), status=200)
+    elif page == 'tvguide':
+        return HTTPResponse(body=create_settings_tvguide(user, listings), status=200)
+    elif page == 'nest':
+        return HTTPResponse(body=create_settings_nest(user,
+                                                      nest_static_vars.STRnest_clientID,
+                                                      ARRnestData[0],
+                                                      randomstring),
+                            status=200)
+    else:
+        return HTTPResponse(body='An error has occurred', status=400)
+
+
+@route('/web/devices/<group>')
+def web(group=""):
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
-    theme = get_usertheme(user)
-    listings = _check_tvlistingsqueue()
+    tvlistings = _check_tvlistingsqueue()
     # If query for tv listings availability, return html code
     tvguide_request = bool(request.query.tvguide) or False
     if tvguide_request:
-        return HTTPResponse(body=html_listings_user_and_all(listings,
-                                                            arr_objects=ARRobjects,
-                                                            room=room,
+        #TODO update with new device array structure
+        return HTTPResponse(body=html_listings_user_and_all(tvlistings,
+                                                            arr_objects=arr_devices,
                                                             group=group,
                                                             user=user),
-                            status=200) if bool(listings) else HTTPResponse(status=400)
+                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
     # Create and return web interface page
     try:
-        return HTTPResponse(body=create_device_group(user, theme, listings, ARRobjects, room, group), status=200)
+        return HTTPResponse(body=create_device_page(user, tvlistings, arr_devices, group), status=200)
     except:
         return HTTPResponse(body='An error has occurred', status=400)
 
@@ -125,28 +145,31 @@ def get_image(folder, filename):
     return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
 
 
-@route('/device/<room>/<group>/<device>/<command>')
-def send_command(room="-", group="-", device="-", command="-"):
+@route('/device/<group>/<device>/<command>')
+def send_command(group="-", device="-", command="-"):
     #
-    x = 0
-    while x < len(ARRobjects):
-        if ARRobjects[x][0] == room:
-            y = 0
-            while y < len(ARRobjects[x][1]):
-                if ARRobjects[x][1][y][0] == group:
-                    list_devices = ARRobjects[x][1][y][1]
-                    z = 0
-                    while z < len(list_devices):
-                        if list_devices[z].getName().replace(" ", "").lower() == device:
-                            command = request.query.id if command == 'channel' else command
-                            response = list_devices[z].sendCmd(command)
-                            return HTTPResponse(body=str(response),
-                                                status=200) if bool(response) else HTTPResponse(status=400)
-                        z += 1
-                y += 1
-        x += 1
+    dvc = False
     #
-    return HTTPResponse(status=400)
+    for devicegroup in arr_devices:
+        if devicegroup['name'].lower().replace(' ','') == group:
+            if devicegroup['devices']['device'].getName().lower().replace(' ','') == device:
+                dvc = devicegroup['devices']['device']
+            else:
+                for obj in devicegroup['devices']['inputs']:
+                    if obj['device'].getName().lower().replace(' ','') == device:
+                        dvc = obj['device']
+                        break
+            if dvc:
+                break
+    #
+    try:
+        command = request.query.id if command == 'channel' else command
+        response = dvc.sendCmd(command)
+        return HTTPResponse(body=str(response), status=200) if bool(response) else HTTPResponse(status=400)
+    except:
+        return HTTPResponse(status=400)
+    #
+    #TODO - code for lgtv_netcast specific devices
     # if room=="lounge" and device=="lgtv" and command=="appslist":
     #     APPtype = request.query.type or 3
     #     APPindex = request.query.index or 0
@@ -160,21 +183,6 @@ def send_command(room="-", group="-", device="-", command="-"):
     #         return HTTPResponse(status=400)
     #     x = OBJloungetv.getAppicon(auid, name)
     #     return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
-    # # TV Command
-    # if room=="lounge" and device=="lgtv":
-    #     return HTTPResponse(status=200) if OBJloungetv.sendCmd(command) else HTTPResponse(status=400)
-    # # TiVo Command
-    # elif room=="lounge" and device=="tivo":
-    #     if command=="channel":
-    #         channo = request.query.id or False
-    #         if channo:
-    #             return HTTPResponse(status=200) if OBJloungetivo.sendCmd(channo) else HTTPResponse(status=400)
-    #         else:
-    #             HTTPResponse(status=400)
-    #     else:
-    #         return HTTPResponse(status=200) if OBJloungetivo.sendCmd(command) else HTTPResponse(status=400)
-    # else:
-    #     return HTTPResponse(status=400)
 
 
 @route('/tvlistings')
@@ -199,17 +207,18 @@ def save_settings(x="-"):
             return HTTPResponse(status=200)
         else:
             return HTTPResponse(status=400)
-    elif x == 'devices':
-        data = request.body
-        if data:
-            tempARR = read_json_devices(data.getvalue())
-            if write_config_devices(tempARR):
-                ARRobjects = tempARR
-                return HTTPResponse(status=200)
-            else:
-                return HTTPResponse(status=400)
-        else:
-            return HTTPResponse(status=400)
+    #TODO - for receipt of new device pson
+    # elif x == 'devices':
+    #     data = request.body
+    #     if data:
+    #         tempARR = read_json_devices(data.getvalue())
+    #         if write_config_devices(tempARR):
+    #             ARRobjects = tempARR
+    #             return HTTPResponse(status=200)
+    #         else:
+    #             return HTTPResponse(status=400)
+    #     else:
+    #         return HTTPResponse(status=400)
     else:
         return HTTPResponse(status=400)
 
@@ -250,7 +259,7 @@ def _check_user(user_cookie):
 postcode='ls27'
 # Create objects from configuration file
 randomstring = (postcode.join('-').join(random.choice(string.ascii_lowercase) for i in range(5)))
-ARRobjects = read_config_devices()
+arr_devices = create_device_object_array()
 ARRnestData = read_config_nest()
 #
 # Create processes for TV Listing code and code to start bottle server

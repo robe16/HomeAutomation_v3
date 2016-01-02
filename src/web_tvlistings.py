@@ -3,7 +3,7 @@ from tvlisting import returnnownext
 from config_users import get_userchannels
 from datetime import datetime
 
-def listings_html(listings, device_url=False, arr_objects=None, device=None, chan_current=False, room=False, group=False, user=False):
+def listings_html(listings, device_url=False, arr_objects=None, device=None, chan_current=False, group=False, user=False):
     if arr_objects:
         x = 0
         while x < len(arr_objects):
@@ -15,9 +15,8 @@ def listings_html(listings, device_url=False, arr_objects=None, device=None, cha
                         z = 0
                         while z < len(list_objects):
                             if list_objects[z].getTvguide_use:
-                                device_url = "device/{room}/{group}/{name}".format(room=room,
-                                                                                   group=group,
-                                                                                   name=list_objects[z].getName().replace(" ", "")).lower()
+                                device_url = "device/{group}/{name}".format(group=group,
+                                                                            name=list_objects[z].getName().replace(" ", "")).lower()
                                 device = list_objects[z]
                                 try:
                                     chan_current = list_objects[z].getChan()
@@ -31,17 +30,17 @@ def listings_html(listings, device_url=False, arr_objects=None, device=None, cha
             x += 1
     if listings:
         script = ""
-        if room and group:
+        if group:
             script = "<script>setTimeout(function () {getChannel('/" + device_url + "/getchannel', true);}, 10000);</script>"
         return urlopen('web/tvguide-data.html').read().encode('utf-8').format(script=script,
                                                                               style="<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>",
                                                                               listings=_listings(listings, device=device, device_url=device_url, chan_current=chan_current, user=user))
     else:
-        if room and group:
+        if group:
             script = ("<script>" +
                       "setTimeout(function () {checkListings();}, 5000);function checkListings(){" +
                       "var xmlHttp = new XMLHttpRequest();" +
-                      "xmlHttp.open('GET', '/web/"+str(room)+"/"+str(group)+"?tvguide=True', false);" +
+                      "xmlHttp.open('GET', '/web/"+str(group)+"?tvguide=True', false);" +
                       "xmlHttp.send(null);" +
                       "if (xmlHttp.status==200) {" +
                       "document.getElementById('alert-tvguide').remove();" +
@@ -129,14 +128,13 @@ def _listingsrow(x, channelitem, device, device_url, chan_current, user=False):
                                                                          go_desc=go_desc)
 
 
-def html_listings_user_and_all (listings, arr_objects=None, room=False, group=False, device_url=None, device=None, chan_current=False, user=False):
+def html_listings_user_and_all (listings, arr_objects=None, group=False, device_url=None, device=None, chan_current=False, user=False):
     html_tvguide = '<p style="text-align: right">Last updated {timestamp}</p>'.format(timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
     html_tvguide_all = listings_html(listings,
                                      arr_objects=arr_objects,
                                      device_url=device_url,
                                      device=device,
                                      chan_current=chan_current,
-                                     room=room,
                                      group=group)
     user_channels = get_userchannels(user)
     if listings and user_channels:
@@ -149,7 +147,6 @@ def html_listings_user_and_all (listings, arr_objects=None, room=False, group=Fa
                                           device_url=device_url,
                                           device=device,
                                           chan_current=chan_current,
-                                          room=room,
                                           group=group,
                                           user=user)
         html_tvguide += urlopen('web/user_tabs.html').read().encode('utf-8').format(title_user=str(user)+"'s favourites",

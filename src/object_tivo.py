@@ -2,18 +2,19 @@ from send_cmds import sendTELNET
 from list_remotes_retriever import read_list_remotes
 from datetime import datetime
 
-class object_TIVO:
+class object_tivo:
     '''TiVo object'''
 
-    def __init__ (self, STRname, STRipaddress, INTport, STRaccesskey="", BOOLtvguide_use=False):
+    def __init__ (self, STRname, STRipaddress, INTport, STRsource, STRaccesskey=""):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRaccesskey = STRaccesskey
-        self._tvguide_use = BOOLtvguide_use
         self._type = "tivo"
         self._name = STRname
-        self._html = "object-tivo.html"
+        self._html = "object_tivo.html"
         self._img = "logo_virgin.png"
+        self._tvguide = True
+        self._source = STRsource
 
 
     def getIP(self):
@@ -29,7 +30,7 @@ class object_TIVO:
         self._STRaccesskey = STRaccesskey
 
     def getTvguide_use(self):
-        return self._tvguide_use
+        return self._tvguide
 
     def getType(self):
         return self._type
@@ -42,6 +43,9 @@ class object_TIVO:
 
     def getLogo(self):
         return self._img
+
+    def getSource(self):
+        return self._source
 
 
     def getChan(self):

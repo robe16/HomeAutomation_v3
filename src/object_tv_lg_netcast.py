@@ -2,7 +2,7 @@ from send_cmds import sendHTTP
 from list_remotes_retriever import read_list_remotes
 
 
-class object_LGTV:
+class object_tv_lg_netcast:
     '''LG TV object'''
 
     STRtv_PATHpair = "/udap/api/pairing"
@@ -10,17 +10,18 @@ class object_LGTV:
     STRtv_PATHevent = "/udap/api/event"
     STRtv_PATHquery = "/udap/api/data"
 
-    def __init__ (self, STRname, STRipaddress, INTport, STRpairingkey=None, BOOLtvguide_use=False):
+    def __init__ (self, STRname, STRipaddress, INTport, STRsource, STRpairingkey=None):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRpairingkey = STRpairingkey
-        self._tvguide_use = BOOLtvguide_use
         self._type = "lgtv"
         if self._STRpairingkey!=None:
             self._pairDevice()
         self._name = STRname
-        self._html = "object-lgtv.html"
+        self._html = "object_lgtv.html"
         self._img = "logo_lg.png"
+        self._tvguide = True
+        self._source = STRsource
 
     def getIP(self):
         return self._STRipaddress
@@ -36,7 +37,7 @@ class object_LGTV:
         self._pairDevice()
 
     def getTvguide_use(self):
-        return self._tvguide_use
+        return self._tvguide
 
     def getType(self):
         return self._type
@@ -50,6 +51,9 @@ class object_LGTV:
     def getLogo(self):
         return self._img
 
+    def getSource(self):
+        return self._source
+
     def isPaired(self):
         return self._BOOLpaired
 
@@ -57,7 +61,7 @@ class object_LGTV:
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._STRpairingkey, str(self._INTport))
         x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHpair), "close", data=STRxml)
         self._BOOLpaired = bool(x)
-        return self._BOOLpaired            
+        return self._BOOLpaired
 
     def showPairingkey(self):
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
