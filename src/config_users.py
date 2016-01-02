@@ -12,6 +12,17 @@ def read_config_users():
         return data
 
 
+def check_user(user):
+    data = read_config_users()
+    if data != None:
+        x=0
+        while x<len(data['users']):
+            if data['users'][x]['name']==user:
+                return True
+            x+=1
+    return False
+
+
 def get_usernames():
     data = read_config_users()
     if data != None:
@@ -35,17 +46,6 @@ def get_usertheme(user):
     return "light"
 
 
-def check_user(user):
-    data = read_config_users()
-    if data != None:
-        x=0
-        while x<len(data['users']):
-            if data['users'][x]['name']==user:
-                return True
-            x+=1
-    return False
-
-
 def get_userchannels(user):
     data = read_config_users()
     if data != None:
@@ -55,3 +55,25 @@ def get_userchannels(user):
                 return data['users'][x]['tvlistings']
             x+=1
     return None
+
+
+def get_userrole(user):
+    data = read_config_users()
+    if data != None:
+        x=0
+        while x<len(data['users']):
+            if data['users'][x]['name']==user:
+                return data['users'][x]['role']
+            x+=1
+    return None
+
+def get_userimage(user):
+    data = read_config_users()
+    if data != None:
+        x=0
+        while x<len(data['users']):
+            if data['users'][x]['name']==user:
+                if data['users'][x]['image'] != "":
+                    return data['users'][x]['image']
+            x+=1
+    return "default.png"

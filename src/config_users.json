@@ -2,11 +2,15 @@
   "users": [
     {
       "name": "Rob",
+      "image": "rob.png",
+      "role": "admin",
       "theme": "light",
       "tvlistings": ["BBC1", "BBC2", "BBC3", "BBC4", "ITV", "Channel 4", "E4", "Channel 5", "dave", "Sky1", "Sky2", "syfy", "Film4", "Fox", "Discovery", "Discovery Science", "BBC News", "Planet Rock", "Gold Radio"]
     },
     {
       "name": "Katie",
+      "image": "katie.png",
+      "role": "user",
       "theme": "dark",
       "tvlistings": []
     }
