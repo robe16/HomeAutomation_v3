@@ -73,11 +73,11 @@ class object_tv_lg_netcast:
         return False
 
     def sendCmd(self, STRcommand):
-        if not self._BOOLpaired:
-            if not self._repair_device():
-                return False
         data = read_list_remotes(self._type, STRcommand)
         if data:
+            if not self._BOOLpaired:
+                if not self._repair_device():
+                    return False
             STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"command\"><name>HandleKeyInput</name><value>{}</value></api></envelope>".format(data)
             x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
             if bool(x) and not str(x.getcode()).startswith("2"):
