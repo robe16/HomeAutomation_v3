@@ -73,22 +73,33 @@ class object_tv_lg_netcast:
         return False
 
     def sendCmd(self, STRcommand):
-        count = 0
         if not self._BOOLpaired:
-            while count < 5:
-                self._pairDevice()
-                if self._BOOLpaired:
-                    break
-                count+=1
-        if count==5 and not self._BOOLpaired:
-            return False
+            if not self._repair_device():
+                return False
         data = read_list_remotes(self._type, STRcommand)
         if data:
             STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"command\"><name>HandleKeyInput</name><value>{}</value></api></envelope>".format(data)
             x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+            if bool(x) and not str(x.getcode()).startswith("2"):
+                if not self._repair_device():
+                    return False
+                x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
             return str(x.getcode()).startswith("2") if bool(x) else False
         else:
             return False
+
+
+    def _repair_device(self):
+        count = 0
+        while count < 5:
+            self._pairDevice()
+            if self._BOOLpaired:
+                break
+            count+=1
+        if count==5 and not self._BOOLpaired:
+            return False
+        return True
+
 
     def getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         # Note - If both index and number are 0, the list of all apps in the category specified by type is fetched.
