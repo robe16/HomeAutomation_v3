@@ -46,7 +46,6 @@
     },
     {
       "name": "ITV",
-      "radiotimes": "28",
       "logo": "itv1_hd.png",
       "type": "tv",
       "listingsrc": {
@@ -134,6 +133,28 @@
       }
     },
     {
+      "name": "5*",
+      "logo": "5star.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2062"
+      },
+      "devicekeys": {
+        "tivo": 151
+      }
+    },
+    {
+      "name": "5 USA",
+      "logo": "5usa.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2008"
+      },
+      "devicekeys": {
+        "tivo": 153
+      }
+    },
+    {
       "name": "dave",
       "logo": "dave.png",
       "type": "tv",
@@ -167,6 +188,28 @@
       }
     },
     {
+      "name": "Sky Living",
+      "logo": "skyliving.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "197"
+      },
+      "devicekeys": {
+        "tivo": 112
+      }
+    },
+    {
+      "name": "Sky Arts",
+      "logo": "skyarts.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "40"
+      },
+      "devicekeys": {
+        "tivo": 122
+      }
+    },
+    {
       "name": "Pick",
       "logo": "pick.png",
       "type": "tv",
@@ -189,6 +232,17 @@
       }
     },
     {
+      "name": "DMAX",
+      "logo": "dmax.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2545"
+      },
+      "devicekeys": {
+        "tivo": 170
+      }
+    },
+    {
       "name": "TLC",
       "logo": "tlc.png",
       "type": "tv",
@@ -208,6 +262,39 @@
       },
       "devicekeys": {
         "tivo": 134
+      }
+    },
+    {
+      "name": "E!",
+      "logo": "e.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "1421"
+      },
+      "devicekeys": {
+        "tivo": 156
+      }
+    },
+    {
+      "name": "CBS Reality",
+      "logo": "cbsreality.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2586"
+      },
+      "devicekeys": {
+        "tivo": 148
+      }
+    },
+    {
+      "name": "Real Lives",
+      "logo": "reallives.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2189"
+      },
+      "devicekeys": {
+        "tivo": 160
       }
     },
     {
@@ -255,6 +342,28 @@
       }
     },
     {
+      "name": "Made in Leeds",
+      "logo": "madeinleeds.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": ""
+      },
+      "devicekeys": {
+        "tivo": 159
+      }
+    },
+    {
+      "name": "Drama",
+      "logo": "drama.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": ""
+      },
+      "devicekeys": {
+        "tivo": 190
+      }
+    },
+    {
       "name": "TCM",
       "logo": "tcm.png",
       "type": "tv",
@@ -285,6 +394,39 @@
       },
       "devicekeys": {
         "tivo": 126
+      }
+    },
+    {
+      "name": "horror",
+      "logo": "horror.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2476"
+      },
+      "devicekeys": {
+        "tivo": 149
+      }
+    },
+    {
+      "name": "Alibi",
+      "logo": "alibi.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2603"
+      },
+      "devicekeys": {
+        "tivo": 130
+      }
+    },
+    {
+      "name": "True Entertainment",
+      "logo": "trueentertainment.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "292"
+      },
+      "devicekeys": {
+        "tivo": 189
       }
     },
     {
@@ -326,6 +468,17 @@
       "type": "tv",
       "listingsrc": {
         "radiotimes": "131"
+      },
+      "devicekeys": {
+        "tivo": 139
+      }
+    },
+    {
+      "name": "Quest",
+      "logo": "quest.png",
+      "type": "tv",
+      "listingsrc": {
+        "radiotimes": "2179"
       },
       "devicekeys": {
         "tivo": 139
