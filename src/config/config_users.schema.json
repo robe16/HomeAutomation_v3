@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "name": "", // user's name
+      "image": "", // full file name (e.g. name.png)
+      "role": "admin", // admin/user
+      "theme": "light", // light/dark
+      "tvlistings": ["", "", "", ""] // names of tv channels from list
+    }
+  ]
+}
