@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 import json
+import os
 from send_cmds import sendHTTP
 from object_channel import object_channel
 
 
 def build_channel_array():
-    with open('list_channels.json', 'r') as data_file:
+    with open(os.path.join('lists', 'list_channels.json'), 'r') as data_file:
         data = json.load(data_file)
     data_channels = data["channels"]
     #

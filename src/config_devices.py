@@ -1,4 +1,5 @@
 import json
+import os
 from object_tv_lg_netcast import object_tv_lg_netcast
 from object_tivo import object_tivo
 from object_other import object_other
@@ -55,7 +56,7 @@ from object_raspberrypi import object_raspberrypi
 
 def write_config_devices(ARRobjects):
     try:
-        with open('config_devices.json', 'w') as outfile:
+        with open(os.path.join('config', 'config_devices.json'), 'w') as outfile:
             outfile.write(json.dumps(create_json_devices(ARRobjects), outfile, indent=4, separators=(',', ': ')))
         return True
     except:
@@ -111,7 +112,7 @@ def create_json_devices(ARRobjects):
 def create_device_object_array():
     temp_array = []
     #
-    with open('config_devices.json', 'r') as data_file:
+    with open(os.path.join('config', 'config_devices.json'), 'r') as data_file:
         data = json.load(data_file)
     #
     for data_group in data:

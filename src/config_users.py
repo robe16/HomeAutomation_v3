@@ -1,8 +1,9 @@
 import json
+import os
 
 
 def read_config_users():
-    with open('config_users.json', 'r') as data_file:
+    with open(os.path.join('config', 'config_users.json'), 'r') as data_file:
         data = json.load(data_file)
     if not isinstance(data, dict):
         data = json.loads(data)
@@ -66,6 +67,7 @@ def get_userrole(user):
                 return data['users'][x]['role']
             x+=1
     return None
+
 
 def get_userimage(user):
     data = read_config_users()

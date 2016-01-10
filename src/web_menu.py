@@ -1,4 +1,5 @@
 import json
+import os
 from urllib import urlopen
 from config_users import get_usertheme, get_userrole, get_userimage
 
@@ -16,7 +17,7 @@ def html_menu(user):
 
 def _menudrops():
     #
-    with open('config_devices.json', 'r') as data_file:
+    with open(os.path.join('config', 'config_devices.json'), 'r') as data_file:
         data = json.load(data_file)
     #
     STRhtml = ""

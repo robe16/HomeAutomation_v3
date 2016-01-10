@@ -1,8 +1,9 @@
 import json
+import os
 
 
 def read_list_remotes(devicetype, command):
-    with open('list_remotes.json', 'r') as data_file:
+    with open(os.path.join('lists', 'list_remotes.json'), 'r') as data_file:
         data = json.load(data_file)
     return read_json_remotes(data, devicetype, command)
 

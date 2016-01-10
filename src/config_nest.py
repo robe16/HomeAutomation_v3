@@ -1,8 +1,9 @@
 import json
+import os
 
 
 def read_config_nest():
-    with open('config_nest.json', 'r') as data_file:
+    with open(os.path.join('config', 'config_nest.json'), 'r') as data_file:
         data = json.load(data_file)
     return read_json_nest(data)
 
@@ -22,7 +23,7 @@ def read_json_nest(dataX):
 
 def write_config_nest(ARRnestData):
     try:
-        with open('config_nest.json', 'w') as outfile:
+        with open(os.path.join('config', 'config_nest.json'), 'w') as outfile:
             outfile.write(json.dumps(create_json_nest(ARRnestData), outfile, indent=4, separators=(',', ': ')))
         return True
     except:
