@@ -11,7 +11,7 @@ from config_users import check_user, get_userrole
 from object_tv_lg_netcast import object_tv_lg_netcast
 from object_tivo import object_tivo
 from web_pages import create_login, create_home, create_tvguide, create_about
-from web_devices import create_device_page
+from web_devices import create_device_page, refresh_tvguide
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
 from web_tvlistings import html_listings_user_and_all, listings_html
 from tvlisting import build_channel_array, returnnonext_xml_all
@@ -79,16 +79,6 @@ def web(page=""):
         return HTTPResponse(body=create_home(user), status=200)
     elif page == 'tvguide':
         return HTTPResponse(body=create_tvguide(user, listings), status=200)
-    elif page == 'settings_devices':
-        return HTTPResponse(body=create_settings_devices(user), status=200)
-    elif page == 'settings_tvguide':
-        return HTTPResponse(body=create_settings_tvguide(user, listings), status=200)
-    elif page == 'settings_nest':
-        return HTTPResponse(body=create_settings_nest(user,
-                                                      nest_static_vars.STRnest_clientID,
-                                                      ARRnestData[0],
-                                                      randomstring),
-                            status=200)
     elif page == 'about':
         return HTTPResponse(body=create_about(user), status=200)
     else:
@@ -128,10 +118,10 @@ def web(group=""):
     tvguide_request = bool(request.query.tvguide) or False
     if tvguide_request:
         #TODO update with new device array structure
-        return HTTPResponse(body=html_listings_user_and_all(tvlistings,
-                                                            arr_objects=arr_devices,
-                                                            group=group,
-                                                            user=user),
+        return HTTPResponse(body=refresh_tvguide(user,
+                                                 tvlistings,
+                                                 arr_devices,
+                                                 group),
                             status=200) if bool(tvlistings) else HTTPResponse(status=400)
     # Create and return web interface page
     try:
