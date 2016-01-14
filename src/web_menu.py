@@ -4,29 +4,41 @@ from urllib import urlopen
 from config_users import get_usertheme, get_userrole, get_userimage
 
 
-def html_menu(user):
-    theme_navbar = _user_theme(user)
+# theme_navbar = _user_theme(user)
+# user_image = _user_image(user)
+# settings = _user_settings(user)
+
+
+def html_menu(user, arr_devices, body):
+    return html_sidebar(arr_devices, body) + _html_menu_rhs(user)
+
+
+
+def html_sidebar(arr_devices, body):
+    # Use passed through arr_devices as opposed to using json as require
+    # device objects that have details regarding to images/logos
+    html = ''
+    for device_group in arr_devices:
+        html += '<li class="list-divider"></li>'
+        if not device_group['name'] == '':
+            name = device_group['name']
+            html += urlopen('web/menu_sidebar_title.html').read().encode('utf-8').format(name=name)
+        else:
+            name = '-'
+        for device in device_group['devices']:
+            html += urlopen('web/menu_sidebar_item.html').read().encode('utf-8').format(href=('/web/devices/{group}/{device}').format(group=name.lower().replace(" ",""),
+                                                                                                                                      device=device.getName().lower().replace(" ","")),
+                                                                                        id='{}_{}'.format(device_group['name'].lower().replace(' ',''), device.getName().lower().replace(' ','')),
+                                                                                        cls='',
+                                                                                        name=device.getName(),
+                                                                                        img=device.getLogo())
+    return urlopen('web/menu_sidebar.html').read().encode('utf-8').format(menu=html, body=body)
+
+
+def _html_menu_rhs(user):
     user_image = _user_image(user)
-    settings = _user_settings(user)
-    return urlopen('web/menu.html').read().encode('utf-8').format(theme_navbar=theme_navbar,
-                                                                  menus=_menudrops(),
-                                                                  settings=settings,
-                                                                  user=user,
-                                                                  user_image=user_image)
-
-
-def _menudrops():
-    #
-    with open(os.path.join('config', 'config_devices.json'), 'r') as data_file:
-        data = json.load(data_file)
-    #
-    STRhtml = ""
-    for devicegroup in data:
-        name = devicegroup['group']
-        STRhtml += urlopen('web/menu_button.html').read().encode('utf-8').format(id=name.lower().replace(" ",""),
-                                                                                 href='/web/devices/'+name.lower().replace(" ",""),
-                                                                                 label=name)
-    return STRhtml
+    return urlopen('web/menu_rhs.html').read().encode('utf-8').format(user=user,
+                                                                       user_image=user_image)
 
 
 def _user_theme(user):

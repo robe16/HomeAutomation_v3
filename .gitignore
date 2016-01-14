@@ -6,6 +6,9 @@ config_nest.json
 config_tvguide.json
 config_users.json
 
+# Test files for development purposes
+web_testpage.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

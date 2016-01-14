@@ -10,17 +10,18 @@ from config_nest import write_config_nest, read_json_nest, read_config_nest
 from config_users import check_user, get_userrole
 from object_tv_lg_netcast import object_tv_lg_netcast
 from object_tivo import object_tivo
-from web_pages import create_login, create_home, create_tvguide, create_about
-from web_devices import create_device_page, refresh_tvguide
+from web_pages import create_login, create_home, create_about, create_tvguide, create_device
+from web_devices import refresh_tvguide
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
-from web_tvlistings import html_listings_user_and_all, listings_html
+from web_tvlistings import html_listings_user_and_all, _listings_html
+from web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1606, debug=True)
+    run(host='0.0.0.0', port=1607, debug=True)
 
 
 def server_start():
@@ -41,7 +42,7 @@ def tvlistings_process():
     time.sleep(5)
     # 604800 secs = 7 days
     while True:
-        #list_listings.put(getall_listings())
+        #TODO - next line muted purely for speeding up testing
         list_listings.put(build_channel_array())
         time.sleep(604800)
 
@@ -69,6 +70,16 @@ def web():
     return redirect('/web/login')
 
 
+# TEST PAGE here for checking and testing design ideas
+@route('/testpage')
+def web():
+    user = _check_user(request.get_cookie('user'))
+    if not user:
+        redirect('/web/login')
+    listings = _check_tvlistingsqueue()
+    return HTTPResponse(body=create_test(user, arr_devices), status=200)
+
+
 @route('/web/<page>')
 def web(page=""):
     user = _check_user(request.get_cookie('user'))
@@ -76,11 +87,11 @@ def web(page=""):
         redirect('/web/login')
     listings = _check_tvlistingsqueue()
     if page == 'home':
-        return HTTPResponse(body=create_home(user), status=200)
+        return HTTPResponse(body=create_home(user, arr_devices), status=200)
     elif page == 'tvguide':
-        return HTTPResponse(body=create_tvguide(user, listings), status=200)
+        return HTTPResponse(body=create_tvguide(user, arr_devices, listings), status=200)
     elif page == 'about':
-        return HTTPResponse(body=create_about(user), status=200)
+        return HTTPResponse(body=create_about(user, arr_devices), status=200)
     else:
         return HTTPResponse(body='An error has occurred', status=400)
 
@@ -95,11 +106,12 @@ def web(page=""):
         return HTTPResponse(body='An error has occurred', status=400)
     listings = _check_tvlistingsqueue()
     if page == 'devices':
-        return HTTPResponse(body=create_settings_devices(user), status=200)
+        return HTTPResponse(body=create_settings_devices(user, arr_devices), status=200)
     elif page == 'tvguide':
-        return HTTPResponse(body=create_settings_tvguide(user, listings), status=200)
+        return HTTPResponse(body=create_settings_tvguide(user, arr_devices, listings), status=200)
     elif page == 'nest':
         return HTTPResponse(body=create_settings_nest(user,
+                                                      arr_devices,
                                                       nest_static_vars.STRnest_clientID,
                                                       ARRnestData[0],
                                                       randomstring),
@@ -108,8 +120,8 @@ def web(page=""):
         return HTTPResponse(body='An error has occurred', status=400)
 
 
-@route('/web/devices/<group>')
-def web(group=""):
+@route('/web/devices/<group>/<device>')
+def web(group='', device=''):
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
@@ -125,7 +137,7 @@ def web(group=""):
                             status=200) if bool(tvlistings) else HTTPResponse(status=400)
     # Create and return web interface page
     try:
-        return HTTPResponse(body=create_device_page(user, tvlistings, arr_devices, group), status=200)
+        return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group, device), status=200)
     except:
         return HTTPResponse(body='An error has occurred', status=400)
 
@@ -140,15 +152,19 @@ def send_command(group="-", device="-", command="-"):
     #
     dvc = False
     #
-    for devicegroup in arr_devices:
-        if devicegroup['name'].lower().replace(' ','') == group:
-            if devicegroup['devices']['device'].getName().lower().replace(' ','') == device:
-                dvc = devicegroup['devices']['device']
-            else:
-                for obj in devicegroup['devices']['inputs']:
-                    if obj['device'].getName().lower().replace(' ','') == device:
-                        dvc = obj['device']
-                        break
+    for device_group in arr_devices:
+        # Get group name - as some groups do not have a name, default this to '-'
+        if not device_group['name'] == '':
+            grp_name = device_group['name']
+        else:
+            grp_name = '-'
+        #
+        if grp_name.lower().replace(' ','') == group:
+            #
+            for objdevice in device_group['devices']:
+                if objdevice.getName().lower().replace(' ','') == device:
+                    dvc = objdevice
+                    break
             if dvc:
                 break
     #

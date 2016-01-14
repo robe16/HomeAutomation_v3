@@ -10,7 +10,7 @@ class object_tv_lg_netcast:
     STRtv_PATHevent = "/udap/api/event"
     STRtv_PATHquery = "/udap/api/data"
 
-    def __init__ (self, STRname, STRipaddress, INTport, STRsource, STRpairingkey=None):
+    def __init__ (self, STRname, STRipaddress, INTport, STRpairingkey=None):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRpairingkey = STRpairingkey
@@ -21,7 +21,6 @@ class object_tv_lg_netcast:
         self._html = "object_lgtv.html"
         self._img = "logo_lg.png"
         self._tvguide = True
-        self._source = STRsource
 
     def getIP(self):
         return self._STRipaddress
@@ -50,9 +49,6 @@ class object_tv_lg_netcast:
 
     def getLogo(self):
         return self._img
-
-    def getSource(self):
-        return self._source
 
     def isPaired(self):
         return self._BOOLpaired

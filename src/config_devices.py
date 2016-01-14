@@ -54,47 +54,14 @@ from object_raspberrypi import object_raspberrypi
 #     return ARRobjects
 
 
-def write_config_devices(ARRobjects):
+def write_config_devices(data):
     try:
         with open(os.path.join('config', 'config_devices.json'), 'w') as outfile:
-            outfile.write(json.dumps(create_json_devices(ARRobjects), outfile, indent=4, separators=(',', ': ')))
+            outfile.write(json.dumps(data, outfile, indent=4, separators=(',', ': ')))
+        #TODO recreate object array and pass back to __init__ as new config file will overwrite current configuration
         return True
     except:
         return False
-
-
-def create_json_devices(ARRobjects):
-    DICTrooms=[]
-    x=0
-    while x<len(ARRobjects):
-        DICTgroups=[]
-        y=0
-        while y<len(ARRobjects[x][1]):
-            DICTdevices=[]
-            z=0
-            while z<len(ARRobjects[x][1][y][1]):
-                #
-                object=ARRobjects[x][1][y][1][z]
-                #
-                if isinstance(object, object_tv_lg_netcast):
-                    DICTdevices.append({'name': object.getName(),
-                                        'type':'lgtv',
-                                        'ipaddress':object.getIP(),
-                                        'pairingkey':object.getPairingkey(),
-                                        'usetvguide':object.getTvguide_use()})
-                elif isinstance(object, object_tivo):
-                    DICTdevices.append({'name': object.getName(),
-                                        'type':'tivo',
-                                        'ipaddress':object.getIP(),
-                                        'mak':object.getAccesskey(),
-                                        'usetvguide':object.getTvguide_use()})
-                #
-                z+=1
-            DICTgroups.append({"name": ARRobjects[x][1][y][0], "devices": DICTdevices})
-            y+=1
-        DICTrooms.append({"name": ARRobjects[x][0], "groups": DICTgroups})
-        x+=1
-    return {'rooms': DICTrooms}
 
 
 '''
@@ -108,66 +75,47 @@ def create_json_devices(ARRobjects):
 }
 '''
 
+def get_device_json():
+    with open(os.path.join('config', 'config_devices.json'), 'r') as data_file:
+        return json.load(data_file)
+
 
 def create_device_object_array():
     temp_array = []
     #
-    with open(os.path.join('config', 'config_devices.json'), 'r') as data_file:
-        data = json.load(data_file)
+    data = get_device_json()
     #
     for data_group in data:
+        temp_devices = []
+        for dvc in data_group['devices']:
+            temp_devices.append(_create_device_object(dvc))
         temp_array.append({'name': data_group['group'],
-                           'tvguide': data_group['tvguide'],
-                           'devices': _create_device_object(data_group)})
+                           'devices': temp_devices})
     #
     return temp_array
 
 
 def _create_device_object(data_device):
     device_type = data_device['device']
-    try:
-        device_source = data_device['details']['source'].encode('ascii')
-    except:
-        device_source = None
     #
     if device_type=="tv_lg_netcast":
-        temp_device = object_tv_lg_netcast(STRname = data_device['details']['name'].encode('ascii'),
-                                           STRipaddress = data_device['details']['ipaddress'].encode('ascii'),
-                                           INTport = 8080,
-                                           STRpairingkey = data_device['details']['pairingkey'].encode('ascii'),
-                                           STRsource = device_source)
+        return object_tv_lg_netcast(STRname = data_device['details']['name'].encode('ascii'),
+                                    STRipaddress = data_device['details']['ipaddress'].encode('ascii'),
+                                    INTport = 8080,
+                                    STRpairingkey = data_device['details']['pairingkey'].encode('ascii'))
     elif device_type=="tivo":
-        temp_device = object_tivo(STRname = data_device['details']['name'].encode('ascii'),
-                                  STRipaddress = data_device['details']['ipaddress'].encode('ascii'),
-                                  INTport = 31339,
-                                  STRaccesskey = data_device['details']['mak'].encode('ascii'),
-                                  STRsource = device_source)
+        return object_tivo(STRname = data_device['details']['name'].encode('ascii'),
+                           STRipaddress = data_device['details']['ipaddress'].encode('ascii'),
+                           INTport = 31339,
+                           STRaccesskey = data_device['details']['mak'].encode('ascii'))
     elif device_type=="xbox_one":
-        temp_device = object_xbox_one(STRname = data_device['details']['name'].encode('ascii'),
-                                      STRsource = device_source)
+        return object_xbox_one(STRname = data_device['details']['name'].encode('ascii'),
+                               STRipaddress = data_device['details']['ipaddress'].encode('ascii'))
     elif device_type=="raspberrypi":
-        temp_device = object_raspberrypi(STRname = data_device['details']['name'].encode('ascii'),
-                                         STRsource = device_source)
+        return object_raspberrypi(STRname = data_device['details']['name'].encode('ascii'),
+                                  STRipaddress = data_device['details']['ipaddress'].encode('ascii'))
     elif device_type=="other":
-        temp_device = object_other(STRname = data_device['details']['name'].encode('ascii'),
-                                   STRsource = device_source)
+        return object_other(STRname = data_device['details']['name'].encode('ascii'),
+                            STRipaddress = data_device['details']['ipaddress'].encode('ascii'))
     else:
-        temp_device = None
-    #
-    temp_inputs = []
-    try:
-        for device in data_device['inputs']:
-            temp_inputs.append(_create_device_object(device))
-    except:
-        temp_inputs = None
-    #
-    temp_outputs = []
-    try:
-        for device in data_device['outputs']:
-            temp_outputs.append(_create_device_object(device))
-    except:
-        temp_outputs = None
-    #
-    if temp_inputs is not None and temp_outputs is not None:
-        return {'device': temp_device, 'inputs': temp_inputs, 'outputs': temp_outputs}
-    return {'device': temp_device}
+        return None

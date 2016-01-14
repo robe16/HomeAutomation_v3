@@ -5,7 +5,7 @@ from datetime import datetime
 class object_tivo:
     '''TiVo object'''
 
-    def __init__ (self, STRname, STRipaddress, INTport, STRsource, STRaccesskey=""):
+    def __init__ (self, STRname, STRipaddress, INTport, STRaccesskey=""):
         self._STRipaddress = STRipaddress
         self._INTport = INTport
         self._STRaccesskey = STRaccesskey
@@ -14,7 +14,6 @@ class object_tivo:
         self._html = "object_tivo.html"
         self._img = "logo_virgin.png"
         self._tvguide = True
-        self._source = STRsource
 
 
     def getIP(self):
@@ -43,9 +42,6 @@ class object_tivo:
 
     def getLogo(self):
         return self._img
-
-    def getSource(self):
-        return self._source
 
 
     def getChan(self):

@@ -1,32 +1,16 @@
 [
   {
     "group": "",
-    "tvguide": true,
-    "device": "",
-    "details": {
-      "name": "",
-      "ipaddress": ""
-      // plus additional items specific to the device
-    },
-    "inputs": [
+    "devices":
+    [
       {
         "device": "",
-        "details": {
-          "name": "",
-          "ipaddress": ""
-          // plus additional items specific to the device
-        }
-      }
-    ],
-    "outputs": [
-      {
-        "room": "",
-        "device": "",
-        "details": {
-          "name": "",
-          "ipaddress": ""
-          // plus additional items specific to the device
-        }
+        "details":
+          {
+            "name": "",
+            "ipaddress": ""
+            // plus additional items specific to the device
+          }
       }
     ]
   }
