@@ -33,10 +33,27 @@ def create_tvguide(user, arr_devices, listings):
            urlopen('web/footer.html').read().encode('utf-8')
 
 
-#TODO - get device first, then pass this through to further code. Will also enable  neater title
 def create_device(user, tvlistings, arr_devices, group_name, device_name):
+    #
+    device = False
+    #
+    for device_group in arr_devices:
+        # Get group name - as some groups do not have a name, default this to '-'
+        grp_name = device_group['name'] if not device_group['name'] == '' else '-'
+        #
+        if grp_name.lower().replace(' ','') == group_name:
+            #
+            for device_item in device_group['devices']:
+                if device_item.getName().lower().replace(' ','') == device_name:
+                    #
+                    device = device_item
+                    break
+        if not device:
+            break
+    #
     body = urlopen('web/comp_alert.html').read().encode('utf-8').format(body='-') +\
-           _create_device_page(user, tvlistings, arr_devices, group_name, device_name)
-    return urlopen('web/header.html').read().encode('utf-8').format(title=group_name + ': ' + device_name) +\
+           _create_device_page(user, tvlistings, device, group_name, device_name)
+    #
+    return urlopen('web/header.html').read().encode('utf-8').format(title=grp_name + ': ' + device.getName()) +\
            html_menu(user, arr_devices, body) + \
            urlopen('web/footer.html').read().encode('utf-8')
