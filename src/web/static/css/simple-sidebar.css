@@ -1,267 +1,73 @@
-/*!
- * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
- * Code licensed under the Apache License v2.0.
- * For details, see http://www.apache.org/licenses/LICENSE-2.0.
- */
 
-/* Toggle Styles */
-
-#wrapper {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    padding-left: 0;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+#page-content-wrapper {
+    padding: 20px 65px;
 }
 
+/* Sidebar spans */
 
-#sidebar-wrapper {
-    z-index: 1000;
+.sidebar_lhs {
+    z-index: 2000;
     position: fixed;
-    left: 200px;
-    width: 60px;
+    left: 20px;
+    top: 20px;
+    width: 50px;
     height: 100%;
-    margin-left: -200px;
     overflow-y: auto;
-    background: #000;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-#sidebar-wrapper {
-    width: 60px;
-}
-#wrapper.toggled #sidebar-wrapper {
-    width: 200px;
 }
 
-
-#page-content-wrapper {
-    z-index: 500;
-    padding: 20px 80px;
-}
-#page-content-wrapper {
-    padding-left: 80px;
-}
-#wrapper.toggled #page-content-wrapper {
-    padding-left: 220px;
+.sidebar_rhs {
+    z-index: 2000;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
 }
 
-/* Sidebar Styles */
+/* Sidebar buttons */
 
-.sidebar-nav {
-    position: absolute;
-    top: 0;
-    margin: 0;
+.sidebar_img {
+    height:40px;
+    width:40px;
+    left: 50%;
+    top: 50%;
+    margin: 0px;
+}
+
+.btn_sidebar_lhs {
+    background: #fff;
+    float: left;
+    margin: 10px 0px;
+    width: 40px;
+    height: 40px;
     padding: 0;
-    list-style: none;
-}
-.sidebar-nav {
-    width: 60px;
-}
-#wrapper.toggled .sidebar-nav {
-    width: 200px;
+    display:table-cell;
+    vertical-align:middle;
+    text-align:center;
 }
 
-
-.sidebar-nav li {
-    text-indent: 20px;
-    line-height: 40px;
-}
-.sidebar-nav li {
-    height: 60px;
-}
-#wrapper.toggled .sidebar-nav li {
-    height: 40px;
-}
-
-
-.sidebar-title {
-    margin-left: 20px;
-    font-weight: bold;
-    color: #fff;
-}
-.sidebar-title {
-    display: none;
-}
-#wrapper.toggled .sidebar-title {
-    display: inline;
-}
-
-
-.sidebar-item-img {
+.btn_sidebar_rhs {
     float: right;
-    width: 60px;
-    margin: auto auto auto auto;
-    vertical-align: middle;
-    text-align: center;
-    text-indent: 0;
-}
-.sidebar-item-img {
-    height: 60px;
-    padding: 15px 10px;
-}
-#wrapper.toggled .sidebar-item-img {
-    height: 40px;
-    padding: 5px 10px 5px 10px;
+    margin-top: 20px;
 }
 
+/* Sidebar dividers */
 
-.sidebar-item-img img {
-    float: none;
-    margin: 0;
-    max-height: 30px;
-    max-width: 40px;
-}
-
-.sidebar-nav li a {
-    display: block;
-    text-decoration: none;
-    color: #cccccc;
-}
-
-.sidebar-item-name {
-    display: none;
-}
-#wrapper.toggled .sidebar-item-name {
-    display: inline;
-}
-
-.sidebar-nav li a:hover {
-    text-decoration: none;
-    color: #fff;
-    background: rgba(255,255,255,0.2);
-}
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-    text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 18px;
-    line-height: 60px;
-}
-
-.sidebar-nav > .sidebar-brand a {
-    color: #cccccc;
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
-    background: none;
-}
-
-/*
-@media(min-width:768px) {
-
-    #page-content-wrapper {
-        padding-left: 220px;
-    }
-    #wrapper.toggled #page-content-wrapper {
-        padding-left: 80px;
-    }
-
-    #sidebar-wrapper {
-        width: 200px;
-    }
-    #wrapper.toggled #sidebar-wrapper {
-        width: 60px;
-    }
-
-    #wrapper.toggled .sidebar-nav li {
-        height: 50px;
-    }
-    .sidebar-nav li {
-        height: 40px;
-    }
-
-    #wrapper.toggled .sidebar-item-name {
-        display: none;
-    }
-    .sidebar-item-name {
-        display: inline;
-    }
-
-    #wrapper.toggled .sidebar-item-img {
-        height: 50px;
-        padding: 15px 10px;
-    }
-    .sidebar-item-img {
-        height: 40px;
-        padding: 5px 10px 5px 10px;
-    }
-
-    #wrapper.toggled .sidebar-title {
-        display: none;
-    }
-    .sidebar-title {
-        display: inline;
-    }
-
-    #wrapper.toggled .sidebar-nav {
-        width: 60px;
-    }
-    .sidebar-nav {
-        width: 200px;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        width: 60px;
-    }
-    #sidebar-wrapper {
-        width: 200px;
-    }
-
-    #sidebar-close {
-        display: none;
-    }
-    #wrapper.toggled #sidebar-close {
-        display: inline;
-    }
-    #sidebar-open {
-        display: inline;
-    }
-    #wrapper.toggled #sidebar-open {
-        display: none;
-    }
-
-}
-*/
-
-#wrapper.toggled .sidebar-nav .list-divider {
-    border-top: 1px solid #cccccc;
-    margin: 5px 0;
+.sidebar_divider {
+    float: left;
+    background: transparent;
+    width: 40px;
     height: 1px;
-}
-.sidebar-nav .list-divider {
-    border-top: 1px solid #cccccc;
-    margin: 5px 0;
-    height: 1px;
+    margin: 10px 0px;
+    border-top: 1px solid black;
 }
 
+/* Shadow to spans and images */
 
-#sidebar-close {
-    display: inline;
+span.box-shadow {
+    -webkit-box-shadow: 2px 2px 7px 0px rgba(50, 50, 50, 0.7);
+    -moz-box-shadow: 2px 2px 7px 0px rgba(50, 50, 50, 0.7);
+    box-shadow: 2px 2px 7px 0px rgba(50, 50, 50, 0.7);
 }
-#wrapper.toggled #sidebar-close {
-    display: none;
-}
-#sidebar-open {
-    display: none;
-}
-#wrapper.toggled #sidebar-open {
-    display: inline;
-}
-
-
-/* Below contains css code for additional menu items not included on sidebar */
-
 img.box-shadow {
     -webkit-box-shadow: 2px 2px 7px 0px rgba(50, 50, 50, 0.7);
     -moz-box-shadow: 2px 2px 7px 0px rgba(50, 50, 50, 0.7);

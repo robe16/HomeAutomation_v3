@@ -1,12 +1,9 @@
-import json
-import os
 from urllib import urlopen
 from config_users import get_usertheme, get_userrole, get_userimage
 
 
 # theme_navbar = _user_theme(user)
 # user_image = _user_image(user)
-# settings = _user_settings(user)
 
 
 def html_menu(user, arr_devices, body):
@@ -19,7 +16,7 @@ def html_sidebar(arr_devices, body):
     # device objects that have details regarding to images/logos
     html = ''
     for device_group in arr_devices:
-        html += '<li class="list-divider"></li>'
+        html += '<span class="sidebar_divider box-shadow"></span>'
         if not device_group['name'] == '':
             name = device_group['name']
             html += urlopen('web/menu_sidebar_title.html').read().encode('utf-8').format(name=name)
@@ -32,13 +29,15 @@ def html_sidebar(arr_devices, body):
                                                                                         cls='',
                                                                                         name=device.getName(),
                                                                                         img=device.getLogo())
-    return urlopen('web/menu_sidebar.html').read().encode('utf-8').format(menu=html, body=body)
+    return urlopen('web/menu_lhs.html').read().encode('utf-8').format(menu=html, body=body)
 
 
 def _html_menu_rhs(user):
     user_image = _user_image(user)
-    return urlopen('web/menu_rhs.html').read().encode('utf-8').format(user=user,
-                                                                       user_image=user_image)
+    html_settings = _user_settings(user)
+    return urlopen('web/menu_rhs.html').read().encode('utf-8').format(settings=html_settings,
+                                                                      user=user,
+                                                                      user_image=user_image)
 
 
 def _user_theme(user):

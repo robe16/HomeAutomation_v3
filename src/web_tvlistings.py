@@ -42,7 +42,11 @@ def _listings_html(listings, device=None, device_url=False, chan_current=False, 
                                                                               style='<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>',
                                                                               listings=_listings(listings, device=device, device_url=device_url, chan_current=chan_current, user=user))
     else:
-        if device_url:
+        try:
+            chan = listings[0].devicekeys(device.getType())
+        except:
+            chan = False
+        if device_url and chan:
             script = ('<script>' +
                       'setTimeout(function () {checkListings();}, 5000);function checkListings(){' +
                       'var xmlHttp = new XMLHttpRequest();' +
