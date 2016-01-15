@@ -21,7 +21,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1609, debug=True)
+    run(host='0.0.0.0', port=1600, debug=True)
 
 
 def server_start():
@@ -42,8 +42,7 @@ def tvlistings_process():
     time.sleep(5)
     # 604800 secs = 7 days
     while True:
-        #TODO - next line muted purely for speeding up testing
-        #list_listings.put(build_channel_array())
+        list_listings.put(build_channel_array())
         time.sleep(604800)
 
 
