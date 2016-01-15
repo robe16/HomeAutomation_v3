@@ -68,10 +68,10 @@ def _listings_html(listings, device=None, device_url=False, chan_current=False, 
 def _listings(listings, device=None, device_url=None, chan_current=False, user=False):
     STRlistings = ""
     x = 0
-    while x < len(listings):
-        lstg = listings[x]
-        STRlistings += _listingsrow(x, lstg, device, device_url, chan_current, user=user)
-        x += 1
+    for lstg in listings:
+        if lstg.getEnabled():
+            STRlistings += _listingsrow(x, lstg, device, device_url, chan_current, user=user)
+            x += 1
     return STRlistings
 
 

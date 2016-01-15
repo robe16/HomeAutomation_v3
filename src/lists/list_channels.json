@@ -4,6 +4,7 @@
       "name": "BBC1",
       "logo": "bbc1_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "96"
       },
@@ -15,6 +16,7 @@
       "name": "BBC2",
       "logo": "bbc2_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "105"
       },
@@ -26,6 +28,7 @@
       "name": "BBC3",
       "logo": "bbc3_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "45"
       },
@@ -37,6 +40,7 @@
       "name": "BBC4",
       "logo": "bbc4_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "47"
       },
@@ -48,6 +52,7 @@
       "name": "ITV",
       "logo": "itv1_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "28"
       },
@@ -59,6 +64,7 @@
       "name": "ITV2",
       "logo": "itv2.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "185"
       },
@@ -70,6 +76,7 @@
       "name": "ITV3",
       "logo": "itv3.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "1859"
       },
@@ -81,6 +88,7 @@
       "name": "ITV4",
       "logo": "itv4.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "1961"
       },
@@ -92,6 +100,7 @@
       "name": "Channel 4",
       "logo": "4_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2056"
       },
@@ -103,6 +112,7 @@
       "name": "E4",
       "logo": "e4.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "158"
       },
@@ -114,6 +124,7 @@
       "name": "More4",
       "logo": "more4.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "1959"
       },
@@ -125,6 +136,7 @@
       "name": "Channel 5",
       "logo": "five_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2615"
       },
@@ -136,6 +148,7 @@
       "name": "5*",
       "logo": "5star.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2062"
       },
@@ -147,6 +160,7 @@
       "name": "5 USA",
       "logo": "5usa.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2008"
       },
@@ -158,6 +172,7 @@
       "name": "dave",
       "logo": "dave.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2050"
       },
@@ -169,6 +184,7 @@
       "name": "Sky1",
       "logo": "sky1.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "248"
       },
@@ -180,6 +196,7 @@
       "name": "Sky2",
       "logo": "sky2.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "922"
       },
@@ -191,6 +208,7 @@
       "name": "Sky Living",
       "logo": "skyliving.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "197"
       },
@@ -202,6 +220,7 @@
       "name": "Sky Arts",
       "logo": "skyarts.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "40"
       },
@@ -213,6 +232,7 @@
       "name": "Pick",
       "logo": "pick.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "1963"
       },
@@ -224,6 +244,7 @@
       "name": "syfy",
       "logo": "syfy.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2212"
       },
@@ -235,6 +256,7 @@
       "name": "DMAX",
       "logo": "dmax.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2545"
       },
@@ -246,6 +268,7 @@
       "name": "TLC",
       "logo": "tlc.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -257,6 +280,7 @@
       "name": "MTV",
       "logo": "mtv.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "202"
       },
@@ -268,6 +292,7 @@
       "name": "E!",
       "logo": "e.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "1421"
       },
@@ -279,6 +304,7 @@
       "name": "CBS Reality",
       "logo": "cbsreality.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2586"
       },
@@ -290,6 +316,7 @@
       "name": "Real Lives",
       "logo": "reallives.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2189"
       },
@@ -301,6 +328,7 @@
       "name": "Good Food",
       "logo": "goodfood.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2136"
       },
@@ -312,6 +340,7 @@
       "name": "Food Network",
       "logo": "foodnetwork.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2185"
       },
@@ -323,6 +352,7 @@
       "name": "Film4",
       "logo": "film4_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2617"
       },
@@ -334,6 +364,7 @@
       "name": "Movies 24",
       "logo": "movies24.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2704"
       },
@@ -345,6 +376,7 @@
       "name": "Made in Leeds",
       "logo": "madeinleeds.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -356,6 +388,7 @@
       "name": "Drama",
       "logo": "drama.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -367,6 +400,7 @@
       "name": "TCM",
       "logo": "tcm.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "271"
       },
@@ -378,6 +412,7 @@
       "name": "Watch",
       "logo": "watch.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2115"
       },
@@ -389,6 +424,7 @@
       "name": "Gold",
       "logo": "gold.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "288"
       },
@@ -400,6 +436,7 @@
       "name": "horror",
       "logo": "horror.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2476"
       },
@@ -411,6 +448,7 @@
       "name": "Alibi",
       "logo": "alibi.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2603"
       },
@@ -422,6 +460,7 @@
       "name": "True Entertainment",
       "logo": "trueentertainment.png",
       "type": "tv",
+      "enabled": false,
       "listingsrc": {
         "radiotimes": "292"
       },
@@ -433,6 +472,7 @@
       "name": "Fox",
       "logo": "fox.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "1461"
       },
@@ -444,6 +484,7 @@
       "name": "Universal",
       "logo": "universal.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "180"
       },
@@ -455,6 +496,7 @@
       "name": "Comedy Central",
       "logo": "comedycentral.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "1061"
       },
@@ -466,6 +508,7 @@
       "name": "Challenge",
       "logo": "challenge.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "131"
       },
@@ -477,6 +520,7 @@
       "name": "Quest",
       "logo": "quest.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2179"
       },
@@ -488,6 +532,7 @@
       "name": "Discovery",
       "logo": "discovery.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "147"
       },
@@ -499,6 +544,7 @@
       "name": "Discovery Science",
       "logo": "discoveryscience.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "153"
       },
@@ -510,6 +556,7 @@
       "name": "Discovery History",
       "logo": "discoveryhistory.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2668"
       },
@@ -521,6 +568,7 @@
       "name": "Yesterday",
       "logo": "yesterday.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "801"
       },
@@ -532,6 +580,7 @@
       "name": "H2",
       "logo": "h2.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "2559"
       },
@@ -543,6 +592,7 @@
       "name": "BBC News",
       "logo": "bbcnews_hd.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "48"
       },
@@ -554,6 +604,7 @@
       "name": "Sky News",
       "logo": "skynews.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "256"
       },
@@ -565,6 +616,7 @@
       "name": "Kerrang!",
       "logo": "kerrang.png",
       "type": "tv",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": "191"
       },
@@ -576,6 +628,7 @@
       "name": "Heat",
       "logo": "heat.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -587,6 +640,7 @@
       "name": "Capital FM",
       "logo": "capitalfm.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -598,6 +652,7 @@
       "name": "BBC Radio 1",
       "logo": "bbcradio1.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -609,6 +664,7 @@
       "name": "BBC Radio 2",
       "logo": "bbcradio2.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -620,6 +676,7 @@
       "name": "BBC Radio 3",
       "logo": "bbcradio3.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -631,6 +688,7 @@
       "name": "BBC Radio 4",
       "logo": "bbcradio4.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -642,6 +700,7 @@
       "name": "Classic FM",
       "logo": "classicfm.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -653,6 +712,7 @@
       "name": "Heart",
       "logo": "heart.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -664,6 +724,7 @@
       "name": "Planet Rock",
       "logo": "planetrock.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },
@@ -675,6 +736,7 @@
       "name": "Gold Radio",
       "logo": "goldradio.png",
       "type": "radio",
+      "enabled": true,
       "listingsrc": {
         "radiotimes": ""
       },

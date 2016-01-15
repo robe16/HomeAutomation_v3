@@ -103,11 +103,10 @@ def web(page=""):
     if get_userrole(user) != 'admin':
         #TODO - page for users without authority
         return HTTPResponse(body='An error has occurred', status=400)
-    listings = _check_tvlistingsqueue()
     if page == 'devices':
         return HTTPResponse(body=create_settings_devices(user, arr_devices), status=200)
     elif page == 'tvguide':
-        return HTTPResponse(body=create_settings_tvguide(user, arr_devices, listings), status=200)
+        return HTTPResponse(body=create_settings_tvguide(user, arr_devices), status=200)
     elif page == 'nest':
         return HTTPResponse(body=create_settings_nest(user,
                                                       arr_devices,

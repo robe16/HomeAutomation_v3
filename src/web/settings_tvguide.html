@@ -1,9 +1,3 @@
-<script src="../../web/static/js/settings_devices.js"></script>
-<script  type="text/javascript">
-    document.getElementById('settings').setAttribute('class', 'active');
-    document.getElementById('settings_tvguide').setAttribute('class', 'active');
-</script>
-
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -12,4 +6,35 @@
     </div>
 </div>
 <br>
-<br>
+<link rel="stylesheet" href="/web/static/css/bootstrap-switch.css">
+<script src="/web/static/js/bootstrap-switch.js"></script>
+<div class="col-md-10 col-md-offset-1">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><img src="/img/icon/ic_tvguide.png" style="height:25px;"/> -</h3>
+        </div>
+        <div class="panel-body" id=tvguide-panelbody">
+            <table style="width:100%">
+                <script>
+                    $.fn.bootstrapSwitch.defaults.handleWidth = '60px';
+                </script>
+                <tr style="height:35px; padding: 2px 0px;">
+                    <td style="width: 5%"></td>
+                    <td style="width: 10%"></td>
+                    <td style="width: 10%"><span style="font-weight: bold">Channel</span></td>
+                    <td style="width: 50%;" align="center">
+                        <div class="row" style="padding: 2px 0px; margin: 5px 0px;">
+                            <div class="col-md-6" style="vertical-align: center;" valign="center">
+                                <span class="label label-primary" style="font-weight: bold">Default</span>
+                            </div>
+                            <div class="col-md-6" style="vertical-align: center;" valign="center">
+                                <span class="label label-success" style="font-weight: bold">User preference</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {listings}
+            </table>
+        </div>
+    </div>
+</div>

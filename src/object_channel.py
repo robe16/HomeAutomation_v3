@@ -1,9 +1,10 @@
 class object_channel:
 
-    def __init__ (self, name, logo, type, devicekeys, listingsrc, listings, listingstimestamp):
+    def __init__ (self, name, logo, type, enabled, devicekeys, listingsrc, listings, listingstimestamp):
         self._name = name
         self._logo = logo
         self._type = type
+        self._enabled = enabled
         self._devicekeys = devicekeys
         self._listingsrc = listingsrc
         self._listings = listings
@@ -17,6 +18,13 @@ class object_channel:
 
     def type(self):
         return self._type
+
+    def getEnabled(self):
+        return self._enabled
+
+    def setEnabled(self, enabled):
+        self._enabled = enabled
+        return
 
     def devicekeys(self, key):
         return self._devicekeys[key]
