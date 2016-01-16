@@ -29,7 +29,9 @@ def create_about(user, arr_devices):
 
 
 def create_tvguide(user, arr_devices, listings):
-    body = urlopen('web/tvguide.html').read().encode('utf-8').format(listings=html_listings_user_and_all(listings, device_url=False, user=user))
+    body = urlopen('web/tvguide.html').read().encode('utf-8').format(listings=html_listings_user_and_all(listings,
+                                                                                                         device_url=False,
+                                                                                                         user=user))
     return urlopen('web/header.html').read().encode('utf-8').format(title='TV Guide') +\
            html_menu(user, arr_devices) +\
            urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
@@ -38,6 +40,7 @@ def create_tvguide(user, arr_devices, listings):
 
 def create_device(user, tvlistings, arr_devices, group_name, device_name):
     #
+    grp_name = '-'
     device = False
     #
     for device_group in arr_devices:
@@ -51,13 +54,16 @@ def create_device(user, tvlistings, arr_devices, group_name, device_name):
                     #
                     device = device_item
                     break
-        if not device:
+        if device:
             break
     #
     body = urlopen('web/comp_alert.html').read().encode('utf-8').format(body='-') +\
            _create_device_page(user, tvlistings, device, group_name, device_name)
     #
-    return urlopen('web/header.html').read().encode('utf-8').format(title=grp_name + ': ' + device.getName()) +\
+    title = '{group}: '.format(group = grp_name) if grp_name != '-' else ''
+    title += device.getName()
+    #
+    return urlopen('web/header.html').read().encode('utf-8').format(title=title) +\
            html_menu(user, arr_devices) +\
            urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
            urlopen('web/footer.html').read().encode('utf-8')

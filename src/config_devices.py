@@ -1,10 +1,11 @@
 import json
 import os
-from object_tv_lg_netcast import object_tv_lg_netcast
-from object_tivo import object_tivo
-from object_other import object_other
-from object_xbox_one import object_xbox_one
-from object_raspberrypi import object_raspberrypi
+from object_device_tv_lg_netcast import object_tv_lg_netcast
+from object_device_tivo import object_tivo
+from object_device_other import object_other
+from object_device_xbox_one import object_xbox_one
+from object_device_raspberrypi import object_raspberrypi
+from object_nest_account import object_nest_account
 
 
 # def read_config_devices():
@@ -117,5 +118,10 @@ def _create_device_object(data_device):
     elif device_type=="other":
         return object_other(STRname = data_device['details']['name'].encode('ascii'),
                             STRipaddress = data_device['details']['ipaddress'].encode('ascii'))
+    elif device_type=="nest_account":
+        return object_nest_account(STRname = data_device['details']['name'].encode('ascii'),
+                                   token = data_device['details']['token'].encode('ascii'),
+                                   tokenexpiry = data_device['details']['tokenexpiry'].encode('ascii'),
+                                   pincode = data_device['details']['pincode'].encode('ascii'))
     else:
         return None

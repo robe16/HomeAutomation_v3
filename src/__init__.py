@@ -6,10 +6,7 @@ import random
 
 import nest_static_vars
 from config_devices import write_config_devices, create_device_object_array
-from config_nest import write_config_nest, read_json_nest, read_config_nest
 from config_users import check_user, get_userrole
-from object_tv_lg_netcast import object_tv_lg_netcast
-from object_tivo import object_tivo
 from web_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
@@ -109,13 +106,6 @@ def web(page=""):
     elif page == 'tvguide':
         #TODO - allow access to non-admin users for updating own preferences
         return HTTPResponse(body=create_settings_tvguide(user, arr_devices), status=200)
-    elif page == 'nest':
-        return HTTPResponse(body=create_settings_nest(user,
-                                                      arr_devices,
-                                                      nest_static_vars.STRnest_clientID,
-                                                      ARRnestData[0],
-                                                      randomstring),
-                            status=200)
     else:
         return HTTPResponse(body='An error has occurred', status=400)
 
@@ -215,16 +205,17 @@ def get_tvlistings():
 @route('/settings/<x>', method='GET')
 @route('/settings/<x>', method='POST')
 def save_settings(x="-"):
-    if x == 'nest':
-        pincode = request.query.pincode
-        if not bool(pincode):
-            return HTTPResponse(status=400)
-        if write_config_nest([pincode, ARRnestData[1], ARRnestData[2]]):
-            ARRnestData[0] = pincode
-            return HTTPResponse(status=200)
-        else:
-            return HTTPResponse(status=400)
-    #TODO - for receipt of new device pson
+    #TODO!!!!
+    # if x == 'nest':
+    #     pincode = request.query.pincode
+    #     if not bool(pincode):
+    #         return HTTPResponse(status=400)
+    #     if write_config_nest([pincode, ARRnestData[1], ARRnestData[2]]):
+    #         ARRnestData[0] = pincode
+    #         return HTTPResponse(status=200)
+    #     else:
+    #         return HTTPResponse(status=400)
+    #TODO - for receipt of new device json
     # elif x == 'devices':
     #     data = request.body
     #     if data:
@@ -236,8 +227,8 @@ def save_settings(x="-"):
     #             return HTTPResponse(status=400)
     #     else:
     #         return HTTPResponse(status=400)
-    else:
-        return HTTPResponse(status=400)
+    # else:
+    return HTTPResponse(status=400)
 
 
 @route('/favicon.ico')
@@ -277,7 +268,6 @@ postcode='ls27'
 # Create objects from configuration file
 randomstring = (postcode.join('-').join(random.choice(string.ascii_lowercase) for i in range(5)))
 arr_devices = create_device_object_array()
-ARRnestData = read_config_nest()
 #
 # Create processes for TV Listing code and code to start bottle server
 list_listings = Queue()
