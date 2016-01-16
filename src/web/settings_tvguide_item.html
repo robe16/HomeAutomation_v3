@@ -1,4 +1,4 @@
-<tr style="height:35px; padding-bottom:2px; padding-top:2px" bgcolor="{color}">
+<tr style="height:35px; padding-bottom:2px; padding-top:2px" bgcolor="{rowcolor}">
     <td style="width: 5%; vertical-align: center" valign="center" align="right">
         <img src="/img/icon/ic_{imgtype}.png" style="height:20px;"/>
     </td>
@@ -7,15 +7,14 @@
     <td style="width: 50%;" align="center">
         <div class="row" style="padding: 2px 0px; margin: 5px 0px;">
             <div class="col-md-6" style="vertical-align: center;" valign="center">
-                <input type="checkbox" id="general-{chan_id}" style="handleWidth: 70px; vertical-align: center;" data-toggle="toggle" {chkd_gen}>
+                <input type="checkbox" id="general-{chan_id}" style="handleWidth: 70px; vertical-align: center;" data-toggle="toggle" data-on-color="{color_gen}" {disabled_gen} {chkd_gen}>
+                <script>
+                    $("[id='general-{chan_id}']").bootstrapSwitch();
+                </script>
             </div>
             <div class="col-md-6" style="vertical-align: center;" valign="center">
                 {user_chan_toggle}
             </div>
         </div>
     </td>
-    <script>
-        $("[id='general-{chan_id}']").bootstrapSwitch();
-        {html_usr_code}
-    </script>
 </tr>

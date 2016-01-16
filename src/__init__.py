@@ -13,15 +13,16 @@ from object_tivo import object_tivo
 from web_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
+from web_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all, _listings_html
-from web_testpage import create_test
+from __web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1600, debug=True)
+    run(host='0.0.0.0', port=1610, debug=True)
 
 
 def server_start():
@@ -106,6 +107,7 @@ def web(page=""):
     if page == 'devices':
         return HTTPResponse(body=create_settings_devices(user, arr_devices), status=200)
     elif page == 'tvguide':
+        #TODO - allow access to non-admin users for updating own preferences
         return HTTPResponse(body=create_settings_tvguide(user, arr_devices), status=200)
     elif page == 'nest':
         return HTTPResponse(body=create_settings_nest(user,
@@ -114,6 +116,17 @@ def web(page=""):
                                                       ARRnestData[0],
                                                       randomstring),
                             status=200)
+    else:
+        return HTTPResponse(body='An error has occurred', status=400)
+
+
+@route('/web/preferences/<page>')
+def web(page=""):
+    user = _check_user(request.get_cookie('user'))
+    if not user and page != 'login':
+        redirect('/web/login')
+    if page == 'tvguide':
+        return HTTPResponse(body=create_preference_tvguide(user, arr_devices), status=200)
     else:
         return HTTPResponse(body='An error has occurred', status=400)
 
