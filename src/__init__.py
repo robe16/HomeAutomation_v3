@@ -12,6 +12,7 @@ from web_devices import refresh_tvguide
 from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
 from web_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all, _listings_html
+from web_error import create_error_404, create_error_500
 from __web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
@@ -19,7 +20,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1610, debug=True)
+    run(host='0.0.0.0', port=1612, debug=True)
 
 
 def server_start():
@@ -73,79 +74,90 @@ def web():
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
-    listings = _check_tvlistingsqueue()
     return HTTPResponse(body=create_test(user, arr_devices), status=200)
 
 
 @route('/web/<page>')
 def web(page=""):
     user = _check_user(request.get_cookie('user'))
-    if not user and page != 'login':
-        redirect('/web/login')
-    listings = _check_tvlistingsqueue()
-    if page == 'home':
-        return HTTPResponse(body=create_home(user, arr_devices), status=200)
-    elif page == 'tvguide':
-        return HTTPResponse(body=create_tvguide(user, arr_devices, listings), status=200)
-    elif page == 'about':
-        return HTTPResponse(body=create_about(user, arr_devices), status=200)
-    else:
-        return HTTPResponse(body='An error has occurred', status=400)
+    try:
+        if not user and page != 'login':
+            redirect('/web/login')
+        listings = _check_tvlistingsqueue()
+        if page == 'home':
+            return HTTPResponse(body=create_home(user, arr_devices), status=200)
+        elif page == 'tvguide':
+            return HTTPResponse(body=create_tvguide(user, arr_devices, listings), status=200)
+        elif page == 'about':
+            return HTTPResponse(body=create_about(user, arr_devices), status=200)
+        else:
+            return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
+    except:
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
 
 
 @route('/web/settings/<page>')
 def web(page=""):
     user = _check_user(request.get_cookie('user'))
-    if not user and page != 'login':
-        redirect('/web/login')
-    if get_userrole(user) != 'admin':
-        #TODO - page for users without authority
-        return HTTPResponse(body='An error has occurred', status=400)
-    if page == 'devices':
-        return HTTPResponse(body=create_settings_devices(user, arr_devices), status=200)
-    elif page == 'tvguide':
-        #TODO - allow access to non-admin users for updating own preferences
-        return HTTPResponse(body=create_settings_tvguide(user, arr_devices), status=200)
-    else:
-        return HTTPResponse(body='An error has occurred', status=400)
+    try:
+        if not user and page != 'login':
+            redirect('/web/login')
+        if get_userrole(user) != 'admin':
+            #TODO - page for users without authority
+            return HTTPResponse(body='An error has occurred', status=400)
+        if page == 'devices':
+            return HTTPResponse(body=create_settings_devices(user, arr_devices), status=200)
+        elif page == 'tvguide':
+            #TODO - allow access to non-admin users for updating own preferences
+            return HTTPResponse(body=create_settings_tvguide(user, arr_devices), status=200)
+        else:
+            return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
+    except:
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
 
 
 @route('/web/preferences/<page>')
 def web(page=""):
     user = _check_user(request.get_cookie('user'))
-    if not user and page != 'login':
-        redirect('/web/login')
-    if page == 'tvguide':
-        return HTTPResponse(body=create_preference_tvguide(user, arr_devices), status=200)
-    else:
-        return HTTPResponse(body='An error has occurred', status=400)
+    try:
+        if not user and page != 'login':
+            redirect('/web/login')
+        if page == 'tvguide':
+            return HTTPResponse(body=create_preference_tvguide(user, arr_devices), status=200)
+        else:
+            return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
+    except:
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
 
 
 @route('/web/devices/<group>/<device>')
 def web(group='', device=''):
     user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
-    tvlistings = _check_tvlistingsqueue()
-    # If query for tv listings availability, return html code
-    tvguide_request = bool(request.query.tvguide) or False
-    if tvguide_request:
-        #TODO update with new device array structure
-        return HTTPResponse(body=refresh_tvguide(user,
-                                                 tvlistings,
-                                                 arr_devices,
-                                                 group),
-                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
-    # Create and return web interface page
     try:
+        if not user:
+            redirect('/web/login')
+        tvlistings = _check_tvlistingsqueue()
+        # If query for tv listings availability, return html code
+        tvguide_request = bool(request.query.tvguide) or False
+        if tvguide_request:
+            #TODO update with new device array structure
+            return HTTPResponse(body=refresh_tvguide(user,
+                                                     tvlistings,
+                                                     arr_devices,
+                                                     group),
+                                status=200) if bool(tvlistings) else HTTPResponse(status=400)
+        # Create and return web interface page
         return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group, device), status=200)
     except:
-        return HTTPResponse(body='An error has occurred', status=400)
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
 
 
 @route('/web/static/<folder>/<filename>')
 def get_image(folder, filename):
-    return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
+    try:
+        return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
+    except:
+        return HTTPResponse(status=400)
 
 
 @route('/device/<group>/<device>/<command>')
