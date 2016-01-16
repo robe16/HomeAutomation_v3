@@ -12,12 +12,12 @@ def build_channel_array():
     #
     list_channels = []
     x = 0
-    while x < len(data_channels):
+    for chan in data_channels:
         #
-        chan = data_channels[x]
+        x += 1
         #
         print (
-            'Building channels and retrieving TV Listing information: {current} out of {total} - {name}'.format(current = x + 1,
+            'Building channels and retrieving TV Listing information: {current} out of {total} - {name}'.format(current = x,
                                                                                                                 total = len(data_channels),
                                                                                                                 name = chan['name']))
         #
@@ -35,8 +35,6 @@ def build_channel_array():
                                  dict_devicekeys, dict_listingsrc, dict_listings, datetime.now())
         #
         list_channels.append(objchan)
-        #
-        x += 1
         #
     return list_channels
 
