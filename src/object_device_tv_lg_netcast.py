@@ -88,7 +88,8 @@ class object_tv_lg_netcast:
         #
         if applist:
             #
-            html = '<div class="container-fluid"><div class="row">'
+            html = '<table style="width:100%">' +\
+                   '<tr style="height:80px; padding-bottom:2px; padding-top:2px">'
             #
             xml = ET.fromstring(applist)
             #
@@ -102,23 +103,21 @@ class object_tv_lg_netcast:
                     adult = data.find('adult').text
                     icon_name = data.find('icon_name').text
                     #
-                    html += ('<div class="col-md-3" align="center" onclick="sendHttp(\'/{device_url}/app?auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
-                             '<img src="/{device_url}/image?auid={auid}&name={app_name}" style="height:40px;"/>' +
-                             '<p style="text-align:center">{name}</p>' +
-                             '</div>').format(device_url = device_url,
-                                              auid = auid,
-                                              app_name = name.replace(' ', '%20'),
-                                              name = name)
+
+                    html += ('<td style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/{device_url}/app?auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
+                             '<img src="/{device_url}/image?auid={auid}&name={app_name}" style="height:50px;"/>' +
+                             '<p style="text-align:center; font-size: 13px;">{name}</p>' +
+                             '</td>').format(device_url = device_url, auid = auid, app_name = name.replace(' ', '%20'), name = name)
                     #
                     if count % 4 == 0:
-                        html += '</div><div class="row">'
+                        html += '</tr><tr style="height:35px; padding-bottom:2px; padding-top:2px">'
                     count += 1
                     #
                 except:
                     html += ''
                 #
             #
-            html += '</div></div>'
+            html += '</table></div>'
             return html
         else:
             return ''
