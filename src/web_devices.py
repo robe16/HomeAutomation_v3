@@ -7,8 +7,7 @@ def _create_device_page(user, tvlistings, device, group_name, device_name):
     if not device:
         return ''
     #
-    device_url = 'device/{group}/{device}'.format(group=group_name, device=device_name)
-    html_body = urlopen('web/{page}'.format(page=device.getHtml())).read().encode('utf-8').format(url=device_url)
+    html_body = device.getHtml(group_name)
     # Get whether device requires TV guide displaying on page
     try:
         bool_tvguideuse = device.getTvguide_use()
@@ -35,7 +34,3 @@ def refresh_tvguide(user, tvlistings, device, group_name, device_name):
         chan_current = False
     #
     return html_listings_user_and_all(tvlistings, device_url=device_url, device=device, chan_current=chan_current, user=user)
-
-    # from config_devices import create_device_object_array
-    # create_device_page("Rob", None, create_device_object_array(), "Lounge TV")
-    # print ('done')

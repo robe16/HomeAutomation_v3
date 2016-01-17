@@ -182,7 +182,7 @@ def send_command(group="-", device="-", command="-"):
                 break
     #
     try:
-        command = request.query.id if command == 'channel' else command
+        command = 'go' + request.query.id if command == 'channel' else command
         response = dvc.sendCmd(command)
         return HTTPResponse(body=str(response), status=200) if bool(response) else HTTPResponse(status=400)
     except:

@@ -1,4 +1,5 @@
 from send_cmds import sendHTTP
+from urllib import urlopen
 
 
 class object_tv_lg_netcast:
@@ -17,7 +18,6 @@ class object_tv_lg_netcast:
         if self._STRpairingkey!=None:
             self._pairDevice()
         self._name = STRname
-        self._html = "object_lgtv.html"
         self._img = "logo_lg.png"
         self._tvguide = True
 
@@ -43,14 +43,15 @@ class object_tv_lg_netcast:
     def getName(self):
         return self._name
 
-    def getHtml(self):
-        return self._html
-
     def getLogo(self):
         return self._img
 
     def isPaired(self):
         return self._BOOLpaired
+
+    def getHtml(self, group_name):
+        device_url = 'device/{group}/{device}'.format(group=group_name, device=self._name.lower().replace(' ',''))
+        return urlopen('web/{page}'.format(page="object_lgtv.html")).read().encode('utf-8').format(url=device_url)
 
     def _pairDevice(self):
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._STRpairingkey, str(self._INTport))

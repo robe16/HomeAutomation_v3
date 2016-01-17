@@ -1,5 +1,6 @@
 from send_cmds import sendTELNET
 from datetime import datetime
+from urllib import urlopen
 
 
 class object_tivo:
@@ -11,7 +12,6 @@ class object_tivo:
         self._STRaccesskey = STRaccesskey
         self._type = "tivo"
         self._name = STRname
-        self._html = "object_tivo.html"
         self._img = "logo_virgin.png"
         self._tvguide = True
 
@@ -36,9 +36,6 @@ class object_tivo:
     def getName(self):
         return self._name
 
-    def getHtml(self):
-        return self._html
-
     def getLogo(self):
         return self._img
 
@@ -56,16 +53,20 @@ class object_tivo:
     def sendCmd(self, STRcommand):
         if STRcommand == "getchannel":
             return self._getChan()
-        elif STRcommand.isdigit():
+        elif STRcommand.startswith('go'):
             return sendTELNET(self._STRipaddress,
                               self._INTport,
-                              data=("FORCECH {}\r").format(STRcommand),
+                              data=("FORCECH {}\r").format(STRcommand.replace('go','')),
                               response=True)
         else:
             try:
                 return sendTELNET(self._STRipaddress, self._INTport, data=self.commands[STRcommand])
             except:
                 return False
+
+    def getHtml(self, group_name):
+        device_url = 'device/{group}/{device}'.format(group=group_name, device=self._name.lower().replace(' ',''))
+        return urlopen('web/{page}'.format(page="object_tivo.html")).read().encode('utf-8').format(url=device_url)
 
     commands = {"power": "IRCODE STANDBY\r",
                 "1": "IRCODE NUM1\r",
