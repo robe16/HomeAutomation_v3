@@ -133,23 +133,23 @@ def web(page=""):
 @route('/web/devices/<group>/<device>')
 def web(group='', device=''):
     user = _check_user(request.get_cookie('user'))
-    try:
-        if not user:
-            redirect('/web/login')
-        tvlistings = _check_tvlistingsqueue()
-        # If query for tv listings availability, return html code
-        tvguide_request = bool(request.query.tvguide) or False
-        if tvguide_request:
-            #TODO update with new device array structure
-            return HTTPResponse(body=refresh_tvguide(user,
-                                                     tvlistings,
-                                                     arr_devices,
-                                                     group),
-                                status=200) if bool(tvlistings) else HTTPResponse(status=400)
-        # Create and return web interface page
-        return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group, device), status=200)
-    except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
+    # try:
+    if not user:
+        redirect('/web/login')
+    tvlistings = _check_tvlistingsqueue()
+    # If query for tv listings availability, return html code
+    tvguide_request = bool(request.query.tvguide) or False
+    if tvguide_request:
+        #TODO update with new device array structure
+        return HTTPResponse(body=refresh_tvguide(user,
+                                                 tvlistings,
+                                                 arr_devices,
+                                                 group),
+                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
+    # Create and return web interface page
+    return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group, device), status=200)
+    # except:
+    #     return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
 
 
 @route('/web/static/<folder>/<filename>')
@@ -182,26 +182,14 @@ def send_command(group="-", device="-", command="-"):
                 break
     #
     try:
-        command = 'go' + request.query.id if command == 'channel' else command
-        response = dvc.sendCmd(command)
-        return HTTPResponse(body=str(response), status=200) if bool(response) else HTTPResponse(status=400)
+        response = dvc.sendCmd(command, request)
+        if isinstance(response, bool):
+            return HTTPResponse(body=str(response), status=200) if bool(response) else HTTPResponse(status=400)
+        else:
+            return response
+            #static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
     except:
         return HTTPResponse(status=400)
-    #
-    #TODO - code for lgtv_netcast specific devices
-    # if room=="lounge" and device=="lgtv" and command=="appslist":
-    #     APPtype = request.query.type or 3
-    #     APPindex = request.query.index or 0
-    #     APPnumber = request.query.number or 0
-    #     x = OBJloungetv.getApplist(APPtype=APPtype, APPindex=APPindex, APPnumber=APPnumber)
-    #     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
-    # elif room=="lounge" and device=="lgtv" and command=="appicon":
-    #     auid = request.query.auid or False
-    #     name = request.query.name or False
-    #     if not bool(auid) or not bool(name):
-    #         return HTTPResponse(status=400)
-    #     x = OBJloungetv.getAppicon(auid, name)
-    #     return HTTPResponse(body=x, status=200, content_type='image/png') if bool(x) else HTTPResponse(status=400)
 
 
 @route('/tvlistings')
