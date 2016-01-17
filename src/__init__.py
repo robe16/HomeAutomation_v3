@@ -7,12 +7,12 @@ import random
 import nest_static_vars
 from config_devices import write_config_devices, create_device_object_array
 from config_users import check_user, get_userrole
-from web_pages import create_login, create_home, create_about, create_tvguide, create_device
+from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
-from web_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
-from web_preferences import create_preference_tvguide
+from web_create_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
+from web_create_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all, _listings_html
-from web_error import create_error_404, create_error_500
+from web_create_error import create_error_404, create_error_500
 from __web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response

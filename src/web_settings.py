@@ -1,43 +1,7 @@
 from urllib import urlopen
 import os
 import json
-from web_menu import html_menu
 from config_users import get_userchannels
-
-
-# TODO - redo code for new device config schema
-def create_settings_devices(user, arr_devices):
-    body = urlopen('web/settings_devices.html').read().encode('utf-8')
-    #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') +\
-           html_menu(user, arr_devices) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
-           urlopen('web/footer.html').read().encode('utf-8')
-
-
-# TODO
-def create_settings_tvguide(user, arr_devices):
-    body = _settings_tvguide(user)
-    #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') +\
-           html_menu(user, arr_devices) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
-           urlopen('web/footer.html').read().encode('utf-8')
-
-
-# TODO - now part of device settings pages (not dedicated)
-def create_settings_nest(user, arr_devices, clientID, STRnest_pincode, random):
-    nesturl = 'https://home.nest.com/login/oauth2?client_id={}&state={}'.format(clientID, random)
-    pincode = ' value="{}"'.format(STRnest_pincode) if bool(STRnest_pincode) else ''
-    #print STRnest_pincode
-    body = urlopen('web/comp_alert.html').read().encode('utf-8').format(body="-") + \
-           urlopen('web/settings_nest.html').read().encode('utf-8').format(nesturl, pincode)
-    #
-    return urlopen('web/header.html').read().encode('utf-8') +\
-           html_menu(user, arr_devices) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
-           urlopen('web/footer.html').read().encode('utf-8')
-
 
 
 def _settings_tvguide(user):
@@ -52,7 +16,15 @@ def _settings_tvguide(user):
     else:
         usr_header = ''
     #
-    return urlopen('web/settings_tvguide.html').read().encode('utf-8').format(color_gen = color_gen,
+    pre_html = '<p align="center"><strong>Note:</strong> blah blah blah</p>'
+    script_src = 'settings_tvguide.js'
+    btn_name = 'Update settings'
+    #
+    return urlopen('web/settings_tvguide.html').read().encode('utf-8').format(panel_title = 'Settings: TV Guide',
+                                                                              pre_html = pre_html,
+                                                                              script_src = script_src,
+                                                                              btn_name = btn_name,
+                                                                              color_gen = color_gen,
                                                                               usr_header = usr_header,
                                                                               listings = _settings_tvguide_items(user, user_channels, color_gen, color_usr))
 
@@ -79,10 +51,9 @@ def _settings_tvguide_items(user, user_channels, color_gen, color_usr):
                     chkd_usr = 'checked'
                     break
             #
-            html_usr_tgle = urlopen('web/settings_tvguide_toggle.html').read().encode('utf-8').format(chan_id = chan_id,
+            html_usr_tgle = urlopen('web/settings_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
                                                                                                       color_usr = color_usr,
-                                                                                                      chkd_usr = chkd_usr,
-                                                                                                      user = user.lower())
+                                                                                                      chkd_usr = chkd_usr)
         else:
             html_usr_tgle = ''
         #

@@ -1,20 +1,7 @@
 from urllib import urlopen
 import os
 import json
-from web_menu import html_menu
 from config_users import get_userchannels
-
-
-# TODO
-def create_preference_tvguide(user, arr_devices):
-    body = _preference_tvguide(user)
-    #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') +\
-           html_menu(user, arr_devices) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
-           urlopen('web/footer.html').read().encode('utf-8')
-
-
 
 def _preference_tvguide(user):
     #
@@ -24,11 +11,19 @@ def _preference_tvguide(user):
     user_channels = get_userchannels(user)
     #
     if user_channels:
-        usr_header = '<span class="label label-{color_usr}" style="font-weight: bold">User favourites</span>'.format(color_usr = color_usr)
+        usr_header = '<span class="label label-{color_usr}" style="font-weight: bold">{user}\'s favourites</span>'.format(user = user, color_usr = color_usr)
     else:
         usr_header = ''
     #
-    return urlopen('web/settings_tvguide.html').read().encode('utf-8').format(color_gen = color_gen,
+    pre_html = '<p align="center"><strong>Note:</strong> blah blah blah</p>'
+    script_src = 'preferences_tvguide.js'
+    btn_name = 'Update user preferences'
+    #
+    return urlopen('web/settings_tvguide.html').read().encode('utf-8').format(panel_title = 'User Preferences: TV Guide',
+                                                                              pre_html = pre_html,
+                                                                              script_src = script_src,
+                                                                              btn_name = btn_name,
+                                                                              color_gen = color_gen,
                                                                               usr_header = usr_header,
                                                                               listings = _preference_tvguide_items(user, user_channels, color_gen, color_usr))
 
@@ -55,10 +50,9 @@ def _preference_tvguide_items(user, user_channels, color_gen, color_usr):
                     chkd_usr = 'checked'
                     break
             #
-            html_usr_tgle = urlopen('web/settings_tvguide_toggle.html').read().encode('utf-8').format(chan_id = chan_id,
+            html_usr_tgle = urlopen('web/settings_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
                                                                                                       color_usr = color_usr,
-                                                                                                      chkd_usr = chkd_usr,
-                                                                                                      user = user.lower())
+                                                                                                      chkd_usr = chkd_usr)
         else:
             html_usr_tgle = ''
         #

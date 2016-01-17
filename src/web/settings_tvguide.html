@@ -11,13 +11,14 @@
 <div class="col-md-10 col-md-offset-1">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title"><img src="/img/icon/ic_tvguide.png" style="height:25px;"/> -</h3>
+            <h3 class="panel-title"><img src="/img/icon/ic_tvguide.png" style="height:25px;"/> {panel_title}</h3>
         </div>
         <div class="panel-body" id=tvguide-panelbody">
-            <table style="width:100%">
-                <script>
-                    $.fn.bootstrapSwitch.defaults.handleWidth = '60px';
-                </script>
+            <script>
+                $.fn.bootstrapSwitch.defaults.handleWidth = '60px';
+            </script>
+            {pre_html}
+            <table style="width:100%; margin: 10px 0px 20px 0px;">
                 <tr style="min-height:35px; padding: 2px 0px;">
                     <td style="width: 5%"></td>
                     <td style="width: 10%"></td>
@@ -35,6 +36,8 @@
                 </tr>
                 {listings}
             </table>
+            <script src="/web/static/js/{script_src}"></script>
+            <button class="btn btn-block btn-success" onclick="sendUpdate()">{btn_name}</button>'
         </div>
     </div>
 </div>
