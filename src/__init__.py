@@ -183,7 +183,7 @@ def send_command(group="-", device="-", command="-"):
     #
     try:
         response = dvc.sendCmd(command, request)
-        if isinstance(response, bool):
+        if isinstance(response, bool) or isinstance(response, int):
             return HTTPResponse(body=str(response), status=200) if bool(response) else HTTPResponse(status=400)
         else:
             return response
