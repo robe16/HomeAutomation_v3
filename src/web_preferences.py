@@ -9,10 +9,7 @@ def _preference_tvguide(user):
     #
     user_channels = get_userchannels(user)
     #
-    if user_channels:
-        usr_header = '<span class="label label-{color_usr}" style="font-weight: bold">{user}\'s favourites</span>'.format(user = user, color_usr = color_usr)
-    else:
-        usr_header = ''
+    usr_header = '<span class="label label-{color_usr}" style="font-weight: bold">{user}\'s favourites</span>'.format(user = user, color_usr = color_usr)
     #
     pre_html = '<p align="center"><strong>Note:</strong> blah blah blah</p>'
     script_src = 'preferences_tvguide.js'
@@ -41,19 +38,16 @@ def _preference_tvguide_items(user_channels, color_usr):
         # Create alternating row colours
         rowcolor = '#e8e8e8' if rowcolor == '#ffffff' else '#ffffff'
         #
-        if user_channels:
-            # Get if item is in user's preferences
-            chkd_usr = ''
-            for n in user_channels:
-                if chan['name'].lower() == n.lower():
-                    chkd_usr = 'checked'
-                    break
-            #
-            html_usr_tgle = urlopen('web/settings_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
-                                                                                                      color_usr = color_usr,
-                                                                                                      chkd_usr = chkd_usr)
-        else:
-            html_usr_tgle = ''
+        # Get if item is in user's preferences
+        chkd_usr = ''
+        for n in user_channels:
+            if chan['name'].lower() == n.lower():
+                chkd_usr = 'checked'
+                break
+        #
+        html_usr_tgle = urlopen('web/settings_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
+                                                                                                  color_usr = color_usr,
+                                                                                                  chkd_usr = chkd_usr)
         #
         html += urlopen('web/preferences_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
                                                                                            rowcolor = rowcolor,
