@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div id="alert" class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> <strong>Note:</strong> This page is still under development</div>
+        </div>
+    </div>
+</div>
+<br>
+<link rel="stylesheet" href="/web/static/css/bootstrap-switch.css">
+<script src="/web/static/js/bootstrap-switch.js"></script>
+<div class="col-md-10 col-md-offset-1">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><img src="/img/icon/ic_tvguide.png" style="height:25px;"/> {panel_title}</h3>
+        </div>
+        <div class="panel-body" id=tvguide-panelbody">
+            <script>
+                $.fn.bootstrapSwitch.defaults.handleWidth = '60px';
+            </script>
+            {pre_html}
+            <table style="width:100%; margin: 10px 0px 20px 0px;">
+                <tr style="min-height:35px; padding: 2px 0px;">
+                    <td style="width: 5%"></td>
+                    <td style="width: 10%"></td>
+                    <td style="width: 10%"><span style="font-weight: bold">Channel</span></td>
+                    <td style="width: 50%;" align="center">
+                        <div class="row" style="padding: 2px 0px; margin: 5px 0px;">
+                            <div class="col-md-6" style="vertical-align: center; min-height:25px;" valign="center">
+                                <span class="label label-default" style="font-weight: bold">Default</span>
+                            </div>
+                            <div class="col-md-6" style="vertical-align: center;  min-height:25px;" valign="center">
+                                {usr_header}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {listings}
+            </table>
+            <script src="/web/static/js/{script_src}"></script>
+            <button class="btn btn-block btn-success" onclick="sendUpdate()">{btn_name}</button>'
+        </div>
+    </div>
+</div>

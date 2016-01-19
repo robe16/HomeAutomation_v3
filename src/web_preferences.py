@@ -5,7 +5,6 @@ from config_users import get_userchannels
 
 def _preference_tvguide(user):
     #
-    color_gen = 'primary'
     color_usr = 'warning'
     #
     user_channels = get_userchannels(user)
@@ -19,15 +18,14 @@ def _preference_tvguide(user):
     script_src = 'preferences_tvguide.js'
     btn_name = 'Update user preferences'
     #
-    return urlopen('web/settings_tvguide.html').read().encode('utf-8').format(panel_title = 'User Preferences: TV Guide',
-                                                                              pre_html = pre_html,
-                                                                              script_src = script_src,
-                                                                              btn_name = btn_name,
-                                                                              color_gen = color_gen,
-                                                                              usr_header = usr_header,
-                                                                              listings = _preference_tvguide_items(user, user_channels, color_gen, color_usr))
+    return urlopen('web/preferences_tvguide.html').read().encode('utf-8').format(panel_title = 'User Preferences: TV Guide',
+                                                                                 pre_html = pre_html,
+                                                                                 script_src = script_src,
+                                                                                 btn_name = btn_name,
+                                                                                 usr_header = usr_header,
+                                                                                 listings = _preference_tvguide_items(user_channels, color_usr))
 
-def _preference_tvguide_items(user, user_channels, color_gen, color_usr):
+def _preference_tvguide_items(user_channels, color_usr):
     #
     with open(os.path.join('lists', 'list_channels.json'), 'r') as data_file:
         data = json.load(data_file)
@@ -38,7 +36,8 @@ def _preference_tvguide_items(user, user_channels, color_gen, color_usr):
     for chan in data_channels:
         #
         chan_id = chan['name'].replace(' ', '').lower()
-        chkd_gen = 'checked' if chan['enabled'] else ''
+        glyphicon = 'glyphicon-ok' if chan['enabled'] else 'glyphicon-remove'
+        color_gen = 'green' if chan['enabled'] else 'red'
         # Create alternating row colours
         rowcolor = '#e8e8e8' if rowcolor == '#ffffff' else '#ffffff'
         #
@@ -56,14 +55,13 @@ def _preference_tvguide_items(user, user_channels, color_gen, color_usr):
         else:
             html_usr_tgle = ''
         #
-        html += urlopen('web/settings_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
-                                                                                        rowcolor = rowcolor,
-                                                                                        color_gen = color_gen,
-                                                                                        channame = chan['name'],
-                                                                                        imgtype = chan['type'],
-                                                                                        imgchan = chan['logo'],
-                                                                                        disabled_gen = 'disabled=true',
-                                                                                        chkd_gen = chkd_gen,
-                                                                                        user_chan_toggle = html_usr_tgle)
+        html += urlopen('web/preferences_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
+                                                                                           rowcolor = rowcolor,
+                                                                                           color_gen = color_gen,
+                                                                                           glyphicon_gen = glyphicon,
+                                                                                           channame = chan['name'],
+                                                                                           imgtype = chan['type'],
+                                                                                           imgchan = chan['logo'],
+                                                                                           user_chan_toggle = html_usr_tgle)
     #
     return html

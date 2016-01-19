@@ -16,9 +16,9 @@ function buildList()
                     {
                         //
                         if (list=='[')
-                            {list += inptChans[i].id;}
+                            {list += '"' + inptChans[i].id + '"';}
                         else
-                            {list += ', ' + inptChans[i].id;}
+                            {list += ', "' + inptChans[i].id + '"';}
                         //
                     }
                 //
@@ -37,6 +37,7 @@ function sendUpdate()
     if (listChans)
         {
             sendHttp('/preferences/tvguide', listChans, 'POST', false, true);
+            // TODO
             alert('Preferences sent to server');
         }
     else

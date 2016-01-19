@@ -6,7 +6,7 @@ import random
 
 import nest_static_vars
 from config_devices import write_config_devices, create_device_object_array
-from config_users import check_user, get_userrole
+from config_users import check_user, get_userrole, update_user_channels
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
 from web_create_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
@@ -229,6 +229,18 @@ def save_settings(x="-"):
     #         return HTTPResponse(status=400)
     # else:
     return HTTPResponse(status=400)
+
+
+@route('/preferences/<x>', method='POST')
+def save_prefernces(x='-'):
+    if _check_user(request.get_cookie('user')):
+        if x == 'tvguide':
+            user = request.get_cookie('user')
+            data = request.body
+            if update_user_channels(user, data):
+                return HTTPResponse(status=200)
+    else:
+        return HTTPResponse(status=400)
 
 
 @route('/favicon.ico')

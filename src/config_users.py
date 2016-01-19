@@ -5,12 +5,34 @@ import os
 def read_config_users():
     with open(os.path.join('config', 'config_users.json'), 'r') as data_file:
         data = json.load(data_file)
+        data_file.close()
     if not isinstance(data, dict):
         data = json.loads(data)
     if len(data["users"]) == 0:
         return None
     else:
         return data
+
+
+def update_user_channels(user, channels):
+    try:
+        with open(os.path.join('config', 'config_users.json'), 'r') as data_file:
+            data = json.load(data_file)
+            data_file.close()
+        if data != None:
+            x=0
+            while x<len(data['users']):
+                if data['users'][x]['name'] == user:
+                    channels = json.load(channels)
+                    data['users'][x]['tvlistings'] = channels
+                    with open(os.path.join('config', 'config_users.json'), 'w+') as output_file:
+                        output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
+                        output_file.close()
+                    return True
+                x+=1
+        return False
+    except:
+        return False
 
 
 def check_user(user):
