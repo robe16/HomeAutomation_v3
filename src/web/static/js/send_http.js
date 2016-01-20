@@ -1,4 +1,8 @@
 function sendHttp(url, data, getpost, responserequired, alert) {
+    // responserequired:
+    // 0 = none
+    // 1 = text/body of response
+    // 2 = success/failure boolean
     var v = document.getElementById('alert')
     try {
         var xmlHttp = new XMLHttpRequest();
@@ -15,8 +19,12 @@ function sendHttp(url, data, getpost, responserequired, alert) {
         }
         v.style.visibility="visible";
         setTimeout(function(){v.style.visibility="hidden"}, 2000);
-        if (responserequired) {
+        if (responserequired == 0) {
+            return;
+        } else if (responserequired == 1) {
             if (xmlHttp.status==200) {return xmlHttp.responseText;} else {return false;}
+        } else if (responserequired == 2) {
+            if (xmlHttp.status==200) {return true;} else {return false;}
         }
     }
     catch(err) {

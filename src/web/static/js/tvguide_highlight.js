@@ -13,7 +13,7 @@ function channelhighlight(channo) {
 
 function getChannel(url, auto) {
     //
-    response = sendHttp(url, null, 'GET', true, false);
+    response = sendHttp(url, null, 'GET', 1, false);
     if (response) {channelhighlight('chan'+response)}
     //
     if (auto) {setTimeout(function () {getChannel(url);}, 10000);}

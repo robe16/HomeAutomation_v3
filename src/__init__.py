@@ -93,7 +93,7 @@ def web(page=""):
         else:
             return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
 @route('/web/settings/<page>')
@@ -113,7 +113,7 @@ def web(page=""):
         else:
             return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
 @route('/web/preferences/<page>')
@@ -127,7 +127,7 @@ def web(page=""):
         else:
             return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
 @route('/web/devices/<group>/<device>')

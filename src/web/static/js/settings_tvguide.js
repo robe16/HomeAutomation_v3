@@ -578,7 +578,7 @@ function buildJson()
 function sendJson()
     {
     jsonDvc = buildJson();
-    if (jsonDvc) {sendHttp('/settings/devices', jsonDvc, 'POST', false, true)}
+    if (jsonDvc) {sendHttp('/settings/devices', jsonDvc, 'POST', 0, true)}
     }
 */
 
