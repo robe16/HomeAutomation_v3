@@ -17,7 +17,6 @@ from __web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
-
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
     run(host='0.0.0.0', port=1612, debug=True)
@@ -83,17 +82,45 @@ def web(page=""):
     try:
         if not user and page != 'login':
             redirect('/web/login')
-        listings = _check_tvlistingsqueue()
+        tvlistings = _check_tvlistingsqueue()
         if page == 'home':
             return HTTPResponse(body=create_home(user, arr_devices), status=200)
         elif page == 'tvguide':
-            return HTTPResponse(body=create_tvguide(user, arr_devices, listings), status=200)
+            tvguide_request = bool(request.query.tvguide) or False
+            if tvguide_request:
+                return HTTPResponse(body=refresh_tvguide(tvlistings,
+                                                         user=user),
+                                    status=200) if bool(tvlistings) else HTTPResponse(status=400)
+            return HTTPResponse(body=create_tvguide(user, arr_devices, tvlistings), status=200)
         elif page == 'about':
             return HTTPResponse(body=create_about(user, arr_devices), status=200)
         else:
             return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
     except:
         return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+
+
+@route('/web/devices/<group_name>/<device_name>')
+def web(group_name='', device_name=''):
+    user = _check_user(request.get_cookie('user'))
+    # try:
+    if not user:
+        redirect('/web/login')
+    dvc = _get_device(group_name, device_name)
+    tvlistings = _check_tvlistingsqueue()
+    # If query for tv listings availability, return html code
+    tvguide_request = bool(request.query.tvguide) or False
+    if tvguide_request:
+        device_url = 'devices/{group}/{device}'.format(group=group_name, device=device_name)
+        return HTTPResponse(body=refresh_tvguide(tvlistings,
+                                                 device=dvc,
+                                                 device_url=device_url,
+                                                 user=user),
+                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
+    # Create and return web interface page
+    return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group_name, device_name), status=200)
+    # except:
+    #     return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
 @route('/web/settings/<page>')
@@ -103,12 +130,11 @@ def web(page=""):
         if not user and page != 'login':
             redirect('/web/login')
         if get_userrole(user) != 'admin':
-            #TODO - page for users without authority
-            return HTTPResponse(body='An error has occurred', status=400)
+            return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
+                                     'Please consult your administrator for further information.', status=400)
         if page == 'devices':
             return HTTPResponse(body=create_settings_devices(user, arr_devices), status=200)
         elif page == 'tvguide':
-            #TODO - allow access to non-admin users for updating own preferences
             return HTTPResponse(body=create_settings_tvguide(user, arr_devices), status=200)
         else:
             return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
@@ -130,28 +156,6 @@ def web(page=""):
         return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
-@route('/web/devices/<group>/<device>')
-def web(group='', device=''):
-    user = _check_user(request.get_cookie('user'))
-    # try:
-    if not user:
-        redirect('/web/login')
-    tvlistings = _check_tvlistingsqueue()
-    # If query for tv listings availability, return html code
-    tvguide_request = bool(request.query.tvguide) or False
-    if tvguide_request:
-        #TODO update with new device array structure
-        return HTTPResponse(body=refresh_tvguide(user,
-                                                 tvlistings,
-                                                 arr_devices,
-                                                 group),
-                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
-    # Create and return web interface page
-    return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group, device), status=200)
-    # except:
-    #     return HTTPResponse(body=create_error_500(user, arr_devices), status=400)
-
-
 @route('/web/static/<folder>/<filename>')
 def get_image(folder, filename):
     try:
@@ -160,26 +164,10 @@ def get_image(folder, filename):
         return HTTPResponse(status=400)
 
 
-@route('/device/<group>/<device>/<command>')
-def send_command(group="-", device="-", command="-"):
+@route('/device/<group_name>/<device_name>/<command>')
+def send_command(group_name="-", device_name="-", command="-"):
     #
-    dvc = False
-    #
-    for device_group in arr_devices:
-        # Get group name - as some groups do not have a name, default this to '-'
-        if not device_group['name'] == '':
-            grp_name = device_group['name']
-        else:
-            grp_name = '-'
-        #
-        if grp_name.lower().replace(' ','') == group:
-            #
-            for objdevice in device_group['devices']:
-                if objdevice.getName().lower().replace(' ','') == device:
-                    dvc = objdevice
-                    break
-            if dvc:
-                break
+    dvc = _get_device(group_name, device_name)
     #
     try:
         response = dvc.sendCmd(command, request)
@@ -263,6 +251,23 @@ def _check_tvlistingsqueue():
         return temp
     else:
         return False
+
+
+def _get_device(group_name, device_name):
+    #
+    for device_group in arr_devices:
+        # Get group name - as some groups do not have a name, default this to '-'
+        if not device_group['name'] == '':
+            grp_name = device_group['name']
+        else:
+            grp_name = '-'
+        #
+        if grp_name.lower().replace(' ','') == group_name:
+            #
+            for objdevice in device_group['devices']:
+                if objdevice.getName().lower().replace(' ','') == device_name:
+                    return objdevice
+    return False
 
 
 def _check_user(user_cookie):

@@ -4,14 +4,16 @@ from config_users import get_userchannels
 from datetime import datetime
 
 
-#def html_listings_user_and_all (listings, arr_objects=None, group=False, device_url=None, device=None, chan_current=False, user=False):
-def html_listings_user_and_all (listings, device=None, device_url=None, chan_current=False, user=False):
+def html_listings_user_and_all (listings, device=None, device_url=False, chan_current=False, user=False):
+    #
     html_tvguide = '<p style="text-align: right">Last updated {timestamp}</p>'.format(timestamp=datetime.now().strftime('%d/%m/%Y %H:%M:%S'))
+    #
     html_tvguide_all = _listings_html(listings,
                                       device_url=device_url,
                                       device=device,
                                       chan_current=chan_current)
     user_channels = get_userchannels(user)
+    #
     if listings and user_channels:
         temp_listings=[]
         for i in listings:
@@ -42,24 +44,13 @@ def _listings_html(listings, device=None, device_url=False, chan_current=False, 
                                                                               style='<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>',
                                                                               listings=_listings(listings, device=device, device_url=device_url, chan_current=chan_current, user=user))
     else:
-        try:
-            chan = listings[0].devicekeys(device.getType())
-        except:
-            chan = False
-        if device_url and chan:
-            script = ('<script>' +
-                      'setTimeout(function () {checkListings();}, 5000);function checkListings(){' +
-                      'var xmlHttp = new XMLHttpRequest();' +
-                      'xmlHttp.open(\'GET\', \'/web/device/'+device_url+'?tvguide=True\', false);' +
-                      'xmlHttp.send(null);' +
-                      'if (xmlHttp.status==200) {' +
-                      'document.getElementById(\'alert-tvguide\').remove();' +
-                      'document.getElementById(\'tvguide-panelbody\').innerHTML=xmlHttp.responseText}' +
-                      'else {setTimeout(function () {checkListings();}, 5000);}' +
-                      '}' +
-                      '</script>')
-        else:
-            script = ''
+        if not device_url:
+            device_url = 'tvguide'
+        script = ('\r\n<script>\r\n' +
+                  'setTimeout(function () {\r\n' +
+                  'checkListings(\'/web/'+device_url+'?tvguide=True\');\r\n' +
+                  '}, 5000);\r\n' +
+                  '</script>\r\n')
         return urlopen('web/tvguide-nodata.html').read().encode('utf-8').format(script=script,
                                                                                 type='alert-danger',
                                                                                 body='<strong>An error has occurred!!</strong> The programme listings are still being retrieved - please wait and refresh shortly.')
