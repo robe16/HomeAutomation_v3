@@ -22,7 +22,7 @@ def html_menu_lhs(arr_devices):
         else:
             name = '-'
         for device in device_group['devices']:
-            html += urlopen('web/menu_sidebar_item.html').read().encode('utf-8').format(href=('/web/devices/{group}/{device}').format(group=name.lower().replace(" ",""),
+            html += urlopen('web/menu_sidebar_item.html').read().encode('utf-8').format(href=('/web/device/{group}/{device}').format(group=name.lower().replace(" ",""),
                                                                                                                                       device=device.getName().lower().replace(" ","")),
                                                                                         id='{}_{}'.format(device_group['name'].lower().replace(' ',''), device.getName().lower().replace(' ','')),
                                                                                         cls='',

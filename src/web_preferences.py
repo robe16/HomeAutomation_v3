@@ -11,12 +11,10 @@ def _preference_tvguide(user):
     #
     usr_header = '<span class="label label-{color_usr}" style="font-weight: bold">{user}\'s favourites</span>'.format(user = user, color_usr = color_usr)
     #
-    pre_html = '<p align="center"><strong>Note:</strong> blah blah blah</p>'
     script_src = 'preferences_tvguide.js'
     btn_name = 'Update user preferences'
     #
     return urlopen('web/preferences_tvguide.html').read().encode('utf-8').format(panel_title = 'User Preferences: TV Guide',
-                                                                                 pre_html = pre_html,
                                                                                  script_src = script_src,
                                                                                  btn_name = btn_name,
                                                                                  usr_header = usr_header,
