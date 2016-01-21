@@ -16,7 +16,7 @@ def _create_device_page(user, tvlistings, device, group_name, device_name):
     # Create tv guide html if required
     if bool_tvguideuse:
         #
-        device_url = 'devices/{group}/{device}'.format(group=group_name, device=device_name)
+        device_url = 'device/{group}/{device}'.format(group=group_name, device=device_name)
         html_tv = refresh_tvguide(tvlistings,
                                   device=device,
                                   device_url = device_url,

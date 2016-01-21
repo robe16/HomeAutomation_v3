@@ -100,7 +100,7 @@ def web(page=""):
         return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
-@route('/web/devices/<group_name>/<device_name>')
+@route('/web/device/<group_name>/<device_name>')
 def web(group_name='', device_name=''):
     user = _check_user(request.get_cookie('user'))
     # try:
@@ -111,7 +111,7 @@ def web(group_name='', device_name=''):
     # If query for tv listings availability, return html code
     tvguide_request = bool(request.query.tvguide) or False
     if tvguide_request:
-        device_url = 'devices/{group}/{device}'.format(group=group_name, device=device_name)
+        device_url = 'device/{group}/{device}'.format(group=group_name, device=device_name)
         return HTTPResponse(body=refresh_tvguide(tvlistings,
                                                  device=dvc,
                                                  device_url=device_url,
