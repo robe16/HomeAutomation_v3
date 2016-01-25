@@ -8,10 +8,7 @@
         "details":
           {
             "name": "",
-            "ipaddress": "",
-            "tvguide_override": false
-            // 'tvguide_override' is for devices that have the python object set to use tv guide,
-            // however custom configuration can allow for override of this
+            "ipaddress": ""
             //
             // plus additional items specific to the device
             //
@@ -22,8 +19,7 @@
         "details":
           {
             "name": "",
-            "ipaddress": "",
-            "tvguide_override": false
+            "ipaddress": ""
             //
             // plus additional items specific to the device
             //

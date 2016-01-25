@@ -11,13 +11,7 @@ def _preference_tvguide(user):
     #
     usr_header = '<span class="label label-{color_usr}" style="font-weight: bold">{user}\'s favourites</span>'.format(user = user, color_usr = color_usr)
     #
-    script_src = 'preferences_tvguide.js'
-    btn_name = 'Update user preferences'
-    #
-    return urlopen('web/preferences_tvguide.html').read().encode('utf-8').format(panel_title = 'User Preferences: TV Guide',
-                                                                                 script_src = script_src,
-                                                                                 btn_name = btn_name,
-                                                                                 usr_header = usr_header,
+    return urlopen('web/preferences_tvguide.html').read().encode('utf-8').format(usr_header = usr_header,
                                                                                  listings = _preference_tvguide_items(user_channels, color_usr))
 
 def _preference_tvguide_items(user_channels, color_usr):
@@ -43,9 +37,9 @@ def _preference_tvguide_items(user_channels, color_usr):
                 chkd_usr = 'checked'
                 break
         #
-        html_usr_tgle = urlopen('web/settings_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
-                                                                                                  color_usr = color_usr,
-                                                                                                  chkd_usr = chkd_usr)
+        html_usr_tgle = urlopen('web/preferences_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
+                                                                                                     color_usr = color_usr,
+                                                                                                     chkd_usr = chkd_usr)
         #
         html += urlopen('web/preferences_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
                                                                                            rowcolor = rowcolor,

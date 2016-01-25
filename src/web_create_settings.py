@@ -15,7 +15,7 @@ def create_settings_devices(user, arr_devices):
 
 # TODO
 def create_settings_tvguide(user, arr_devices):
-    body = _settings_tvguide(user)
+    body = _settings_tvguide()
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') +\
            html_menu(user, arr_devices) +\
