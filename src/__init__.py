@@ -13,7 +13,6 @@ from web_create_settings import create_settings_devices, create_settings_tvguide
 from web_create_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all
 from web_create_error import create_error_404, create_error_500
-from __web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
 from tvlisting_updatechannels import update_channellist
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
@@ -67,15 +66,6 @@ def web():
 def web():
     response.delete_cookie('user')
     return redirect('/web/login')
-
-
-# TEST PAGE here for checking and testing design ideas
-@route('/testpage')
-def web():
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
-    return HTTPResponse(body=create_test(user, arr_devices), status=200)
 
 
 @route('/web/<page>')
