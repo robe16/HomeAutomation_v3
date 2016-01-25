@@ -1,1120 +1,1120 @@
 {
-  "channels": [
-    {
-      "name": "BBC1",
-      "logo": "bbc1_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "96"
-      },
-      "devicekeys": {
-        "tivo": 108
-      }
-    },
-    {
-      "name": "BBC2",
-      "logo": "bbc2_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "105"
-      },
-      "devicekeys": {
-        "tivo": 162
-      }
-    },
-    {
-      "name": "BBC3",
-      "logo": "bbc3_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "45"
-      },
-      "devicekeys": {
-        "tivo": 163
-      }
-    },
-    {
-      "name": "BBC4",
-      "logo": "bbc4_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "47"
-      },
-      "devicekeys": {
-        "tivo": 164
-      }
-    },
-    {
-      "name": "BBC ALBA",
-      "logo": "bbcalba.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2098"
-      },
-      "devicekeys": {
-        "tivo": 161
-      }
-    },
-    {
-      "name": "ITV",
-      "logo": "itv1_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "28"
-      },
-      "devicekeys": {
-        "tivo": 113
-      }
-    },
-    {
-      "name": "ITV +1",
-      "logo": "itv1+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2683"
-      },
-      "devicekeys": {
-        "tivo": 114
-      }
-    },
-    {
-      "name": "ITV2",
-      "logo": "itv2.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "185"
-      },
-      "devicekeys": {
-        "tivo": 115
-      }
-    },
-    {
-      "name": "ITV2 +1",
-      "logo": "itv2+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "1990"
-      },
-      "devicekeys": {
-        "tivo": 116
-      }
-    },
-    {
-      "name": "ITV3",
-      "logo": "itv3.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "1859"
-      },
-      "devicekeys": {
-        "tivo": 117
-      }
-    },
-    {
-      "name": "ITV3 +1",
-      "logo": "itv3+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2511"
-      },
-      "devicekeys": {
-        "tivo": 174
-      }
-    },
-    {
-      "name": "ITV4",
-      "logo": "itv4.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "1961"
-      },
-      "devicekeys": {
-        "tivo": 118
-      }
-    },
-    {
-      "name": "ITV4 +1",
-      "logo": "itv4+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2568"
-      },
-      "devicekeys": {
-        "tivo": 175
-      }
-    },
-    {
-      "name": "ITVBe",
-      "logo": "itvbe.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 119
-      }
-    },
-    {
-      "name": "ITVBe +1",
-      "logo": "itvbe+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 120
-      }
-    },
-    {
-      "name": "Channel 4",
-      "logo": "channel4_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2056"
-      },
-      "devicekeys": {
-        "tivo": 142
-      }
-    },
-    {
-      "name": "Channel 4 +1",
-      "logo": "channel4+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2047"
-      },
-      "devicekeys": {
-        "tivo": 143
-      }
-    },
-    {
-      "name": "E4",
-      "logo": "e4.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "158"
-      },
-      "devicekeys": {
-        "tivo": 144
-      }
-    },
-    {
-      "name": "E4+1",
-      "logo": "e4+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "1161"
-      },
-      "devicekeys": {
-        "tivo": 146
-      }
-    },
-    {
-      "name": "More4",
-      "logo": "more4.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "1959"
-      },
-      "devicekeys": {
-        "tivo": 147
-      }
-    },
-    {
-      "name": "More4+1",
-      "logo": "more4+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "1972"
-      },
-      "devicekeys": {
-        "tivo": 196
-      }
-    },
-    {
-      "name": "4Seven",
-      "logo": "4seven.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2701"
-      },
-      "devicekeys": {
-        "tivo": 195
-      }
-    },
-    {
-      "name": "Channel 5",
-      "logo": "channel5_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2615"
-      },
-      "devicekeys": {
-        "tivo": 150
-      }
-    },
-    {
-      "name": "Channel 5 +1",
-      "logo": "channel5+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2699"
-      },
-      "devicekeys": {
-        "tivo": 155
-      }
-    },
-    {
-      "name": "Channel 5 +24",
-      "logo": "channel5+24.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 152
-      }
-    },
-    {
-      "name": "5*",
-      "logo": "5star.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2062"
-      },
-      "devicekeys": {
-        "tivo": 151
-      }
-    },
-    {
-      "name": "5 USA",
-      "logo": "5usa.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2008"
-      },
-      "devicekeys": {
-        "tivo": 153
-      }
-    },
-    {
-      "name": "5 USA +1",
-      "logo": "5usa+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2577"
-      },
-      "devicekeys": {
-        "tivo": 154
-      }
-    },
-    {
-      "name": "dave",
-      "logo": "dave.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2050"
-      },
-      "devicekeys": {
-        "tivo": 128
-      }
-    },
-    {
-      "name": "dave ja vu",
-      "logo": "davejavu.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2052"
-      },
-      "devicekeys": {
-        "tivo": 129
-      }
-    },
-    {
-      "name": "Sky1",
-      "logo": "sky1.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "248"
-      },
-      "devicekeys": {
-        "tivo": 110
-      }
-    },
-    {
-      "name": "Sky2",
-      "logo": "sky2.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "922"
-      },
-      "devicekeys": {
-        "tivo": 121
-      }
-    },
-    {
-      "name": "Sky Living",
-      "logo": "skyliving.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "197"
-      },
-      "devicekeys": {
-        "tivo": 112
-      }
-    },
-    {
-      "name": "Sky Living +1",
-      "logo": "skyliving+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "841"
-      },
-      "devicekeys": {
-        "tivo": 140
-      }
-    },
-    {
-      "name": "Sky Arts",
-      "logo": "skyarts.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "40"
-      },
-      "devicekeys": {
-        "tivo": 122
-      }
-    },
-    {
-      "name": "Pick",
-      "logo": "pick.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "1963"
-      },
-      "devicekeys": {
-        "tivo": 123
-      }
-    },
-    {
-      "name": "syfy",
-      "logo": "syfy.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2212"
-      },
-      "devicekeys": {
-        "tivo": 135
-      }
-    },
-    {
-      "name": "syfy +1",
-      "logo": "syfy+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2213"
-      },
-      "devicekeys": {
-        "tivo": 136
-      }
-    },
-    {
-      "name": "Sony Channel",
-      "logo": "sonychannel.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2702"
-      },
-      "devicekeys": {
-        "tivo": 193
-      }
-    },
-    {
-      "name": "DMAX",
-      "logo": "dmax.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2545"
-      },
-      "devicekeys": {
-        "tivo": 170
-      }
-    },
-    {
-      "name": "TLC",
-      "logo": "tlc.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 167
-      }
-    },
-    {
-      "name": "TLC +1",
-      "logo": "tlc+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 169
-      }
-    },
-    {
-      "name": "MTV",
-      "logo": "mtv.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "202"
-      },
-      "devicekeys": {
-        "tivo": 134
-      }
-    },
-    {
-      "name": "E!",
-      "logo": "e.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "1421"
-      },
-      "devicekeys": {
-        "tivo": 156
-      }
-    },
-    {
-      "name": "CBS Action",
-      "logo": "cbsaction.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2178"
-      },
-      "devicekeys": {
-        "tivo": 192
-      }
-    },
-    {
-      "name": "CBS Reality",
-      "logo": "cbsreality.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2586"
-      },
-      "devicekeys": {
-        "tivo": 148
-      }
-    },
-    {
-      "name": "CBS Reality +1",
-      "logo": "cbsreality+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 201
-      }
-    },
-    {
-      "name": "Real Lives",
-      "logo": "reallives.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2189"
-      },
-      "devicekeys": {
-        "tivo": 160
-      }
-    },
-    {
-      "name": "Real Lives +1",
-      "logo": "reallives+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2190"
-      },
-      "devicekeys": {
-        "tivo": 207
-      }
-    },
-    {
-      "name": "Good Food",
-      "logo": "goodfood.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2136"
-      },
-      "devicekeys": {
-        "tivo": 278
-      }
-    },
-    {
-      "name": "Food Network",
-      "logo": "foodnetwork.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2185"
-      },
-      "devicekeys": {
-        "tivo": 291
-      }
-    },
-    {
-      "name": "Film4",
-      "logo": "film4_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2617"
-      },
-      "devicekeys": {
-        "tivo": 429
-      }
-    },
-    {
-      "name": "Movies 24",
-      "logo": "movies24.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2704"
-      },
-      "devicekeys": {
-        "tivo": 419
-      }
-    },
-    {
-      "name": "Made in Leeds",
-      "logo": "madeinleeds.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 159
-      }
-    },
-    {
-      "name": "Drama",
-      "logo": "drama.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 190
-      }
-    },
-    {
-      "name": "TCM",
-      "logo": "tcm.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "271"
-      },
-      "devicekeys": {
-        "tivo": 415
-      }
-    },
-    {
-      "name": "Watch",
-      "logo": "watch.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2115"
-      },
-      "devicekeys": {
-        "tivo": 124
-      }
-    },
-    {
-      "name": "Watch +1",
-      "logo": "watch+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2116"
-      },
-      "devicekeys": {
-        "tivo": 125
-      }
-    },
-    {
-      "name": "Gold",
-      "logo": "gold.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "288"
-      },
-      "devicekeys": {
-        "tivo": 126
-      }
-    },
-    {
-      "name": "Gold +1",
-      "logo": "gold+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "665"
-      },
-      "devicekeys": {
-        "tivo": 127
-      }
-    },
-    {
-      "name": "horror",
-      "logo": "horror.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2476"
-      },
-      "devicekeys": {
-        "tivo": 149
-      }
-    },
-    {
-      "name": "Alibi",
-      "logo": "alibi.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2603"
-      },
-      "devicekeys": {
-        "tivo": 130
-      }
-    },
-    {
-      "name": "Alibi +1",
-      "logo": "alibi+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "1993"
-      },
-      "devicekeys": {
-        "tivo": 131
-      }
-    },
-    {
-      "name": "True Entertainment",
-      "logo": "trueentertainment.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "292"
-      },
-      "devicekeys": {
-        "tivo": 189
-      }
-    },
-    {
-      "name": "BET",
-      "logo": "bet.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2244"
-      },
-      "devicekeys": {
-        "tivo": 184
-      }
-    },
-    {
-      "name": "Fox",
-      "logo": "fox.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "1461"
-      },
-      "devicekeys": {
-        "tivo": 157
-      }
-    },
-    {
-      "name": "Fox+",
-      "logo": "fox+.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "1971"
-      },
-      "devicekeys": {
-        "tivo": 158
-      }
-    },
-    {
-      "name": "Universal",
-      "logo": "universal.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "180"
-      },
-      "devicekeys": {
-        "tivo": 137
-      }
-    },
-    {
-      "name": "Universal +1",
-      "logo": "universal+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "2591"
-      },
-      "devicekeys": {
-        "tivo": 138
-      }
-    },
-    {
-      "name": "Comedy Central",
-      "logo": "comedycentral.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "1061"
-      },
-      "devicekeys": {
-        "tivo": 132
-      }
-    },
-    {
-      "name": "Comedy Central +1",
-      "logo": "comedycentral+1.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2013"
-      },
-      "devicekeys": {
-        "tivo": 133
-      }
-    },
-    {
-      "name": "Challenge",
-      "logo": "challenge.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "131"
-      },
-      "devicekeys": {
-        "tivo": 139
-      }
-    },
-    {
-      "name": "Challenge +1",
-      "logo": "challenge+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "1872"
-      },
-      "devicekeys": {
-        "tivo": 180
-      }
-    },
-    {
-      "name": "Quest",
-      "logo": "quest.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2179"
-      },
-      "devicekeys": {
-        "tivo": 139
-      }
-    },
-    {
-      "name": "Discovery",
-      "logo": "discovery.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "147"
-      },
-      "devicekeys": {
-        "tivo": 250
-      }
-    },
-    {
-      "name": "Discovery Science",
-      "logo": "discoveryscience.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "153"
-      },
-      "devicekeys": {
-        "tivo": 259
-      }
-    },
-    {
-      "name": "Discovery History",
-      "logo": "discoveryhistory.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2668"
-      },
-      "devicekeys": {
-        "tivo": 262
-      }
-    },
-    {
-      "name": "Yesterday",
-      "logo": "yesterday.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "801"
-      },
-      "devicekeys": {
-        "tivo": 245
-      }
-    },
-    {
-      "name": "Yesterday +1",
-      "logo": "yesterday+1.png",
-      "type": "tv",
-      "enabled": false,
-      "listingsrc": {
-        "radiotimes": "1521"
-      },
-      "devicekeys": {
-        "tivo": 246
-      }
-    },
-    {
-      "name": "H2",
-      "logo": "h2.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "2559"
-      },
-      "devicekeys": {
-        "tivo": 273
-      }
-    },
-    {
-      "name": "BBC News",
-      "logo": "bbcnews_hd.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "48"
-      },
-      "devicekeys": {
-        "tivo": 604
-      }
-    },
-    {
-      "name": "Sky News",
-      "logo": "skynews.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "256"
-      },
-      "devicekeys": {
-        "tivo": 602
-      }
-    },
-    {
-      "name": "Kerrang!",
-      "logo": "kerrang.png",
-      "type": "tv",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": "191"
-      },
-      "devicekeys": {
-        "tivo": 342
-      }
-    },
-    {
-      "name": "Heat",
-      "logo": "heat.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 338
-      }
-    },
-    {
-      "name": "Capital FM",
-      "logo": "capitalfm.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 958
-      }
-    },
-    {
-      "name": "BBC Radio 1",
-      "logo": "bbcradio1.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 901
-      }
-    },
-    {
-      "name": "BBC Radio 2",
-      "logo": "bbcradio2.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 902
-      }
-    },
-    {
-      "name": "BBC Radio 3",
-      "logo": "bbcradio3.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 903
-      }
-    },
-    {
-      "name": "BBC Radio 4",
-      "logo": "bbcradio4.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 904
-      }
-    },
-    {
-      "name": "Classic FM",
-      "logo": "classicfm.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 922
-      }
-    },
-    {
-      "name": "Heart",
-      "logo": "heart.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 918
-      }
-    },
-    {
-      "name": "Planet Rock",
-      "logo": "planetrock.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 924
-      }
-    },
-    {
-      "name": "Gold Radio",
-      "logo": "goldradio.png",
-      "type": "radio",
-      "enabled": true,
-      "listingsrc": {
-        "radiotimes": ""
-      },
-      "devicekeys": {
-        "tivo": 923
-      }
-    }
-  ]
+    "channels": [
+        {
+            "name": "BBC1",
+            "devicekeys": {
+                "tivo": 108
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "96"
+            },
+            "logo": "bbc1_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "BBC2",
+            "devicekeys": {
+                "tivo": 162
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "105"
+            },
+            "logo": "bbc2_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "BBC3",
+            "devicekeys": {
+                "tivo": 163
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "45"
+            },
+            "logo": "bbc3_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "BBC4",
+            "devicekeys": {
+                "tivo": 164
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "47"
+            },
+            "logo": "bbc4_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "BBC ALBA",
+            "devicekeys": {
+                "tivo": 161
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2098"
+            },
+            "logo": "bbcalba.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV",
+            "devicekeys": {
+                "tivo": 113
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "28"
+            },
+            "logo": "itv1_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV +1",
+            "devicekeys": {
+                "tivo": 114
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2683"
+            },
+            "logo": "itv1+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV2",
+            "devicekeys": {
+                "tivo": 115
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "185"
+            },
+            "logo": "itv2.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV2 +1",
+            "devicekeys": {
+                "tivo": 116
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "1990"
+            },
+            "logo": "itv2+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV3",
+            "devicekeys": {
+                "tivo": 117
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "1859"
+            },
+            "logo": "itv3.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV3 +1",
+            "devicekeys": {
+                "tivo": 174
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2511"
+            },
+            "logo": "itv3+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV4",
+            "devicekeys": {
+                "tivo": 118
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "1961"
+            },
+            "logo": "itv4.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITV4 +1",
+            "devicekeys": {
+                "tivo": 175
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2568"
+            },
+            "logo": "itv4+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITVBe",
+            "devicekeys": {
+                "tivo": 119
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "itvbe.png",
+            "type": "tv"
+        },
+        {
+            "name": "ITVBe +1",
+            "devicekeys": {
+                "tivo": 120
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "itvbe+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Channel 4",
+            "devicekeys": {
+                "tivo": 142
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2056"
+            },
+            "logo": "channel4_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "Channel 4 +1",
+            "devicekeys": {
+                "tivo": 143
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2047"
+            },
+            "logo": "channel4+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "E4",
+            "devicekeys": {
+                "tivo": 144
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "158"
+            },
+            "logo": "e4.png",
+            "type": "tv"
+        },
+        {
+            "name": "E4+1",
+            "devicekeys": {
+                "tivo": 146
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "1161"
+            },
+            "logo": "e4+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "More4",
+            "devicekeys": {
+                "tivo": 147
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "1959"
+            },
+            "logo": "more4.png",
+            "type": "tv"
+        },
+        {
+            "name": "More4+1",
+            "devicekeys": {
+                "tivo": 196
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "1972"
+            },
+            "logo": "more4+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "4Seven",
+            "devicekeys": {
+                "tivo": 195
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2701"
+            },
+            "logo": "4seven.png",
+            "type": "tv"
+        },
+        {
+            "name": "Channel 5",
+            "devicekeys": {
+                "tivo": 150
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2615"
+            },
+            "logo": "channel5_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "Channel 5 +1",
+            "devicekeys": {
+                "tivo": 155
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2699"
+            },
+            "logo": "channel5+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Channel 5 +24",
+            "devicekeys": {
+                "tivo": 152
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "channel5+24.png",
+            "type": "tv"
+        },
+        {
+            "name": "5*",
+            "devicekeys": {
+                "tivo": 151
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2062"
+            },
+            "logo": "5star.png",
+            "type": "tv"
+        },
+        {
+            "name": "5 USA",
+            "devicekeys": {
+                "tivo": 153
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2008"
+            },
+            "logo": "5usa.png",
+            "type": "tv"
+        },
+        {
+            "name": "5 USA +1",
+            "devicekeys": {
+                "tivo": 154
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2577"
+            },
+            "logo": "5usa+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "dave",
+            "devicekeys": {
+                "tivo": 128
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2050"
+            },
+            "logo": "dave.png",
+            "type": "tv"
+        },
+        {
+            "name": "dave ja vu",
+            "devicekeys": {
+                "tivo": 129
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2052"
+            },
+            "logo": "davejavu.png",
+            "type": "tv"
+        },
+        {
+            "name": "Sky1",
+            "devicekeys": {
+                "tivo": 110
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "248"
+            },
+            "logo": "sky1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Sky2",
+            "devicekeys": {
+                "tivo": 121
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "922"
+            },
+            "logo": "sky2.png",
+            "type": "tv"
+        },
+        {
+            "name": "Sky Living",
+            "devicekeys": {
+                "tivo": 112
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "197"
+            },
+            "logo": "skyliving.png",
+            "type": "tv"
+        },
+        {
+            "name": "Sky Living +1",
+            "devicekeys": {
+                "tivo": 140
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "841"
+            },
+            "logo": "skyliving+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Sky Arts",
+            "devicekeys": {
+                "tivo": 122
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "40"
+            },
+            "logo": "skyarts.png",
+            "type": "tv"
+        },
+        {
+            "name": "Pick",
+            "devicekeys": {
+                "tivo": 123
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "1963"
+            },
+            "logo": "pick.png",
+            "type": "tv"
+        },
+        {
+            "name": "syfy",
+            "devicekeys": {
+                "tivo": 135
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2212"
+            },
+            "logo": "syfy.png",
+            "type": "tv"
+        },
+        {
+            "name": "syfy +1",
+            "devicekeys": {
+                "tivo": 136
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2213"
+            },
+            "logo": "syfy+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Sony Channel",
+            "devicekeys": {
+                "tivo": 193
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2702"
+            },
+            "logo": "sonychannel.png",
+            "type": "tv"
+        },
+        {
+            "name": "DMAX",
+            "devicekeys": {
+                "tivo": 170
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2545"
+            },
+            "logo": "dmax.png",
+            "type": "tv"
+        },
+        {
+            "name": "TLC",
+            "devicekeys": {
+                "tivo": 167
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "tlc.png",
+            "type": "tv"
+        },
+        {
+            "name": "TLC +1",
+            "devicekeys": {
+                "tivo": 169
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "tlc+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "MTV",
+            "devicekeys": {
+                "tivo": 134
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "202"
+            },
+            "logo": "mtv.png",
+            "type": "tv"
+        },
+        {
+            "name": "E!",
+            "devicekeys": {
+                "tivo": 156
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "1421"
+            },
+            "logo": "e.png",
+            "type": "tv"
+        },
+        {
+            "name": "CBS Action",
+            "devicekeys": {
+                "tivo": 192
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2178"
+            },
+            "logo": "cbsaction.png",
+            "type": "tv"
+        },
+        {
+            "name": "CBS Reality",
+            "devicekeys": {
+                "tivo": 148
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2586"
+            },
+            "logo": "cbsreality.png",
+            "type": "tv"
+        },
+        {
+            "name": "CBS Reality +1",
+            "devicekeys": {
+                "tivo": 201
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "cbsreality+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Real Lives",
+            "devicekeys": {
+                "tivo": 160
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2189"
+            },
+            "logo": "reallives.png",
+            "type": "tv"
+        },
+        {
+            "name": "Real Lives +1",
+            "devicekeys": {
+                "tivo": 207
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2190"
+            },
+            "logo": "reallives+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Good Food",
+            "devicekeys": {
+                "tivo": 278
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2136"
+            },
+            "logo": "goodfood.png",
+            "type": "tv"
+        },
+        {
+            "name": "Food Network",
+            "devicekeys": {
+                "tivo": 291
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2185"
+            },
+            "logo": "foodnetwork.png",
+            "type": "tv"
+        },
+        {
+            "name": "Film4",
+            "devicekeys": {
+                "tivo": 429
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2617"
+            },
+            "logo": "film4_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "Movies 24",
+            "devicekeys": {
+                "tivo": 419
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2704"
+            },
+            "logo": "movies24.png",
+            "type": "tv"
+        },
+        {
+            "name": "Made in Leeds",
+            "devicekeys": {
+                "tivo": 159
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "madeinleeds.png",
+            "type": "tv"
+        },
+        {
+            "name": "Drama",
+            "devicekeys": {
+                "tivo": 190
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "drama.png",
+            "type": "tv"
+        },
+        {
+            "name": "TCM",
+            "devicekeys": {
+                "tivo": 415
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "271"
+            },
+            "logo": "tcm.png",
+            "type": "tv"
+        },
+        {
+            "name": "Watch",
+            "devicekeys": {
+                "tivo": 124
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2115"
+            },
+            "logo": "watch.png",
+            "type": "tv"
+        },
+        {
+            "name": "Watch +1",
+            "devicekeys": {
+                "tivo": 125
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2116"
+            },
+            "logo": "watch+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Gold",
+            "devicekeys": {
+                "tivo": 126
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "288"
+            },
+            "logo": "gold.png",
+            "type": "tv"
+        },
+        {
+            "name": "Gold +1",
+            "devicekeys": {
+                "tivo": 127
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "665"
+            },
+            "logo": "gold+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "horror",
+            "devicekeys": {
+                "tivo": 149
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2476"
+            },
+            "logo": "horror.png",
+            "type": "tv"
+        },
+        {
+            "name": "Alibi",
+            "devicekeys": {
+                "tivo": 130
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2603"
+            },
+            "logo": "alibi.png",
+            "type": "tv"
+        },
+        {
+            "name": "Alibi +1",
+            "devicekeys": {
+                "tivo": 131
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "1993"
+            },
+            "logo": "alibi+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "True Entertainment",
+            "devicekeys": {
+                "tivo": 189
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "292"
+            },
+            "logo": "trueentertainment.png",
+            "type": "tv"
+        },
+        {
+            "name": "BET",
+            "devicekeys": {
+                "tivo": 184
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2244"
+            },
+            "logo": "bet.png",
+            "type": "tv"
+        },
+        {
+            "name": "Fox",
+            "devicekeys": {
+                "tivo": 157
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "1461"
+            },
+            "logo": "fox.png",
+            "type": "tv"
+        },
+        {
+            "name": "Fox+",
+            "devicekeys": {
+                "tivo": 158
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "1971"
+            },
+            "logo": "fox+.png",
+            "type": "tv"
+        },
+        {
+            "name": "Universal",
+            "devicekeys": {
+                "tivo": 137
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "180"
+            },
+            "logo": "universal.png",
+            "type": "tv"
+        },
+        {
+            "name": "Universal +1",
+            "devicekeys": {
+                "tivo": 138
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "2591"
+            },
+            "logo": "universal+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Comedy Central",
+            "devicekeys": {
+                "tivo": 132
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "1061"
+            },
+            "logo": "comedycentral.png",
+            "type": "tv"
+        },
+        {
+            "name": "Comedy Central +1",
+            "devicekeys": {
+                "tivo": 133
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2013"
+            },
+            "logo": "comedycentral+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Challenge",
+            "devicekeys": {
+                "tivo": 139
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "131"
+            },
+            "logo": "challenge.png",
+            "type": "tv"
+        },
+        {
+            "name": "Challenge +1",
+            "devicekeys": {
+                "tivo": 180
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "1872"
+            },
+            "logo": "challenge+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "Quest",
+            "devicekeys": {
+                "tivo": 139
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2179"
+            },
+            "logo": "quest.png",
+            "type": "tv"
+        },
+        {
+            "name": "Discovery",
+            "devicekeys": {
+                "tivo": 250
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "147"
+            },
+            "logo": "discovery.png",
+            "type": "tv"
+        },
+        {
+            "name": "Discovery Science",
+            "devicekeys": {
+                "tivo": 259
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "153"
+            },
+            "logo": "discoveryscience.png",
+            "type": "tv"
+        },
+        {
+            "name": "Discovery History",
+            "devicekeys": {
+                "tivo": 262
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2668"
+            },
+            "logo": "discoveryhistory.png",
+            "type": "tv"
+        },
+        {
+            "name": "Yesterday",
+            "devicekeys": {
+                "tivo": 245
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "801"
+            },
+            "logo": "yesterday.png",
+            "type": "tv"
+        },
+        {
+            "name": "Yesterday +1",
+            "devicekeys": {
+                "tivo": 246
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": "1521"
+            },
+            "logo": "yesterday+1.png",
+            "type": "tv"
+        },
+        {
+            "name": "H2",
+            "devicekeys": {
+                "tivo": 273
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "2559"
+            },
+            "logo": "h2.png",
+            "type": "tv"
+        },
+        {
+            "name": "BBC News",
+            "devicekeys": {
+                "tivo": 604
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "48"
+            },
+            "logo": "bbcnews_hd.png",
+            "type": "tv"
+        },
+        {
+            "name": "Sky News",
+            "devicekeys": {
+                "tivo": 602
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "256"
+            },
+            "logo": "skynews.png",
+            "type": "tv"
+        },
+        {
+            "name": "Kerrang!",
+            "devicekeys": {
+                "tivo": 342
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": "191"
+            },
+            "logo": "kerrang.png",
+            "type": "tv"
+        },
+        {
+            "name": "Heat",
+            "devicekeys": {
+                "tivo": 338
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "heat.png",
+            "type": "radio"
+        },
+        {
+            "name": "Capital FM",
+            "devicekeys": {
+                "tivo": 958
+            },
+            "enabled": false,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "capitalfm.png",
+            "type": "radio"
+        },
+        {
+            "name": "BBC Radio 1",
+            "devicekeys": {
+                "tivo": 901
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "bbcradio1.png",
+            "type": "radio"
+        },
+        {
+            "name": "BBC Radio 2",
+            "devicekeys": {
+                "tivo": 902
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "bbcradio2.png",
+            "type": "radio"
+        },
+        {
+            "name": "BBC Radio 3",
+            "devicekeys": {
+                "tivo": 903
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "bbcradio3.png",
+            "type": "radio"
+        },
+        {
+            "name": "BBC Radio 4",
+            "devicekeys": {
+                "tivo": 904
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "bbcradio4.png",
+            "type": "radio"
+        },
+        {
+            "name": "Classic FM",
+            "devicekeys": {
+                "tivo": 922
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "classicfm.png",
+            "type": "radio"
+        },
+        {
+            "name": "Heart",
+            "devicekeys": {
+                "tivo": 918
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "heart.png",
+            "type": "radio"
+        },
+        {
+            "name": "Planet Rock",
+            "devicekeys": {
+                "tivo": 924
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "planetrock.png",
+            "type": "radio"
+        },
+        {
+            "name": "Gold Radio",
+            "devicekeys": {
+                "tivo": 923
+            },
+            "enabled": true,
+            "listingsrc": {
+                "radiotimes": ""
+            },
+            "logo": "goldradio.png",
+            "type": "radio"
+        }
+    ]
 }

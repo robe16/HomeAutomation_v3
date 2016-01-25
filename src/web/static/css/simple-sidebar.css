@@ -92,7 +92,7 @@ div.viewport_centre {
 }
 
 div.message {
-    z-index: 4000;
+    z-index: 2500;
     padding: 20px;
     text-align: center;
     text-align: -webkit-center;

@@ -9,12 +9,13 @@ from config_devices import write_config_devices, create_device_object_array
 from config_users import check_user, get_userrole, update_user_channels
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
-from web_create_settings import create_settings_devices, create_settings_tvguide, create_settings_nest
+from web_create_settings import create_settings_devices, create_settings_tvguide
 from web_create_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all, _listings_html
 from web_create_error import create_error_404, create_error_500
 from __web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
+from tvlisting_updatechannels import update_channellist
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 def start_bottle():
@@ -103,24 +104,24 @@ def web(page=""):
 @route('/web/device/<group_name>/<device_name>')
 def web(group_name='', device_name=''):
     user = _check_user(request.get_cookie('user'))
-    # try:
-    if not user:
-        redirect('/web/login')
-    dvc = _get_device(group_name, device_name)
-    tvlistings = _check_tvlistingsqueue()
-    # If query for tv listings availability, return html code
-    tvguide_request = bool(request.query.tvguide) or False
-    if tvguide_request:
-        device_url = 'device/{group}/{device}'.format(group=group_name, device=device_name)
-        return HTTPResponse(body=refresh_tvguide(tvlistings,
-                                                 device=dvc,
-                                                 device_url=device_url,
-                                                 user=user),
-                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
-    # Create and return web interface page
-    return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group_name, device_name), status=200)
-    # except:
-    #     return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+    try:
+        if not user:
+            redirect('/web/login')
+        dvc = _get_device(group_name, device_name)
+        tvlistings = _check_tvlistingsqueue()
+        # If query for tv listings availability, return html code
+        tvguide_request = bool(request.query.tvguide) or False
+        if tvguide_request:
+            device_url = 'device/{group}/{device}'.format(group=group_name, device=device_name)
+            return HTTPResponse(body=refresh_tvguide(tvlistings,
+                                                     device=dvc,
+                                                     device_url=device_url,
+                                                     user=user),
+                                status=200) if bool(tvlistings) else HTTPResponse(status=400)
+        # Create and return web interface page
+        return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group_name, device_name), status=200)
+    except:
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
 @route('/web/settings/<page>')
@@ -193,30 +194,30 @@ def get_tvlistings():
 @route('/settings/<x>', method='GET')
 @route('/settings/<x>', method='POST')
 def save_settings(x="-"):
-    #TODO!!!!
-    # if x == 'nest':
-    #     pincode = request.query.pincode
-    #     if not bool(pincode):
-    #         return HTTPResponse(status=400)
-    #     if write_config_nest([pincode, ARRnestData[1], ARRnestData[2]]):
-    #         ARRnestData[0] = pincode
-    #         return HTTPResponse(status=200)
-    #     else:
-    #         return HTTPResponse(status=400)
-    #TODO - for receipt of new device json
-    # elif x == 'devices':
-    #     data = request.body
-    #     if data:
-    #         tempARR = read_json_devices(data.getvalue())
-    #         if write_config_devices(tempARR):
-    #             ARRobjects = tempARR
-    #             return HTTPResponse(status=200)
-    #         else:
-    #             return HTTPResponse(status=400)
-    #     else:
-    #         return HTTPResponse(status=400)
-    # else:
-    return HTTPResponse(status=400)
+    user = _check_user(request.get_cookie('user'))
+    try:
+        if not user:
+            redirect('/web/login')
+        if get_userrole(user) != 'admin':
+            return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
+                                     'Please consult your administrator for further information.', status=400)
+        if x == 'tvguide':
+            data = request.body.read()
+            if data:
+                if update_channellist(data):
+                    return HTTPResponse(status=200)
+        elif x == 'devices':
+            return
+        #TODO - for receipt of new device json
+        #     data = request.body
+        #     if data:
+        #         tempARR = read_json_devices(data.getvalue())
+        #         if write_config_devices(tempARR):
+        #             ARRobjects = tempARR
+        #             return HTTPResponse(status=200)
+        return HTTPResponse(status=400)
+    except:
+        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
 
 
 @route('/preferences/<x>', method='POST')
