@@ -11,12 +11,13 @@ from web_create_pages import create_login, create_home, create_about, create_tvg
 from web_devices import refresh_tvguide
 from web_create_settings import create_settings_devices, create_settings_tvguide
 from web_create_preferences import create_preference_tvguide
-from web_tvlistings import html_listings_user_and_all, _listings_html
+from web_tvlistings import html_listings_user_and_all
 from web_create_error import create_error_404, create_error_500
 from __web_testpage import create_test
 from tvlisting import build_channel_array, returnnonext_xml_all
 from tvlisting_updatechannels import update_channellist
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
+
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
@@ -171,12 +172,11 @@ def send_command(group_name="-", device_name="-", command="-"):
     dvc = _get_device(group_name, device_name)
     #
     try:
-        response = dvc.sendCmd(command, request)
-        if isinstance(response, bool) or isinstance(response, int):
-            return HTTPResponse(body=str(response), status=200) if bool(response) else HTTPResponse(status=400)
+        rsp = dvc.sendCmd(command, request)
+        if isinstance(rsp, bool) or isinstance(rsp, int):
+            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
         else:
-            return response
-            #static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
+            return rsp
     except:
         return HTTPResponse(status=400)
 
@@ -208,7 +208,7 @@ def save_settings(x="-"):
                     return HTTPResponse(status=200)
         elif x == 'devices':
             return
-        #TODO - for receipt of new device json
+        # TODO - for receipt of new device json
         #     data = request.body
         #     if data:
         #         tempARR = read_json_devices(data.getvalue())
@@ -263,10 +263,10 @@ def _get_device(group_name, device_name):
         else:
             grp_name = '-'
         #
-        if grp_name.lower().replace(' ','') == group_name:
+        if grp_name.lower().replace(' ', '') == group_name:
             #
             for objdevice in device_group['devices']:
-                if objdevice.getName().lower().replace(' ','') == device_name:
+                if objdevice.getName().lower().replace(' ', '') == device_name:
                     return objdevice
     return False
 
@@ -281,10 +281,12 @@ def _check_user(user_cookie):
             return 'Guest'
 
 
-#TODO temp variable here with property postcode (replace with settings page input etc.)
-postcode='ls27'
+# TODO temp variable here with property postcode (replace with settings page input etc.)
+postcode = 'ls27'
 # Create objects from configuration file
 randomstring = (postcode.join('-').join(random.choice(string.ascii_lowercase) for i in range(5)))
+#
+#
 arr_devices = create_device_object_array()
 #
 # Create processes for TV Listing code and code to start bottle server
