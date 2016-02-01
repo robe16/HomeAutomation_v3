@@ -3,8 +3,8 @@ from web_menu import html_menu
 from web_create_login import html_users
 from web_tvlistings import html_listings_user_and_all
 from web_devices import _create_device_page
+from command_forwarder import get_device
 
-#TODO - change title to include house name (from config file - todo)
 
 def create_login():
     return urlopen('web/header.html').read().encode('utf-8').format(title='Login') + \
@@ -29,9 +29,8 @@ def create_about(user, arr_devices):
 
 
 def create_tvguide(user, arr_devices, listings):
-    body = urlopen('web/tvguide.html').read().encode('utf-8').format(listings=html_listings_user_and_all(listings,
-                                                                                                         device_url=False,
-                                                                                                         user=user))
+    body = urlopen('web/html_tvguide/tvguide.html').read().encode('utf-8').format(listings=html_listings_user_and_all(listings,
+                                                                                                                      user=user))
     return urlopen('web/header.html').read().encode('utf-8').format(title='TV Guide') +\
            html_menu(user, arr_devices) +\
            urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
@@ -41,20 +40,12 @@ def create_tvguide(user, arr_devices, listings):
 def create_device(user, tvlistings, arr_devices, group_name, device_name):
     #
     grp_name = '-'
-    device = False
+    device = get_device(arr_devices, group_name, device_name)
     #
+    # Get group name - as some groups do not have a name, default this to '-'
     for device_group in arr_devices:
-        # Get group name - as some groups do not have a name, default this to '-'
         grp_name = device_group['name'] if not device_group['name'] == '' else '-'
-        #
         if grp_name.lower().replace(' ','') == group_name:
-            #
-            for device_item in device_group['devices']:
-                if device_item.getName().lower().replace(' ','') == device_name:
-                    #
-                    device = device_item
-                    break
-        if device:
             break
     #
     body = urlopen('web/comp_alert.html').read().encode('utf-8').format(body='-') +\

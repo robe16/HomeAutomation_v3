@@ -23,4 +23,4 @@ class object_other:
 
     def getHtml(self, group_name):
         device_url = 'device/{group}/{device}'.format(group=group_name, device=self._name.lower().replace(' ',''))
-        return urlopen('web/{page}'.format(page="object_other.html")).read().encode('utf-8').format(url=device_url)
+        return urlopen('web/html_devices/object_other.html').read().encode('utf-8').format(url=device_url)

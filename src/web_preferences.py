@@ -11,8 +11,8 @@ def _preference_tvguide(user):
     #
     usr_header = '<span class="label label-{color_usr}" style="font-weight: bold">{user}\'s favourites</span>'.format(user = user, color_usr = color_usr)
     #
-    return urlopen('web/preferences_tvguide.html').read().encode('utf-8').format(usr_header = usr_header,
-                                                                                 listings = _preference_tvguide_items(user_channels, color_usr))
+    return urlopen('web/html_preferences/preferences_tvguide.html').read().encode('utf-8').format(usr_header = usr_header,
+                                                                                                  listings = _preference_tvguide_items(user_channels, color_usr))
 
 def _preference_tvguide_items(user_channels, color_usr):
     #
@@ -37,17 +37,17 @@ def _preference_tvguide_items(user_channels, color_usr):
                 chkd_usr = 'checked'
                 break
         #
-        html_usr_tgle = urlopen('web/preferences_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
-                                                                                                     color_usr = color_usr,
-                                                                                                     chkd_usr = chkd_usr)
+        html_usr_tgle = urlopen('web/html_preferences/preferences_tvguide_toggle.html').read().encode('utf-8').format(chan_name = chan['name'],
+                                                                                                                      color_usr = color_usr,
+                                                                                                                      chkd_usr = chkd_usr)
         #
-        html += urlopen('web/preferences_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
-                                                                                           rowcolor = rowcolor,
-                                                                                           color_gen = color_gen,
-                                                                                           glyphicon_gen = glyphicon,
-                                                                                           channame = chan['name'],
-                                                                                           imgtype = chan['type'],
-                                                                                           imgchan = chan['logo'],
-                                                                                           user_chan_toggle = html_usr_tgle)
+        html += urlopen('web/html_preferences/preferences_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
+                                                                                                            rowcolor = rowcolor,
+                                                                                                            color_gen = color_gen,
+                                                                                                            glyphicon_gen = glyphicon,
+                                                                                                            channame = chan['name'],
+                                                                                                            imgtype = chan['type'],
+                                                                                                            imgchan = chan['logo'],
+                                                                                                            user_chan_toggle = html_usr_tgle)
     #
     return html

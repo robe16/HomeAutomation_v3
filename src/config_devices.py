@@ -8,53 +8,6 @@ from object_device_raspberrypi import object_raspberrypi
 from object_nest_account import object_nest_account
 
 
-# def read_config_devices():
-#     with open('config_devices.json', 'r') as data_file:
-#         data = json.load(data_file)
-#     return read_json_devices(data)
-#
-#
-# def read_json_devices(dataX):
-#     if not isinstance(dataX, dict):
-#         data = json.loads(dataX)
-#     else:
-#         data = dataX
-#     data_allrooms = data["rooms"]
-#     #
-#     x=0
-#     ARRobjects = []
-#     while x<len(data_allrooms):
-#         y=0
-#         groups=[]
-#         data_room=data_allrooms[x]
-#         while y<len(data_room["groups"]):
-#             z=0
-#             devices=[]
-#             data_group=data_room["groups"][y]
-#             while z<len(data_group["devices"]):
-#                 #
-#                 data_device=data_group["devices"][z]
-#                 if data_device["type"]=="lgtv":
-#                     devices.append(object_tv_lg_netcast(data_device["name"].encode('ascii'),
-#                                                data_device["ipaddress"].encode('ascii'),
-#                                                8080,
-#                                                STRpairingkey=data_device["pairingkey"].encode('ascii'),
-#                                                BOOLtvguide_use=data_device["usetvguide"]))
-#                 elif data_device["type"]=="tivo":
-#                     devices.append(object_tivo(data_device["name"].encode('ascii'),
-#                                                data_device["ipaddress"].encode('ascii'),
-#                                                31339,
-#                                                STRaccesskey=data_device["mak"].encode('ascii'),
-#                                                BOOLtvguide_use=data_device["usetvguide"]))
-#                 #
-#                 z+=1
-#             groups.append([data_group["name"].encode('ascii'), devices])
-#             y+=1
-#         ARRobjects.append([data_room["name"].encode('ascii'), groups])
-#         x+=1
-#     return ARRobjects
-
-
 def write_config_devices(data):
     try:
         with open(os.path.join('config', 'config_devices.json'), 'w') as outfile:

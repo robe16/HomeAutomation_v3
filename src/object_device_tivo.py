@@ -66,8 +66,8 @@ class object_tivo:
                 return False
 
     def getHtml(self, group_name):
-        device_url = 'device/{group}/{device}'.format(group=group_name, device=self._name.lower().replace(' ',''))
-        return urlopen('web/{page}'.format(page="object_tivo.html")).read().encode('utf-8').format(url=device_url)
+        return urlopen('web/html_devices/object_tivo.html').read().encode('utf-8').format(group=group_name,
+                                                                                          device=self._name.lower().replace(' ',''))
 
     commands = {"power": "IRCODE STANDBY\r",
                 "1": "IRCODE NUM1\r",

@@ -74,11 +74,11 @@ class object_tv_lg_netcast:
         return str(x.getcode()).startswith("2") if bool(x) else False
 
     def getHtml(self, group_name):
-        device_url = 'device/{group}/{device}'.format(group=group_name, device=self._name.lower().replace(' ',''))
-        return urlopen('web/{page}'.format(page="object_lgtv.html")).read().encode('utf-8').format(url=device_url,
-                                                                                                   apps = self._html_apps(device_url))
+        return urlopen('web/html_devices/object_lgtv.html').read().encode('utf-8').format(group = group_name,
+                                                                                          device = self._name.lower().replace(' ',''),
+                                                                                          apps = self._html_apps(group_name))
 
-    def _html_apps(self, device_url):
+    def _html_apps(self, group_name):
         #
         if not self._check_paired():
             return '<p style="text-align:center">App list could not be retrieved from the device.</p>'+\
@@ -104,10 +104,14 @@ class object_tv_lg_netcast:
                     icon_name = data.find('icon_name').text
                     #
 
-                    html += ('<td style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/{device_url}/app?auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
-                             '<img src="/{device_url}/image?auid={auid}&name={app_name}" style="height:50px;"/>' +
+                    html += ('<td style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command?group={group}&device={device}&command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
+                             '<img src="/command?group={group}&device={device}&command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
-                             '</td>').format(device_url = device_url, auid = auid, app_name = name.replace(' ', '%20'), name = name)
+                             '</td>').format(group = group_name,
+                                             device = self._name.lower().replace(' ',''),
+                                             auid = auid,
+                                             app_name = name.replace(' ', '%20'),
+                                             name = name)
                     #
                     if count % 4 == 0:
                         html += '</tr><tr style="height:35px; padding-bottom:2px; padding-top:2px">'
@@ -172,15 +176,18 @@ class object_tv_lg_netcast:
         # sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHquery)+"?target=cur_channel", "close")
         return False
 
-    def sendCmd(self, STRcommand, request):
+    def sendCmd(self, request):
         try:
+            #
+            command = request.query.command
+            #
             if not self._check_paired():
                 return False
             #
-            if STRcommand == 'image':
+            if command == 'image':
                 return self.getAppicon(request.query.auid, request.query.name.replace(' ','%20'))
                 #
-            elif STRcommand == 'app':
+            elif command == 'app':
                 STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
                           '<envelope>' +
                           '<api type="command">' +
@@ -198,8 +205,8 @@ class object_tv_lg_netcast:
                     response = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
                 return str(response.getcode()).startswith("2") if bool(response) else False
                 #
-            elif STRcommand == 'command':
-                code = self.commands[request.query.code]
+            else:
+                code = self.commands[request.query.command]
                 STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
                           '<envelope>' +
                           '<api type="command">' +

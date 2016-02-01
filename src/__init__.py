@@ -7,6 +7,7 @@ import random
 import nest_static_vars
 from config_devices import write_config_devices, create_device_object_array
 from config_users import check_user, get_userrole, update_user_channels
+from command_forwarder import cmd_fwrd, get_device
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
 from web_create_settings import create_settings_devices, create_settings_tvguide
@@ -52,7 +53,6 @@ def web_redirect():
 
 
 @route('/web/login')
-@route('/web/login.php')
 def web():
     user = request.query.user
     if not user:
@@ -69,21 +69,29 @@ def web():
 
 
 @route('/web/<page>')
-def web(page=""):
+def web(page=''):
+    # Get and check user
     user = _check_user(request.get_cookie('user'))
+    if not user and page != 'login':
+        redirect('/web/login')
+    #
     try:
-        if not user and page != 'login':
-            redirect('/web/login')
+        #
+        # Retrieve tvlistings from queue
         tvlistings = _check_tvlistingsqueue()
+        #
         if page == 'home':
             return HTTPResponse(body=create_home(user, arr_devices), status=200)
         elif page == 'tvguide':
-            tvguide_request = bool(request.query.tvguide) or False
-            if tvguide_request:
+            if bool(request.query.group) and bool(request.query.device):
                 return HTTPResponse(body=refresh_tvguide(tvlistings,
+                                                         device = get_device(arr_devices, request.query.group, request.query.device),
+                                                         group_name = request.query.group,
+                                                         device_name = request.query.device,
                                                          user=user),
                                     status=200) if bool(tvlistings) else HTTPResponse(status=400)
-            return HTTPResponse(body=create_tvguide(user, arr_devices, tvlistings), status=200)
+            else:
+                return HTTPResponse(body=create_tvguide(user, arr_devices, tvlistings), status=200)
         elif page == 'about':
             return HTTPResponse(body=create_about(user, arr_devices), status=200)
         else:
@@ -98,17 +106,7 @@ def web(group_name='', device_name=''):
     try:
         if not user:
             redirect('/web/login')
-        dvc = _get_device(group_name, device_name)
         tvlistings = _check_tvlistingsqueue()
-        # If query for tv listings availability, return html code
-        tvguide_request = bool(request.query.tvguide) or False
-        if tvguide_request:
-            device_url = 'device/{group}/{device}'.format(group=group_name, device=device_name)
-            return HTTPResponse(body=refresh_tvguide(tvlistings,
-                                                     device=dvc,
-                                                     device_url=device_url,
-                                                     user=user),
-                                status=200) if bool(tvlistings) else HTTPResponse(status=400)
         # Create and return web interface page
         return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group_name, device_name), status=200)
     except:
@@ -116,7 +114,7 @@ def web(group_name='', device_name=''):
 
 
 @route('/web/settings/<page>')
-def web(page=""):
+def web(page=''):
     user = _check_user(request.get_cookie('user'))
     try:
         if not user and page != 'login':
@@ -135,7 +133,7 @@ def web(page=""):
 
 
 @route('/web/preferences/<page>')
-def web(page=""):
+def web(page=''):
     user = _check_user(request.get_cookie('user'))
     try:
         if not user and page != 'login':
@@ -156,34 +154,24 @@ def get_image(folder, filename):
         return HTTPResponse(status=400)
 
 
-@route('/device/<group_name>/<device_name>/<command>')
-def send_command(group_name="-", device_name="-", command="-"):
-    #
-    dvc = _get_device(group_name, device_name)
+@route('/command')
+def send_command():
     #
     try:
-        rsp = dvc.sendCmd(command, request)
-        if isinstance(rsp, bool) or isinstance(rsp, int):
-            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+        #
+        rsp = cmd_fwrd(arr_devices, request)
+        #
+        if isinstance(rsp, bool):
+            return HTTPResponse(status=200) if bool(rsp) else HTTPResponse(status=400)
         else:
-            return rsp
+            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
     except:
         return HTTPResponse(status=400)
 
 
-@route('/tvlistings')
-def get_tvlistings():
-    listings = _check_tvlistingsqueue()
-    if not listings:
-        HTTPResponse(status=400)
-    channel = request.query.id or None
-    x = returnnonext_xml_all(listings, channel)
-    return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
-
-
 @route('/settings/<x>', method='GET')
 @route('/settings/<x>', method='POST')
-def save_settings(x="-"):
+def save_settings(x='-'):
     user = _check_user(request.get_cookie('user'))
     try:
         if not user:
@@ -197,17 +185,14 @@ def save_settings(x="-"):
                 if update_channellist(data):
                     return HTTPResponse(status=200)
         elif x == 'devices':
+            # TODO - recieve json payload and save to config file
+            # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
+            # Recreate device array/list after new config saved
+            arr_devices = create_device_object_array()
             return
-        # TODO - for receipt of new device json
-        #     data = request.body
-        #     if data:
-        #         tempARR = read_json_devices(data.getvalue())
-        #         if write_config_devices(tempARR):
-        #             ARRobjects = tempARR
-        #             return HTTPResponse(status=200)
         return HTTPResponse(status=400)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+        return HTTPResponse(status=500)
 
 
 @route('/preferences/<x>', method='POST')
@@ -224,7 +209,7 @@ def save_prefernces(x='-'):
 
 @route('/favicon.ico')
 def send_favicon():
-    root = os.path.join(os.path.dirname(__file__), '..', 'img/logo/favicon.ico')
+    root = os.path.join(os.path.dirname(__file__), '..', 'img/logo')
     return static_file('favicon.ico', root=root)
 
 
@@ -232,6 +217,21 @@ def send_favicon():
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/{}'.format(category))
     return static_file(filename, root=root, mimetype='image/png')
+
+
+################################################################################################
+# This will allow for non-web UI to call for listings as XML payload.
+# Put on hold for now as focus of current development scope on web-server access
+################################################################################################
+# @route('/tvlistings')
+# def get_tvlistings():
+#     listings = _check_tvlistingsqueue()
+#     if not listings:
+#         HTTPResponse(status=400)
+#     channel = request.query.id or None
+#     x = returnnonext_xml_all(listings, channel)
+#     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
+################################################################################################
 
 
 def _check_tvlistingsqueue():
@@ -242,23 +242,6 @@ def _check_tvlistingsqueue():
         return temp
     else:
         return False
-
-
-def _get_device(group_name, device_name):
-    #
-    for device_group in arr_devices:
-        # Get group name - as some groups do not have a name, default this to '-'
-        if not device_group['name'] == '':
-            grp_name = device_group['name']
-        else:
-            grp_name = '-'
-        #
-        if grp_name.lower().replace(' ', '') == group_name:
-            #
-            for objdevice in device_group['devices']:
-                if objdevice.getName().lower().replace(' ', '') == device_name:
-                    return objdevice
-    return False
 
 
 def _check_user(user_cookie):

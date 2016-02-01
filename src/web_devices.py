@@ -16,23 +16,25 @@ def _create_device_page(user, tvlistings, device, group_name, device_name):
     # Create tv guide html if required
     if bool_tvguideuse:
         #
-        device_url = 'device/{group}/{device}'.format(group=group_name, device=device_name)
         html_tv = refresh_tvguide(tvlistings,
                                   device=device,
-                                  device_url = device_url,
+                                  group_name=group_name,
+                                  device_name=device_name,
                                   user=user)
         #
+        html_body += '</div>'
         html_body += '<br>'
-        html_body += urlopen('web/tvguide.html').read().encode('utf-8').format(listings=html_tv)
+        html_body += '<div class="row">'
+        html_body += urlopen('web/html_tvguide/tvguide.html').read().encode('utf-8').format(listings=html_tv)
     #
     return html_body
 
 
-def refresh_tvguide(tvlistings, device=None, device_url=False, user=False):
+def refresh_tvguide(tvlistings, device=None, group_name=False, device_name=False, user=False):
     # Attempt getting current channel from device
     try:
         chan_current = device.getChan()
     except:
         chan_current = False
     #
-    return html_listings_user_and_all(tvlistings, device=device, device_url=device_url, chan_current=chan_current, user=user)
+    return html_listings_user_and_all(tvlistings, device=device, group_name=group_name, device_name=device_name, chan_current=chan_current, user=user)

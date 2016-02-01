@@ -1,0 +1,66 @@
+<div class="col-md-5 col-md-offset-1">
+    <div class="panel panel-default" style="margin: 0px 10px;">
+        <div class="panel-heading">
+            <h3 class="panel-title"><img src="/img/logo/logo_lg.png" style="height:25px;"/> LG TV</h3>
+        </div>
+        <div class="panel-body">
+            <table style="width:100%">
+                <tr>
+                    <td style="width: 10%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=power', null, 'GET', 0, true)"><span class="glyphicon glyphicon-off" aria-hidden="true"/></button></td>
+                    <td style="width: 70%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=volup', null, 'GET', 0, true)"><span class="glyphicon glyphicon-chevron-up" aria-hidden="true"/></button></td>
+                </tr>
+            </table>
+            <table style="width:100%">
+                <tr>
+                    <td style="width: 80%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=mute', null, 'GET', 0, true)">Mute</button></td>
+                </tr>
+            </table>
+            <table style="width:100%">
+                <tr>
+                    <td style="width: 80%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=voldown', null, 'GET', 0, true)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"/></button></td>
+                </tr>
+            </table>
+            <br>
+            <table style="width:100%">
+                <tr>
+                    <td style="width: 20%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=up', null, 'GET', 0, true)"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"/></button></td>
+                    <td style="width: 40%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=externalinput', null, 'GET', 0, true)"><span class="glyphicon glyphicon-log-in" aria-hidden="true"/></button></td>
+                </tr>
+            </table>
+            <table style="width:100%">
+                <tr>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=left', null, 'GET', 0, true)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"/></button></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=ok', null, 'GET', 0, true)">OK</button></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=right', null, 'GET', 0, true)"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"/></button></td>
+                    <td style="width: 20%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=prev', null, 'GET', 0, true)">Prev</button></td>
+                </tr>
+            </table>
+            <table style="width:100%">
+                <tr>
+                    <td style="width: 20%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=down', null, 'GET', 0, true)"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/></button></td>
+                    <td style="width: 40%"></td>
+                    <td style="width: 20%"><button class="btn btn-block btn-default" onclick="sendHttp('/command?group={group}&device={device}&command=exit', null, 'GET', 0, true)"><span class="glyphicon glyphicon-remove" aria-hidden="true"/></button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-md-5">
+    <div class="panel panel-default" style="height: 275px; margin: 0px 10px;">
+        <div class="panel-heading">
+            <h3 class="panel-title"><img src="/img/logo/logo_lg.png" style="height:25px;"/> Applications</h3>
+        </div>
+        <div class="panel-body">
+            <div style="height: 200px; overflow-y: auto;">
+                {apps}
+            </div>
+        </div>
+    </div>
+</div>
