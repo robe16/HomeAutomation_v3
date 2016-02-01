@@ -3,6 +3,7 @@ import os
 import time
 import string
 import random
+from urllib import urlopen
 
 import nest_static_vars
 from config_devices import write_config_devices, create_device_object_array
@@ -130,6 +131,16 @@ def web(page=''):
             return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
     except:
         return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+
+
+@route('/web/settings')
+def web():
+    try:
+        if request.query.gethtml == 'group':
+            return HTTPResponse(body=urlopen('web/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name='', devices=''), status=200)
+        return HTTPResponse(status=400)
+    except:
+        return HTTPResponse(status=500)
 
 
 @route('/web/preferences/<page>')

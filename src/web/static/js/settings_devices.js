@@ -1,3 +1,22 @@
+function addGroup() {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', '/web/settings?gethtml=group', false);
+    xmlHttp.send(null);
+    if (xmlHttp.status==200) {
+        document.getElementById('settings-groups').innerHTML = document.getElementById('settings-groups').innerHTML + xmlHttp.responseText;
+        }
+    else {return}
+}
+
+
+function validateIpaddress(ipaddress) {
+    if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
+        {return (true)}
+    else
+        {return (false)}
+}
+
+
 /*function addRoom(addroomBtnId)
     {
         //
@@ -546,12 +565,3 @@ function sendJson()
     if (jsonDvc) {sendHttp('/settings/devices', jsonDvc, 'POST', 0, true)}
     }
 */
-
-
-function validateIpaddress(ipaddress)
-    {
-        if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
-            {return (true)}
-        else
-            {return (false)}
-    }

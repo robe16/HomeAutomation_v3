@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="/web/static/css/settings.css">
+<script src="/web/static/js/settings_devices.js"></script>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -9,12 +10,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <div name="groups">
+            <div id="settings-groups">
                 <!-- -->
                 {groups}
                 <!-- -->
             </div>
-            <button type="button" class="btn settings_btn settings_group_add">
+            <button type="button" class="btn settings_btn settings_group_add" onclick="addGroup()">
                 <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
             </button>
         </div>

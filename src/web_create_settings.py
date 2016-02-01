@@ -1,11 +1,12 @@
 from urllib import urlopen
 from web_menu import html_menu
-from web_settings import _settings_tvguide
+from web_settings_devices import _settings_devices
+from web_settings_tvguide import _settings_tvguide
 
 
 # TODO - redo code for new device config schema
 def create_settings_devices(user, arr_devices):
-    body = urlopen('web/html_settings/settings_devices.html').read().encode('utf-8')
+    body = _settings_devices()
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') +\
            html_menu(user, arr_devices) +\
