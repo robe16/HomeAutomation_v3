@@ -11,7 +11,7 @@ from config_users import check_user, get_userrole, update_user_channels
 from command_forwarder import cmd_fwrd, get_device
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
-from web_create_settings import create_settings_devices, create_settings_tvguide
+from web_create_settings import create_settings_devices, settings_devices_input, create_settings_tvguide
 from web_create_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all
 from web_create_error import create_error_404, create_error_500
@@ -136,9 +136,11 @@ def web(page=''):
 @route('/web/settings')
 def web():
     try:
-        if request.query.gethtml == 'group':
-            return HTTPResponse(body=urlopen('web/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name='', devices=''), status=200)
-        return HTTPResponse(status=400)
+        body = settings_devices_input(request)
+        if body:
+            return HTTPResponse(body=body, status=200)
+        else:
+            return HTTPResponse(status=400)
     except:
         return HTTPResponse(status=500)
 

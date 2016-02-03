@@ -1,11 +1,30 @@
-function addGroup() {
+function addGroup(num) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', '/web/settings?gethtml=group', false);
+    xmlHttp.open('GET', '/web/settings?gethtml=group&num=' + num, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
         document.getElementById('settings-groups').innerHTML = document.getElementById('settings-groups').innerHTML + xmlHttp.responseText;
+        document.getElementById('btn_addgroup').setAttribute('onclick', 'addGroup(' + (num + 1) + ')');
+        return
         }
     else {return}
+}
+
+
+function addDevice(grpnum) {
+    return
+}
+
+
+function addDeviceHTML(grpnum, device) {
+    return
+    /*
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', '/web/settings?gethtml=device&' + device + '&num=' + grpnum, false);
+    xmlHttp.send(null);
+    if (xmlHttp.status==200) {return}
+    else {return}
+    */
 }
 
 

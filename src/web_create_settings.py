@@ -14,6 +14,23 @@ def create_settings_devices(user, arr_devices):
            urlopen('web/footer.html').read().encode('utf-8')
 
 
+def settings_devices_input(request):
+    #
+    if request.query.gethtml == 'group':
+        return urlopen('web/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name = '',
+                                                                                                      devices = '',
+                                                                                                      num = str(request.query.num))
+    elif request.query.gethtml == 'group':
+        if request.query.device == 'lgtv':
+            return urlopen('web/html_settings/devices/settings_devices_lgtv.html').read().encode('utf-8')
+        elif request.query.device == 'tivo':
+            return urlopen('web/html_settings/devices/settings_devices_tivo.html').read().encode('utf-8')
+        elif request.query.device == 'nest':
+            return urlopen('web/html_settings/devices/settings_devices_nest.html').read().encode('utf-8')
+    #
+    return False
+
+
 def create_settings_tvguide(user, arr_devices):
     body = _settings_tvguide()
     #
