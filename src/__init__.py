@@ -11,7 +11,7 @@ from config_users import check_user, get_userrole, update_user_channels
 from command_forwarder import cmd_fwrd, get_device
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
-from web_create_settings import create_settings_devices, settings_devices_input, create_settings_tvguide
+from web_create_settings import create_settings_devices, settings_devices_requests, create_settings_tvguide
 from web_create_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all
 from web_create_error import create_error_404, create_error_500
@@ -136,7 +136,7 @@ def web(page=''):
 @route('/web/settings')
 def web():
     try:
-        body = settings_devices_input(request)
+        body = settings_devices_requests(request)
         if body:
             return HTTPResponse(body=body, status=200)
         else:

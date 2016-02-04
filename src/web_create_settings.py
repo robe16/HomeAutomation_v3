@@ -1,6 +1,6 @@
 from urllib import urlopen
 from web_menu import html_menu
-from web_settings_devices import _settings_devices
+from web_settings_devices import _settings_devices, _settings_devices_selection
 from web_settings_tvguide import _settings_tvguide
 
 
@@ -8,25 +8,34 @@ from web_settings_tvguide import _settings_tvguide
 def create_settings_devices(user, arr_devices):
     body = _settings_devices()
     #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') +\
-           html_menu(user, arr_devices) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
+    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') + \
+           html_menu(user, arr_devices) + \
+           urlopen('web/body.html').read().encode('utf-8').format(body=body) + \
+           urlopen('web/message_popup.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 
-def settings_devices_input(request):
+def settings_devices_requests(request):
     #
-    if request.query.gethtml == 'group':
-        return urlopen('web/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name = '',
-                                                                                                      devices = '',
-                                                                                                      num = str(request.query.num))
+    if request.query.gethtml == 'selection':
+        #
+        return _settings_devices_selection()
+        #
     elif request.query.gethtml == 'group':
+        #
+        return urlopen('web/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name='',
+                                                                                                      devices='',
+                                                                                                      num=str(request.query.num))
+        #
+    elif request.query.gethtml == 'device':
+        #
         if request.query.device == 'lgtv':
             return urlopen('web/html_settings/devices/settings_devices_lgtv.html').read().encode('utf-8')
         elif request.query.device == 'tivo':
             return urlopen('web/html_settings/devices/settings_devices_tivo.html').read().encode('utf-8')
         elif request.query.device == 'nest':
             return urlopen('web/html_settings/devices/settings_devices_nest.html').read().encode('utf-8')
+        #
     #
     return False
 
@@ -34,10 +43,10 @@ def settings_devices_input(request):
 def create_settings_tvguide(user, arr_devices):
     body = _settings_tvguide()
     #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') +\
-           html_menu(user, arr_devices) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
-           urlopen('web/message_popup.html').read().encode('utf-8') +\
+    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') + \
+           html_menu(user, arr_devices) + \
+           urlopen('web/body.html').read().encode('utf-8').format(body=body) + \
+           urlopen('web/message_popup.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
 
 
