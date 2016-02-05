@@ -52,7 +52,7 @@ def create_device(user, tvlistings, arr_devices, group_name, device_name):
            _create_device_page(user, tvlistings, device, group_name, device_name)
     #
     title = '{group}: '.format(group = grp_name) if grp_name != '-' else ''
-    title += device.getName()
+    title += device.getLabel()
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title=title) +\
            html_menu(user, arr_devices) +\

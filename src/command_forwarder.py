@@ -23,6 +23,6 @@ def get_device(arr_devices, group_name, device_name):
         if grp_name.lower().replace(' ', '') == group_name:
             #
             for objdevice in device_group['devices']:
-                if objdevice.getName().lower().replace(' ', '') == device_name:
+                if objdevice.getLabel().lower().replace(' ', '') == device_name:
                     return objdevice
     return False

@@ -1,4 +1,5 @@
 from urllib import urlopen
+from list_devices import read_list_devices, get_device_name, get_device_logo
 
 
 def _settings_devices():
@@ -6,20 +7,23 @@ def _settings_devices():
     return urlopen('web/html_settings/settings_devices.html').read().encode('utf-8').format(groups = '',
                                                                                             num = str(0))
 
-def _settings_devices_selection():
+def _settings_devices_selection(grpnum):
     #
     body = '<div class="row">'
     count = 0
-    devices = [['LG TV', 'logo_lg.png'],
-               ['Virgin Media', 'logo_virgin.png'],
-               ['Xbox One', 'logo_xboxone.png'],
-               ['Nest Account', 'logo_nest_blue.png']]
+    devices = read_list_devices()
     #
     for dvc in devices:
         if count> 0 and count % 4 == 0:
             body += '</div><div class="row">'
-        body += urlopen('web/html_settings/settings_devices_selection_item.html').read().encode('utf-8').format(name = dvc[0],
-                                                                                                                img = dvc[1])
+        #
+        name = get_device_name(dvc['type'])
+        img = get_device_logo(dvc['type'])
+        #
+        body += urlopen('web/html_settings/settings_devices_selection_item.html').read().encode('utf-8').format(name = name,
+                                                                                                                img = img,
+                                                                                                                grpnum = grpnum,
+                                                                                                                type = dvc['type'].lower().replace(' ',''))
         count += 1
     #
     body += '</div>'

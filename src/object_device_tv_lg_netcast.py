@@ -1,6 +1,7 @@
 from send_cmds import sendHTTP
-from urllib import urlopen, urlencode
+from urllib import urlopen
 import xml.etree.ElementTree as ET
+from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 
 
 class object_tv_lg_netcast:
@@ -11,48 +12,47 @@ class object_tv_lg_netcast:
     STRtv_PATHevent = "/udap/api/event"
     STRtv_PATHquery = "/udap/api/data"
 
-    def __init__ (self, STRname, STRipaddress, INTport, STRpairingkey=None):
-        self._STRipaddress = STRipaddress
-        self._INTport = INTport
-        self._STRpairingkey = STRpairingkey
-        self._type = "lgtv"
-        if self._STRpairingkey!=None:
+    def __init__ (self, label, ipaddress, port, pairingkey=None):
+        self._type = "tv_lg_netcast"
+        self._label = label
+        self._ipaddress = ipaddress
+        self._port = port
+        self._pairingkey = pairingkey
+        if self._pairingkey!=None:
             self._pairDevice()
-        self._name = STRname
-        self._img = "logo_lg.png"
         self._tvguide = True
 
+    def getType(self):
+        return self._type
+
+    def getLabel(self):
+        return self._label
+
     def getIP(self):
-        return self._STRipaddress
+        return self._ipaddress
 
     def getPort(self):
-        return self._INTport
+        return self._port
 
     def getPairingkey(self):
-        return self._STRpairingkey
+        return self._pairingkey
 
     def setPairingkey(self, STRpairingkey):
-        self._STRpairingkey = STRpairingkey
+        self._pairingkey = STRpairingkey
         self._pairDevice()
 
     def getTvguide_use(self):
         return self._tvguide
 
-    def getType(self):
-        return self._type
-
-    def getName(self):
-        return self._name
-
     def getLogo(self):
-        return self._img
+        return get_device_logo(self._type)
 
     def isPaired(self):
         return self._BOOLpaired
 
     def _pairDevice(self):
-        STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._STRpairingkey, str(self._INTport))
-        x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHpair), "close", data=STRxml)
+        STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey, str(self._port))
+        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml)
         self._BOOLpaired = bool(x)
         return self._BOOLpaired
 
@@ -70,13 +70,14 @@ class object_tv_lg_netcast:
 
     def showPairingkey(self):
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
-        x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHpair), "close", data=STRxml)
+        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml)
         return str(x.getcode()).startswith("2") if bool(x) else False
 
     def getHtml(self, group_name):
-        return urlopen('web/html_devices/object_lgtv.html').read().encode('utf-8').format(group = group_name,
-                                                                                          device = self._name.lower().replace(' ',''),
-                                                                                          apps = self._html_apps(group_name))
+        html = get_device_html_command(self._type)
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = group_name,
+                                                                                 device = self._label.lower().replace(' ',''),
+                                                                                 apps = self._html_apps(group_name))
 
     def _html_apps(self, group_name):
         #
@@ -108,7 +109,7 @@ class object_tv_lg_netcast:
                              '<img src="/command?group={group}&device={device}&command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
                              '</td>').format(group = group_name,
-                                             device = self._name.lower().replace(' ',''),
+                                             device = self._label.lower().replace(' ',''),
                                              auid = auid,
                                              app_name = name.replace(' ', '%20'),
                                              name = name)
@@ -155,7 +156,7 @@ class object_tv_lg_netcast:
         # </envelope>
         #
         STRurl = "/udap/api/data?target=applist_get&type={}&index={}&number={}".format(str(APPtype), str(APPindex), str(APPnumber))
-        x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+STRurl, "keep-alive")
+        x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
         if bool(x):
             return x.read() if str(x.getcode()).startswith("2") else False
         else:
@@ -166,7 +167,7 @@ class object_tv_lg_netcast:
         # name = App name
         STRurl = "/udap/api/data?target=appicon_get&auid={auid}&appname={appname}".format(auid = auid,
                                                                                           appname = name)
-        x = sendHTTP(self._STRipaddress+":"+str(self._INTport)+STRurl, "keep-alive")
+        x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
         if bool(x):
             return x.read() if str(x.getcode()).startswith("2") else False
         else:
@@ -198,11 +199,11 @@ class object_tv_lg_netcast:
                           '</api>' +
                           '</envelope>').format(auid = request.query.auid,
                                                 app_name = request.query.name.replace(' ','%20'))
-                response = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
                 if bool(response) and not str(response.getcode()).startswith("2"):
                     if not self._check_paired():
                         return False
-                    response = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
                 return str(response.getcode()).startswith("2") if bool(response) else False
                 #
             else:
@@ -214,11 +215,11 @@ class object_tv_lg_netcast:
                           '<value>{value}</value>' +
                           '</api>' +
                           '</envelope>').format(value = code)
-                response = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
                 if bool(response) and not str(response.getcode()).startswith("2"):
                     if not self._check_paired():
                         return False
-                    response = sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
                 return str(response.getcode()).startswith("2") if bool(response) else False
                 #
         except:

@@ -1,0 +1,44 @@
+[
+  {
+    "type": "tv_lg_netcast",
+    "name": "LG TV",
+    "logo": "logo_lg.png",
+    "html_command": "object_lgtv.html",
+    "html_settings": "settings_devices_lgtv.html"
+  },
+  {
+    "type": "tivo",
+    "name": "Virgin Media",
+    "logo": "logo_virgin.png",
+    "html_command": "object_tivo.html",
+    "html_settings": "settings_devices_tivo.html"
+  },
+  {
+    "type": "xboxone",
+    "name": "Xbox One",
+    "logo": "logo_xboxone.png",
+    "html_command": "object_xboxone.html",
+    "html_settings": ""
+  },
+  {
+    "type": "nest_account",
+    "name": "Nest Account",
+    "logo": "logo_nest_blue.png",
+    "html_command": "",
+    "html_settings": "settings_devices_nest.html"
+  },
+  {
+    "type": "raspberrypi",
+    "name": "Raspberry Pi",
+    "logo": "logo_raspberrypi.png",
+    "html_command": "object_raspberrypi.html",
+    "html_settings": ""
+  },
+  {
+    "type": "other",
+    "name": "Other",
+    "logo": "logo_other.png",
+    "html_command": "object_other.html",
+    "html_settings": ""
+  }
+]

@@ -2,6 +2,7 @@ from urllib import urlopen
 from web_menu import html_menu
 from web_settings_devices import _settings_devices, _settings_devices_selection
 from web_settings_tvguide import _settings_tvguide
+from list_devices import get_device_logo, get_device_html_settings
 
 
 # TODO - redo code for new device config schema
@@ -19,7 +20,7 @@ def settings_devices_requests(request):
     #
     if request.query.gethtml == 'selection':
         #
-        return _settings_devices_selection()
+        return _settings_devices_selection(request.query.grpnum)
         #
     elif request.query.gethtml == 'group':
         #
@@ -29,12 +30,12 @@ def settings_devices_requests(request):
         #
     elif request.query.gethtml == 'device':
         #
-        if request.query.device == 'lgtv':
-            return urlopen('web/html_settings/devices/settings_devices_lgtv.html').read().encode('utf-8')
-        elif request.query.device == 'tivo':
-            return urlopen('web/html_settings/devices/settings_devices_tivo.html').read().encode('utf-8')
-        elif request.query.device == 'nest':
-            return urlopen('web/html_settings/devices/settings_devices_nest.html').read().encode('utf-8')
+        html = get_device_html_settings(request.query.device)
+        #
+        if html:
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = get_device_logo(request.query.device))
+        else:
+            return ''
         #
     #
     return False

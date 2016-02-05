@@ -1,26 +1,31 @@
+from urllib import urlopen
+from list_devices import get_device_logo, get_device_html_command, get_device_html_settings
+
 class object_nest_account:
 
-    def __init__ (self, STRname, token, tokenexpiry, pincode):
+    def __init__ (self, label, token, tokenexpiry, pincode):
         self._type = "nest_account"
-        self._name = STRname
-        self._html = "object_other.html"
-        self._img = "logo_nest_blue.png"
-        self._tvguide = False
+        self._label = label
         self._token = token
         self._tokenexpiry = tokenexpiry
         self._pincode = pincode
+        self._tvguide = False
 
-    def getName(self):
-        return self._name
+    def getLabel(self):
+        return self._label
+
+    def getType(self):
+        return self._type
+
+    def getLogo(self):
+        return get_device_logo(self._type)
 
     def getTvguide_use(self):
         return self._tvguide
 
-    def getHtml(self):
-        return self._html
-
-    def getLogo(self):
-        return self._img
+    def getHtml(self, group_name):
+        html = get_device_html_command(self._type)
+        return urlopen('web/html_devices/' + html).read().encode('utf-8')
 
 
     def getToken(self):

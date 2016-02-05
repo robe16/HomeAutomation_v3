@@ -53,26 +53,26 @@ def _create_device_object(data_device):
     device_type = data_device['device']
     #
     if device_type=="tv_lg_netcast":
-        return object_tv_lg_netcast(STRname = data_device['details']['name'].encode('ascii'),
-                                    STRipaddress = data_device['details']['ipaddress'].encode('ascii'),
-                                    INTport = 8080,
-                                    STRpairingkey = data_device['details']['pairingkey'].encode('ascii'))
+        return object_tv_lg_netcast(label = data_device['details']['name'].encode('ascii'),
+                                    ipaddress = data_device['details']['ipaddress'].encode('ascii'),
+                                    port = 8080,
+                                    pairingkey = data_device['details']['pairingkey'].encode('ascii'))
     elif device_type=="tivo":
-        return object_tivo(STRname = data_device['details']['name'].encode('ascii'),
-                           STRipaddress = data_device['details']['ipaddress'].encode('ascii'),
-                           INTport = 31339,
-                           STRaccesskey = data_device['details']['mak'].encode('ascii'))
+        return object_tivo(label = data_device['details']['name'].encode('ascii'),
+                           ipaddress = data_device['details']['ipaddress'].encode('ascii'),
+                           port = 31339,
+                           accesskey = data_device['details']['mak'].encode('ascii'))
     elif device_type=="xbox_one":
-        return object_xbox_one(STRname = data_device['details']['name'].encode('ascii'),
-                               STRipaddress = data_device['details']['ipaddress'].encode('ascii'))
+        return object_xbox_one(label = data_device['details']['name'].encode('ascii'),
+                               ipaddress = data_device['details']['ipaddress'].encode('ascii'))
     elif device_type=="raspberrypi":
-        return object_raspberrypi(STRname = data_device['details']['name'].encode('ascii'),
-                                  STRipaddress = data_device['details']['ipaddress'].encode('ascii'))
+        return object_raspberrypi(label = data_device['details']['name'].encode('ascii'),
+                                  ipaddress = data_device['details']['ipaddress'].encode('ascii'))
     elif device_type=="other":
-        return object_other(STRname = data_device['details']['name'].encode('ascii'),
-                            STRipaddress = data_device['details']['ipaddress'].encode('ascii'))
+        return object_other(label = data_device['details']['name'].encode('ascii'),
+                            ipaddress = data_device['details']['ipaddress'].encode('ascii'))
     elif device_type=="nest_account":
-        return object_nest_account(STRname = data_device['details']['name'].encode('ascii'),
+        return object_nest_account(label = data_device['details']['name'].encode('ascii'),
                                    token = data_device['details']['token'].encode('ascii'),
                                    tokenexpiry = data_device['details']['tokenexpiry'].encode('ascii'),
                                    pincode = data_device['details']['pincode'].encode('ascii'))

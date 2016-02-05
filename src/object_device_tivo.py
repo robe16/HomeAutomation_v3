@@ -1,25 +1,31 @@
 from send_cmds import sendTELNET
 from datetime import datetime
 from urllib import urlopen
+from list_devices import get_device_logo, get_device_html_command, get_device_html_settings
 
 
 class object_tivo:
     '''TiVo object'''
 
-    def __init__(self, STRname, STRipaddress, INTport, STRaccesskey=""):
-        self._STRipaddress = STRipaddress
-        self._INTport = INTport
-        self._STRaccesskey = STRaccesskey
+    def __init__(self, label, ipaddress, port, accesskey=""):
         self._type = "tivo"
-        self._name = STRname
-        self._img = "logo_virgin.png"
+        self._label = label
+        self._ipaddress = ipaddress
+        self._port = port
+        self._accesskey = accesskey
         self._tvguide = True
 
+    def getLabel(self):
+        return self._label
+
+    def getType(self):
+        return self._type
+
     def getIP(self):
-        return self._STRipaddress
+        return self._ipaddress
 
     def getPort(self):
-        return self._INTport
+        return self._port
 
     def getAccesskey(self):
         return self._STRaccesskey
@@ -30,20 +36,14 @@ class object_tivo:
     def getTvguide_use(self):
         return self._tvguide
 
-    def getType(self):
-        return self._type
-
-    def getName(self):
-        return self._name
-
     def getLogo(self):
-        return self._img
+        return get_device_logo(self._type)
 
     def _getChan(self):
-        x = sendTELNET(self._STRipaddress, self._INTport, response=True)
+        x = sendTELNET(self._ipaddress, self._port, response=True)
         print ("{timestamp} Channel request for TiVo device {ipaddress} - {response}").format(
             timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-            ipaddress=self._STRipaddress,
+            ipaddress=self._ipaddress,
             response=x)
         if not bool(x):
             return False
@@ -54,20 +54,21 @@ class object_tivo:
         if STRcommand == "getchannel":
             return self._getChan()
         elif STRcommand == "channel":
-            return sendTELNET(self._STRipaddress,
-                              self._INTport,
+            return sendTELNET(self._ipaddress,
+                              self._port,
                               data=("FORCECH {}\r").format(request.query.id),
                               response=True)
         elif STRcommand == 'command':
             code = self.commands[request.query.code]
             try:
-                return sendTELNET(self._STRipaddress, self._INTport, data=code)
+                return sendTELNET(self._ipaddress, self._port, data=code)
             except:
                 return False
 
     def getHtml(self, group_name):
-        return urlopen('web/html_devices/object_tivo.html').read().encode('utf-8').format(group=group_name,
-                                                                                          device=self._name.lower().replace(' ',''))
+        html = get_device_html_command(self._type)
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group=group_name,
+                                                                                 device=self._label.lower().replace(' ',''))
 
     commands = {"power": "IRCODE STANDBY\r",
                 "1": "IRCODE NUM1\r",

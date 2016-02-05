@@ -13,13 +13,12 @@ function addGroup(num) {
 
 function addDevice(grpnum) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', '/web/settings?gethtml=selection', false);
+    xmlHttp.open('GET', '/web/settings?gethtml=selection&grpnum=' + grpnum, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
         document.getElementById('msg_title').innerHTML = 'Select device:';
         document.getElementById('msg_txt').innerHTML = xmlHttp.responseText;
         document.getElementById('msg_btn').innerHTML = 'Cancel'
-        //document.getElementById('msg_btn').
         document.getElementById('message_popup').className = 'message viewport_centre visible';
         return
         }
@@ -30,14 +29,16 @@ function addDevice(grpnum) {
 
 
 function addDeviceHTML(grpnum, device) {
-    return
-    /*
+    hidePopup()
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', '/web/settings?gethtml=device&' + device + '&num=' + grpnum, false);
+    xmlHttp.open('GET', '/web/settings?gethtml=device&device='+ device, false);
     xmlHttp.send(null);
-    if (xmlHttp.status==200) {return}
+    if (xmlHttp.status==200) {
+        document.getElementById('devicegroup_' + grpnum).innerHTML = document.getElementById('devicegroup_' + grpnum).innerHTML + xmlHttp.responseText;
+        }
     else {return}
-    */
+    //
+    return
 }
 
 

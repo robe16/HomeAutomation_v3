@@ -23,10 +23,10 @@ def html_menu_lhs(arr_devices):
             name = '-'
         for device in device_group['devices']:
             html += urlopen('web/html_menu/menu_sidebar_item.html').read().encode('utf-8').format(href=('/web/device/{group}/{device}').format(group=name.lower().replace(" ",""),
-                                                                                                                                               device=device.getName().lower().replace(" ","")),
-                                                                                                  id='{}_{}'.format(device_group['name'].lower().replace(' ',''), device.getName().lower().replace(' ','')),
+                                                                                                                                               device=device.getLabel().lower().replace(" ","")),
+                                                                                                  id='{}_{}'.format(device_group['name'].lower().replace(' ',''), device.getLabel().lower().replace(' ','')),
                                                                                                   cls='',
-                                                                                                  name=device.getName(),
+                                                                                                  name=device.getLabel(),
                                                                                                   img=device.getLogo())
     return urlopen('web/html_menu/menu_lhs.html').read().encode('utf-8').format(menu=html)
 
