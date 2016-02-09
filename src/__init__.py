@@ -197,11 +197,13 @@ def save_settings(x='-'):
                 if update_channellist(data):
                     return HTTPResponse(status=200)
         elif x == 'devices':
-            # TODO - recieve json payload and save to config file
+            data = request.body.read()
+            if data:
+                if write_config_devices(data):
+                    # Recreate device array/list after new config saved
+                    arr_devices = create_device_object_array()
+                    return HTTPResponse(status=200)
             # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
-            # Recreate device array/list after new config saved
-            arr_devices = create_device_object_array()
-            return
         return HTTPResponse(status=400)
     except:
         return HTTPResponse(status=500)

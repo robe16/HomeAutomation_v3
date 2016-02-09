@@ -3,8 +3,8 @@
     "type": "tv_lg_netcast",
     "name": "LG TV",
     "logo": "logo_lg.png",
-    "html_command": "object_lgtv.html",
-    "html_settings": "settings_devices_lgtv.html"
+    "html_command": "object_tv_lg_netcast.html",
+    "html_settings": "settings_devices_tv_lg_netcast.html"
   },
   {
     "type": "tivo",

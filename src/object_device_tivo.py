@@ -50,15 +50,18 @@ class object_tivo:
         nums = [int(s) for s in x.split() if s.isdigit()]
         return nums[0] if len(nums) > 0 else False
 
-    def sendCmd(self, STRcommand, request):
-        if STRcommand == "getchannel":
+    def sendCmd(self, request):
+        #
+        command = request.query.command
+        #
+        if command == "getchannel":
             return self._getChan()
-        elif STRcommand == "channel":
+        elif command == "channel":
             return sendTELNET(self._ipaddress,
                               self._port,
-                              data=("FORCECH {}\r").format(request.query.id),
+                              data=("FORCECH {}\r").format(request.query.chan),
                               response=True)
-        elif STRcommand == 'command':
+        elif command == 'command':
             code = self.commands[request.query.code]
             try:
                 return sendTELNET(self._ipaddress, self._port, data=code)

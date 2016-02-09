@@ -1,5 +1,6 @@
 import json
 import os
+import ast
 from object_device_tv_lg_netcast import object_tv_lg_netcast
 from object_device_tivo import object_tivo
 from object_device_other import object_other
@@ -8,26 +9,19 @@ from object_device_raspberrypi import object_raspberrypi
 from object_nest_account import object_nest_account
 
 
-def write_config_devices(data):
+def write_config_devices(new_data):
     try:
-        with open(os.path.join('config', 'config_devices.json'), 'w') as outfile:
-            outfile.write(json.dumps(data, outfile, indent=4, separators=(',', ': ')))
-        #TODO recreate object array and pass back to __init__ as new config file will overwrite current configuration
+        #
+        new_data = ast.literal_eval(new_data)
+        #
+        with open(os.path.join('config', 'config_devices.json'), 'w+') as output_file:
+            output_file.write(json.dumps(new_data, indent=4, separators=(',', ': ')))
+            output_file.close()
+        #
         return True
     except:
         return False
 
-
-'''
-******** Example JSON ********
-{"nest":
-    {
-    "pincode": "xxxxxx",
-    "token": "45678-gfsas-2354656u-hgfds-eretry",
-    "tokenexpiry", "xx/xx/xxxx xx:xx:xx"
-    }
-}
-'''
 
 def get_device_json():
     with open(os.path.join('config', 'config_devices.json'), 'r') as data_file:

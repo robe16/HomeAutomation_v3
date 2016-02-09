@@ -1,4 +1,4 @@
-<div name="nest" class="settings_box">
+<div name="nest_account" class="settings_box device">
     <div class="row">
         <div class="col-md-12">
             <h4><img src="/img/logo/{img}" style="height:32px; margin-right: 5px;"/> Nest Account</h4>
@@ -9,14 +9,18 @@
             <div>
                 <p>In order for the server to connect to your <span style="color:#00AFD8">Nest</span> account, it must be authorised. Use the button below to open the authorisation page in a new browser tab and follow the instructions to get your pin code, which must be pasted into the input field here.</p>
                 <br>
-                <a href="{}" target="_blank"><button class="btn btn-default" type="button" style="width:100%">Login and authorise with Nest</button></a>
+                <a href="" target="_blank"><button class="btn btn-default" type="button" style="width:100%">Login and authorise with Nest</button></a>
             </div>
             <br>
         </div>
         <div class="col-md-6">
-            <div>
-                <label for="nestpin">Enter pin code:</label>
-                <input id="nestpin" type="text" name="device_pincode" class="form-control" placeholder="Pin Code"{}>
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Enter pin code:</h5>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" name="pincode" class="form-control" placeholder="Pin code">
+                </div>
             </div>
         </div>
     </div>
