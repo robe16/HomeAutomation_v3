@@ -28,3 +28,7 @@ class object_xbox_one:
         device_url = 'device/{group}/{device}'.format(group=group_name, device=self._label.lower().replace(' ',''))
         html = get_device_html_command(self._type)
         return urlopen('web/html_devices/' + html).read().encode('utf-8').format(url=device_url)
+
+    def getHtml_settings(self):
+        html = get_device_html_settings(self._type)
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(img = self.getLogo()) if html else ''

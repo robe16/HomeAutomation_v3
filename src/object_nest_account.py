@@ -27,6 +27,12 @@ class object_nest_account:
         html = get_device_html_command(self._type)
         return urlopen('web/html_devices/' + html).read().encode('utf-8')
 
+    def getHtml_settings(self):
+        html = get_device_html_settings(self._type)
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
+                                                                                 name = self._label,
+                                                                                 pincode = self._pincode)
+
 
     def getToken(self):
         return self._token

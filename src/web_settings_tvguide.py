@@ -4,7 +4,7 @@ import json
 from config_users import get_userchannels
 
 
-def _settings_tvguide():
+def settings_tvguide():
     #
     color_gen = 'primary'
     #

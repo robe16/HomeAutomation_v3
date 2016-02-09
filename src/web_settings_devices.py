@@ -2,12 +2,12 @@ from urllib import urlopen
 from list_devices import read_list_devices, get_device_name, get_device_logo
 
 
-def _settings_devices():
+def settings_devices(arr_devices):
     # TODO - code to create entire page to reflect json config file
     return urlopen('web/html_settings/settings_devices.html').read().encode('utf-8').format(groups = '',
                                                                                             num = str(0))
 
-def _settings_devices_selection(grpnum):
+def settings_devices_selection(grpnum):
     #
     body = '<div class="row">'
     count = 0

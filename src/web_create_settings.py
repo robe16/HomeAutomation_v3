@@ -1,13 +1,12 @@
 from urllib import urlopen
 from web_menu import html_menu
-from web_settings_devices import _settings_devices, _settings_devices_selection
-from web_settings_tvguide import _settings_tvguide
-from list_devices import get_device_logo, get_device_html_settings
+from web_settings_devices import settings_devices, settings_devices_selection
+from web_settings_tvguide import settings_tvguide
+from list_devices import get_device_logo, get_device_html_settings, get_device_settings_dict
 
 
-# TODO - redo code for new device config schema
 def create_settings_devices(user, arr_devices):
-    body = _settings_devices()
+    body = settings_devices(arr_devices)
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') + \
            html_menu(user, arr_devices) + \
@@ -20,7 +19,7 @@ def settings_devices_requests(request):
     #
     if request.query.gethtml == 'selection':
         #
-        return _settings_devices_selection(request.query.grpnum)
+        return settings_devices_selection(request.query.grpnum)
         #
     elif request.query.gethtml == 'group':
         #
@@ -32,8 +31,11 @@ def settings_devices_requests(request):
         #
         html = get_device_html_settings(request.query.device)
         #
+        dict = get_device_settings_dict(request.query.device)
+        dict['img'] = get_device_logo(request.query.device)
+        #
         if html:
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = get_device_logo(request.query.device))
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(**dict)
         else:
             return ''
         #
@@ -42,7 +44,7 @@ def settings_devices_requests(request):
 
 
 def create_settings_tvguide(user, arr_devices):
-    body = _settings_tvguide()
+    body = settings_tvguide()
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') + \
            html_menu(user, arr_devices) + \

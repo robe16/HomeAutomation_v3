@@ -20,7 +20,7 @@ function addDevice(grpnum) {
     if (xmlHttp.status==200) {
         document.getElementById('msg_title').innerHTML = 'Select device:';
         document.getElementById('msg_txt').innerHTML = xmlHttp.responseText;
-        document.getElementById('msg_btn').innerHTML = 'Cancel'
+        document.getElementById('msg_btn').innerHTML = 'Cancel';
         document.getElementById('message_popup').className = 'message viewport_centre visible';
         return
         }

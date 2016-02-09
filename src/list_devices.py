@@ -47,3 +47,10 @@ def get_device_html_settings(type):
     if item:
         return item['html_settings']
     return False
+
+
+def get_device_settings_dict(type):
+    item = _get_device_details(type)
+    if item:
+        return item['settings_dict']
+    return False
