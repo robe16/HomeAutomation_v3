@@ -3,7 +3,9 @@ function addGroup(num) {
     xmlHttp.open('GET', '/web/settings?gethtml=group&num=' + num, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
-        document.getElementById('settings-groups').innerHTML = document.getElementById('settings-groups').innerHTML + xmlHttp.responseText;
+        var z = document.createElement('div');
+        z.innerHTML = xmlHttp.responseText;
+        document.getElementById('settings-groups').appendChild(z);
         document.getElementById('btn_addgroup').setAttribute('onclick', 'addGroup(' + (num + 1) + ')');
         return
         }
@@ -34,7 +36,9 @@ function addDeviceHTML(grpnum, device) {
     xmlHttp.open('GET', '/web/settings?gethtml=device&device='+ device, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
-        document.getElementById('devicegroup_' + grpnum).innerHTML = document.getElementById('devicegroup_' + grpnum).innerHTML + xmlHttp.responseText;
+        var z = document.createElement('div');
+        z.innerHTML = xmlHttp.responseText;
+        document.getElementById('devicegroup_' + grpnum).appendChild(z);
         }
     else {return}
     //
@@ -54,18 +58,14 @@ function sendDevices() {
     } else {
         json = buildJson();
         if (json) {
-            if (listChans && sendHttp('/settings/devices', json, 'POST', 2, false))
-                {
-                    document.getElementById('msg_title').innerHTML = 'Success';
-                    document.getElementById('msg_txt').innerHTML = 'Device settings have been successfully sent to the server.';
-                    document.getElementById('message_popup').className = 'message viewport_centre visible';
-                }
-            else
-                {
-                    document.getElementById('msg_title').innerHTML = 'Error';
-                    document.getElementById('msg_txt').innerHTML = 'An error has been encountered.';
-                    document.getElementById('message_popup').className = 'message viewport_centre visible';
-                }
+            if (listChans && sendHttp('/settings/devices', json, 'POST', 2, false)) {
+                document.getElementById('msg_title').innerHTML = 'Success';
+                document.getElementById('msg_txt').innerHTML = 'Device settings have been successfully sent to the server.';
+                document.getElementById('message_popup').className = 'message viewport_centre visible';
+            } else {
+                document.getElementById('msg_title').innerHTML = 'Error';
+                document.getElementById('msg_txt').innerHTML = 'An error has been encountered.';
+                document.getElementById('message_popup').className = 'message viewport_centre visible';
             }
         }
     }
