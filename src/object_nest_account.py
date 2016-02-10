@@ -3,9 +3,9 @@ from list_devices import get_device_logo, get_device_html_command, get_device_ht
 
 class object_nest_account:
 
-    def __init__ (self, label, token, tokenexpiry, pincode):
-        self._type = "nest_account"
-        self._label = label
+    def __init__ (self, token, tokenexpiry, pincode):
+        self._type = 'nest_account'
+        self._label = 'Nest'
         self._token = token
         self._tokenexpiry = tokenexpiry
         self._pincode = pincode
@@ -29,9 +29,11 @@ class object_nest_account:
 
     def getHtml_settings(self):
         html = get_device_html_settings(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
-                                                                                 name = self._label,
-                                                                                 pincode = self._pincode)
+        return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
+                                                                                          name = self._label,
+                                                                                          pincode = self._pincode,
+                                                                                          token = self._token,
+                                                                                          tokenexpiry = self._tokenexpiry)
 
 
     def getToken(self):

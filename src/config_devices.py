@@ -66,8 +66,7 @@ def _create_device_object(data_device):
         return object_other(label = data_device['details']['name'].encode('ascii'),
                             ipaddress = data_device['details']['ipaddress'].encode('ascii'))
     elif device_type=="nest_account":
-        return object_nest_account(label = data_device['details']['name'].encode('ascii'),
-                                   token = data_device['details']['token'].encode('ascii'),
+        return object_nest_account(token = data_device['details']['token'].encode('ascii'),
                                    tokenexpiry = data_device['details']['tokenexpiry'].encode('ascii'),
                                    pincode = data_device['details']['pincode'].encode('ascii'))
     else:

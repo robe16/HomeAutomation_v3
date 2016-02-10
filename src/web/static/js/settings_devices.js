@@ -58,7 +58,7 @@ function sendDevices() {
     } else {
         json = buildJson();
         if (json) {
-            if (listChans && sendHttp('/settings/devices', json, 'POST', 2, false)) {
+            if (sendHttp('/settings/devices', json, 'POST', 2, false)) {
                 document.getElementById('msg_title').innerHTML = 'Success';
                 document.getElementById('msg_txt').innerHTML = 'Device settings have been successfully sent to the server.';
                 document.getElementById('message_popup').className = 'message viewport_centre visible';
@@ -81,11 +81,13 @@ function checkInputs() {
     //
     for (var i = 0; i < elementsInputs.length; i++) {
         //
-        if (elementsInputs[i].value == '') {
-            elementError(elementsInputs[i]);
-            result = false;
-        } else {
-            elementNoError(elementsInputs[i]);
+        if (elementsInputs[i].style.display != 'none') {
+            if (elementsInputs[i].value == '') {
+                elementError(elementsInputs[i]);
+                result = false;
+            } else {
+                elementNoError(elementsInputs[i]);
+            }
         }
         //
     }
@@ -95,11 +97,13 @@ function checkInputs() {
     //
     for (var i = 0; i < elementsIP.length; i++) {
         //
-        if (!validateIpaddress(elementsIP[i].value)) {
-            elementError(elementsIP[i]);
-            result = false;
-        } else {
-            elementNoError(elementsIP[i]);
+        if (elementsIP[i].style.display != 'none') {
+            if (!validateIpaddress(elementsIP[i].value)) {
+                elementError(elementsIP[i]);
+                result = false;
+            } else {
+                elementNoError(elementsIP[i]);
+            }
         }
         //
     }

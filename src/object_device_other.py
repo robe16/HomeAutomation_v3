@@ -28,4 +28,4 @@ class object_other:
 
     def getHtml_settings(self):
         html = get_device_html_settings(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(img = self.getLogo()) if html else ''
+        return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo()) if html else ''

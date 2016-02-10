@@ -1,6 +1,6 @@
 from urllib import urlopen
 from web_menu import html_menu
-from web_settings_devices import settings_devices, settings_devices_selection
+from web_settings_devices import settings_devices, settings_devices_selection, settings_devices_group
 from web_settings_tvguide import settings_tvguide
 from list_devices import get_device_logo, get_device_html_settings, get_device_settings_dict
 
@@ -23,9 +23,7 @@ def settings_devices_requests(request):
         #
     elif request.query.gethtml == 'group':
         #
-        return urlopen('web/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name='',
-                                                                                                      devices='',
-                                                                                                      num=str(request.query.num))
+        return settings_devices_group(request.query.num)
         #
     elif request.query.gethtml == 'device':
         #

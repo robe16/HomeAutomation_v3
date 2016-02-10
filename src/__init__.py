@@ -21,7 +21,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1699, debug=True)
+    run(host='0.0.0.0', port=1616, debug=True)
 
 
 def server_start():
@@ -42,7 +42,7 @@ def tvlistings_process():
     time.sleep(5)
     # 604800 secs = 7 days
     while True:
-        list_listings.put(build_channel_array())
+        q_listings.put(build_channel_array())
         time.sleep(604800)
 
 
@@ -81,23 +81,23 @@ def web(page=''):
         tvlistings = _check_tvlistingsqueue()
         #
         if page == 'home':
-            return HTTPResponse(body=create_home(user, arr_devices), status=200)
+            return HTTPResponse(body=create_home(user, _get_devices()), status=200)
         elif page == 'tvguide':
             if bool(request.query.group) and bool(request.query.device):
                 return HTTPResponse(body=refresh_tvguide(tvlistings,
-                                                         device = get_device(arr_devices, request.query.group, request.query.device),
+                                                         device = get_device(_get_devices(), request.query.group, request.query.device),
                                                          group_name = request.query.group,
                                                          device_name = request.query.device,
                                                          user=user),
                                     status=200) if bool(tvlistings) else HTTPResponse(status=400)
             else:
-                return HTTPResponse(body=create_tvguide(user, arr_devices, tvlistings), status=200)
+                return HTTPResponse(body=create_tvguide(user, _get_devices(), tvlistings), status=200)
         elif page == 'about':
-            return HTTPResponse(body=create_about(user, arr_devices), status=200)
+            return HTTPResponse(body=create_about(user, _get_devices()), status=200)
         else:
-            return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
+            return HTTPResponse(body=create_error_404(user, _get_devices()), status=400)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+        return HTTPResponse(body=create_error_500(user, _get_devices()), status=500)
 
 
 @route('/web/device/<group_name>/<device_name>')
@@ -108,9 +108,9 @@ def web(group_name='', device_name=''):
             redirect('/web/login')
         tvlistings = _check_tvlistingsqueue()
         # Create and return web interface page
-        return HTTPResponse(body=create_device(user, tvlistings, arr_devices, group_name, device_name), status=200)
+        return HTTPResponse(body=create_device(user, tvlistings, _get_devices(), group_name, device_name), status=200)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+        return HTTPResponse(body=create_error_500(user, _get_devices()), status=500)
 
 
 @route('/web/settings/<page>')
@@ -123,13 +123,13 @@ def web(page=''):
             return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
                                      'Please consult your administrator for further information.', status=400)
         if page == 'devices':
-            return HTTPResponse(body=create_settings_devices(user, arr_devices), status=200)
+            return HTTPResponse(body=create_settings_devices(user, _get_devices()), status=200)
         elif page == 'tvguide':
-            return HTTPResponse(body=create_settings_tvguide(user, arr_devices), status=200)
+            return HTTPResponse(body=create_settings_tvguide(user, _get_devices()), status=200)
         else:
-            return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
+            return HTTPResponse(body=create_error_404(user, _get_devices()), status=400)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+        return HTTPResponse(body=create_error_500(user, _get_devices()), status=500)
 
 
 @route('/web/settings')
@@ -151,11 +151,11 @@ def web(page=''):
         if not user and page != 'login':
             redirect('/web/login')
         if page == 'tvguide':
-            return HTTPResponse(body=create_preference_tvguide(user, arr_devices), status=200)
+            return HTTPResponse(body=create_preference_tvguide(user, _get_devices()), status=200)
         else:
-            return HTTPResponse(body=create_error_404(user, arr_devices), status=400)
+            return HTTPResponse(body=create_error_404(user, _get_devices()), status=400)
     except:
-        return HTTPResponse(body=create_error_500(user, arr_devices), status=500)
+        return HTTPResponse(body=create_error_500(user, _get_devices()), status=500)
 
 
 @route('/web/static/<folder>/<filename>')
@@ -171,7 +171,7 @@ def send_command():
     #
     try:
         #
-        rsp = cmd_fwrd(arr_devices, request)
+        rsp = cmd_fwrd(_get_devices(), request)
         #
         if isinstance(rsp, bool):
             return HTTPResponse(status=200) if bool(rsp) else HTTPResponse(status=400)
@@ -181,9 +181,8 @@ def send_command():
         return HTTPResponse(status=400)
 
 
-@route('/settings/<x>', method='GET')
-@route('/settings/<x>', method='POST')
-def save_settings(x='-'):
+@route('/settings/<category>', method='POST')
+def save_settings(category=''):
     user = _check_user(request.get_cookie('user'))
     try:
         if not user:
@@ -191,17 +190,17 @@ def save_settings(x='-'):
         if get_userrole(user) != 'admin':
             return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
                                      'Please consult your administrator for further information.', status=400)
-        if x == 'tvguide':
+        if category == 'tvguide':
             data = request.body.read()
             if data:
                 if update_channellist(data):
                     return HTTPResponse(status=200)
-        elif x == 'devices':
+        elif category == 'devices':
             data = request.body.read()
             if data:
                 if write_config_devices(data):
                     # Recreate device array/list after new config saved
-                    arr_devices = create_device_object_array()
+                    _create_devices()
                     return HTTPResponse(status=200)
             # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
         return HTTPResponse(status=400)
@@ -250,12 +249,23 @@ def get_image(category, filename):
 
 def _check_tvlistingsqueue():
     # Check listings in queue
-    if not list_listings.empty():
-        temp = list_listings.get()
-        list_listings.put(temp)
+    if not q_listings.empty():
+        temp = q_listings.get()
+        q_listings.put(temp)
         return temp
     else:
         return False
+
+def _get_devices():
+    if not q_devices.empty():
+        temp = q_devices.get()
+        q_devices.put(temp)
+        return temp
+    else:
+        return False
+
+def _create_devices():
+    q_devices.put(create_device_object_array())
 
 
 def _check_user(user_cookie):
@@ -273,11 +283,12 @@ postcode = 'ls27'
 # Create objects from configuration file
 randomstring = (postcode.join('-').join(random.choice(string.ascii_lowercase) for i in range(5)))
 #
-#
-arr_devices = create_device_object_array()
-#
 # Create processes for TV Listing code and code to start bottle server
-list_listings = Queue()
+q_listings = Queue()
+#
+q_devices = Queue()
+_create_devices()
+#
 p1 = Process(target=tvlistings_process)
 p2 = Process(target=start_bottle)
 # Start server

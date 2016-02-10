@@ -81,10 +81,10 @@ class object_tv_lg_netcast:
 
     def getHtml_settings(self):
         html = get_device_html_settings(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
-                                                                                 name = self._label,
-                                                                                 ipaddress = self._ipaddress,
-                                                                                 pairingkey = self._pairingkey) if html else ''
+        return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
+                                                                                          name = self._label,
+                                                                                          ipaddress = self._ipaddress,
+                                                                                          pairingkey = self._pairingkey) if html else ''
 
     def _html_apps(self, group_name):
         #
