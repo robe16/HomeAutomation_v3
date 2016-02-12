@@ -3,6 +3,7 @@ import json
 import os
 from send_cmds import sendHTTP
 from object_channel import object_channel
+from console_messages import print_channelbuild
 
 
 def build_channel_array():
@@ -16,10 +17,7 @@ def build_channel_array():
         #
         x += 1
         #
-        print (
-            'Building channels and retrieving TV Listing information: {current} out of {total} - {name}'.format(current = x,
-                                                                                                                total = len(data_channels),
-                                                                                                                name = chan['name']))
+        print_channelbuild(x, len(data_channels), chan['name'])
         #
         dict_devicekeys = {}
         for k, v in chan['devicekeys'].items():

@@ -31,7 +31,7 @@ def server_end():
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1617, debug=True)
+    run(host='0.0.0.0', port=1600, debug=True)
 
 
 def tvlistings_process():
