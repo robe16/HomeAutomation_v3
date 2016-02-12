@@ -197,7 +197,7 @@ class object_tv_lg_netcast:
             #
             if command == 'image':
                 response = self.getAppicon(request.query.auid, request.query.name.replace(' ','%20'))
-                print_command (command, get_device_name(self._type), self._ipaddress, bool(response))
+                print_command (command + ':' + request.query.name, get_device_name(self._type), self._ipaddress, bool(response))
                 return response
                 #
             elif command == 'app':
