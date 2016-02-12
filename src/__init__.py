@@ -19,23 +19,19 @@ from tvlisting_updatechannels import update_channellist
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 
-def start_bottle():
-    # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1616, debug=True)
-
-
 def server_start():
-    tvlistings_startprocess()
-    p2.start()
+    process_listings.start()
+    process_bottle.start()
 
 
 def server_end():
-    p1.terminate()
-    p2.terminate()
+    process_listings.terminate()
+    process_bottle.terminate()
 
 
-def tvlistings_startprocess():
-    p1.start()
+def start_bottle():
+    # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
+    run(host='0.0.0.0', port=1617, debug=True)
 
 
 def tvlistings_process():
@@ -289,7 +285,7 @@ q_listings = Queue()
 q_devices = Queue()
 _create_devices()
 #
-p1 = Process(target=tvlistings_process)
-p2 = Process(target=start_bottle)
+process_listings = Process(target=tvlistings_process)
+process_bottle = Process(target=start_bottle)
 # Start server
 server_start()

@@ -2,6 +2,7 @@ from send_cmds import sendHTTP
 from urllib import urlopen
 import xml.etree.ElementTree as ET
 from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from console_messages import print_command
 
 
 class object_tv_lg_netcast:
@@ -185,15 +186,19 @@ class object_tv_lg_netcast:
         return False
 
     def sendCmd(self, request):
+        #
+        command = request.query.command
+        #
         try:
             #
-            command = request.query.command
-            #
             if not self._check_paired():
+                print_command (command, get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
                 return False
             #
             if command == 'image':
-                return self.getAppicon(request.query.auid, request.query.name.replace(' ','%20'))
+                response = self.getAppicon(request.query.auid, request.query.name.replace(' ','%20'))
+                print_command (command, get_device_name(self._type), self._ipaddress, bool(response))
+                return response
                 #
             elif command == 'app':
                 STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
@@ -211,7 +216,10 @@ class object_tv_lg_netcast:
                     if not self._check_paired():
                         return False
                     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
-                return str(response.getcode()).startswith("2") if bool(response) else False
+                #
+                response = str(response.getcode()).startswith("2") if bool(response) else False
+                print_command (command, get_device_name(self._type), self._ipaddress, bool(response))
+                return response
                 #
             else:
                 code = self.commands[request.query.command]
@@ -227,9 +235,13 @@ class object_tv_lg_netcast:
                     if not self._check_paired():
                         return False
                     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
-                return str(response.getcode()).startswith("2") if bool(response) else False
+                #
+                response = str(response.getcode()).startswith("2") if bool(response) else False
+                print_command (code, get_device_name(self._type), self._ipaddress, bool(response))
+                return response
                 #
         except:
+            print_command (command, get_device_name(self._type), self._ipaddress, "ERROR: Exception encountered")
             return False
 
     commands = {"power": "1",

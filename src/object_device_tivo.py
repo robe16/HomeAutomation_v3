@@ -1,7 +1,8 @@
 from send_cmds import sendTELNET
 from datetime import datetime
 from urllib import urlopen
-from list_devices import get_device_logo, get_device_html_command, get_device_html_settings
+from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from console_messages import print_command
 
 
 class object_tivo:
@@ -40,33 +41,35 @@ class object_tivo:
         return get_device_logo(self._type)
 
     def _getChan(self):
-        x = sendTELNET(self._ipaddress, self._port, response=True)
-        print ("{timestamp} Channel request for TiVo device {ipaddress} - {response}").format(
-            timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-            ipaddress=self._ipaddress,
-            response=x)
-        if not bool(x):
+        response = sendTELNET(self._ipaddress, self._port, response=True)
+        if not bool(response):
             return False
-        nums = [int(s) for s in x.split() if s.isdigit()]
+        nums = [int(s) for s in response.split() if s.isdigit()]
         return nums[0] if len(nums) > 0 else False
 
     def sendCmd(self, request):
         #
         command = request.query.command
+        code = False
+        response = False
         #
         if command == "getchannel":
-            return self._getChan()
+            response = self._getChan()
         elif command == "channel":
-            return sendTELNET(self._ipaddress,
-                              self._port,
-                              data=("FORCECH {}\r").format(request.query.chan),
-                              response=True)
+            response =  sendTELNET(self._ipaddress,
+                                   self._port,
+                                   data=("FORCECH {}\r").format(request.query.chan),
+                                   response=True)
         elif command == 'command':
             code = self.commands[request.query.code]
             try:
-                return sendTELNET(self._ipaddress, self._port, data=code)
+                response = sendTELNET(self._ipaddress, self._port, data=code)
             except:
-                return False
+                response = False
+        #
+        x = request.query.code if code else command
+        print_command (x, get_device_name(self._type), self._ipaddress, response)
+        return response
 
     def getHtml(self, group_name):
         html = get_device_html_command(self._type)
