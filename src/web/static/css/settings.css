@@ -65,3 +65,12 @@
     height: 50px;
     margin: auto auto 5px auto;
 }
+
+.remove_device {
+    text-align: right;
+    margin: 10px 0px;
+    cursor: pointer;
+}
+.remove_device_color {
+    color: #cc0000;
+}

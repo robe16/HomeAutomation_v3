@@ -76,12 +76,16 @@ class object_tivo:
         return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group=group_name,
                                                                                  device=self._label.lower().replace(' ',''))
 
-    def getHtml_settings(self):
+    def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
-        return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
-                                                                                          name = self._label,
-                                                                                          ipaddress = self._ipaddress,
-                                                                                          mak = self._accesskey) if html else ''
+        if html:
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
+                                                                                              name = self._label,
+                                                                                              ipaddress = self._ipaddress,
+                                                                                              mak = self._accesskey,
+                                                                                              dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
+        else:
+            return ''
 
     commands = {"power": "IRCODE STANDBY\r",
                 "1": "IRCODE NUM1\r",

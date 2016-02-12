@@ -1,13 +1,20 @@
-<div class="settings_box" name="group">
+<div id="{grp_ref}" class="settings_box" name="group">
     <div class="row">
         <div class="col-md-12">
             <h4><input type="text" class="form-control" name="groupname" placeholder="Enter group name" value="{group_name}" style="margin-top: 5px;"></h4>
-            <h5 style="margin-top: 10px; cursor: pointer;" data-toggle="collapse" data-target="#collapse_{num}"><small>Click to expand/collapse</small></h5>
         </div>
     </div>
-    <div id="collapse_{num}" class="collapse out">
+    <div class="row">
+        <div class="col-md-8">
+            <h5 style="margin-top: 10px; cursor: pointer;" data-toggle="collapse" data-target="#collapse_{grpnum}"><small>Click to expand/collapse</small></h5>
+        </div>
+        <div class="col-md-4">
+            <h5 class="remove_device"><small onclick="delElement('{grp_ref}')" class="remove_device_color">Remove group</small></h5>
+        </div>
+    </div>
+    <div id="collapse_{grpnum}" class="collapse out">
         <div class="row">
-            <div id="devicegroup_{num}" class="col-md-12" name="group_devices">
+            <div id="devicegroup_{grpnum}" class="col-md-12" name="group_devices">
                 <!-- -->
                 {devices}
                 <!-- -->
@@ -15,7 +22,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn settings_btn settings_device_add" onclick="addDevice({num})">
+                <button id="btn_adddevice_{grpnum}" type="button" class="btn settings_btn settings_device_add" onclick="addDevice({grpnum}, {dvcnum})">
                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Add new device
                 </button>
             </div>

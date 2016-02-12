@@ -20,7 +20,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 
 def server_start():
-    process_listings.start()
+    #process_listings.start()
     process_bottle.start()
 
 

@@ -27,13 +27,17 @@ class object_nest_account:
         html = get_device_html_command(self._type)
         return urlopen('web/html_devices/' + html).read().encode('utf-8')
 
-    def getHtml_settings(self):
+    def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
-        return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
-                                                                                          name = self._label,
-                                                                                          pincode = self._pincode,
-                                                                                          token = self._token,
-                                                                                          tokenexpiry = self._tokenexpiry)
+        if html:
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
+                                                                                              name = self._label,
+                                                                                              pincode = self._pincode,
+                                                                                              token = self._token,
+                                                                                              tokenexpiry = self._tokenexpiry,
+                                                                                              dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
+        else:
+            return ''
 
 
     def getToken(self):

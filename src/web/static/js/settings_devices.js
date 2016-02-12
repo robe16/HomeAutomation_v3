@@ -1,21 +1,21 @@
-function addGroup(num) {
+function addGroup(grpnum) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', '/web/settings?gethtml=group&num=' + num, false);
+    xmlHttp.open('GET', '/web/settings?gethtml=group&grpnum=' + grpnum, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
         var z = document.createElement('div');
         z.innerHTML = xmlHttp.responseText;
         document.getElementById('settings-groups').appendChild(z);
-        document.getElementById('btn_addgroup').setAttribute('onclick', 'addGroup(' + (num + 1) + ')');
+        document.getElementById('btn_addgroup').setAttribute('onclick', 'addGroup(' + (grpnum + 1) + ')');
         return
         }
     else {return}
 }
 
 
-function addDevice(grpnum) {
+function addDevice(grpnum, dvcnum) {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', '/web/settings?gethtml=selection&grpnum=' + grpnum, false);
+    xmlHttp.open('GET', '/web/settings?gethtml=selection&grpnum=' + grpnum + '&dvcnum=' + dvcnum, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
         document.getElementById('msg_title').innerHTML = 'Select device:';
@@ -30,19 +30,24 @@ function addDevice(grpnum) {
 }
 
 
-function addDeviceHTML(grpnum, device) {
+function addDeviceHTML(grpnum, dvcnum, device) {
     hidePopup();
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', '/web/settings?gethtml=device&device='+ device, false);
+    xmlHttp.open('GET', '/web/settings?gethtml=device&device='+ device + '&grpnum=' + grpnum + '&dvcnum=' + dvcnum, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
         var z = document.createElement('div');
         z.innerHTML = xmlHttp.responseText;
         document.getElementById('devicegroup_' + grpnum).appendChild(z);
+        document.getElementById('btn_adddevice_' + grpnum).setAttribute('onclick', 'addDevice(' + grpnum + ', ' + (dvcnum + 1) + ')');
         }
     else {return}
     //
     return
+}
+
+function delElement(id) {
+    document.getElementById(id).remove();
 }
 
 
