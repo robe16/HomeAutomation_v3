@@ -7,9 +7,9 @@ function addGroup(grpnum) {
         z.innerHTML = xmlHttp.responseText;
         document.getElementById('settings-groups').appendChild(z);
         document.getElementById('btn_addgroup').setAttribute('onclick', 'addGroup(' + (grpnum + 1) + ')');
-        return
+        return;
         }
-    else {return}
+    else {return;}
 }
 
 
@@ -22,11 +22,9 @@ function addDevice(grpnum, dvcnum) {
         document.getElementById('msg_txt').innerHTML = xmlHttp.responseText;
         document.getElementById('msg_btn').innerHTML = 'Cancel';
         document.getElementById('message_popup').className = 'message viewport_centre visible';
-        return
+        return;
         }
-    else {return}
-    //
-    return
+    else {return;}
 }
 
 
@@ -40,14 +38,18 @@ function addDeviceHTML(grpnum, dvcnum, device) {
         z.innerHTML = xmlHttp.responseText;
         document.getElementById('devicegroup_' + grpnum).appendChild(z);
         document.getElementById('btn_adddevice_' + grpnum).setAttribute('onclick', 'addDevice(' + grpnum + ', ' + (dvcnum + 1) + ')');
+        return;
         }
-    else {return}
-    //
-    return
+    else {return;}
+
 }
 
 function delElement(id) {
-    document.getElementById(id).remove();
+    // TODO - Basic in-browser popup box - to create themed html box
+    var r = confirm("Are you sure you want to remove this group/device?");
+    if (r == true) {
+        document.getElementById(id).remove();
+    }
 }
 
 
@@ -128,9 +130,9 @@ function elementNoError (element) {
 
 function validateIpaddress(ipaddress) {
     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress))
-        {return (true)}
+        {return true;}
     else
-        {return (false)}
+        {return false;}
 }
 
 
@@ -182,8 +184,15 @@ function buildJson() {
         //
     }
     //
-    json += ']'
+    json += ']';
     //
-    return json
+    return json;
+    //
+}
+
+function nest_newpincode(dvcref) {
+    //
+    document.getElementById('nesttoken_' + dvcref).value = "";
+    document.getElementById('nesttokenexpiry_' + dvcref).value = "";
     //
 }

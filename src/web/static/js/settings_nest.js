@@ -1,1 +1,0 @@
-function sendNestPin() {sendHttp('/settings/nest?pincode='+document.getElementById('nestpin').value, null, 'GET', 0, true);}
