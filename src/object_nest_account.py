@@ -6,7 +6,6 @@ import os
 import ast
 import json
 from send_cmds import sendHTTP
-from config_devices import get_device_json, write_config_devices
 from list_devices import get_device_logo, get_device_html_command, get_device_html_settings, get_device_detail
 
 class object_nest_account:
