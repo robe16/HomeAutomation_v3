@@ -39,7 +39,7 @@ def build_channel_array():
 
 def getlisting(src, value):
     if src == 'radiotimes':
-        x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code = value), "close")
+        x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code = value), 'close', contenttype='text/xml; charset=utf-8')
         data = x.read() if bool(x) else None
     else:
         data = None

@@ -54,3 +54,10 @@ def get_device_settings_dict(type):
     if item:
         return item['settings_dict']
     return False
+
+
+def get_device_detail(type, key):
+    item = _get_device_details(type)
+    if item:
+        return item[key]
+    return False

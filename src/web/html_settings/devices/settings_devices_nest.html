@@ -12,7 +12,7 @@
             <div>
                 <p>In order for the server to connect to your <span style="color:#00AFD8">Nest</span> account, it must be authorised. Use the button below to open the authorisation page in a new browser tab and follow the instructions to get your pin code, which must be pasted into the input field here.</p>
                 <br>
-                <a href="" target="_blank"><button class="btn btn-default" type="button" style="width:100%">Login and authorise with Nest</button></a>
+                <a href="https://home.nest.com/login/oauth2?client_id={clientid}&state={state}" target="_blank"><button class="btn btn-default" type="button" style="width:100%">Login and authorise with Nest</button></a>
             </div>
             <br>
         </div>
@@ -23,8 +23,9 @@
                 </div>
                 <div class="col-md-8">
                     <input type="text" name="pincode" class="form-control" placeholder="Pin code" value="{pincode}" onchange="nest_newpincode('{dvc_ref}')">
-                    <input type="text" name="token" class="form-control" placeholder="Token" id="nesttoken_{dvc_ref}" value="{token}" style="display: none;">
-                    <input type="text" name="tokenexpiry" class="form-control" placeholder="Token expiry" id="nesttokenexpiry_{dvc_ref}" value="{tokenexpiry}" style="display: none;">
+                    <input type="text" name="token" class="form-control" id="nesttoken_{dvc_ref}" value="{token}" style="display: none;">
+                    <input type="text" name="tokenexpiry" class="form-control" id="nesttokenexpiry_{dvc_ref}" value="{tokenexpiry}" style="display: none;">
+                    <input type="text" name="state" class="form-control" id="neststate_{dvc_ref}" value="{state}" style="display: none;">
                 </div>
             </div>
         </div>

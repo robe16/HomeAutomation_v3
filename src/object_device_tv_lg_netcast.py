@@ -13,9 +13,10 @@ class object_tv_lg_netcast:
     STRtv_PATHevent = "/udap/api/event"
     STRtv_PATHquery = "/udap/api/data"
 
-    def __init__ (self, label, ipaddress, port, pairingkey=None):
+    def __init__ (self, label, group, ipaddress, port, pairingkey=None):
         self._type = "tv_lg_netcast"
         self._label = label
+        self._group = group
         self._ipaddress = ipaddress
         self._port = port
         self._pairingkey = pairingkey
@@ -74,11 +75,11 @@ class object_tv_lg_netcast:
         x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml)
         return str(x.getcode()).startswith("2") if bool(x) else False
 
-    def getHtml(self, group_name):
+    def getHtml(self):
         html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = group_name,
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
                                                                                  device = self._label.lower().replace(' ',''),
-                                                                                 apps = self._html_apps(group_name))
+                                                                                 apps = self._html_apps())
 
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
@@ -91,7 +92,7 @@ class object_tv_lg_netcast:
         else:
             return ''
 
-    def _html_apps(self, group_name):
+    def _html_apps(self):
         #
         if not self._check_paired():
             return '<p style="text-align:center">App list could not be retrieved from the device.</p>'+\
@@ -120,7 +121,7 @@ class object_tv_lg_netcast:
                     html += ('<td style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command?group={group}&device={device}&command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
                              '<img src="/command?group={group}&device={device}&command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
-                             '</td>').format(group = group_name,
+                             '</td>').format(group = self._group.lower().replace(' ',''),
                                              device = self._label.lower().replace(' ',''),
                                              auid = auid,
                                              app_name = name.replace(' ', '%20'),

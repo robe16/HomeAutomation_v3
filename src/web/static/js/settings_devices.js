@@ -194,5 +194,6 @@ function nest_newpincode(dvcref) {
     //
     document.getElementById('nesttoken_' + dvcref).value = "";
     document.getElementById('nesttokenexpiry_' + dvcref).value = "";
+    document.getElementById('state_' + dvcref).value = "";
     //
 }

@@ -3,9 +3,10 @@ from list_devices import get_device_logo, get_device_html_command, get_device_ht
 
 class object_raspberrypi:
 
-    def __init__ (self, label, ipaddress):
+    def __init__ (self, label, group, ipaddress):
         self._type = "raspberrypi"
         self._label = label
+        self._group = group
         self._ipaddress = ipaddress
         self._tvguide = False
 
@@ -24,8 +25,8 @@ class object_raspberrypi:
     def getLogo(self):
         return get_device_logo(self._type)
 
-    def getHtml(self, group_name):
-        device_url = 'device/{group}/{device}'.format(group=group_name, device=self._label.lower().replace(' ',''))
+    def getHtml(self):
+        device_url = 'device/{group}/{device}'.format(group=self._group.lower().replace(' ',''), device=self._label.lower().replace(' ',''))
         html = get_device_html_command(self._type)
         return urlopen('web/html_devices/' + html).read().encode('utf-8').format(url=device_url)
 

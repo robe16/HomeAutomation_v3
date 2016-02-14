@@ -1,8 +1,6 @@
 from multiprocessing import Process, Queue
 import os
 import time
-import string
-import random
 
 import nest_static_vars
 from config_devices import write_config_devices, create_device_object_array
@@ -274,11 +272,6 @@ def _check_user(user_cookie):
             return 'Guest'
 
 
-# TODO temp variable here with property postcode (replace with settings page input etc.)
-postcode = 'ls27'
-# Create objects from configuration file
-randomstring = (postcode.join('-').join(random.choice(string.ascii_lowercase) for i in range(5)))
-#
 # Create processes for TV Listing code and code to start bottle server
 q_listings = Queue()
 #

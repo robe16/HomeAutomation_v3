@@ -8,9 +8,10 @@ from console_messages import print_command
 class object_tivo:
     '''TiVo object'''
 
-    def __init__(self, label, ipaddress, port, accesskey=""):
+    def __init__(self, label, group, ipaddress, port, accesskey=""):
         self._type = "tivo"
         self._label = label
+        self._group = group
         self._ipaddress = ipaddress
         self._port = port
         self._accesskey = accesskey
@@ -56,10 +57,10 @@ class object_tivo:
         if command == "getchannel":
             response = self._getChan()
         elif command == "channel":
-            response =  sendTELNET(self._ipaddress,
-                                   self._port,
-                                   data=("FORCECH {}\r").format(request.query.chan),
-                                   response=True)
+            response = sendTELNET(self._ipaddress,
+                                  self._port,
+                                  data=("FORCECH {}\r").format(request.query.chan),
+                                  response=True)
         elif command == 'command':
             code = self.commands[request.query.code]
             try:
@@ -71,9 +72,9 @@ class object_tivo:
         print_command (x, get_device_name(self._type), self._ipaddress, response)
         return response
 
-    def getHtml(self, group_name):
+    def getHtml(self):
         html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group=group_name,
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
                                                                                  device=self._label.lower().replace(' ',''))
 
     def getHtml_settings(self, grp_num, dvc_num):

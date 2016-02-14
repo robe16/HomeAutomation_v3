@@ -33,7 +33,9 @@
     "logo": "logo_nest_blue.png",
     "html_command": "",
     "html_settings": "settings_devices_nest.html",
-    "settings_dict": {"pincode": ""}
+    "settings_dict": {"pincode": ""},
+    "client_id": "170016da-432a-4ca0-aa37-426a2117d7a2",
+    "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI"
   },
   {
     "type": "raspberrypi",
