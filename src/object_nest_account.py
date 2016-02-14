@@ -91,7 +91,7 @@ class object_nest_account:
             return True
             #
         except:
-            print_command (command, get_device_name(self._type), self._ipaddress, "ERROR: Exception encountered")
+            print_command (command, get_device_name(self._type), '', "ERROR: Exception encountered")
             return False
 
 
