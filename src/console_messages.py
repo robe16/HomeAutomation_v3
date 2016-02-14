@@ -16,3 +16,7 @@ def print_channelbuild(num_current, num_total, name_chan):
                    current = num_current,
                    total = num_total,
                    name = name_chan))
+
+def print_error(error_msg):
+    print ('{timestamp} - ERROR: {error}'.format(timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                                                 error = error_msg))

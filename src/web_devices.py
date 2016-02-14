@@ -7,7 +7,7 @@ def _create_device_page(user, tvlistings, device, group_name, device_name):
     if not device:
         return ''
     #
-    html_body = device.getHtml(group_name)
+    html_body = device.getHtml()
     # Get whether device requires TV guide displaying on page
     try:
         bool_tvguideuse = device.getTvguide_use()

@@ -54,7 +54,7 @@ class object_tv_lg_netcast:
 
     def _pairDevice(self):
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey, str(self._port))
-        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml)
+        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
         self._BOOLpaired = bool(x)
         return self._BOOLpaired
 
@@ -72,7 +72,7 @@ class object_tv_lg_netcast:
 
     def showPairingkey(self):
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
-        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml)
+        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
         return str(x.getcode()).startswith("2") if bool(x) else False
 
     def getHtml(self):
@@ -141,6 +141,13 @@ class object_tv_lg_netcast:
             return ''
 
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
+        #
+        STRurl = "/udap/api/data?target=applist_get&type={}&index={}&number={}".format(str(APPtype), str(APPindex), str(APPnumber))
+        x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
+        if bool(x):
+            return x.read() if str(x.getcode()).startswith("2") else False
+        else:
+            return False
         # http://developer.lgappstv.com/TV_HELP/index.jsp?topic=%2Flge.tvsdk.references.book%2Fhtml%2FUDAP%2FUDAP%2FObtaining+the+Apps+list+Controller+Host.htm
         # Note - If both index and number are 0, the list of all apps in the category specified by type is fetched.
         # 'APPtype' specifies the category for obtaining the list of apps. The following three values are available.
@@ -167,13 +174,6 @@ class object_tv_lg_netcast:
         #         </data>
         #     </dataList>
         # </envelope>
-        #
-        STRurl = "/udap/api/data?target=applist_get&type={}&index={}&number={}".format(str(APPtype), str(APPindex), str(APPnumber))
-        x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
-        if bool(x):
-            return x.read() if str(x.getcode()).startswith("2") else False
-        else:
-            return False
 
     def getAppicon (self, auid, name):
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
@@ -216,11 +216,11 @@ class object_tv_lg_netcast:
                           '</api>' +
                           '</envelope>').format(auid = request.query.auid,
                                                 app_name = request.query.name.replace(' ','%20'))
-                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
                 if bool(response) and not str(response.getcode()).startswith("2"):
                     if not self._check_paired():
                         return False
-                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
                 #
                 response = str(response.getcode()).startswith("2") if bool(response) else False
                 print_command (command, get_device_name(self._type), self._ipaddress, bool(response))
@@ -235,11 +235,11 @@ class object_tv_lg_netcast:
                           '<value>{value}</value>' +
                           '</api>' +
                           '</envelope>').format(value = code)
-                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
                 if bool(response) and not str(response.getcode()).startswith("2"):
                     if not self._check_paired():
                         return False
-                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml)
+                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
                 #
                 response = str(response.getcode()).startswith("2") if bool(response) else False
                 print_command (code, get_device_name(self._type), self._ipaddress, bool(response))
