@@ -2,6 +2,8 @@ from urllib import urlopen
 from datetime import datetime
 import string
 import random
+import os
+import ast
 import json
 from send_cmds import sendHTTP
 from config_devices import get_device_json, write_config_devices
@@ -77,7 +79,8 @@ class object_nest_account:
             return False
 
     def _updateConfig(self):
-        data = get_device_json()
+        #
+        data = json.load(open(os.path.join('config', 'config_devices.json'), 'r'))
         #
         grpX = 0
         for data_group in data:
@@ -89,9 +92,19 @@ class object_nest_account:
                         data[grpX]['devices'][dvcX]['details']['tokenexpiry'] = self._tokenexpiry.strftime("%d %m %Y %H:%M:%S")
                         data[grpX]['devices'][dvcX]['details']['pincode'] = self._pincode
                         data[grpX]['devices'][dvcX]['details']['state'] = self._state
-                        write_config_devices(data)
-                        return
+                        #
+                        try:
+                            new_data = ast.literal_eval(data)
+                            #
+                            with open(os.path.join('config', 'config_devices.json'), 'w+') as output_file:
+                                output_file.write(json.dumps(new_data, indent=4, separators=(',', ': ')))
+                                output_file.close()
+                            #
+                            return True
+                        except:
+                            return False
+                        #
                     dvcX += 1
             grpX += 1
         #
-        return
+        return False
