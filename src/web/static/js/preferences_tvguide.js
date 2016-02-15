@@ -34,7 +34,7 @@ function buildList()
 function sendUpdate()
     {
     listChans = buildList();
-    if (listChans && sendHttp('/preferences/tvguide', listChans, 'POST', 2, false))
+    if (listChans && sendHttp('/preferences/tvguide', listChans, 'POST', 2, true))
         {
             document.getElementById('msg_title').innerHTML = 'Success';
             document.getElementById('msg_txt').innerHTML = 'User preferences have been successfully sent to the server';

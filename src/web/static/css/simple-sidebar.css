@@ -23,6 +23,14 @@
     width: 50px;
 }
 
+.sidebar_cmd_alert {
+    z-index: 2000;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    width: 50px;
+}
+
 /* Sidebar buttons */
 
 .sidebar_img {
@@ -48,6 +56,11 @@
 .btn_sidebar_rhs {
     float: right;
     margin-top: 20px;
+}
+
+.icon_cmd_alert {
+    float: right;
+    margin-bottom: 20px;
 }
 
 /* Sidebar dividers */

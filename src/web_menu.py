@@ -7,7 +7,9 @@ from config_users import get_usertheme, get_userrole, get_userimage
 
 
 def html_menu(user, arr_devices):
-    return html_menu_lhs(arr_devices) + _html_menu_rhs(user)
+    return html_menu_lhs(arr_devices) +\
+           _html_menu_rhs(user) +\
+           urlopen('web/cmd_alert.html').read().encode('utf-8')
 
 
 def html_menu_lhs(arr_devices):

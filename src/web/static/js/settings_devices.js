@@ -65,7 +65,7 @@ function sendDevices() {
     } else {
         json = buildJson();
         if (json) {
-            if (sendHttp('/settings/devices', json, 'POST', 2, false)) {
+            if (sendHttp('/settings/devices', json, 'POST', 2, true)) {
                 document.getElementById('msg_title').innerHTML = 'Success';
                 document.getElementById('msg_txt').innerHTML = 'Device settings have been successfully sent to the server.';
                 document.getElementById('message_popup').className = 'message viewport_centre visible';

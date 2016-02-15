@@ -48,8 +48,7 @@ def create_device(user, tvlistings, arr_devices, group_name, device_name):
         if grp_name.lower().replace(' ','') == group_name:
             break
     #
-    body = urlopen('web/comp_alert.html').read().encode('utf-8').format(body='-') +\
-           _create_device_page(user, tvlistings, device, group_name, device_name)
+    body = _create_device_page(user, tvlistings, device, group_name, device_name)
     #
     title = '{group}: '.format(group = grp_name) if grp_name != '-' else ''
     title += device.getLabel()
