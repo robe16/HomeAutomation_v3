@@ -2,7 +2,6 @@ from multiprocessing import Process, Queue
 import os
 import time
 
-import nest_static_vars
 from config_devices import write_config_devices, create_device_object_array
 from config_users import check_user, get_userrole, update_user_channels
 from command_forwarder import cmd_fwrd, get_device

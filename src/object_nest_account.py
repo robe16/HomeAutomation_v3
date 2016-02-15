@@ -10,7 +10,16 @@ from list_devices import get_device_logo, get_device_html_command, get_device_ht
 
 class object_nest_account:
 
+    # Static variable used as part of using Nest's APIs
+    nesturl_api = "https://developer-api.nest.com"
+    nesturl_tokenexchange = ('https://api.home.nest.com/oauth2/access_token?' +
+                             'code={authcode}&' +
+                             'client_id={clientid}&' +
+                             'client_secret={clientsecret}&' +
+                             'grant_type=authorization_code')
+    #
     _dateformat = '%d/%m/%Y %H:%M:%S'
+
 
     def __init__ (self, group, token, tokenexpiry, pincode, state):
         self._type = 'nest_account'
@@ -99,13 +108,9 @@ class object_nest_account:
         return datetime.datetime.now() < self._tokenexpiry if bool(self._tokenexpiry) else False
 
     def _getNewToken(self):
-        url = ('https://api.home.nest.com/oauth2/access_token?' +
-               'code={authcode}&' +
-               'client_id={clientid}&' +
-               'client_secret={clientsecret}&' +
-               'grant_type=authorization_code').format(authcode=self._pincode,
-                                                       clientid=get_device_detail(self._type, 'client_id'),
-                                                       clientsecret=get_device_detail(self._type, 'client_secret'))
+        url = (self.nesturl_tokenexchange).format(authcode=self._pincode,
+                                                  clientid=get_device_detail(self._type, 'client_id'),
+                                                  clientsecret=get_device_detail(self._type, 'client_secret'))
         #
         # Set 'data' to ' ' in order to force method to POST as opposed to GET
         response = sendHTTP(url, 'close', data=' ')
