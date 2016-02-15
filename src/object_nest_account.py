@@ -77,7 +77,7 @@ class object_nest_account:
         command = request.query.command
         #
         if command=='test':
-            return bool(self._read_structure_json())
+            return bool(self._read_json_devices())
         #
         try:
             #
@@ -174,9 +174,25 @@ class object_nest_account:
         #
         return False
 
-    def _read_structure_json(self):
+    def _read_json_all(self):
+        return self._read_nest_json()
+
+    def _read_json_metadata(self):
+        return self._read_nest_json(model='/metadata')
+
+    def _read_json_devices(self, device=False, device_id=False):
+        if bool(device) and bool(device_id):
+            device_url = '/{device}/{device_id}'.format(device=device, device_id=device_id)
+        else:
+            device_url = ''
+        return self._read_nest_json(model='/devices'+device_url)
+
+    def _read_json_structures(self):
+        return self._read_nest_json(model='/structures')
+
+    def _read_nest_json(self, model=''):
         #
         header_auth = 'Bearer {authcode}'.format(authcode=self._token)
-        response = sendHTTP(self.nesturl_api, 'close', url2='/structures', header_auth=header_auth)
+        response = sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=header_auth)
         #
         return json.load(response.read())
