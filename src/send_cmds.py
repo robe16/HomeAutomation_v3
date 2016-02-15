@@ -1,24 +1,51 @@
-import urllib2
+from  urllib2 import Request, urlopen, HTTPError
 import telnetlib
 import time
+from console_messages import print_error, print_http
 # import socket
 
-def sendHTTP(ipaddress, connection, data=False, contenttype=False):
-    if not ipaddress.startswith("http"):
-        ipaddress = "http://" + ipaddress
+def sendHTTP(url1, connection, url2='', data=False, contenttype=False, header_auth=False, redirect=0):
+    #
+    if redirect >= 5:
+        return False
+    #
+    url = _check_prefix(url1) + url2
+    #
     if data:
-        req = urllib2.Request(ipaddress, data=data)
+        req = Request(url, data=data)
     else:
-        req = urllib2.Request(ipaddress)
+        req = Request(url)
+    #
     if bool(contenttype):
         req.add_header("content-type", contenttype)
+    #
+    if bool(header_auth):
+        req.add_header("Authorization", header_auth)
+    #
     req.add_header("Connection", connection)
     req.add_header("User-Agent","Linux/2.6.18 UDAP/2.0 CentOS/5.8")
+    #
     try:
-        x = urllib2.urlopen(req, timeout=10)
+        x = urlopen(req, timeout=10)
         return False if not str(x.getcode()).startswith("2") else x
-    except:
+    except HTTPError as h:
+        if str(h.getcode()).startswith("3"):
+            print_http(h.getcode(), 'Redirect of http request - ' + str(h))
+            url_redirect = h.headers['Location']
+            return sendHTTP(url_redirect, connection, data=data, contenttype=contenttype, header_auth=header_auth, redirect=redirect+1)
+        else:
+            print_http(h.getcode(), 'Could not send http request - ' + str(h))
         return False
+    except Exception as e:
+        print_error('Could not send http request - ' + str(e))
+        return False
+
+def _check_prefix(url):
+    if not url.startswith("http"):
+        return "http://" + url
+    else:
+        return url
+
 
 # Stopped working for unknown reason - sendTELNET added for use instead by tivo
 # def sendSOCKET(ipaddress, port, data):

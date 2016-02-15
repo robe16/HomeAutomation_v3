@@ -20,3 +20,8 @@ def print_channelbuild(num_current, num_total, name_chan):
 def print_error(error_msg):
     print ('{timestamp} - ERROR: {error}'.format(timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
                                                  error = error_msg))
+
+def print_http(httpcode, error_msg):
+    print ('{timestamp} - HTTP {httpcode}: {error}'.format(timestamp = datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                                                           httpcode = httpcode,
+                                                           error = error_msg))

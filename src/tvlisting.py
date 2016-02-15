@@ -29,8 +29,14 @@ def build_channel_array():
             dict_listingsrc[k] = v
             dict_listings[k] = getlisting(k, v)
         #
-        objchan = object_channel(chan['name'], chan['logo'], chan['type'], chan['enabled'],
-                                 dict_devicekeys, dict_listingsrc, dict_listings, datetime.now())
+        objchan = object_channel(chan['name'],
+                                 chan['logo'],
+                                 chan['type'],
+                                 chan['enabled'],
+                                 dict_devicekeys,
+                                 dict_listingsrc,
+                                 dict_listings,
+                                 datetime.now())
         #
         list_channels.append(objchan)
         #
@@ -38,7 +44,7 @@ def build_channel_array():
 
 
 def getlisting(src, value):
-    if src == 'radiotimes':
+    if src == 'radiotimes' and value != '':
         x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code = value), 'close', contenttype='text/xml; charset=utf-8')
         data = x.read() if bool(x) else None
     else:

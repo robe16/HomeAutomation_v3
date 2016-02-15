@@ -31,7 +31,7 @@
     "type": "nest_account",
     "name": "Nest Account",
     "logo": "logo_nest_blue.png",
-    "html_command": "",
+    "html_command": "object_nest_account.html",
     "html_settings": "settings_devices_nest.html",
     "settings_dict": {"pincode": ""},
     "client_id": "170016da-432a-4ca0-aa37-426a2117d7a2",

@@ -47,7 +47,8 @@ class object_nest_account:
 
     def getHtml(self):
         html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8')
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
+                                                                                 device = self._label.lower().replace(' ',''))
 
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
@@ -74,6 +75,9 @@ class object_nest_account:
     def sendCmd(self, request):
         #
         command = request.query.command
+        #
+        if command=='test':
+            return bool(self._read_structure_json())
         #
         try:
             #
@@ -169,3 +173,10 @@ class object_nest_account:
             grpX += 1
         #
         return False
+
+    def _read_structure_json(self):
+        #
+        header_auth = 'Bearer {authcode}'.format(authcode=self._token)
+        response = sendHTTP(self.nesturl_api, 'close', url2='/structures', header_auth=header_auth)
+        #
+        return json.load(response.read())
