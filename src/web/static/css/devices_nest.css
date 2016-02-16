@@ -1,0 +1,48 @@
+.nest_device_container{
+    width: 125px;
+    margin: 25px;
+}
+
+
+.obj_thermostat {
+    display: inline-block;
+    position: relative;
+    height: 125px;
+    width: 125px;
+    vertical-align: middle;
+    text-align: center;
+}
+.obj_thermostat_heating {
+    background-color: red;
+}
+.obj_thermostat_cooling {
+    background-color: blue;
+}
+.obj_thermostat_off {
+    background-color: grey;
+}
+
+
+.therm_temp_label {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);%;
+}
+
+
+.therm_temp_cmds {
+    margin: 10px 0px;
+    position: absolute;
+    bottom: 0;
+    width: 100%
+}
+
+
+.therm_temp_glyph {
+    display: inline-block;
+    font-size: 20px;
+    margin: 0px 1px;
+    cursor: pointer;
+}

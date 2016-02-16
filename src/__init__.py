@@ -17,7 +17,7 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 
 def server_start():
-    process_listings.start()
+    #process_listings.start()
     process_bottle.start()
 
 
@@ -28,7 +28,7 @@ def server_end():
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1616, debug=True)
+    run(host='0.0.0.0', port=1617, debug=True)
 
 
 def tvlistings_process():

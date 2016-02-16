@@ -46,9 +46,47 @@ class object_nest_account:
         return self._tvguide
 
     def getHtml(self):
+        #
         html = get_device_html_command(self._type)
+        devices_html = ''
+        #
+        try:
+            json_devices = self._read_json_devices()
+            #
+            therm_ids = json_devices['thermostats'].keys()
+            #
+            for therm in therm_ids:
+                #
+                therm_name = json_devices['thermostats'][therm]['name']
+                therm_hvac_state = json_devices['thermostats'][therm]['hvac_state']
+                #
+                if therm_hvac_state == 'heating':
+                    temp_hvac_statement = 'Heating to'
+                elif therm_hvac_state =='cooling':
+                    temp_hvac_statement = 'Cooling to'
+                else:
+                    temp_hvac_statement = 'Heat set to'
+                #
+                temp_unit = 'c'
+                temp_unit_html = '&#8451;' if temp_unit == 'c' else '&#8457'
+                #
+                therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=temp_unit)]
+                therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=temp_unit)]
+                #
+                devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html').read().encode('utf-8').format(name=therm_name,
+                                                                                                                              temp_hvac=temp_hvac_statement,
+                                                                                                                              temp_target=therm_temp_target,
+                                                                                                                              temp_ambient=therm_temp_ambient,
+                                                                                                                              temp_unit=temp_unit_html,
+                                                                                                                              hvac=therm_hvac_state)
+            #
+        except Exception as e:
+            devices_html = 'ERROR'
+            print_error('Nest devices could not be compiled into html - ' + str(e))
+        #
         return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
-                                                                                 device = self._label.lower().replace(' ',''))
+                                                                                 device = self._label.lower().replace(' ',''),
+                                                                                 body=devices_html)
 
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
@@ -195,4 +233,4 @@ class object_nest_account:
         header_auth = 'Bearer {authcode}'.format(authcode=self._token)
         response = sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=header_auth)
         #
-        return json.load(response.read())
+        return json.load(response)

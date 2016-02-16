@@ -30,14 +30,14 @@ def sendHTTP(url1, connection, url2='', data=False, contenttype=False, header_au
         return False if not str(x.getcode()).startswith("2") else x
     except HTTPError as h:
         if str(h.getcode()).startswith("3"):
-            print_http(h.getcode(), 'Redirect of http request - ' + str(h))
+            print_http(h.getcode(), 'Redirect of http request - ' + url + ' - ' + str(h))
             url_redirect = h.headers['Location']
             return sendHTTP(url_redirect, connection, data=data, contenttype=contenttype, header_auth=header_auth, redirect=redirect+1)
         else:
-            print_http(h.getcode(), 'Could not send http request - ' + str(h))
+            print_http(h.getcode(), 'Could not send http request - ' + url + ' - ' + str(h))
         return False
     except Exception as e:
-        print_error('Could not send http request - ' + str(e))
+        print_error('Could not send http request - ' + url + ' - ' + str(e))
         return False
 
 def _check_prefix(url):
