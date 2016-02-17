@@ -1,12 +1,12 @@
 <div class="nest_device_container">
-    <span class="obj_thermostat obj_thermostat_{hvac} img-circle">
+    <span class="obj_thermostat obj_thermostat_{hvac} img-circle nest-box-shadow">
         <div class="therm_temp_label">
-            <h5 style="margin-bottom: 5px;">{temp_hvac}</h5>
-            <h4 style="margin-top: 5px;">{temp_target}{temp_unit}</h4>
+            <p style="margin-bottom: 5px; font-size: 12dp;">{temp_hvac}</p>
+            <h3 style="margin-top: 5px;">{temp_target}{temp_unit}</h3>
         </div>
         <div class="therm_temp_cmds">
-            <span class="therm_temp_glyph therm_temp_upper glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-            <span class="therm_temp_glyph therm_temp_lower glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+            <span class="therm_temp_glyph therm_temp_upper glyphicon glyphicon-chevron-up" aria-hidden="true" onclick="sendHttp('/command?group={group}&device={device}&command=temp&value={new_temp_up}&nest_device=thermostat&nest_device_id={nest_device_id}', null, 'GET', 0, true)"></span>
+            <span class="therm_temp_glyph therm_temp_lower glyphicon glyphicon-chevron-down" aria-hidden="true" onclick="sendHttp('/command?group={group}&device={device}&command=temp&value={new_temp_down}&nest_device=thermostat&nest_device_id={nest_device_id}', null, 'GET', 0, true)"></span>
         </div>
     </span>
     <h4 style="text-align: center;">Current: {temp_ambient}{temp_unit}</h4>

@@ -57,6 +57,7 @@ class object_nest_account:
             #
             for therm in therm_ids:
                 #
+                nest_device_id = json_devices['thermostats'][therm]['device_id']
                 therm_name = json_devices['thermostats'][therm]['name']
                 therm_hvac_state = json_devices['thermostats'][therm]['hvac_state']
                 #
@@ -73,12 +74,18 @@ class object_nest_account:
                 therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=temp_unit)]
                 therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=temp_unit)]
                 #
-                devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html').read().encode('utf-8').format(name=therm_name,
-                                                                                                                              temp_hvac=temp_hvac_statement,
-                                                                                                                              temp_target=therm_temp_target,
-                                                                                                                              temp_ambient=therm_temp_ambient,
-                                                                                                                              temp_unit=temp_unit_html,
-                                                                                                                              hvac=therm_hvac_state)
+                devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html')\
+                    .read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
+                                                   device = self._label.lower().replace(' ',''),
+                                                   nest_device_id=nest_device_id,
+                                                   name=therm_name,
+                                                   temp_hvac=temp_hvac_statement,
+                                                   temp_target=therm_temp_target,
+                                                   temp_ambient=therm_temp_ambient,
+                                                   temp_unit=temp_unit_html,
+                                                   hvac=therm_hvac_state,
+                                                   new_temp_up=therm_temp_target+0.5,
+                                                   new_temp_down=therm_temp_target-0.5)
             #
         except Exception as e:
             devices_html = 'ERROR'
@@ -109,15 +116,25 @@ class object_nest_account:
         else:
             return ''
 
-
+    #TODO get redirect passed back from sendHTTP - put into list_devices?
     def sendCmd(self, request):
         #
         command = request.query.command
         #
-        if command=='test':
-            return bool(self._read_json_devices())
-        #
         try:
+            nest_device_id = request.query.nest_device_id
+            nest_device = request.query.nest_device
+            value = request.query.value
+            #
+            if nest_device == 'thermostat':
+                #TODO create json with new command
+                #
+                if command == 'temp':
+                    json_cmd = {'devices': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
+                    return self._send_nest_json(json_cmd)
+                else:
+                    return False
+                #
             #
             # if not self._check_paired():
             #     print_command (command, get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
@@ -234,3 +251,9 @@ class object_nest_account:
         response = sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=header_auth)
         #
         return json.load(response)
+
+    def _send_nest_json (self, json_cmd, model='/devices'):
+        #
+        header_auth = 'Bearer {authcode}'.format(authcode=self._token)
+        #
+        return sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=header_auth, data=json.dumps(json_cmd), contenttype='application/json')
