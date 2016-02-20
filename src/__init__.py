@@ -4,6 +4,7 @@ import time
 
 from config_devices import write_config_devices, create_device_object_array
 from config_users import check_user, get_userrole, update_user_channels
+from console_messages import print_msg
 from command_forwarder import cmd_fwrd, get_device
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
@@ -17,8 +18,12 @@ from bottle import route, request, run, static_file, HTTPResponse, template, red
 
 
 def server_start():
-    #process_listings.start()
+    print_msg('Starting process: "bottle" server')
     process_bottle.start()
+    print_msg('Process started: "bottle" server')
+    print_msg('Starting process: Retrieval of TV listings')
+    process_listings.start() #mute/unmute this line if required for testing purposes
+    print_msg('Process started: Retrieval of TV listings')
 
 
 def server_end():
@@ -28,7 +33,7 @@ def server_end():
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1617, debug=True)
+    run(host='0.0.0.0', port=1600, debug=True)
 
 
 def tvlistings_process():
@@ -273,9 +278,11 @@ def _check_user(user_cookie):
 
 # Create processes for TV Listing code and code to start bottle server
 q_listings = Queue()
-#
 q_devices = Queue()
+#
+print_msg('Creating devices')
 _create_devices()
+print_msg('Device array/dict created')
 #
 process_listings = Process(target=tvlistings_process)
 process_bottle = Process(target=start_bottle)
