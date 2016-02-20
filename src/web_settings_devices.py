@@ -34,18 +34,20 @@ def settings_devices_selection(grpnum, dvcnum):
     count = 0
     devices = read_list_devices()
     #
-    for dvc in devices:
+    device_keys = devices.keys()
+    #
+    for dvc_key in device_keys:
         if count> 0 and count % 4 == 0:
             body += '</div><div class="row">'
         #
-        name = get_device_name(dvc['type'])
-        img = get_device_logo(dvc['type'])
+        name = get_device_name(devices[dvc_key]['type'])
+        img = get_device_logo(devices[dvc_key]['type'])
         #
         body += urlopen('web/html_settings/settings_devices_selection_item.html').read().encode('utf-8').format(name=name,
                                                                                                                 img=img,
                                                                                                                 grpnum=grpnum,
                                                                                                                 dvcnum=dvcnum,
-                                                                                                                type=dvc['type'].lower().replace(' ',''))
+                                                                                                                type=devices[dvc_key]['type'].lower().replace(' ',''))
         count += 1
     #
     body += '</div>'

@@ -8,6 +8,7 @@
         },
         "html_settings": "settings_devices_tivo.html",
         "name": "Virgin Media",
+        "type": "tivo",
         "logo": "logo_virgin.png"
     },
     "tv_lg_netcast": {
@@ -19,6 +20,7 @@
         },
         "html_settings": "settings_devices_tv_lg_netcast.html",
         "name": "LG TV",
+        "type": "tv_lg_netcast",
         "logo": "logo_lg.png"
     },
     "nest_account": {
@@ -28,6 +30,7 @@
         },
         "html_settings": "settings_devices_nest.html",
         "name": "Nest Account",
+        "type": "nest_account",
         "html_command": "object_nest_account.html",
         "client_id": "170016da-432a-4ca0-aa37-426a2117d7a2",
         "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI",
@@ -38,6 +41,7 @@
         "settings_dict": {},
         "html_settings": "",
         "name": "Xbox One",
+        "type": "xboxone",
         "logo": "logo_xboxone.png"
     },
     "raspberrypi": {
@@ -45,6 +49,7 @@
         "settings_dict": {},
         "html_settings": "",
         "name": "Raspberry Pi",
+        "type": "raspberrypi",
         "logo": "logo_raspberrypi.png"
     },
     "other": {
@@ -52,6 +57,7 @@
         "settings_dict": {},
         "html_settings": "",
         "name": "Other",
+        "type": "other",
         "logo": "logo_other.png"
     }
 }
