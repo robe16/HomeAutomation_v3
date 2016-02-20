@@ -5,8 +5,8 @@
             <h3 style="margin-top: 5px;">{temp_target}{temp_unit}</h3>
         </div>
         <div class="therm_temp_cmds">
-            <span class="therm_temp_glyph therm_temp_upper glyphicon glyphicon-chevron-up" aria-hidden="true" onclick="sendHttp('/command?group={group}&device={device}&command=temp&value={new_temp_up}&nest_model=devices&nest_device=thermostats&nest_device_id={nest_device_id}', null, 'GET', 0, true)"></span>
-            <span class="therm_temp_glyph therm_temp_lower glyphicon glyphicon-chevron-down" aria-hidden="true" onclick="sendHttp('/command?group={group}&device={device}&command=temp&value={new_temp_down}&nest_model=devices&nest_device=thermostats&nest_device_id={nest_device_id}', null, 'GET', 0, true)"></span>
+            <span class="therm_temp_glyph therm_temp_upper glyphicon glyphicon-chevron-up" aria-hidden="true" onclick="sendNestCmd('{group}', '{device}', 'temp', {new_temp_up}, 'devices', 'thermostats', '{nest_device_id}')"></span>
+            <span class="therm_temp_glyph therm_temp_lower glyphicon glyphicon-chevron-down" aria-hidden="true" onclick="sendNestCmd('{group}', '{device}', 'temp', {new_temp_down}, 'devices', 'thermostats', '{nest_device_id}')"></span>
         </div>
     </span>
     <h4 style="text-align: center;">Current: {temp_ambient}{temp_unit}</h4>

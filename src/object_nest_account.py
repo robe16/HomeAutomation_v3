@@ -49,6 +49,14 @@ class object_nest_account:
     def getHtml(self):
         #
         html = get_device_html_command(self._type)
+        body = self._htmlbody()
+        #
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
+                                                                                 device = self._label.lower().replace(' ',''),
+                                                                                 body=body)
+
+    def _htmlbody(self):
+        #
         devices_html = ''
         #
         try:
@@ -91,9 +99,7 @@ class object_nest_account:
             devices_html = 'ERROR'
             print_error('Nest devices could not be compiled into html - ' + str(e))
         #
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
-                                                                                 device = self._label.lower().replace(' ',''),
-                                                                                 body=devices_html)
+        return devices_html
 
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
@@ -116,7 +122,6 @@ class object_nest_account:
         else:
             return ''
 
-    #TODO get redirect passed back from sendHTTP - put into list_devices?
     def sendCmd(self, request):
         #
         command = request.query.command
@@ -137,9 +142,8 @@ class object_nest_account:
                 if command == 'temp':
                     #json_cmd = {'devices': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
                     json_cmd = {'target_temperature_' + self._temp_unit : float(value)}
-                    return self._send_nest_json(json_cmd, nest_model, nest_device, nest_device_id)
-                else:
-                    return False
+                    if self._send_nest_json(json_cmd, nest_model, nest_device, nest_device_id):
+                        return self._htmlbody()
                 #
             return False
             #
@@ -164,8 +168,7 @@ class object_nest_account:
                                                   clientid=get_device_detail(self._type, 'client_id'),
                                                   clientsecret=get_device_detail(self._type, 'client_secret'))
         #
-        # Set 'data' to ' ' in order to force method to POST as opposed to GET
-        response = sendHTTP(url, 'close', data=' ')
+        response = sendHTTP(url, 'close', method='POST')
         #
         if isinstance(response, bool):
             print_error('Nest auth code not received by Nest server')
