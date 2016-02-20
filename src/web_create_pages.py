@@ -50,6 +50,9 @@ def create_device(user, tvlistings, arr_devices, group_name, device_name):
     #
     body = _create_device_page(user, tvlistings, device, group_name, device_name)
     #
+    if not body:
+        raise Exception
+    #
     title = '{group}: '.format(group = grp_name) if grp_name != '-' else ''
     title += device.getLabel()
     #

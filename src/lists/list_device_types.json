@@ -1,6 +1,5 @@
 {
     "tivo": {
-        "html_command": "object_tivo.html",
         "settings_dict": {
             "mak": "",
             "ipaddress": "",
@@ -8,11 +7,11 @@
         },
         "html_settings": "settings_devices_tivo.html",
         "name": "Virgin Media",
-        "type": "tivo",
-        "logo": "logo_virgin.png"
+        "html_command": "object_tivo.html",
+        "logo": "logo_virgin.png",
+        "type": "tivo"
     },
     "tv_lg_netcast": {
-        "html_command": "object_tv_lg_netcast.html",
         "settings_dict": {
             "pairingkey": "",
             "ipaddress": "",
@@ -20,44 +19,45 @@
         },
         "html_settings": "settings_devices_tv_lg_netcast.html",
         "name": "LG TV",
-        "type": "tv_lg_netcast",
-        "logo": "logo_lg.png"
+        "html_command": "object_tv_lg_netcast.html",
+        "logo": "logo_lg.png",
+        "type": "tv_lg_netcast"
     },
     "nest_account": {
-        "redirect_url": "https://firebase-apiserver01-tah01-iad01.dapi.production.nest.com:9553",
         "settings_dict": {
             "pincode": ""
         },
         "html_settings": "settings_devices_nest.html",
         "name": "Nest Account",
-        "type": "nest_account",
         "html_command": "object_nest_account.html",
         "client_id": "170016da-432a-4ca0-aa37-426a2117d7a2",
+        "redirect_url": "https://firebase-apiserver01-tah01-iad01.dapi.production.nest.com:9553",
         "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI",
-        "logo": "logo_nest_blue.png"
+        "logo": "logo_nest_blue.png",
+        "type": "nest_account"
     },
     "xboxone": {
-        "html_command": "object_xboxone.html",
         "settings_dict": {},
         "html_settings": "",
         "name": "Xbox One",
-        "type": "xboxone",
-        "logo": "logo_xboxone.png"
+        "html_command": "object_xboxone.html",
+        "logo": "logo_xboxone.png",
+        "type": "xboxone"
     },
     "raspberrypi": {
-        "html_command": "object_raspberrypi.html",
         "settings_dict": {},
         "html_settings": "",
         "name": "Raspberry Pi",
-        "type": "raspberrypi",
-        "logo": "logo_raspberrypi.png"
+        "html_command": "object_raspberrypi.html",
+        "logo": "logo_raspberrypi.png",
+        "type": "raspberrypi"
     },
     "other": {
-        "html_command": "object_other.html",
         "settings_dict": {},
         "html_settings": "",
         "name": "Other",
-        "type": "other",
-        "logo": "logo_other.png"
+        "html_command": "object_other.html",
+        "logo": "logo_other.png",
+        "type": "other"
     }
 }

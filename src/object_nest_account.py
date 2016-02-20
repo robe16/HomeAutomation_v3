@@ -57,14 +57,31 @@ class object_nest_account:
 
     def _htmlbody(self):
         #
-        devices_html = ''
+        devices_html = '<div class="row">'
         #
         try:
             json_devices = self._read_json_devices()
             #
+            if not json_devices:
+                print_error('Nest devices could not retrieved from Nest server')
+                return False
+            #
             therm_ids = json_devices['thermostats'].keys()
             #
+            count = 0
+            #
             for therm in therm_ids:
+                if count> 0 and count % 4 == 0:
+                    devices_html += '</div><div class="row">'
+                #
+                colwidth = '3'
+                rem = len(therm_ids) - count
+                if rem == 1:
+                    colwidth = '12'
+                elif rem == 2:
+                    colwidth = '6'
+                elif rem == 3:
+                    colwidth = '4'
                 #
                 nest_device_id = json_devices['thermostats'][therm]['device_id']
                 therm_name = json_devices['thermostats'][therm]['name']
@@ -83,8 +100,9 @@ class object_nest_account:
                 therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
                 #
                 devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html')\
-                    .read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
-                                                   device = self._label.lower().replace(' ',''),
+                    .read().encode('utf-8').format(colwidth=colwidth,
+                                                   group=self._group.lower().replace(' ',''),
+                                                   device=self._label.lower().replace(' ',''),
                                                    nest_device_id=nest_device_id,
                                                    name=therm_name,
                                                    temp_hvac=temp_hvac_statement,
@@ -94,11 +112,15 @@ class object_nest_account:
                                                    hvac=therm_hvac_state,
                                                    new_temp_up=therm_temp_target+0.5,
                                                    new_temp_down=therm_temp_target-0.5)
+                #
+                count += 1
+                #
             #
         except Exception as e:
             devices_html = 'ERROR'
             print_error('Nest devices could not be compiled into html - ' + str(e))
         #
+        devices_html += '</div>'
         return devices_html
 
     def getHtml_settings(self, grp_num, dvc_num):
@@ -178,6 +200,7 @@ class object_nest_account:
             response = response.read()
         except Exception as e:
             print_error('Nest auth code not received by Nest server - ' + str(e))
+            return False
         #
         if response:
             try:

@@ -39,6 +39,7 @@ def sendHTTP(url1, connection, url2='', method=False, data=False, contenttype=Fa
     #
     try:
         x = urlopen(req, timeout=10)
+        print_http(x.getcode(), 'HTTP request - ' + url + ' - ' + str(x))
         return False if not str(x.getcode()).startswith("2") else x
     except HTTPError as h:
         if str(h.getcode()).startswith("3"):
