@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 def print_command(command, device, ipaddress, response):
-    print ("{ipaddress} - [{timestamp}] - \'{command}\' request sent to {device} device - {response}").format(
+    print ("{timestamp} - \'{command}\' request sent to {device} device {ipaddress} - {response}").format(
         ipaddress=ipaddress,
         timestamp=datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
         command=command.replace('/r',''),

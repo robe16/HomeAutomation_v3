@@ -6,12 +6,12 @@ import os
 import json
 from send_cmds import sendHTTP
 from console_messages import print_command, print_error
-from list_devices import get_device_logo, get_device_html_command, get_device_html_settings, get_device_detail, get_device_name
+from list_devices import get_device_logo, get_device_html_command, get_device_html_settings, get_device_detail, get_device_name, set_device_detail
 
 class object_nest_account:
 
     # Static variable used as part of using Nest's APIs
-    nesturl_api = "https://developer-api.nest.com"
+    nesturl_api = 'https://developer-api.nest.com'
     nesturl_tokenexchange = ('https://api.home.nest.com/oauth2/access_token?' +
                              'code={authcode}&' +
                              'client_id={clientid}&' +
@@ -19,6 +19,7 @@ class object_nest_account:
                              'grant_type=authorization_code')
     #
     _dateformat = '%d/%m/%Y %H:%M:%S'
+    _temp_unit = 'c'
 
 
     def __init__ (self, group, token, tokenexpiry, pincode, state):
@@ -68,11 +69,10 @@ class object_nest_account:
                 else:
                     temp_hvac_statement = 'Heat set to'
                 #
-                temp_unit = 'c'
-                temp_unit_html = '&#8451;' if temp_unit == 'c' else '&#8457'
+                temp_unit_html = '&#8451;' if self._temp_unit == 'c' else '&#8457'
                 #
-                therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=temp_unit)]
-                therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=temp_unit)]
+                therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=self._temp_unit)]
+                therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
                 #
                 devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html')\
                     .read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
@@ -122,46 +122,39 @@ class object_nest_account:
         command = request.query.command
         #
         try:
-            nest_device_id = request.query.nest_device_id
-            nest_device = request.query.nest_device
-            value = request.query.value
             #
-            if nest_device == 'thermostat':
-                #TODO create json with new command
+            if not self._tokencheck():
+                print_error('Nest command could not be sent - error encountered with retrieving new authorisation code')
+                return False
+            #
+            nest_model = request.query.nest_model or False
+            nest_device_id = request.query.nest_device_id or False
+            nest_device = request.query.nest_device or False
+            value = request.query.value or False
+            #
+            if nest_device == 'thermostats':
                 #
                 if command == 'temp':
-                    json_cmd = {'devices': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
-                    return self._send_nest_json(json_cmd)
+                    #json_cmd = {'devices': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
+                    json_cmd = {'target_temperature_' + self._temp_unit : float(value)}
+                    return self._send_nest_json(json_cmd, nest_model, nest_device, nest_device_id)
                 else:
                     return False
                 #
+            return False
             #
-            # if not self._check_paired():
-            #     print_command (command, get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
-            #     return False
-            #
-            # STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
-            #           '<envelope>' +
-            #           '<api type="command">' +
-            #           '<name>HandleKeyInput</name>' +
-            #           '<value>{value}</value>' +
-            #           '</api>' +
-            #           '</envelope>').format(value = code)
-            # response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-            # if bool(response) and not str(response.getcode()).startswith("2"):
-            #     if not self._check_paired():
-            #         return False
-            #     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-            # #
-            # response = str(response.getcode()).startswith("2") if bool(response) else False
-            # print_command (code, get_device_name(self._type), self._ipaddress, bool(response))
-            # return response
-            return True
-            #
-        except:
-            print_command (command, get_device_name(self._type), '', "ERROR: Exception encountered")
+        except Exception as e:
+            print_command (command, get_device_name(self._type), '', 'ERROR: Exception encountered - ' + str(e))
             return False
 
+    def _tokencheck(self):
+        if bool(self._pincode):
+            if self._checkToken():
+                return True
+            else:
+                return self._getNewToken()
+        else:
+            return False
 
     def _checkToken(self):
         return datetime.datetime.now() < self._tokenexpiry if bool(self._tokenexpiry) else False
@@ -173,6 +166,10 @@ class object_nest_account:
         #
         # Set 'data' to ' ' in order to force method to POST as opposed to GET
         response = sendHTTP(url, 'close', data=' ')
+        #
+        if isinstance(response, bool):
+            print_error('Nest auth code not received by Nest server')
+            return False
         #
         try:
             response = response.read()
@@ -237,7 +234,7 @@ class object_nest_account:
 
     def _read_json_devices(self, device=False, device_id=False):
         if bool(device) and bool(device_id):
-            device_url = '/{device}/{device_id}'.format(device=device, device_id=device_id)
+            device_url = '/{device}/{device_id}'.format(device=device, device_id=device_id, redirect_type=self._type)
         else:
             device_url = ''
         return self._read_nest_json(model='/devices'+device_url)
@@ -247,13 +244,34 @@ class object_nest_account:
 
     def _read_nest_json(self, model=''):
         #
-        header_auth = 'Bearer {authcode}'.format(authcode=self._token)
-        response = sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=header_auth)
+        response = sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=self._header_token(), redirect_type=self._type)
         #
         return json.load(response)
 
-    def _send_nest_json (self, json_cmd, model='/devices'):
+    def _send_nest_json (self, json_cmd, model, device, id, retry=0):
         #
-        header_auth = 'Bearer {authcode}'.format(authcode=self._token)
+        if retry >= 2:
+            return False
         #
-        return sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=header_auth, data=json.dumps(json_cmd), contenttype='application/json')
+        url2 = '/{model}/{device}/{id}'.format(model=model, device=device, id=id)
+        #
+        response = sendHTTP(self._get_url(), 'close', url2=url2, method='PUT', header_auth=self._header_token(), data=json.dumps(json_cmd), contenttype='application/json', redirect_type=self._type)
+        #
+        if not response and not get_device_detail(self._type, 'redirect_url') == '':
+            # if the command failed and there is redirect url, attempt without the url
+            retry += 1
+            set_device_detail(self._type, 'redirect_url', '')
+            return self._send_nest_json (json_cmd, model, device, id, retry=retry)
+        else:
+            return response
+        #
+
+    def _get_url(self):
+        #
+        if get_device_detail(self._type, 'redirect_url') != '':
+            return get_device_detail(self._type, 'redirect_url')
+        else:
+            return self.nesturl_api
+
+    def _header_token(self):
+        return 'Bearer {authcode}'.format(authcode=self._token)

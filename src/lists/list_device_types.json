@@ -1,56 +1,57 @@
-[
-  {
-    "type": "tv_lg_netcast",
-    "name": "LG TV",
-    "logo": "logo_lg.png",
-    "html_command": "object_tv_lg_netcast.html",
-    "html_settings": "settings_devices_tv_lg_netcast.html",
-    "settings_dict": {"name" : "",
-                      "ipaddress": "",
-                      "pairingkey": ""}
-  },
-  {
-    "type": "tivo",
-    "name": "Virgin Media",
-    "logo": "logo_virgin.png",
-    "html_command": "object_tivo.html",
-    "html_settings": "settings_devices_tivo.html",
-    "settings_dict": {"name" : "",
-                      "ipaddress": "",
-                      "mak": ""}
-  },
-  {
-    "type": "xboxone",
-    "name": "Xbox One",
-    "logo": "logo_xboxone.png",
-    "html_command": "object_xboxone.html",
-    "html_settings": "",
-    "settings_dict": {}
-  },
-  {
-    "type": "nest_account",
-    "name": "Nest Account",
-    "logo": "logo_nest_blue.png",
-    "html_command": "object_nest_account.html",
-    "html_settings": "settings_devices_nest.html",
-    "settings_dict": {"pincode": ""},
-    "client_id": "170016da-432a-4ca0-aa37-426a2117d7a2",
-    "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI"
-  },
-  {
-    "type": "raspberrypi",
-    "name": "Raspberry Pi",
-    "logo": "logo_raspberrypi.png",
-    "html_command": "object_raspberrypi.html",
-    "html_settings": "",
-    "settings_dict": {}
-  },
-  {
-    "type": "other",
-    "name": "Other",
-    "logo": "logo_other.png",
-    "html_command": "object_other.html",
-    "html_settings": "",
-    "settings_dict": {}
-  }
-]
+{
+    "tivo": {
+        "html_command": "object_tivo.html",
+        "settings_dict": {
+            "mak": "",
+            "ipaddress": "",
+            "name": ""
+        },
+        "html_settings": "settings_devices_tivo.html",
+        "name": "Virgin Media",
+        "logo": "logo_virgin.png"
+    },
+    "tv_lg_netcast": {
+        "html_command": "object_tv_lg_netcast.html",
+        "settings_dict": {
+            "pairingkey": "",
+            "ipaddress": "",
+            "name": ""
+        },
+        "html_settings": "settings_devices_tv_lg_netcast.html",
+        "name": "LG TV",
+        "logo": "logo_lg.png"
+    },
+    "nest_account": {
+        "redirect_url": "https://firebase-apiserver01-tah01-iad01.dapi.production.nest.com:9553",
+        "settings_dict": {
+            "pincode": ""
+        },
+        "html_settings": "settings_devices_nest.html",
+        "name": "Nest Account",
+        "html_command": "object_nest_account.html",
+        "client_id": "170016da-432a-4ca0-aa37-426a2117d7a2",
+        "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI",
+        "logo": "logo_nest_blue.png"
+    },
+    "xboxone": {
+        "html_command": "object_xboxone.html",
+        "settings_dict": {},
+        "html_settings": "",
+        "name": "Xbox One",
+        "logo": "logo_xboxone.png"
+    },
+    "raspberrypi": {
+        "html_command": "object_raspberrypi.html",
+        "settings_dict": {},
+        "html_settings": "",
+        "name": "Raspberry Pi",
+        "logo": "logo_raspberrypi.png"
+    },
+    "other": {
+        "html_command": "object_other.html",
+        "settings_dict": {},
+        "html_settings": "",
+        "name": "Other",
+        "logo": "logo_other.png"
+    }
+}

@@ -1,12 +1,13 @@
 import json
 import os
+from console_messages import print_error
 
 
 def read_list_devices():
     with open(os.path.join('lists', 'list_device_types.json'), 'r') as data_file:
         data = json.load(data_file)
         data_file.close()
-    if not isinstance(data, dict):
+    if isinstance(data, dict):
         return data
     else:
         return False
@@ -14,11 +15,15 @@ def read_list_devices():
 
 def _get_device_details(type):
     data = read_list_devices()
-    if data:
-        for item in data:
-            if item['type'] == type:
-                return item
-    return False
+    try:
+        return data[type]
+    except:
+        return False
+    # if data:
+    #     for item in data:
+    #         if item['type'] == type:
+    #             return item
+    # return False
 
 
 def get_device_name(type):
@@ -61,3 +66,19 @@ def get_device_detail(type, key):
     if item:
         return item[key]
     return False
+
+def set_device_detail(type, key, value):
+    #
+    data = json.load(open(os.path.join('lists', 'list_device_types.json'), 'r'))
+    #
+    data[type][key] = value
+    try:
+        #
+        with open(os.path.join('lists', 'list_device_types.json'), 'w+') as output_file:
+            output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
+            output_file.close()
+        #
+        return True
+    except Exception as e:
+        print_error('Could not update "list_device_types.json" with new value - ' + str(e))
+        return False
