@@ -20,7 +20,7 @@ def settings_devices(arr_devices):
             dvc_num += 1
         #
         html_groups += settings_devices_group(grp_num,
-                                              dvcnum=dvc_num-1,
+                                              dvcnum=dvc_num,
                                               group_name=device_group['name'],
                                               devices=html_devices)
         grp_num += 1

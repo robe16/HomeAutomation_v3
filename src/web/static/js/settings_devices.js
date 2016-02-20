@@ -41,8 +41,8 @@ function addDeviceHTML(grpnum, dvcnum, device) {
         return;
         }
     else {return;}
-
 }
+
 
 function delElement(id) {
     // TODO - Basic in-browser popup box - to create themed html box
