@@ -242,7 +242,7 @@ class object_tv_lg_netcast:
                     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
                 #
                 response = str(response.getcode()).startswith("2") if bool(response) else False
-                print_command (code, get_device_name(self._type), self._ipaddress, bool(response))
+                print_command(request.query.command, get_device_name(self._type), self._ipaddress, bool(response))
                 return response
                 #
         except:
