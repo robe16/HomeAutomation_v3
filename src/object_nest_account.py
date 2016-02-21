@@ -8,6 +8,8 @@ from send_cmds import sendHTTP
 from console_messages import print_command, print_error
 from list_devices import get_device_logo, get_device_html_command, get_device_html_settings, get_device_detail, get_device_name, set_device_detail
 
+# Nest API Documentation: https://developer.nest.com/documentation/api-reference
+
 class object_nest_account:
 
     # Static variable used as part of using Nest's APIs
@@ -85,19 +87,29 @@ class object_nest_account:
                 #
                 nest_device_id = json_devices['thermostats'][therm]['device_id']
                 therm_name = json_devices['thermostats'][therm]['name']
-                therm_hvac_state = json_devices['thermostats'][therm]['hvac_state']
                 #
-                if therm_hvac_state == 'heating':
-                    temp_hvac_statement = 'Heating to'
-                elif therm_hvac_state =='cooling':
-                    temp_hvac_statement = 'Cooling to'
+                if json_devices['thermostats'][therm]['is_online']:
+                    #
+                    therm_hvac_state = json_devices['thermostats'][therm]['hvac_state']
+                    if therm_hvac_state == 'heating':
+                        temp_hvac_statement = 'Heating to'
+                    elif therm_hvac_state =='cooling':
+                        temp_hvac_statement = 'Cooling to'
+                    else:
+                        temp_hvac_statement = 'Heat set to'
+                    #
+                    temp_unit_html = '&#8451;' if self._temp_unit == 'c' else '&#8457'
+                    therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=self._temp_unit)]
+                    therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
+                    #
                 else:
-                    temp_hvac_statement = 'Heat set to'
-                #
-                temp_unit_html = '&#8451;' if self._temp_unit == 'c' else '&#8457'
-                #
-                therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=self._temp_unit)]
-                therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
+                    #
+                    therm_hvac_state = 'offline'
+                    temp_hvac_statement = 'Offline'
+                    temp_unit_html = ''
+                    therm_temp_target = ''
+                    therm_temp_ambient = ''
+                    #
                 #
                 devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html')\
                     .read().encode('utf-8').format(colwidth=colwidth,
@@ -170,7 +182,7 @@ class object_nest_account:
             return False
             #
         except Exception as e:
-            print_command (command, get_device_name(self._type), '', 'ERROR: Exception encountered - ' + str(e))
+            print_command(command, get_device_name(self._type), '', 'ERROR: Exception encountered - ' + str(e))
             return False
 
     def _tokencheck(self):

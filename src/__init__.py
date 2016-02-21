@@ -1,10 +1,11 @@
 from multiprocessing import Process, Queue
 import os
 import time
+from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 from config_devices import write_config_devices, create_device_object_array
 from config_users import check_user, get_userrole, update_user_channels
-from console_messages import print_msg
+from console_messages import print_msg, print_error
 from command_forwarder import cmd_fwrd, get_device
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
@@ -14,7 +15,6 @@ from web_tvlistings import html_listings_user_and_all
 from web_create_error import create_error_404, create_error_500
 from tvlisting import build_channel_array, returnnonext_xml_all
 from tvlisting_updatechannels import update_channellist
-from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 
 def server_start():
@@ -40,8 +40,13 @@ def tvlistings_process():
     time.sleep(5)
     # 604800 secs = 7 days
     while True:
-        q_listings.put(build_channel_array())
-        time.sleep(604800)
+        try:
+            q_listings.put(build_channel_array())
+            time.sleep(604800)
+        except:
+            print_error('Creation of TV listings failed - retrying in 10 seconds')
+            # if creation of listings crashes, retry in 10 seconds
+            time.sleep(10)
 
 
 @route('/')

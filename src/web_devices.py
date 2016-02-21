@@ -22,9 +22,7 @@ def _create_device_page(user, tvlistings, device, group_name, device_name):
                                   device_name=device_name,
                                   user=user)
         #
-        html_body += '</div>'
         html_body += '<br>'
-        html_body += '<div class="row">'
         html_body += urlopen('web/html_tvguide/tvguide.html').read().encode('utf-8').format(listings=html_tv)
     #
     return html_body

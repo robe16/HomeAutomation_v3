@@ -1,5 +1,5 @@
 .nest_device_container{
-    width: 150px;
+    width: 175px;
     margin: 25px auto;
 }
 
@@ -7,8 +7,8 @@
 .obj_thermostat {
     display: inline-block;
     position: relative;
-    height: 150px;
-    width: 150px;
+    height: 175px;
+    width: 175px;
     vertical-align: middle;
     text-align: center;
 }
@@ -20,6 +20,9 @@
 }
 .obj_thermostat_off {
     background-color: #454657;
+}
+.obj_thermostat_offline {
+    background-color: #B8B8BE;
 }
 
 
@@ -38,6 +41,7 @@
     position: absolute;
     bottom: 0;
     width: 100%;
+    z-index: 1200;
 }
 
 
@@ -48,6 +52,33 @@
     cursor: pointer;
     color: white;
 }
+
+
+.nest_device_border{
+    display: block;
+    position: relative;
+    height: 176px;
+    width: 176px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    border: #9FA5AB solid 5px;
+    z-index: 1100;
+}
+/*.nest_device_border_heating {
+    border: #f6b745 solid 5px;
+}
+.nest_device_border_cooling {
+    border: #000000 solid 5px;
+}
+.nest_device_border_off {
+    border: #9FA5AB solid 5px;
+}
+.nest_device_border_offline {
+    border: #000000 solid 5px;
+}*/
+
 
 .nest-box-shadow {
     -webkit-box-shadow: 0px 0px 20px 5px rgba(50, 50, 50, 0.7);
