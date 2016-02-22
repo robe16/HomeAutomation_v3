@@ -68,68 +68,149 @@ class object_nest_account:
                 print_error('Nest devices could not retrieved from Nest server')
                 return False
             #
-            therm_ids = json_devices['thermostats'].keys()
             #
-            count = 0
+            try:
+                therm_ids = json_devices['thermostats'].keys()
+            except:
+                therm_ids = False
             #
-            for therm in therm_ids:
-                if count> 0 and count % 4 == 0:
-                    devices_html += '</div><div class="row">'
-                #
-                colwidth = '3'
-                rem = len(therm_ids) - count
-                if rem == 1:
-                    colwidth = '12'
-                elif rem == 2:
-                    colwidth = '6'
-                elif rem == 3:
-                    colwidth = '4'
-                #
-                nest_device_id = json_devices['thermostats'][therm]['device_id']
-                therm_name = json_devices['thermostats'][therm]['name']
-                #
-                if json_devices['thermostats'][therm]['is_online']:
+            if bool(therm_ids):
+                count = 0
+                for therm in therm_ids:
+                    if count> 0 and count % 4 == 0:
+                        devices_html += '</div><div class="row">'
                     #
-                    therm_hvac_state = json_devices['thermostats'][therm]['hvac_state']
-                    if therm_hvac_state == 'heating':
-                        temp_hvac_statement = 'Heating to'
-                    elif therm_hvac_state =='cooling':
-                        temp_hvac_statement = 'Cooling to'
+                    colwidth = '3'
+                    rem = len(therm_ids) - count
+                    if rem == 1:
+                        colwidth = '12'
+                    elif rem == 2:
+                        colwidth = '6'
+                    elif rem == 3:
+                        colwidth = '4'
+                    #
+                    nest_device_id = json_devices['thermostats'][therm]['device_id']
+                    therm_name = json_devices['thermostats'][therm]['name']
+                    #
+                    if json_devices['thermostats'][therm]['is_online']:
+                        #
+                        therm_hvac_state = json_devices['thermostats'][therm]['hvac_state']
+                        if therm_hvac_state == 'heating':
+                            temp_hvac_statement = 'Heating to'
+                        elif therm_hvac_state =='cooling':
+                            temp_hvac_statement = 'Cooling to'
+                        else:
+                            temp_hvac_statement = 'Heat set to'
+                        #
+                        temp_unit_html = '&#8451;' if self._temp_unit == 'c' else '&#8457'
+                        therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=self._temp_unit)]
+                        therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
+                        #
                     else:
-                        temp_hvac_statement = 'Heat set to'
+                        #
+                        therm_hvac_state = 'offline'
+                        temp_hvac_statement = 'Offline'
+                        temp_unit_html = ''
+                        therm_temp_target = ''
+                        therm_temp_ambient = ''
+                        #
                     #
-                    temp_unit_html = '&#8451;' if self._temp_unit == 'c' else '&#8457'
-                    therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=self._temp_unit)]
-                    therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
+                    devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html')\
+                        .read().encode('utf-8').format(colwidth=colwidth,
+                                                       group=self._group.lower().replace(' ',''),
+                                                       device=self._label.lower().replace(' ',''),
+                                                       nest_device_id=nest_device_id,
+                                                       name=therm_name,
+                                                       temp_hvac=temp_hvac_statement,
+                                                       temp_target=therm_temp_target,
+                                                       temp_ambient=therm_temp_ambient,
+                                                       temp_unit=temp_unit_html,
+                                                       hvac=therm_hvac_state,
+                                                       new_temp_up=therm_temp_target+0.5,
+                                                       new_temp_down=therm_temp_target-0.5)
                     #
-                else:
+                    count += 1
                     #
-                    therm_hvac_state = 'offline'
-                    temp_hvac_statement = 'Offline'
-                    temp_unit_html = ''
-                    therm_temp_target = ''
-                    therm_temp_ambient = ''
+            #
+            #
+            try:
+                smoke_ids = json_devices['smoke_co_alarms'].keys()
+            except:
+                smoke_ids = False
+            #
+            if bool(smoke_ids):
+                count = 0
+                for smoke in smoke_ids:
+                    if count> 0 and count % 4 == 0:
+                        devices_html += '</div><div class="row">'
                     #
-                #
-                devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html')\
-                    .read().encode('utf-8').format(colwidth=colwidth,
-                                                   group=self._group.lower().replace(' ',''),
-                                                   device=self._label.lower().replace(' ',''),
-                                                   nest_device_id=nest_device_id,
-                                                   name=therm_name,
-                                                   temp_hvac=temp_hvac_statement,
-                                                   temp_target=therm_temp_target,
-                                                   temp_ambient=therm_temp_ambient,
-                                                   temp_unit=temp_unit_html,
-                                                   hvac=therm_hvac_state,
-                                                   new_temp_up=therm_temp_target+0.5,
-                                                   new_temp_down=therm_temp_target-0.5)
-                #
-                count += 1
-                #
+                    colwidth = '3'
+                    rem = len(smoke_ids) - count
+                    if rem == 1:
+                        colwidth = '12'
+                    elif rem == 2:
+                        colwidth = '6'
+                    elif rem == 3:
+                        colwidth = '4'
+                    #
+                    nest_device_id = json_devices['smoke_co_alarms'][smoke]['device_id']
+                    smoke_name = json_devices['smoke_co_alarms'][smoke]['name']
+                    #
+                    if json_devices['smoke_co_alarms'][smoke]['is_online']:
+                        #
+                        smoke_online = 'online'
+                        #
+                        battery_health = json_devices['smoke_co_alarms'][smoke]['battery_health']
+                        # ok
+                        # replace
+                        #
+                        co_alarm_state = json_devices['smoke_co_alarms'][smoke]['co_alarm_state']
+                        # ok
+                        # warning
+                        # emergency
+                        #
+                        smoke_alarm_state = json_devices['smoke_co_alarms'][smoke]['smoke_alarm_state']
+                        # ok
+                        # warning
+                        # emergency
+                        #
+                        ui_color_state = json_devices['smoke_co_alarms'][smoke]['ui_color_state']
+                        # gray
+                        # green
+                        # yellow
+                        # red
+                        #
+                    else:
+                        #
+                        smoke_online = 'offline'
+                        battery_health = ''
+                        co_alarm_state = ''
+                        smoke_alarm_state = ''
+                        #
+                    #
+                    devices_html += urlopen('web/html_devices/object_nest_account_smoke_co_alarm.html')\
+                        .read().encode('utf-8').format(colwidth=colwidth,
+                                                       group=self._group.lower().replace(' ',''),
+                                                       device=self._label.lower().replace(' ',''),
+                                                       nest_device_id=nest_device_id,
+                                                       name=smoke_name,
+                                                       online=smoke_online,
+                                                       battery_health=battery_health,
+                                                       co_alarm_state=co_alarm_state,
+                                                       smoke_alarm_state=smoke_alarm_state)
+                    #
+                    count += 1
+                    #
+            #
+            #
+            try:
+                cam_ids = json_devices['cameras'].keys()
+            except:
+                cam_ids = False
+            #
             #
         except Exception as e:
-            devices_html = 'ERROR'
+            devices_html = '<div id="body" class="row">ERROR</div>'
             print_error('Nest devices could not be compiled into html - ' + str(e))
         #
         devices_html += '</div>'

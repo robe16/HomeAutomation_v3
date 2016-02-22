@@ -2,9 +2,17 @@
     width: 175px;
     margin: 25px auto;
 }
+.nest-box-shadow {
+    -webkit-box-shadow: 0px 0px 20px 5px rgba(50, 50, 50, 0.7);
+    -moz-box-shadow: 0px 0px 20px 5px rgba(50, 50, 50, 0.7);
+    box-shadow: 0px 0px 20px 5px rgba(50, 50, 50, 0.7);
+}
 
 
-.nest_device_border{
+/* Thermostats */
+
+
+.nest_therm_border {
     display: inline-block;
     position: relative;
     height: 175px;
@@ -68,8 +76,45 @@
 }
 
 
-.nest-box-shadow {
-    -webkit-box-shadow: 0px 0px 20px 5px rgba(50, 50, 50, 0.7);
-    -moz-box-shadow: 0px 0px 20px 5px rgba(50, 50, 50, 0.7);
-    box-shadow: 0px 0px 20px 5px rgba(50, 50, 50, 0.7);
+/* Smoke detectors */
+
+
+.nest_smoke_border {
+    display: inline-block;
+    position: relative;
+    height: 175px;
+    width: 175px;
+    background-color: #9FA5AB;
+    border-radius: 25px;
+    z-index: 1000;
+}
+
+
+.smoke_status_label {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);%;
+    color: black;
+}
+
+.obj_smoke {
+    display: block;
+    position: relative;
+    height: 163px;
+    width: 163px;
+    vertical-align: middle;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 19px;
+    z-index: 1100;
+}
+.obj_smoke_online {
+    background-color: white;
+}
+.obj_smoke_offline {
+    background-color: #B8B8BE;
 }
