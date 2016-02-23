@@ -75,6 +75,20 @@
     color: white;
 }
 
+.img_leaf {
+    margin: 10px auto;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    z-index: 1200;
+}
+.leaf_true {
+    visibility: visible;
+}
+.leaf_false {
+    visibility: hidden;
+}
+
 
 /* Smoke detectors */
 
@@ -84,11 +98,21 @@
     position: relative;
     height: 175px;
     width: 175px;
-    background-color: #9FA5AB;
     border-radius: 25px;
     z-index: 1000;
 }
-
+.nest_smoke_border_gray {
+    background-color: #B8B8BE;
+}
+.nest_smoke_border_green {
+    background-color: #39C226;
+}
+.nest_smoke_border_yellow {
+    background-color: #FBCD36;
+}
+.nest_smoke_border_red {
+    background-color: #E63117;
+}
 
 .smoke_status_label {
     position: absolute;

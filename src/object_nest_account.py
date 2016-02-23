@@ -106,6 +106,8 @@ class object_nest_account:
                         therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=self._temp_unit)]
                         therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
                         #
+                        therm_leaf = json_devices['thermostats'][therm]['has_leaf']
+                        #
                     else:
                         #
                         therm_hvac_state = 'offline'
@@ -113,6 +115,7 @@ class object_nest_account:
                         temp_unit_html = ''
                         therm_temp_target = ''
                         therm_temp_ambient = ''
+                        therm_leaf = 'false'
                         #
                     #
                     devices_html += urlopen('web/html_devices/object_nest_account_thermostat.html')\
@@ -125,6 +128,7 @@ class object_nest_account:
                                                        temp_target=therm_temp_target,
                                                        temp_ambient=therm_temp_ambient,
                                                        temp_unit=temp_unit_html,
+                                                       has_leaf=str(therm_leaf).lower(),
                                                        hvac=therm_hvac_state,
                                                        new_temp_up=therm_temp_target+0.5,
                                                        new_temp_down=therm_temp_target-0.5)
@@ -186,6 +190,7 @@ class object_nest_account:
                         battery_health = ''
                         co_alarm_state = ''
                         smoke_alarm_state = ''
+                        ui_color_state = ''
                         #
                     #
                     devices_html += urlopen('web/html_devices/object_nest_account_smoke_co_alarm.html')\
@@ -195,6 +200,7 @@ class object_nest_account:
                                                        nest_device_id=nest_device_id,
                                                        name=smoke_name,
                                                        online=smoke_online,
+                                                       ui_color_state=ui_color_state,
                                                        battery_health=battery_health,
                                                        co_alarm_state=co_alarm_state,
                                                        smoke_alarm_state=smoke_alarm_state)
