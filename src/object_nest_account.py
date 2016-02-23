@@ -241,13 +241,15 @@ class object_nest_account:
                         #
                         if json_devices['cameras'][cam]['is_online']:
                             #
-                            cam_online = 'online'
+                            cam_online = 'Online'
+                            img_color = 'blue'
                             #
                             cam_streaming = json_devices['cameras'][cam]['is_streaming']
                             #
                         else:
                             #
-                            cam_online = 'offline'
+                            cam_online = 'Offline'
+                            img_color = 'gray'
                             cam_streaming = ''
                             #
                         #
@@ -257,6 +259,7 @@ class object_nest_account:
                                                            device=self._label.lower().replace(' ',''),
                                                            nest_device_id=nest_device_id,
                                                            name=cam_name,
+                                                           color=img_color,
                                                            online=cam_online)
                         #
                         count += 1

@@ -142,3 +142,15 @@
 .obj_smoke_offline {
     background-color: #B8B8BE;
 }
+
+
+/* Smoke detectors */
+
+
+.img_nest_cam {
+    margin: 10px 35px;
+    top: 0;
+    width: 105px;
+    height: 105px;
+    z-index: 1000;
+}
