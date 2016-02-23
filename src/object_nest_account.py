@@ -175,24 +175,16 @@ class object_nest_account:
                             smoke_online = 'online'
                             #
                             battery_health = json_devices['smoke_co_alarms'][smoke]['battery_health']
-                            # ok
-                            # replace
+                            # ok / replace
                             #
                             co_alarm_state = json_devices['smoke_co_alarms'][smoke]['co_alarm_state']
-                            # ok
-                            # warning
-                            # emergency
+                            # ok / warning / emergency
                             #
                             smoke_alarm_state = json_devices['smoke_co_alarms'][smoke]['smoke_alarm_state']
-                            # ok
-                            # warning
-                            # emergency
+                            # ok / warning / emergency
                             #
                             ui_color_state = json_devices['smoke_co_alarms'][smoke]['ui_color_state']
-                            # gray
-                            # green
-                            # yellow
-                            # red
+                            # gray / green / yellow / red
                             #
                         else:
                             #
@@ -228,6 +220,47 @@ class object_nest_account:
                     cam_ids = json_devices['cameras'].keys()
                 except:
                     cam_ids = False
+                #
+                if bool(cam_ids):
+                    count = 0
+                    for cam in cam_ids:
+                        if count> 0 and count % 4 == 0:
+                            devices_html += '</div><div class="row">'
+                        #
+                        colwidth = '3'
+                        rem = len(cam_ids) - count
+                        if rem == 1:
+                            colwidth = '12'
+                        elif rem == 2:
+                            colwidth = '6'
+                        elif rem == 3:
+                            colwidth = '4'
+                        #
+                        nest_device_id = json_devices['cameras'][cam]['device_id']
+                        cam_name = json_devices['cameras'][cam]['name']
+                        #
+                        if json_devices['cameras'][cam]['is_online']:
+                            #
+                            cam_online = 'online'
+                            #
+                            cam_streaming = json_devices['cameras'][cam]['is_streaming']
+                            #
+                        else:
+                            #
+                            cam_online = 'offline'
+                            cam_streaming = ''
+                            #
+                        #
+                        devices_html += urlopen('web/html_devices/{html_cam}'.format(html_cam=html_cam))\
+                            .read().encode('utf-8').format(colwidth=colwidth,
+                                                           group=self._group.lower().replace(' ',''),
+                                                           device=self._label.lower().replace(' ',''),
+                                                           nest_device_id=nest_device_id,
+                                                           name=cam_name,
+                                                           online=cam_online)
+                        #
+                        count += 1
+                        #
             #
             #
         except Exception as e:
