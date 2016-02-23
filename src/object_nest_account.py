@@ -53,9 +53,19 @@ class object_nest_account:
         html = get_device_html_command(self._type)
         body = self._htmlbody()
         #
+        script = ("\r\n<script>\r\n" +
+                  "setTimeout(function () {\r\n" +
+                  "updateNest('/web/device/" + self._group.lower().replace(' ','') + "/" + self._label.lower().replace(' ','') + "?body=true');\r\n" +
+                  "}, 30000);\r\n" +
+                  "</script>\r\n")
+        #
+        timestamp = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        #
         return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
                                                                                  device = self._label.lower().replace(' ',''),
-                                                                                 body=body)
+                                                                                 timestamp=timestamp,
+                                                                                 script=script,
+                                                                                 body_nest=body)
 
     def _htmlbody(self):
         #

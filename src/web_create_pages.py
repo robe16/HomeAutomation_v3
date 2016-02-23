@@ -37,7 +37,7 @@ def create_tvguide(user, arr_devices, listings):
            urlopen('web/footer.html').read().encode('utf-8')
 
 
-def create_device(user, tvlistings, arr_devices, group_name, device_name):
+def create_device(user, tvlistings, arr_devices, group_name, device_name, request):
     #
     grp_name = '-'
     device = get_device(arr_devices, group_name, device_name)
@@ -48,15 +48,18 @@ def create_device(user, tvlistings, arr_devices, group_name, device_name):
         if grp_name.lower().replace(' ','') == group_name:
             break
     #
-    body = _create_device_page(user, tvlistings, device, group_name, device_name)
-    #
-    if not body:
+    if bool(device):
+        body = _create_device_page(user, tvlistings, device, group_name, device_name)
+    else:
         raise Exception
+    #
+    if request.query.body:
+        return body
     #
     title = '{group}: '.format(group = grp_name) if grp_name != '-' else ''
     title += device.getLabel()
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title=title) +\
            html_menu(user, arr_devices) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
+           urlopen('web/body.html').read().encode('utf-8').format(body=body) +\
            urlopen('web/footer.html').read().encode('utf-8')

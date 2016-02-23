@@ -111,7 +111,7 @@ def web(group_name='', device_name=''):
             redirect('/web/login')
         tvlistings = _check_tvlistingsqueue()
         # Create and return web interface page
-        return HTTPResponse(body=create_device(user, tvlistings, _get_devices(), group_name, device_name), status=200)
+        return HTTPResponse(body=create_device(user, tvlistings, _get_devices(), group_name, device_name, request), status=200)
     except:
         return HTTPResponse(body=create_error_500(user, _get_devices()), status=500)
 
