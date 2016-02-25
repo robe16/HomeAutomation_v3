@@ -217,7 +217,8 @@ class object_tv_lg_netcast:
                           '</envelope>').format(auid = request.query.auid,
                                                 app_name = request.query.name.replace(' ','%20'))
                 response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-                if bool(response) and not str(response.getcode()).startswith("2"):
+                if not bool(response):
+                    self._BOOLpaired = False
                     if not self._check_paired():
                         return False
                     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
@@ -236,7 +237,8 @@ class object_tv_lg_netcast:
                           '</api>' +
                           '</envelope>').format(value = code)
                 response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-                if bool(response) and not str(response.getcode()).startswith("2"):
+                if not bool(response):
+                    self._BOOLpaired = False
                     if not self._check_paired():
                         return False
                     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
