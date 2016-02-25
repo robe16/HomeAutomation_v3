@@ -74,6 +74,13 @@
     cursor: pointer;
     color: white;
 }
+.therm_temp_glyph_online {
+    visibility: visible;
+}
+.therm_temp_glyph_offline {
+    visibility: hidden;
+}
+
 
 .img_leaf {
     margin: 10px auto;

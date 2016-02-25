@@ -109,6 +109,8 @@ class object_nest_account:
                         #
                         if json_devices['thermostats'][therm]['is_online']:
                             #
+                            is_online = 'online'
+                            #
                             therm_hvac_state = json_devices['thermostats'][therm]['hvac_state']
                             if therm_hvac_state == 'heating':
                                 temp_hvac_statement = 'Heating to'
@@ -121,16 +123,25 @@ class object_nest_account:
                             therm_temp_target = json_devices['thermostats'][therm]['target_temperature_{unit}'.format(unit=self._temp_unit)]
                             therm_temp_ambient = json_devices['thermostats'][therm]['ambient_temperature_{unit}'.format(unit=self._temp_unit)]
                             #
+                            therm_label = 'Current: '
+                            #
+                            new_temp_up = therm_temp_target + 0.5
+                            new_temp_down = therm_temp_target - 0.5
+                            #
                             therm_leaf = json_devices['thermostats'][therm]['has_leaf']
                             #
                         else:
                             #
+                            is_online = 'offline'
                             therm_hvac_state = 'offline'
-                            temp_hvac_statement = 'Offline'
+                            temp_hvac_statement = ''
                             temp_unit_html = ''
+                            therm_label = 'Offline'
                             therm_temp_target = ''
                             therm_temp_ambient = ''
                             therm_leaf = 'false'
+                            new_temp_up = ''
+                            new_temp_down = ''
                             #
                         #
                         devices_html += urlopen('web/html_devices/{html_therm}'.format(html_therm=html_therm))\
@@ -139,14 +150,16 @@ class object_nest_account:
                                                            device=self._label.lower().replace(' ',''),
                                                            nest_device_id=nest_device_id,
                                                            name=therm_name,
+                                                           therm_label=therm_label,
+                                                           is_online=is_online,
                                                            temp_hvac=temp_hvac_statement,
                                                            temp_target=therm_temp_target,
                                                            temp_ambient=therm_temp_ambient,
                                                            temp_unit=temp_unit_html,
                                                            has_leaf=str(therm_leaf).lower(),
                                                            hvac=therm_hvac_state,
-                                                           new_temp_up=therm_temp_target+0.5,
-                                                           new_temp_down=therm_temp_target-0.5)
+                                                           new_temp_up=new_temp_up,
+                                                           new_temp_down=new_temp_down)
                         #
                         count += 1
                         #
@@ -277,8 +290,8 @@ class object_nest_account:
             #
             #
         except Exception as e:
-            devices_html = '<div id="body" class="row">ERROR</div>'
             print_error('Nest devices could not be compiled into html - ' + str(e))
+            raise Exception
         #
         devices_html += '</div>'
         return devices_html
