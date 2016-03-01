@@ -143,8 +143,19 @@ class object_tv_lg_netcast:
 
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         #
+        if not self._check_paired():
+            print_command ('getApplist', get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
+            return False
+        #
         STRurl = "/udap/api/data?target=applist_get&type={}&index={}&number={}".format(str(APPtype), str(APPindex), str(APPnumber))
         x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
+        #
+        if not bool(x):
+            set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
+            if not self._check_paired():
+                return False
+            x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
+        #
         if bool(x):
             return x.read() if str(x.getcode()).startswith("2") else False
         else:
@@ -177,11 +188,23 @@ class object_tv_lg_netcast:
         # </envelope>
 
     def getAppicon (self, auid, name):
+        #
+        if not self._check_paired():
+            print_command ('getAppicon', get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
+            return False
+        #
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
         # name = App name
         STRurl = "/udap/api/data?target=appicon_get&auid={auid}&appname={appname}".format(auid = auid,
                                                                                           appname = name)
         x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
+        #
+        if not bool(x):
+            set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
+            if not self._check_paired():
+                return False
+            x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
+        #
         if bool(x):
             return x.read() if str(x.getcode()).startswith("2") else False
         else:
