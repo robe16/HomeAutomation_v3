@@ -4,10 +4,10 @@ import time
 from bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
 
 from config_devices_create import create_device_object
-from config_devices import write_config_devices #, create_device_object_array
+from config_devices import write_config_devices
 from config_users import check_user, get_userrole, update_user_channels
 from console_messages import print_msg, print_error
-from command_forwarder import cmd_fwrd#, get_device
+from command_forwarder import cmd_fwrd
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_devices import refresh_tvguide
 from web_create_settings import create_settings_devices, settings_devices_requests, create_settings_tvguide
