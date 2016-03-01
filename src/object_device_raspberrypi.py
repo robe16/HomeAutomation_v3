@@ -13,6 +13,9 @@ class object_raspberrypi:
     def getLabel(self):
         return self._label
 
+    def getGroup(self):
+        return self._group
+
     def getType(self):
         return self._type
 

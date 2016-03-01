@@ -138,7 +138,7 @@ function validateIpaddress(ipaddress) {
 
 function buildJson() {
     //
-    var json = '[';
+    var json = '{';
     //
     var grps = document.getElementsByName('group');
     //
@@ -154,8 +154,8 @@ function buildJson() {
         //
         if (g>0) {json += ',';}
         //
-        json += '{"group": "' + grp_name + '",';
-        json += '"devices": [';
+        json += '"' + grp_name + '": {"group": "' + grp_name + '",';
+        json += '"devices": {';
         //
         var grp_dvcs = grps[g].getElementsByClassName('settings_box device');
         //
@@ -163,16 +163,33 @@ function buildJson() {
             //
             if (d>0) {json += ',';}
             //
-            json += '{"device": "' + grp_dvcs[d].getAttribute("name") + '",';
-            json += '"details": {';
-            //
             var dvc_inputs = grp_dvcs[d].getElementsByTagName('input');
+            //
+            label = '-'
+            //
+            for (var i = 0; i < dvc_inputs.length; i++) {
+                //
+                if (dvc_inputs[i].name=='name') {
+                    label = dvc_inputs[i].value;
+                    break;
+                }
+                //
+            }
+            //
+            json += '' + label + '": {"device": "' + grp_dvcs[d].getAttribute("name") + '",';
+            json += '"details": {';
             //
             for (var i = 0; i < dvc_inputs.length; i++) {
                 //
                 if (i>0) {json += ',';}
                 //
-                json += '"' + dvc_inputs[i].name + '": "' + dvc_inputs[i].value + '"';
+                if (dvc_inputs[i].value.toLowerCase()=='true' || dvc_inputs[i].value.toLowerCase()=='false') {
+                    val = dvc_inputs[i].value.toLowerCase();
+                } else {
+                    val = '"' + dvc_inputs[i].value + '"'
+                }
+                //
+                json += '"' + dvc_inputs[i].name + '": ' + val;
                 //
             }
             //
@@ -180,11 +197,11 @@ function buildJson() {
             //
         }
         //
-        json += ']}';
+        json += '}}';
         //
     }
     //
-    json += ']';
+    json += '}';
     //
     return json;
     //

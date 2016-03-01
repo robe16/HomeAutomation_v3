@@ -5,11 +5,11 @@ from web_settings_tvguide import settings_tvguide
 from list_devices import get_device_logo, get_device_html_settings, get_device_settings_dict
 
 
-def create_settings_devices(user, arr_devices):
-    body = settings_devices(arr_devices)
+def create_settings_devices(user):
+    body = settings_devices()
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') + \
-           html_menu(user, arr_devices) + \
+           html_menu(user) + \
            urlopen('web/body.html').read().encode('utf-8').format(body=body) + \
            urlopen('web/message_popup.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
@@ -42,11 +42,11 @@ def settings_devices_requests(request):
     return False
 
 
-def create_settings_tvguide(user, arr_devices):
+def create_settings_tvguide(user):
     body = settings_tvguide()
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') + \
-           html_menu(user, arr_devices) + \
+           html_menu(user) + \
            urlopen('web/body.html').read().encode('utf-8').format(body=body) + \
            urlopen('web/message_popup.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')

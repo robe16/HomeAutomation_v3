@@ -1,5 +1,4 @@
 from send_cmds import sendTELNET
-from datetime import datetime
 from urllib import urlopen
 from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from console_messages import print_command
@@ -19,6 +18,9 @@ class object_tivo:
 
     def getLabel(self):
         return self._label
+
+    def getGroup(self):
+        return self._group
 
     def getType(self):
         return self._type

@@ -32,12 +32,15 @@ class object_nest_account:
         self._tokenexpiry = datetime.datetime.strptime(tokenexpiry, self._dateformat) if bool(tokenexpiry) else False
         self._pincode = pincode
         self._state = state
-        if bool(self._pincode) and not self._checkToken():
-            self._getNewToken()
+        # if bool(self._pincode) and not self._checkToken():
+        #     self._getNewToken()
         self._tvguide = False
 
     def getLabel(self):
         return self._label
+
+    def getGroup(self):
+        return self._group
 
     def getType(self):
         return self._type

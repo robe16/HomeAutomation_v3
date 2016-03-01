@@ -1,27 +1,34 @@
 from urllib import urlopen
 from list_devices import read_list_devices, get_device_name, get_device_logo
+from config_devices import get_device_json
+from config_devices_create import create_device_object
 
 
-def settings_devices(arr_devices):
+def settings_devices():
     #
-    html_groups =''
+    html_groups = ''
     grp_num = 0
     #
-    for device_group in arr_devices:
+    data = get_device_json()
+    #
+    grp_keys = data.keys()
+    for grp in grp_keys:
         #
         html_devices = ''
         dvc_num = 0
         #
-        for device in device_group['devices']:
+        dvc_keys = data[grp]['devices'].keys()
+        for dvc in dvc_keys:
             try:
+                device = create_device_object(grp, dvc)
                 html_devices += device.getHtml_settings(grp_num, dvc_num)
-            except:
+            except Exception as e:
                 html_devices += ''
             dvc_num += 1
         #
         html_groups += settings_devices_group(grp_num,
                                               dvcnum=dvc_num,
-                                              group_name=device_group['name'],
+                                              group_name=data[grp]['group'],
                                               devices=html_devices)
         grp_num += 1
     #

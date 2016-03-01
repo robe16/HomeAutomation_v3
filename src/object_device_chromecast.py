@@ -16,6 +16,9 @@ class object_chromecast:
     def getLabel(self):
         return self._label
 
+    def getGroup(self):
+        return self._group
+
     def getIP(self):
         return self._ipaddress
 

@@ -2,6 +2,7 @@ from send_cmds import sendHTTP
 from urllib import urlopen
 import xml.etree.ElementTree as ET
 from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from config_devices import get_device_config_detail, set_device_config_detail
 from console_messages import print_command
 
 
@@ -20,8 +21,8 @@ class object_tv_lg_netcast:
         self._ipaddress = ipaddress
         self._port = port
         self._pairingkey = pairingkey
-        if self._pairingkey!=None:
-            self._pairDevice()
+        # if self._pairingkey!=None:
+        #     self._pairDevice()
         self._tvguide = True
 
     def getType(self):
@@ -29,6 +30,9 @@ class object_tv_lg_netcast:
 
     def getLabel(self):
         return self._label
+
+    def getGroup(self):
+        return self._group
 
     def getIP(self):
         return self._ipaddress
@@ -50,23 +54,23 @@ class object_tv_lg_netcast:
         return get_device_logo(self._type)
 
     def isPaired(self):
-        return self._BOOLpaired
+        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired')
 
     def _pairDevice(self):
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey, str(self._port))
         x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-        self._BOOLpaired = bool(x)
-        return self._BOOLpaired
+        set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', bool(x))
+        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired')
 
     def _check_paired(self):
-        if not self._BOOLpaired:
+        if not get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
             count = 0
             while count < 5:
                 self._pairDevice()
-                if self._BOOLpaired:
+                if get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
                     return True
                 count+=1
-            if count==5 and not self._BOOLpaired:
+            if count==5 and not get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
                 return False
         return True
 
@@ -218,7 +222,7 @@ class object_tv_lg_netcast:
                                                 app_name = request.query.name.replace(' ','%20'))
                 response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
                 if not bool(response):
-                    self._BOOLpaired = False
+                    set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
                     if not self._check_paired():
                         return False
                     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
@@ -238,7 +242,7 @@ class object_tv_lg_netcast:
                           '</envelope>').format(value = code)
                 response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
                 if not bool(response):
-                    self._BOOLpaired = False
+                    set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
                     if not self._check_paired():
                         return False
                     response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
