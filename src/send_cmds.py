@@ -3,7 +3,6 @@ import telnetlib
 import time
 from console_messages import print_error, print_http
 from list_devices import set_device_detail
-# import socket
 
 def sendHTTP(url1, connection, url2='', method=False, data=False, contenttype=False, header_auth=False, retry=0, redirect_type=False):
     #
@@ -57,23 +56,13 @@ def sendHTTP(url1, connection, url2='', method=False, data=False, contenttype=Fa
         print_error('Could not send http request - ' + url + ' - ' + str(e))
         return False
 
+
 def _check_prefix(url):
     if not url.startswith("http"):
         return "http://" + url
     else:
         return url
 
-
-# Stopped working for unknown reason - sendTELNET added for use instead by tivo
-# def sendSOCKET(ipaddress, port, data):
-#     try:
-#         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#         sock.connect((ipaddress, port))
-#         sock.send(bytes(data))
-#         sock.close()
-#         return True
-#     except:
-#         return False
 
 def sendTELNET(ipaddress, port, data=None, response=False):
     try:

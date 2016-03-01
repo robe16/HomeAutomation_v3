@@ -7,7 +7,6 @@ from console_messages import print_command
 
 
 class object_tv_lg_netcast:
-    '''LG TV object'''
 
     STRtv_PATHpair = "/udap/api/pairing"
     STRtv_PATHcommand = "/udap/api/command"
@@ -21,8 +20,6 @@ class object_tv_lg_netcast:
         self._ipaddress = ipaddress
         self._port = port
         self._pairingkey = pairingkey
-        # if self._pairingkey!=None:
-        #     self._pairDevice()
         self._tvguide = True
 
     def getType(self):

@@ -19,11 +19,6 @@ def _get_device_details(type):
         return data[type]
     except:
         return False
-    # if data:
-    #     for item in data:
-    #         if item['type'] == type:
-    #             return item
-    # return False
 
 
 def get_device_name(type):

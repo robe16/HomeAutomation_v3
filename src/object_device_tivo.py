@@ -5,7 +5,6 @@ from console_messages import print_command
 
 
 class object_tivo:
-    '''TiVo object'''
 
     def __init__(self, label, group, ipaddress, port, accesskey=""):
         self._type = "tivo"

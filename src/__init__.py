@@ -34,7 +34,7 @@ def server_end():
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1601, debug=True)
+    run(host='0.0.0.0', port=1600, debug=True)
 
 
 def tvlistings_process():
@@ -175,7 +175,6 @@ def send_command():
     #
     try:
         #
-        # rsp = cmd_fwrd(_get_devices(), request)
         rsp = cmd_fwrd(request)
         #
         if isinstance(rsp, bool):
@@ -204,8 +203,6 @@ def save_settings(category=''):
             data = request.body.read()
             if data:
                 if write_config_devices(data):
-                    # Recreate device array/list after new config saved
-                    # _create_devices()
                     return HTTPResponse(status=200)
             # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
         return HTTPResponse(status=400)
@@ -261,17 +258,6 @@ def _check_tvlistingsqueue():
     else:
         return False
 
-# def _get_devices():
-#     if not q_devices.empty():
-#         temp = q_devices.get()
-#         q_devices.put(temp)
-#         return temp
-#     else:
-#         return False
-#
-# def _create_devices():
-#     q_devices.put(create_device_object_array())
-
 
 def _check_user(user_cookie):
     if not user_cookie:
@@ -286,10 +272,6 @@ def _check_user(user_cookie):
 # Create processes for TV Listing code and code to start bottle server
 q_listings = Queue()
 q_devices = Queue()
-#
-# print_msg('Creating devices')
-# _create_devices()
-# print_msg('Device array/dict created')
 #
 process_listings = Process(target=tvlistings_process)
 process_bottle = Process(target=start_bottle)
