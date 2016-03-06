@@ -62,7 +62,7 @@ class object_tv_lg_netcast:
     def _check_paired(self):
         if not get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
             count = 0
-            while count < 5:
+            while count < 2:
                 self._pairDevice()
                 if get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
                     return True
