@@ -70,7 +70,7 @@ def _listings(listings, device=None, chan_current=False, group_name=False, devic
     return STRlistings
 
 
-def _listingsrow(x, channelitem, device, chan_current, group_name=False, device_name=False, user=False):
+def _listingsrow(x, channelitem, device, chan_current, group_name=False, device_name=False, user=False, last=False):
     #
     try:
         channo = channelitem.devicekeys(device.getType())
@@ -107,18 +107,21 @@ def _listingsrow(x, channelitem, device, chan_current, group_name=False, device_
         color = '#ffffff'
     # If current channel, create element class text for highlighting
     if bool(chan_current) and channo == chan_current:
-        chan_highlight = 'class="highlight"'
+        chan_highlight = ' highlight'
     else:
-        chan_highlight = ""
+        chan_highlight = ''
+    # If last item, add class text to add bottom border to row
+    if last:
+        item_last = ' tbl_border'
+    else:
+        item_last = ''
     # If device can change channel, add 'go' button
     if group_name and device_name and channo:
         go = urlopen('web/html_tvguide/tvguide-row_go.html').read().encode('utf-8').format(group=group_name,
                                                                                            device=device_name,
                                                                                            channo=channo)
-        go_desc = '<td></td>'
     else:
         go = ''
-        go_desc = ''
     # Create element id, including user name if required (user name prevents duplication of id names within page)
     if user:
         chan_id = str(user).lower()+'_'
@@ -126,7 +129,8 @@ def _listingsrow(x, channelitem, device, chan_current, group_name=False, device_
     #
     return urlopen('web/html_tvguide/tvguide-row.html').read().encode('utf-8').format(id=('chan' + str(channo)),
                                                                                       chan_id=chan_id,
-                                                                                      cls=chan_highlight,
+                                                                                      cls_highlight=chan_highlight,
+                                                                                      cls_lastitem=item_last,
                                                                                       color=color,
                                                                                       imgtype=channelitem.type(),
                                                                                       imgchan=channelitem.logo(),
@@ -134,5 +138,4 @@ def _listingsrow(x, channelitem, device, chan_current, group_name=False, device_
                                                                                       now=now,
                                                                                       next=next,
                                                                                       blurb=blurb,
-                                                                                      go=go,
-                                                                                      go_desc=go_desc)
+                                                                                      go=go)

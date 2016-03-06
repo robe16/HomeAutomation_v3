@@ -123,3 +123,13 @@ p.message {
     text-align: center;
     margin: 10px 40px 20px 40px;
 }
+
+/* TV guide table border */
+
+.tbl_border {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+.tbl_border_last {
+    border-bottom: 1px solid #ddd;
+}
