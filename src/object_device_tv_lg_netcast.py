@@ -1,7 +1,7 @@
 from send_cmds import sendHTTP
 from urllib import urlopen
 import xml.etree.ElementTree as ET
-from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from list_devices import get_device_name, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from config_devices import get_device_config_detail, set_device_config_detail
 from console_messages import print_command
 
@@ -49,6 +49,9 @@ class object_tv_lg_netcast:
 
     def getLogo(self):
         return get_device_logo(self._type)
+
+    def getName(self):
+        return get_device_name(self._type)
 
     def isPaired(self):
         return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired')

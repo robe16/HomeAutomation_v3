@@ -1,5 +1,5 @@
 from urllib import urlopen
-from list_devices import get_device_logo, get_device_html_command, get_device_html_settings
+from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 
 class object_other:
 
@@ -24,6 +24,9 @@ class object_other:
 
     def getLogo(self):
         return get_device_logo(self._type)
+
+    def getName(self):
+        return get_device_name(self._type)
 
     def getHtml(self):
         device_url = 'device/{group}/{device}'.format(group=self._group.lower().replace(' ',''), device=self._label.lower().replace(' ',''))

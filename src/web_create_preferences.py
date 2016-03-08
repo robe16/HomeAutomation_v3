@@ -8,6 +8,6 @@ def create_preference_tvguide(user):
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='User Preferences: TV Guide') +\
            html_menu(user) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
+           urlopen('web/body.html').read().encode('utf-8').format(header='User Preferences: TV Guide', body=body) +\
            urlopen('web/message_popup.html').read().encode('utf-8') +\
            urlopen('web/footer.html').read().encode('utf-8')

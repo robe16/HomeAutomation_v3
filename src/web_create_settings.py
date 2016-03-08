@@ -10,7 +10,7 @@ def create_settings_devices(user):
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') + \
            html_menu(user) + \
-           urlopen('web/body.html').read().encode('utf-8').format(body=body) + \
+           urlopen('web/body.html').read().encode('utf-8').format(header='Settings: Devices', body=body) + \
            urlopen('web/message_popup.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')
 
@@ -47,6 +47,6 @@ def create_settings_tvguide(user):
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') + \
            html_menu(user) + \
-           urlopen('web/body.html').read().encode('utf-8').format(body=body) + \
+           urlopen('web/body.html').read().encode('utf-8').format(header='Settings: TV Guide', body=body) + \
            urlopen('web/message_popup.html').read().encode('utf-8') + \
            urlopen('web/footer.html').read().encode('utf-8')

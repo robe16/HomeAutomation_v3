@@ -42,6 +42,9 @@ class object_tivo:
     def getLogo(self):
         return get_device_logo(self._type)
 
+    def getName(self):
+        return get_device_name(self._type)
+
     def _getChan(self):
         response = sendTELNET(self._ipaddress, self._port, response=True)
         if not bool(response):

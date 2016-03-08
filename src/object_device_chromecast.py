@@ -1,6 +1,6 @@
 import pychromecast
 from urllib import urlopen
-from list_devices import get_device_logo, get_device_html_command, get_device_html_settings
+from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 
 # Documentation for use of pychromecast package/library: https://pypi.python.org/pypi/PyChromecast
 
@@ -27,6 +27,9 @@ class object_chromecast:
 
     def getLogo(self):
         return get_device_logo(self._type)
+
+    def getName(self):
+        return get_device_name(self._type)
 
     def getHtml(self):
         device_url = 'device/{group}/{device}'.format(group=self._group.lower().replace(' ',''), device=self._label.lower().replace(' ',''))

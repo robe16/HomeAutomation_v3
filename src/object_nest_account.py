@@ -6,7 +6,7 @@ import os
 import json
 from send_cmds import sendHTTP
 from console_messages import print_command, print_error
-from list_devices import get_device_logo, get_device_html_command, get_device_html_settings, get_device_detail, get_device_name, set_device_detail
+from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings, get_device_detail, get_device_name, set_device_detail
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
 
@@ -47,6 +47,9 @@ class object_nest_account:
 
     def getLogo(self):
         return get_device_logo(self._type)
+
+    def getName(self):
+        return get_device_name(self._type)
 
     def getTvguide_use(self):
         return self._tvguide

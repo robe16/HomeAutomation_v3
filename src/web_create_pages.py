@@ -16,7 +16,7 @@ def create_home(user):
     body = urlopen('web/index.html').read().encode('utf-8')
     return urlopen('web/header.html').read().encode('utf-8').format(title='Home') + \
            html_menu(user) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
+           urlopen('web/body.html').read().encode('utf-8').format(header='', body=body) +\
            urlopen('web/footer.html').read().encode('utf-8')
 
 
@@ -24,7 +24,7 @@ def create_about(user):
     body = urlopen('web/about.html').read().encode('utf-8')
     return urlopen('web/header.html').read().encode('utf-8').format(title='About') +\
            html_menu(user) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
+           urlopen('web/body.html').read().encode('utf-8').format(header='About', body=body) +\
            urlopen('web/footer.html').read().encode('utf-8')
 
 
@@ -33,7 +33,7 @@ def create_tvguide(user, listings):
                                                                                                                       user=user))
     return urlopen('web/header.html').read().encode('utf-8').format(title='TV Guide') +\
            html_menu(user) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body = body) +\
+           urlopen('web/body.html').read().encode('utf-8').format(header='TV Guide', body=body) +\
            urlopen('web/footer.html').read().encode('utf-8')
 
 
@@ -53,5 +53,5 @@ def create_device(user, tvlistings, group_name, device_name, request):
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title=title) +\
            html_menu(user) +\
-           urlopen('web/body.html').read().encode('utf-8').format(body=body) +\
+           urlopen('web/body.html').read().encode('utf-8').format(header=device.getName(), body=body) +\
            urlopen('web/footer.html').read().encode('utf-8')
