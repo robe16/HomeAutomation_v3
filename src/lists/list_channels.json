@@ -1,1120 +1,3776 @@
 {
-    "channels": [
-        {
-            "name": "BBC1",
-            "devicekeys": {
-                "tivo": 108
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "96"
-            },
-            "logo": "bbc1_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "BBC2",
-            "devicekeys": {
-                "tivo": 162
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "105"
-            },
-            "logo": "bbc2_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "BBC3",
-            "devicekeys": {
-                "tivo": 163
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "45"
-            },
-            "logo": "bbc3_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "BBC4",
-            "devicekeys": {
-                "tivo": 164
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "47"
-            },
-            "logo": "bbc4_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "BBC ALBA",
-            "devicekeys": {
-                "tivo": 161
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2098"
-            },
-            "logo": "bbcalba.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV",
-            "devicekeys": {
-                "tivo": 113
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "28"
-            },
-            "logo": "itv1_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV +1",
-            "devicekeys": {
-                "tivo": 114
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2683"
-            },
-            "logo": "itv1+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV2",
-            "devicekeys": {
-                "tivo": 115
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "185"
-            },
-            "logo": "itv2.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV2 +1",
-            "devicekeys": {
-                "tivo": 116
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "1990"
-            },
-            "logo": "itv2+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV3",
-            "devicekeys": {
-                "tivo": 117
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "1859"
-            },
-            "logo": "itv3.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV3 +1",
-            "devicekeys": {
-                "tivo": 174
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2511"
-            },
-            "logo": "itv3+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV4",
-            "devicekeys": {
-                "tivo": 118
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "1961"
-            },
-            "logo": "itv4.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITV4 +1",
-            "devicekeys": {
-                "tivo": 175
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2568"
-            },
-            "logo": "itv4+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITVBe",
-            "devicekeys": {
-                "tivo": 119
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "itvbe.png",
-            "type": "tv"
-        },
-        {
-            "name": "ITVBe +1",
-            "devicekeys": {
-                "tivo": 120
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "itvbe+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Channel 4",
-            "devicekeys": {
-                "tivo": 142
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2056"
-            },
-            "logo": "channel4_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "Channel 4 +1",
-            "devicekeys": {
-                "tivo": 143
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2047"
-            },
-            "logo": "channel4+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "E4",
-            "devicekeys": {
-                "tivo": 144
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "158"
-            },
-            "logo": "e4.png",
-            "type": "tv"
-        },
-        {
-            "name": "E4+1",
-            "devicekeys": {
-                "tivo": 146
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "1161"
-            },
-            "logo": "e4+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "More4",
-            "devicekeys": {
-                "tivo": 147
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "1959"
-            },
-            "logo": "more4.png",
-            "type": "tv"
-        },
-        {
-            "name": "More4+1",
-            "devicekeys": {
-                "tivo": 196
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "1972"
-            },
-            "logo": "more4+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "4Seven",
-            "devicekeys": {
-                "tivo": 195
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2701"
-            },
-            "logo": "4seven.png",
-            "type": "tv"
-        },
-        {
-            "name": "Channel 5",
-            "devicekeys": {
-                "tivo": 150
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2615"
-            },
-            "logo": "channel5_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "Channel 5 +1",
-            "devicekeys": {
-                "tivo": 155
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2699"
-            },
-            "logo": "channel5+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Channel 5 +24",
-            "devicekeys": {
-                "tivo": 152
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "channel5+24.png",
-            "type": "tv"
-        },
-        {
-            "name": "5*",
-            "devicekeys": {
-                "tivo": 151
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2062"
-            },
-            "logo": "5star.png",
-            "type": "tv"
-        },
-        {
-            "name": "5 USA",
-            "devicekeys": {
-                "tivo": 153
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2008"
-            },
-            "logo": "5usa.png",
-            "type": "tv"
-        },
-        {
-            "name": "5 USA +1",
-            "devicekeys": {
-                "tivo": 154
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2577"
-            },
-            "logo": "5usa+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "dave",
-            "devicekeys": {
-                "tivo": 128
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2050"
-            },
-            "logo": "dave.png",
-            "type": "tv"
-        },
-        {
-            "name": "dave ja vu",
-            "devicekeys": {
-                "tivo": 129
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2052"
-            },
-            "logo": "davejavu.png",
-            "type": "tv"
-        },
-        {
-            "name": "Sky1",
-            "devicekeys": {
-                "tivo": 110
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "248"
-            },
-            "logo": "sky1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Sky2",
-            "devicekeys": {
-                "tivo": 121
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "922"
-            },
-            "logo": "sky2.png",
-            "type": "tv"
-        },
-        {
-            "name": "Sky Living",
-            "devicekeys": {
-                "tivo": 112
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "197"
-            },
-            "logo": "skyliving.png",
-            "type": "tv"
-        },
-        {
-            "name": "Sky Living +1",
-            "devicekeys": {
-                "tivo": 140
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "841"
-            },
-            "logo": "skyliving+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Sky Arts",
-            "devicekeys": {
-                "tivo": 122
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "40"
-            },
-            "logo": "skyarts.png",
-            "type": "tv"
-        },
-        {
-            "name": "Pick",
-            "devicekeys": {
-                "tivo": 123
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "1963"
-            },
-            "logo": "pick.png",
-            "type": "tv"
-        },
-        {
-            "name": "syfy",
-            "devicekeys": {
-                "tivo": 135
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2212"
-            },
-            "logo": "syfy.png",
-            "type": "tv"
-        },
-        {
-            "name": "syfy +1",
-            "devicekeys": {
-                "tivo": 136
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2213"
-            },
-            "logo": "syfy+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Sony Channel",
-            "devicekeys": {
-                "tivo": 193
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2702"
-            },
-            "logo": "sonychannel.png",
-            "type": "tv"
-        },
-        {
-            "name": "DMAX",
-            "devicekeys": {
-                "tivo": 170
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2545"
-            },
-            "logo": "dmax.png",
-            "type": "tv"
-        },
-        {
-            "name": "TLC",
-            "devicekeys": {
-                "tivo": 167
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "tlc.png",
-            "type": "tv"
-        },
-        {
-            "name": "TLC +1",
-            "devicekeys": {
-                "tivo": 169
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "tlc+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "MTV",
-            "devicekeys": {
-                "tivo": 134
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "202"
-            },
-            "logo": "mtv.png",
-            "type": "tv"
-        },
-        {
-            "name": "E!",
-            "devicekeys": {
-                "tivo": 156
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "1421"
-            },
-            "logo": "e.png",
-            "type": "tv"
-        },
-        {
-            "name": "CBS Action",
-            "devicekeys": {
-                "tivo": 192
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2178"
-            },
-            "logo": "cbsaction.png",
-            "type": "tv"
-        },
-        {
-            "name": "CBS Reality",
-            "devicekeys": {
-                "tivo": 148
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2586"
-            },
-            "logo": "cbsreality.png",
-            "type": "tv"
-        },
-        {
-            "name": "CBS Reality +1",
-            "devicekeys": {
-                "tivo": 201
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "cbsreality+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Real Lives",
-            "devicekeys": {
-                "tivo": 160
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2189"
-            },
-            "logo": "reallives.png",
-            "type": "tv"
-        },
-        {
-            "name": "Real Lives +1",
-            "devicekeys": {
-                "tivo": 207
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2190"
-            },
-            "logo": "reallives+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Good Food",
-            "devicekeys": {
-                "tivo": 278
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2136"
-            },
-            "logo": "goodfood.png",
-            "type": "tv"
-        },
-        {
-            "name": "Food Network",
-            "devicekeys": {
-                "tivo": 291
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2185"
-            },
-            "logo": "foodnetwork.png",
-            "type": "tv"
-        },
-        {
-            "name": "Film4",
-            "devicekeys": {
-                "tivo": 429
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2617"
-            },
-            "logo": "film4_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "Movies 24",
-            "devicekeys": {
-                "tivo": 419
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2704"
-            },
-            "logo": "movies24.png",
-            "type": "tv"
-        },
-        {
-            "name": "Made in Leeds",
-            "devicekeys": {
-                "tivo": 159
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "madeinleeds.png",
-            "type": "tv"
-        },
-        {
-            "name": "Drama",
-            "devicekeys": {
-                "tivo": 190
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "drama.png",
-            "type": "tv"
-        },
-        {
-            "name": "TCM",
-            "devicekeys": {
-                "tivo": 415
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "271"
-            },
-            "logo": "tcm.png",
-            "type": "tv"
-        },
-        {
-            "name": "Watch",
-            "devicekeys": {
-                "tivo": 124
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2115"
-            },
-            "logo": "watch.png",
-            "type": "tv"
-        },
-        {
-            "name": "Watch +1",
-            "devicekeys": {
-                "tivo": 125
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2116"
-            },
-            "logo": "watch+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Gold",
-            "devicekeys": {
-                "tivo": 126
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "288"
-            },
-            "logo": "gold.png",
-            "type": "tv"
-        },
-        {
-            "name": "Gold +1",
-            "devicekeys": {
-                "tivo": 127
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "665"
-            },
-            "logo": "gold+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "horror",
-            "devicekeys": {
-                "tivo": 149
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2476"
-            },
-            "logo": "horror.png",
-            "type": "tv"
-        },
-        {
-            "name": "Alibi",
-            "devicekeys": {
-                "tivo": 130
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2603"
-            },
-            "logo": "alibi.png",
-            "type": "tv"
-        },
-        {
-            "name": "Alibi +1",
-            "devicekeys": {
-                "tivo": 131
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "1993"
-            },
-            "logo": "alibi+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "True Entertainment",
-            "devicekeys": {
-                "tivo": 189
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "292"
-            },
-            "logo": "trueentertainment.png",
-            "type": "tv"
-        },
-        {
-            "name": "BET",
-            "devicekeys": {
-                "tivo": 184
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2244"
-            },
-            "logo": "bet.png",
-            "type": "tv"
-        },
-        {
-            "name": "Fox",
-            "devicekeys": {
-                "tivo": 157
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "1461"
-            },
-            "logo": "fox.png",
-            "type": "tv"
-        },
-        {
-            "name": "Fox+",
-            "devicekeys": {
-                "tivo": 158
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "1971"
-            },
-            "logo": "fox+.png",
-            "type": "tv"
-        },
-        {
-            "name": "Universal",
-            "devicekeys": {
-                "tivo": 137
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "180"
-            },
-            "logo": "universal.png",
-            "type": "tv"
-        },
-        {
-            "name": "Universal +1",
-            "devicekeys": {
-                "tivo": 138
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "2591"
-            },
-            "logo": "universal+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Comedy Central",
-            "devicekeys": {
-                "tivo": 132
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "1061"
-            },
-            "logo": "comedycentral.png",
-            "type": "tv"
-        },
-        {
-            "name": "Comedy Central +1",
-            "devicekeys": {
-                "tivo": 133
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2013"
-            },
-            "logo": "comedycentral+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Challenge",
-            "devicekeys": {
-                "tivo": 139
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "131"
-            },
-            "logo": "challenge.png",
-            "type": "tv"
-        },
-        {
-            "name": "Challenge +1",
-            "devicekeys": {
-                "tivo": 180
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "1872"
-            },
-            "logo": "challenge+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "Quest",
-            "devicekeys": {
-                "tivo": 139
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2179"
-            },
-            "logo": "quest.png",
-            "type": "tv"
-        },
-        {
-            "name": "Discovery",
-            "devicekeys": {
-                "tivo": 250
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "147"
-            },
-            "logo": "discovery.png",
-            "type": "tv"
-        },
-        {
-            "name": "Discovery Science",
-            "devicekeys": {
-                "tivo": 259
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "153"
-            },
-            "logo": "discoveryscience.png",
-            "type": "tv"
-        },
-        {
-            "name": "Discovery History",
-            "devicekeys": {
-                "tivo": 262
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2668"
-            },
-            "logo": "discoveryhistory.png",
-            "type": "tv"
-        },
-        {
-            "name": "Yesterday",
-            "devicekeys": {
-                "tivo": 245
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "801"
-            },
-            "logo": "yesterday.png",
-            "type": "tv"
-        },
-        {
-            "name": "Yesterday +1",
-            "devicekeys": {
-                "tivo": 246
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": "1521"
-            },
-            "logo": "yesterday+1.png",
-            "type": "tv"
-        },
-        {
-            "name": "H2",
-            "devicekeys": {
-                "tivo": 273
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "2559"
-            },
-            "logo": "h2.png",
-            "type": "tv"
-        },
-        {
-            "name": "BBC News",
-            "devicekeys": {
-                "tivo": 604
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "48"
-            },
-            "logo": "bbcnews_hd.png",
-            "type": "tv"
-        },
-        {
-            "name": "Sky News",
-            "devicekeys": {
-                "tivo": 602
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "256"
-            },
-            "logo": "skynews.png",
-            "type": "tv"
-        },
-        {
-            "name": "Kerrang!",
-            "devicekeys": {
-                "tivo": 342
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": "191"
-            },
-            "logo": "kerrang.png",
-            "type": "tv"
-        },
-        {
-            "name": "Heat",
-            "devicekeys": {
-                "tivo": 338
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "heat.png",
-            "type": "radio"
-        },
-        {
-            "name": "Capital FM",
-            "devicekeys": {
-                "tivo": 958
-            },
-            "enabled": false,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "capitalfm.png",
-            "type": "radio"
-        },
-        {
-            "name": "BBC Radio 1",
-            "devicekeys": {
-                "tivo": 901
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "bbcradio1.png",
-            "type": "radio"
-        },
-        {
-            "name": "BBC Radio 2",
-            "devicekeys": {
-                "tivo": 902
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "bbcradio2.png",
-            "type": "radio"
-        },
-        {
-            "name": "BBC Radio 3",
-            "devicekeys": {
-                "tivo": 903
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "bbcradio3.png",
-            "type": "radio"
-        },
-        {
-            "name": "BBC Radio 4",
-            "devicekeys": {
-                "tivo": 904
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "bbcradio4.png",
-            "type": "radio"
-        },
-        {
-            "name": "Classic FM",
-            "devicekeys": {
-                "tivo": 922
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "classicfm.png",
-            "type": "radio"
-        },
-        {
-            "name": "Heart",
-            "devicekeys": {
-                "tivo": 918
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "heart.png",
-            "type": "radio"
-        },
-        {
-            "name": "Planet Rock",
-            "devicekeys": {
-                "tivo": 924
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "planetrock.png",
-            "type": "radio"
-        },
-        {
-            "name": "Gold Radio",
-            "devicekeys": {
-                "tivo": 923
-            },
-            "enabled": true,
-            "listingsrc": {
-                "radiotimes": ""
-            },
-            "logo": "goldradio.png",
-            "type": "radio"
+  "categories": [
+    "Entertainment",
+    "Movies",
+    "Sports",
+    "Factual",
+    "Lifestyle",
+    "Kids",
+    "Music",
+    "News",
+    "Radio"
+  ],
+  "channels": {
+    "Entertainment": [
+      {
+        "name": "BBC ONE",
+        "listingsrc": {
+          "radiotimes": "96"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bbc_one.png",
+          "devicekeys": {
+            "tivo": 101
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "bbc_one_hd.png",
+          "devicekeys": {
+            "tivo": 108
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
         }
+      },
+      {
+        "name": "BBC TWO",
+        "listingsrc": {
+          "radiotimes": "105"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bbc_two.png",
+          "devicekeys": {
+            "tivo": 102
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "bbc_two_hd.png",
+          "devicekeys": {
+            "tivo": 162
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "ITV",
+        "listingsrc": {
+          "radiotimes": "28"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv.png",
+          "devicekeys": {
+            "tivo": 103
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "itv_hd.png",
+          "devicekeys": {
+            "tivo": 113
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Channel 4",
+        "listingsrc": {
+          "radiotimes": "2056"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "channel_4.png",
+          "devicekeys": {
+            "tivo": 104
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "channel_4_hd.png",
+          "devicekeys": {
+            "tivo": 142
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Channel 4 +1",
+        "listingsrc": {
+          "radiotimes": "2047"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "channel_4_plus1.png",
+          "devicekeys": {
+            "tivo": 143
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Channel 5",
+        "listingsrc": {
+          "radiotimes": "2615"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "channel_5_hd.png",
+          "devicekeys": {
+            "tivo": 105
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "channel_5.png",
+          "devicekeys": {
+            "tivo": 150
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Channel 5 +1",
+        "listingsrc": {
+          "radiotimes": "2699"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "channel_5_plus1.png",
+          "devicekeys": {
+            "tivo": 155
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Channel 5 +24",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "channel_5_plus24.png",
+          "devicekeys": {
+            "tivo": 152
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC FOUR",
+        "listingsrc": {
+          "radiotimes": "47"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bbc_four.png",
+          "devicekeys": {
+            "tivo": 107
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "bbc_four_hd.png",
+          "devicekeys": {
+            "tivo": 164
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Sky1",
+        "listingsrc": {
+          "radiotimes": "248"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky1.png",
+          "devicekeys": {
+            "tivo": 110
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "sky1_hd.png",
+          "devicekeys": {
+            "tivo": 109
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Sky Living",
+        "listingsrc": {
+          "radiotimes": "197"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_living.png",
+          "devicekeys": {
+            "tivo": 112
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "sky_living_hd.png",
+          "devicekeys": {
+            "tivo": 111
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Sky Living +1",
+        "listingsrc": {
+          "radiotimes": "841"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_living_plus1.png",
+          "devicekeys": {
+            "tivo": 140
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "ITV +1",
+        "listingsrc": {
+          "radiotimes": "2683"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv_plus1.png",
+          "devicekeys": {
+            "tivo": 114
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "ITV2",
+        "listingsrc": {
+          "radiotimes": "185"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv2.png",
+          "devicekeys": {
+            "tivo": 115
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "itv2_hd.png",
+          "devicekeys": {
+            "tivo": 176
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "ITV2 +1",
+        "listingsrc": {
+          "radiotimes": "1990"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv2_plus1.png",
+          "devicekeys": {
+            "tivo": 116
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "ITV3",
+        "listingsrc": {
+          "radiotimes": "1859"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv3.png",
+          "devicekeys": {
+            "tivo": 117
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "itv3_hd.png",
+          "devicekeys": {
+            "tivo": 177
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "ITV3 +1",
+        "listingsrc": {
+          "radiotimes": "2511"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv3_plus1.png",
+          "devicekeys": {
+            "tivo": 174
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "ITV4",
+        "listingsrc": {
+          "radiotimes": "1961"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv4.png",
+          "devicekeys": {
+            "tivo": 118
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "itv4_hd.png",
+          "devicekeys": {
+            "tivo": 178
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "ITV4 +1",
+        "listingsrc": {
+          "radiotimes": "2568"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv4_plus1.png",
+          "devicekeys": {
+            "tivo": 175
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "ITVBe",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv_be.png",
+          "devicekeys": {
+            "tivo": 119
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "itv_be.png",
+          "devicekeys": {
+            "tivo": 179
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "ITVBe +1",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "itv_be_plus1.png",
+          "devicekeys": {
+            "tivo": 120
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Sky2",
+        "listingsrc": {
+          "radiotimes": "922"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky2.png",
+          "devicekeys": {
+            "tivo": 121
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Sky Arts",
+        "listingsrc": {
+          "radiotimes": "40"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_arts.png",
+          "devicekeys": {
+            "tivo": 122
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "sky_arts_hd.png",
+          "devicekeys": {
+            "tivo": 206
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Pick",
+        "listingsrc": {
+          "radiotimes": "1963"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "pick.png",
+          "devicekeys": {
+            "tivo": 123
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "W",
+        "listingsrc": {
+          "radiotimes": "2115"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "w.png",
+          "devicekeys": {
+            "tivo": 124
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "w_hd.png",
+          "devicekeys": {
+            "tivo": 191
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "W +1",
+        "listingsrc": {
+          "radiotimes": "2116"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "w_plus1.png",
+          "devicekeys": {
+            "tivo": 125
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Gold",
+        "listingsrc": {
+          "radiotimes": "288"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "gold.png",
+          "devicekeys": {
+            "tivo": 126
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Gold +1",
+        "listingsrc": {
+          "radiotimes": "665"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "gold_plus1.png",
+          "devicekeys": {
+            "tivo": 127
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Dave",
+        "listingsrc": {
+          "radiotimes": "2050"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "dave.png",
+          "devicekeys": {
+            "tivo": 128
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "dave_hd.png",
+          "devicekeys": {
+            "tivo": 194
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Dave ja vu",
+        "listingsrc": {
+          "radiotimes": "2052"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "dave_ja_vu.png",
+          "devicekeys": {
+            "tivo": 129
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Alibi",
+        "listingsrc": {
+          "radiotimes": "2603"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "alibi.png",
+          "devicekeys": {
+            "tivo": 130
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "alibi_hd.png",
+          "devicekeys": {
+            "tivo": 200
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Alibi +1",
+        "listingsrc": {
+          "radiotimes": "1993"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "alibi_plus1.png",
+          "devicekeys": {
+            "tivo": 131
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Comedy Central",
+        "listingsrc": {
+          "radiotimes": "1061"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "comedy_central.png",
+          "devicekeys": {
+            "tivo": 132
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {
+          "logo": "comedy_central_hd.png",
+          "devicekeys": {
+            "tivo": 181
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Comedy Central +1",
+        "listingsrc": {
+          "radiotimes": "2013"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "comedy_central_plus1.png",
+          "devicekeys": {
+            "tivo": 133
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Comedy Central Extra",
+        "listingsrc": {
+          "radiotimes": "1201"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "comedy_central_extra.png",
+          "devicekeys": {
+            "tivo": 182
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "MTV",
+        "listingsrc": {
+          "radiotimes": "202"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "mtv.png",
+          "devicekeys": {
+            "tivo": 134
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "mtv_hd.png",
+          "devicekeys": {
+            "tivo": 183
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "syfy",
+        "listingsrc": {
+          "radiotimes": "2212"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "syfy.png",
+          "devicekeys": {
+            "tivo": 135
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "syfy_hd.png",
+          "devicekeys": {
+            "tivo": 165
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "syfy +1",
+        "listingsrc": {
+          "radiotimes": "2213"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "syfy_plus1.png",
+          "devicekeys": {
+            "tivo": 136
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Universal Channel",
+        "listingsrc": {
+          "radiotimes": "180"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "universal.png",
+          "devicekeys": {
+            "tivo": 137
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Universal Channel +1",
+        "listingsrc": {
+          "radiotimes": "2591"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "universal_plus1.png",
+          "devicekeys": {
+            "tivo": 138
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Challenge",
+        "listingsrc": {
+          "radiotimes": "131"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "challenge.png",
+          "devicekeys": {
+            "tivo": 139
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Challenge +1",
+        "listingsrc": {
+          "radiotimes": "1872"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "challenge_plus1.png",
+          "devicekeys": {
+            "tivo": 180
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "E4",
+        "listingsrc": {
+          "radiotimes": "158"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "e4.png",
+          "devicekeys": {
+            "tivo": 144
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "e4_hd.png",
+          "devicekeys": {
+            "tivo": 145
+          },
+          "freeview": true,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "E4+1",
+        "listingsrc": {
+          "radiotimes": "1161"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "e4_plus1.png",
+          "devicekeys": {
+            "tivo": 146
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "More4",
+        "listingsrc": {
+          "radiotimes": "1959"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "more_4.png",
+          "devicekeys": {
+            "tivo": 147
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "more_4_hd.png",
+          "devicekeys": {
+            "tivo": 203
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "More4 +1",
+        "listingsrc": {
+          "radiotimes": "1972"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "more_4_plus1.png",
+          "devicekeys": {
+            "tivo": 196
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CBS Reality",
+        "listingsrc": {
+          "radiotimes": "2586"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cbs_reality.png",
+          "devicekeys": {
+            "tivo": 148
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CBS Reality +1",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cbs_reality_plus1.png",
+          "devicekeys": {
+            "tivo": 201
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Horror Channel",
+        "listingsrc": {
+          "radiotimes": "2476"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "horror_channel.png",
+          "devicekeys": {
+            "tivo": 149
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Horror Channel +1",
+        "listingsrc": {
+          "radiotimes": "2561"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "horror_channel_plus1.png",
+          "devicekeys": {
+            "tivo": 202
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "5*",
+        "listingsrc": {
+          "radiotimes": "2062"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "5_star.png",
+          "devicekeys": {
+            "tivo": 151
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "5 USA",
+        "listingsrc": {
+          "radiotimes": "2008"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "5_usa.png",
+          "devicekeys": {
+            "tivo": 153
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "5 USA +1",
+        "listingsrc": {
+          "radiotimes": "2577"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "5_usa_plus1.png",
+          "devicekeys": {
+            "tivo": 154
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "E! Entertainment",
+        "listingsrc": {
+          "radiotimes": "1421"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "e.png",
+          "devicekeys": {
+            "tivo": 156
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "FOX",
+        "listingsrc": {
+          "radiotimes": "1461"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "fox.png",
+          "devicekeys": {
+            "tivo": 157
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "fox_hd.png",
+          "devicekeys": {
+            "tivo": 199
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "FOX+",
+        "listingsrc": {
+          "radiotimes": "1971"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "fox_plus.png",
+          "devicekeys": {
+            "tivo": 158
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Made in Leeds",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "made_in_leeds.png",
+          "devicekeys": {
+            "tivo": 159
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Real Lives",
+        "listingsrc": {
+          "radiotimes": "2189"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "real_lives.png",
+          "devicekeys": {
+            "tivo": 160
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Real Lives +1",
+        "listingsrc": {
+          "radiotimes": "2190"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "real_lives_plus1.png",
+          "devicekeys": {
+            "tivo": 207
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC ALBA",
+        "listingsrc": {
+          "radiotimes": "2098"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bbc_alba.png",
+          "devicekeys": {
+            "tivo": 161
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "S4C",
+        "listingsrc": {
+          "radiotimes": "721"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "s4c.png",
+          "devicekeys": {
+            "tivo": 166
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "TLC",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "tlc.png",
+          "devicekeys": {
+            "tivo": 167
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "tlc_hd.png",
+          "devicekeys": {
+            "tivo": 168
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "TLC +1",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "tlc_plus1.png",
+          "devicekeys": {
+            "tivo": 169
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "DMAX",
+        "listingsrc": {
+          "radiotimes": "2545"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "dmax.png",
+          "devicekeys": {
+            "tivo": 170
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "DMAX +1",
+        "listingsrc": {
+          "radiotimes": "2595"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "dmax_plus1.png",
+          "devicekeys": {
+            "tivo": 171
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Quest",
+        "listingsrc": {
+          "radiotimes": "2179"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "quest.png",
+          "devicekeys": {
+            "tivo": 172
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Quest +1",
+        "listingsrc": {
+          "radiotimes": "2588"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "quest_plus1.png",
+          "devicekeys": {
+            "tivo": 173
+          },
+          "freeview": true,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BET",
+        "listingsrc": {
+          "radiotimes": "2244"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bet.png",
+          "devicekeys": {
+            "tivo": 184
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "True Entertainment",
+        "listingsrc": {
+          "radiotimes": "292"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "true_entertainment.png",
+          "devicekeys": {
+            "tivo": 189
+          },
+          "freeview": true,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Drama",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "drama.png",
+          "devicekeys": {
+            "tivo": 190
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CBS Action",
+        "listingsrc": {
+          "radiotimes": "2178"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cbs_action.png",
+          "devicekeys": {
+            "tivo": 192
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Sony TV",
+        "listingsrc": {
+          "radiotimes": "2702"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sony_tv.png",
+          "devicekeys": {
+            "tivo": 193
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "4Seven",
+        "listingsrc": {
+          "radiotimes": "2701"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "4seven.png",
+          "devicekeys": {
+            "tivo": 195
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CBS Drama",
+        "listingsrc": {
+          "radiotimes": "2177"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cbs_drama.png",
+          "devicekeys": {
+            "tivo": 197
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      }
+    ],
+    "Movies": [
+      {
+        "name": "TCM",
+        "listingsrc": {
+          "radiotimes": "271"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "tcm.png",
+          "devicekeys": {
+            "tivo": 415
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "tcm_hd.png",
+          "devicekeys": {
+            "tivo": 416
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "TCM +1",
+        "listingsrc": {
+          "radiotimes": "2016"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "tcm_plus1.png",
+          "devicekeys": {
+            "tivo": 417
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Movies 24",
+        "listingsrc": {
+          "radiotimes": "2704"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "movies_24.png",
+          "devicekeys": {
+            "tivo": 419
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Movies 24+",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "movies_24_plus.png",
+          "devicekeys": {
+            "tivo": 420
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "True Movies 1",
+        "listingsrc": {
+          "radiotimes": "2059"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "true_movies_1.png",
+          "devicekeys": {
+            "tivo": 424
+          },
+          "freeview": true,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Film4",
+        "listingsrc": {
+          "radiotimes": "160"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "film4.png",
+          "devicekeys": {
+            "tivo": 428
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "film4_hd.png",
+          "devicekeys": {
+            "tivo": 429
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Film4 +1",
+        "listingsrc": {
+          "radiotimes": "2021"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "film4_plus1.png",
+          "devicekeys": {
+            "tivo": 430
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Sky Movies Premiere",
+        "listingsrc": {
+          "radiotimes": "249"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 401
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 431
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Premiere +1",
+        "listingsrc": {
+          "radiotimes": "250"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 402
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Sky Movies Showcase",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 403
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 433
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Greats",
+        "listingsrc": {
+          "radiotimes": "260"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 404
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 434
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Disney",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 405
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 435
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Family",
+        "listingsrc": {
+          "radiotimes": "258"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 406
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 436
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Action & Adventure",
+        "listingsrc": {
+          "radiotimes": "2204"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 407
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 437
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Comedy",
+        "listingsrc": {
+          "radiotimes": "257"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 408
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 438
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Crime & Thriller",
+        "listingsrc": {
+          "radiotimes": "2206"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 409
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 439
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Drama & Romance",
+        "listingsrc": {
+          "radiotimes": "2208"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 410
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 440
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Sci Fi & Horror",
+        "listingsrc": {
+          "radiotimes": "2168"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 411
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 441
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      },
+      {
+        "name": "Sky Movies Select",
+        "listingsrc": {
+          "radiotimes": "253"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_movies.png",
+          "devicekeys": {
+            "tivo": 412
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        },
+        "hd": {
+          "logo": "sky_movies_hd.png",
+          "devicekeys": {
+            "tivo": 442
+          },
+          "freeview": false,
+          "virginmedia_package": ["movies_sky"]
+        }
+      }
+    ],
+    "Sports": [
+      {
+        "name": "Sky Sports News HQ",
+        "listingsrc": {
+          "radiotimes": "300"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_sports_news_hq.png",
+          "devicekeys": {
+            "tivo": 511
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "sky_sports_news_hq_hd.png",
+          "devicekeys": {
+            "tivo": 501
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Eurosport",
+        "listingsrc": {
+          "radiotimes": "123"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "eurosport.png",
+          "devicekeys": {
+            "tivo": 523
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "eurosport.png",
+          "devicekeys": {
+            "tivo": 521
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Eurosport 2",
+        "listingsrc": {
+          "radiotimes": "1876"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "eurosport_2.png",
+          "devicekeys": {
+            "tivo": 524
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "eurosport_2_hd.png",
+          "devicekeys": {
+            "tivo": 522
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Motors TV",
+        "listingsrc": {
+          "radiotimes": "1958"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "motors_tv.png",
+          "devicekeys": {
+            "tivo": 545
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "At The Races",
+        "listingsrc": {
+          "radiotimes": "661"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "at_the_races.png",
+          "devicekeys": {
+            "tivo": 535
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BT Sport ESPN",
+        "listingsrc": {
+          "radiotimes": "2142"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bt_sport_espn.png",
+          "devicekeys": {
+            "tivo": 534
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {
+          "logo": "bt_sport_espn_hd.png",
+          "devicekeys": {
+            "tivo": 530
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "BT Sport Europe",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bt_sport_europe.png",
+          "devicekeys": {
+            "tivo": 533
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {
+          "logo": "bt_sport_europe_hd.png",
+          "devicekeys": {
+            "tivo": 528
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "BT Sport 1",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bt_sport_1.png",
+          "devicekeys": {
+            "tivo": 531
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {
+          "logo": "bt_sport_1_hd.png",
+          "devicekeys": {
+            "tivo": 527
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "BT Sport 2",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bt_sport_2.png",
+          "devicekeys": {
+            "tivo": 532
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {
+          "logo": "bt_sport_2_hd.png",
+          "devicekeys": {
+            "tivo": 529
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "BIKE",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bike.png",
+          "devicekeys": {
+            "tivo": 552
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      }
+    ],
+    "Factual": [
+      {
+        "name": "Yesterday",
+        "listingsrc": {
+          "radiotimes": "801"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "yesterday.png",
+          "devicekeys": {
+            "tivo": 245
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Yesterday +1",
+        "listingsrc": {
+          "radiotimes": "1521"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "yesterday_plus1.png",
+          "devicekeys": {
+            "tivo": 246
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Eden",
+        "listingsrc": {
+          "radiotimes": "1601"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "-.png",
+          "devicekeys": {
+            "tivo": 247
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "-.png",
+          "devicekeys": {
+            "tivo": 249
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Eden +1",
+        "listingsrc": {
+          "radiotimes": "625"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "-.png",
+          "devicekeys": {
+            "tivo": 248
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery Channel",
+        "listingsrc": {
+          "radiotimes": "-"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_channel.png",
+          "devicekeys": {
+            "tivo": 250
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "discovery_channel_hd.png",
+          "devicekeys": {
+            "tivo": 251
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Discovery Channel +1",
+        "listingsrc": {
+          "radiotimes": "-"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_channel_plus1.png",
+          "devicekeys": {
+            "tivo": 252
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Investigation Discovery",
+        "listingsrc": {
+          "radiotimes": "2570"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "investigation_discovery.png",
+          "devicekeys": {
+            "tivo": 253
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Investigation Discovery +1",
+        "listingsrc": {
+          "radiotimes": "-"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "investigation_discovery_plus1.png",
+          "devicekeys": {
+            "tivo": 254
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Animal Planet",
+        "listingsrc": {
+          "radiotimes": "39"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "animal_planet.png",
+          "devicekeys": {
+            "tivo": 256
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "animal_planet_hd.png",
+          "devicekeys": {
+            "tivo": 257
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Animal Planet +1",
+        "listingsrc": {
+          "radiotimes": "1761"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "animal_planet_plus1.png",
+          "devicekeys": {
+            "tivo": 258
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery Science",
+        "listingsrc": {
+          "radiotimes": "153"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_science.png",
+          "devicekeys": {
+            "tivo": 259
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery Science +1",
+        "listingsrc": {
+          "radiotimes": "2600"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_science_plus1.png",
+          "devicekeys": {
+            "tivo": 260
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery Turbo",
+        "listingsrc": {
+          "radiotimes": "155"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_turbo.png",
+          "devicekeys": {
+            "tivo": 261
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery History",
+        "listingsrc": {
+          "radiotimes": "2668"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_history.png",
+          "devicekeys": {
+            "tivo": 262
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery History +1",
+        "listingsrc": {
+          "radiotimes": "2672"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_history_plus1.png",
+          "devicekeys": {
+            "tivo": 263
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Nat Geo Wild",
+        "listingsrc": {
+          "radiotimes": "22"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "nat_geo_wild.png",
+          "devicekeys": {
+            "tivo": 264
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {
+          "logo": "nat_geo_wild_hd.png",
+          "devicekeys": {
+            "tivo": 265
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "National Geographic",
+        "listingsrc": {
+          "radiotimes": "213"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "national_geographic.png",
+          "devicekeys": {
+            "tivo": 266
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {
+          "logo": "national_geographic_hd.png",
+          "devicekeys": {
+            "tivo": 268
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "National Geographic +1",
+        "listingsrc": {
+          "radiotimes": "214"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "national_geographic_plus1.png",
+          "devicekeys": {
+            "tivo": 267
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Community Channel",
+        "listingsrc": {
+          "radiotimes": "1542"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "community_channel.png",
+          "devicekeys": {
+            "tivo": 269
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "History",
+        "listingsrc": {
+          "radiotimes": "182"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "history.png",
+          "devicekeys": {
+            "tivo": 270
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "History +1",
+        "listingsrc": {
+          "radiotimes": "183"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "history_plus1.png",
+          "devicekeys": {
+            "tivo": 271
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "H2",
+        "listingsrc": {
+          "radiotimes": "2559"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "h2.png",
+          "devicekeys": {
+            "tivo": 273
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {
+          "logo": "h2_hd.png",
+          "devicekeys": {
+            "tivo": 274
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Lifetime",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "lifetime.png",
+          "devicekeys": {
+            "tivo": 208
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {
+          "logo": "lifetime_hd.png",
+          "devicekeys": {
+            "tivo": 209
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Crime and Investigation",
+        "listingsrc": {
+          "radiotimes": "2165"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "crime_and_investigation.png",
+          "devicekeys": {
+            "tivo": 275
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "PBS America",
+        "listingsrc": {
+          "radiotimes": "2698"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "pbs_america.png",
+          "devicekeys": {
+            "tivo": 276
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Forces TV",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "forces_tv.png",
+          "devicekeys": {
+            "tivo": 277
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      }
+    ],
+    "Lifestyle": [
+      {
+        "name": "Good Food",
+        "listingsrc": {
+          "radiotimes": "2136"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "good_food.png",
+          "devicekeys": {
+            "tivo": 278
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "good_food_hd.png",
+          "devicekeys": {
+            "tivo": 280
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Good Food +1",
+        "listingsrc": {
+          "radiotimes": "2173"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "good_food_plus1.png",
+          "devicekeys": {
+            "tivo": 279
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Food Network",
+        "listingsrc": {
+          "radiotimes": "2185"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "food_network.png",
+          "devicekeys": {
+            "tivo": 291
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Home",
+        "listingsrc": {
+          "radiotimes": "2134"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "home.png",
+          "devicekeys": {
+            "tivo": 281
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Home +1",
+        "listingsrc": {
+          "radiotimes": "2135"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "home_plus1.png",
+          "devicekeys": {
+            "tivo": 282
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Really",
+        "listingsrc": {
+          "radiotimes": "1882"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "really.png",
+          "devicekeys": {
+            "tivo": 283
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery Home & Health",
+        "listingsrc": {
+          "radiotimes": "149"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_home_and_health.png",
+          "devicekeys": {
+            "tivo": 284
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery Home & Health +1",
+        "listingsrc": {
+          "radiotimes": "1953"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_home_and_health_plus1.png",
+          "devicekeys": {
+            "tivo": 285
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Discovery Shed",
+        "listingsrc": {
+          "radiotimes": "2057"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "discovery_shed.png",
+          "devicekeys": {
+            "tivo": 286
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Ginx TV",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "ginx.png",
+          "devicekeys": {
+            "tivo": 290
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Travel Channel",
+        "listingsrc": {
+          "radiotimes": "1462"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "travel_channel.png",
+          "devicekeys": {
+            "tivo": 292
+          },
+          "freeview": true,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      }
+    ],
+    "Kids": [
+      {
+        "name": "Tiddlers TV",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "tiddlers_tv.png",
+          "devicekeys": {
+            "tivo": 700
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CBBC",
+        "listingsrc": {
+          "radiotimes": "482"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cbbc.png",
+          "devicekeys": {
+            "tivo": 701
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "cbbc_hd.png",
+          "devicekeys": {
+            "tivo": 710
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Cbeebies",
+        "listingsrc": {
+          "radiotimes": "483"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cbeebies.png",
+          "devicekeys": {
+            "tivo": 702
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "cbeebies_hd.png",
+          "devicekeys": {
+            "tivo": 711
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Cartoon Network",
+        "listingsrc": {
+          "radiotimes": "128"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cartoon_network.png",
+          "devicekeys": {
+            "tivo": 704
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "cartoon_network_hd.png",
+          "devicekeys": {
+            "tivo": 732
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Cartoon Network +1",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cartoon_network_plus1.png",
+          "devicekeys": {
+            "tivo": 705
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Cartoonito",
+        "listingsrc": {
+          "radiotimes": "1983"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cartoonito.png",
+          "devicekeys": {
+            "tivo": 706
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Disney XD",
+        "listingsrc": {
+          "radiotimes": "165"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "disney_xd.png",
+          "devicekeys": {
+            "tivo": 707
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Disney XD +1",
+        "listingsrc": {
+          "radiotimes": "166"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "disney_xd_plus1.png",
+          "devicekeys": {
+            "tivo": 708
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Nickelodeon",
+        "listingsrc": {
+          "radiotimes": "217"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "nickelodeon.png",
+          "devicekeys": {
+            "tivo": 712
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {
+          "logo": "nickelodeon_hd.png",
+          "devicekeys": {
+            "tivo": 714
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "Nickelodeon +1",
+        "listingsrc": {
+          "radiotimes": "216"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "nickelodeon_plus1.png",
+          "devicekeys": {
+            "tivo": 713
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Nick Junior",
+        "listingsrc": {
+          "radiotimes": "215"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "nick_junior.png",
+          "devicekeys": {
+            "tivo": 715
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Nick Junior Too",
+        "listingsrc": {
+          "radiotimes": "2593"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "nick_junior_too.png",
+          "devicekeys": {
+            "tivo": 716
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Nicktoons",
+        "listingsrc": {
+          "radiotimes": "664"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "nicktoons.png",
+          "devicekeys": {
+            "tivo": 717
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Disney Channel",
+        "listingsrc": {
+          "radiotimes": "156"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "disney_channel.png",
+          "devicekeys": {
+            "tivo": 724
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Disney Channel +1",
+        "listingsrc": {
+          "radiotimes": "157"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "disney_channel_plus1.png",
+          "devicekeys": {
+            "tivo": 725
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Disney Junior",
+        "listingsrc": {
+          "radiotimes": "421"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "disney_junior.png",
+          "devicekeys": {
+            "tivo": 727
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Boomerang",
+        "listingsrc": {
+          "radiotimes": "1661"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "boomerang.png",
+          "devicekeys": {
+            "tivo": 730
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Boomerang +1",
+        "listingsrc": {
+          "radiotimes": "129"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "boomerang_plus1.png",
+          "devicekeys": {
+            "tivo": 731
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CITV",
+        "listingsrc": {
+          "radiotimes": "1981"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "citv.png",
+          "devicekeys": {
+            "tivo": 734
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Tiny Pop",
+        "listingsrc": {
+          "radiotimes": "2543"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "tiny_pop.png",
+          "devicekeys": {
+            "tivo": 737
+          },
+          "freeview": true,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      }
+    ],
+    "Music": [
+      {
+        "name": "MTV Music",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "mtv_music.png",
+          "devicekeys": {
+            "tivo": 310
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "MTV Live HD",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {},
+        "hd": {
+          "logo": "mtv_live_hd.png",
+          "devicekeys": {
+            "tivo": 311
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "MTV Hits",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "mtv_hits.png",
+          "devicekeys": {
+            "tivo": 312
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "MTV Base",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "mtv_base.png",
+          "devicekeys": {
+            "tivo": 313
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "MTV Dance",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "mtv_dance.png",
+          "devicekeys": {
+            "tivo": 314
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "MTV Rocks",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "mtv_rocks.png",
+          "devicekeys": {
+            "tivo": 315
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "VH1",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "vh1.png",
+          "devicekeys": {
+            "tivo": 316
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Viva",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "viva.png",
+          "devicekeys": {
+            "tivo": 317
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "4 Music",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "4music.png",
+          "devicekeys": {
+            "tivo": 330
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "The Box",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "the_box.png",
+          "devicekeys": {
+            "tivo": 335
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Kiss",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "kiss.png",
+          "devicekeys": {
+            "tivo": 336
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Smash Hits",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "kiss.png",
+          "devicekeys": {
+            "tivo": 337
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Heat",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "heat.png",
+          "devicekeys": {
+            "tivo": 338
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Magic",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "magic.png",
+          "devicekeys": {
+            "tivo": 340
+          },
+          "freeview": false,
+          "virginmedia_package": ["More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Kerrang! TV",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "kerrang.png",
+          "devicekeys": {
+            "tivo": 342
+          },
+          "freeview": false,
+          "virginmedia_package": ["L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Vintage TV",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "vintage_tv.png",
+          "devicekeys": {
+            "tivo": 343
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      }
+    ],
+    "News": [
+      {
+        "name": "BBC News",
+        "listingsrc": {
+          "radiotimes": "48"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bbc_news.png",
+          "devicekeys": {
+            "tivo": 601
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "bbc_news_hd.png",
+          "devicekeys": {
+            "tivo": 604
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        }
+      },
+      {
+        "name": "Sky News",
+        "listingsrc": {
+          "radiotimes": "256"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "sky_news.png",
+          "devicekeys": {
+            "tivo": 602
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {
+          "logo": "sky_news_hd.png",
+          "devicekeys": {
+            "tivo": 603
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
+      },
+      {
+        "name": "BBC Parliament",
+        "listingsrc": {
+          "radiotimes": "49"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bbc_parliament.png",
+          "devicekeys": {
+            "tivo": 605
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CNN",
+        "listingsrc": {
+          "radiotimes": "126"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cnn.png",
+          "devicekeys": {
+            "tivo": 607
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Bloomberg",
+        "listingsrc": {
+          "radiotimes": "120"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "bloomberg.png",
+          "devicekeys": {
+            "tivo": 609
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "CNBC",
+        "listingsrc": {
+          "radiotimes": "125"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "cnbc.png",
+          "devicekeys": {
+            "tivo": 613
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Euronews",
+        "listingsrc": {
+          "radiotimes": "159"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "euronews.png",
+          "devicekeys": {
+            "tivo": 620
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "NDTV 24x7",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "ndtv_24x7.png",
+          "devicekeys": {
+            "tivo": 621
+          },
+          "freeview": false,
+          "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      }
+    ],
+    "Radio": [
+      {
+        "name": "BBC Radio 1",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_1.png",
+          "devicekeys": {
+            "tivo": 901
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 1 Xtra",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_1_xtra.png",
+          "devicekeys": {
+            "tivo": 907
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 2",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_2.png",
+          "devicekeys": {
+            "tivo": 902
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 3",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_3.png",
+          "devicekeys": {
+            "tivo": 903
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 4 FM",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_4fm.png",
+          "devicekeys": {
+            "tivo": 904
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 4 Extra",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_4_extra.png",
+          "devicekeys": {
+            "tivo": 910
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 4 Long Wave",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_4_long_wave.png",
+          "devicekeys": {
+            "tivo": 911
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 5 Live",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_5live.png",
+          "devicekeys": {
+            "tivo": 905
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 5 Live Sports Extra",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_5live_sports_extra.png",
+          "devicekeys": {
+            "tivo": 908
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC Radio 6 Music",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_radio_6music.png",
+          "devicekeys": {
+            "tivo": 909
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "BBC World Service",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "bbc_world_services.png",
+          "devicekeys": {
+            "tivo": 906
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Absolute Radio",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "absolute_radio.png",
+          "devicekeys": {
+            "tivo": 915
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Smooth Radio",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "smooth_radio.png",
+          "devicekeys": {
+            "tivo": 916
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Heart FM",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "heart_fm.png",
+          "devicekeys": {
+            "tivo": 918
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Classic FM",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "classic_fm.png",
+          "devicekeys": {
+            "tivo": 922
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Gold Radio",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "gold_radio.png",
+          "devicekeys": {
+            "tivo": 923
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Planet Rock",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "planet_rock.png",
+          "devicekeys": {
+            "tivo": 924
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Magic Radio",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "magic_radio.png",
+          "devicekeys": {
+            "tivo": 928
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Absolute 80s",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "absolute_80s.png",
+          "devicekeys": {
+            "tivo": 951
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Absolute Classic Rock",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "absolute_classic_rock.png",
+          "devicekeys": {
+            "tivo": 952
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Capital FM",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "capital_fm.png",
+          "devicekeys": {
+            "tivo": 958
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Capital Xtra",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "capital_xtra.png",
+          "devicekeys": {
+            "tivo": 959
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Radio X",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "radio_x.png",
+          "devicekeys": {
+            "tivo": 960
+          },
+          "freeview": false,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Kiss FM",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "kiss_fm.png",
+          "devicekeys": {
+            "tivo": 963
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "talkSPORT",
+        "listingsrc": {
+          "radiotimes": ""
+        },
+        "type": "radio",
+        "sd": {
+          "logo": "talksport.png",
+          "devicekeys": {
+            "tivo": 927
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      }
     ]
+  }
 }

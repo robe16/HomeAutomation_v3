@@ -1,79 +1,141 @@
 from urllib import urlopen
 from tvlisting import returnnownext
 from config_users import get_userchannels
+from config_devices import get_device_config_detail
 from datetime import datetime
 
 
-def html_listings_user_and_all (listings, device=None, group_name =False, device_name =False, chan_current=False, user=False):
+def html_listings_user_and_all (listings, group_name=False, device_name=False, user=False):
     #
     html_tvguide = '<p style="text-align: right">Last updated {timestamp}</p>'.format(timestamp=datetime.now().strftime('%d/%m/%Y %H:%M:%S'))
     #
-    html_tvguide_all = _listings_html(listings,
-                                      group_name = group_name,
-                                      device_name = device_name,
-                                      device = device,
-                                      chan_current = chan_current)
+    if not listings:
+        html_tvguide += _html_no_listings(group_name=group_name, device_name=device_name)
+        return html_tvguide
+    #
+    categories = listings['categories']
+    all_count = 0
+    html_nav_user = ''
+    html_nav_all = ''
+    html_content = ''
+    #
+    # Build HTML code for 'user' TV channels
+    #
     user_channels = get_userchannels(user)
     #
     if listings and user_channels:
+        #
+        all_count += 1
+        active = 'active' if all_count == 1 else ''
+        #
+        html_nav_user += urlopen('web/pills_nav.html').read().encode('utf-8').format(active=active,
+                                                                                    category=str(user).lower(),
+                                                                                    title=str(user)+'\'s favourites')
+        #
         temp_listings=[]
-        for i in listings:
-            if i.name() in user_channels:
-                temp_listings.append(i)
-        html_tvguide_user = _listings_html(temp_listings,
-                                           device = device,
-                                           group_name = group_name,
-                                           device_name = device_name,
-                                           chan_current = chan_current,
-                                           user = user)
-        html_tvguide += urlopen('web/user_tabs.html').read().encode('utf-8').format(title_user=str(user)+'\'s favourites',
-                                                                                   title_all='All channels',
-                                                                                   body_user=html_tvguide_user,
-                                                                                   body_all=html_tvguide_all)
-    else:
-        html_tvguide += html_tvguide_all
+        for cat in categories:
+            for l in listings['channels'][cat]:
+                if l.name() in user_channels:
+                    temp_listings.append(l)
+        #
+        body = _html_listings(temp_listings,
+                              group_name = group_name,
+                              device_name = device_name,
+                              user = user)
+        #
+        html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
+                                                                                         category=str(user).lower(),
+                                                                                         body=body)
+        #
+        #chan_current = chan_current,
+    #
+    # Build HTML code for 'all' TV channels
+    #
+    for cat in categories:
+        all_count += 1
+        active = 'active' if all_count == 1 else ''
+        #
+        html_nav_all += urlopen('web/pills_nav.html').read().encode('utf-8').format(active=active,
+                                                                                    category=cat.lower(),
+                                                                                    title=cat)
+        #
+        body = _html_listings(listings['channels'][cat],
+                              group_name = group_name,
+                              device_name = device_name)
+        #
+        html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
+                                                                                         category=cat.lower(),
+                                                                                         body=body)
+        #
+    #
+    # If user channels available, change categories into dropdown menu
+    if user_channels:
+        html_nav_all = urlopen('web/pills_nav_dropdown.html').read().encode('utf-8').format(title='All Channels',
+                                                                                            dropdowns=html_nav_all)
+    #
+    # Combine pills for 'user' and 'all' channel listings
+    html_nav = html_nav_user + html_nav_all
+    #
+    html_tvguide += urlopen('web/pills_parent.html').read().encode('utf-8').format(nav=html_nav,
+                                                                                   content=html_content)
     #
     return html_tvguide
 
 
-def _listings_html(listings, device=None, group_name =False, device_name=False, chan_current=False, user=False):
-    if listings:
-        if group_name and device_name:
-            script = '<script>setTimeout(function () {getChannel(\'/command?group=' + str(group_name) + '&device=' + str(device_name) + '&command=getchannel\', true);}, 10000);</script>'
-        else:
-            script = ''
-        return urlopen('web/html_tvguide/tvguide-data.html').read().encode('utf-8').format(script=script,
-                                                                                           style='<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>',
-                                                                                           listings=_listings(listings, device=device, group_name=group_name, device_name=device_name, chan_current=chan_current, user=user))
+def _html_no_listings(group_name=False, device_name=False):
+    #
+    if group_name and device_name:
+        device_query = '?group={group_name}&device={device_name}'.format(group_name=group_name, device_name=device_name)
     else:
-        if group_name and device_name:
-            device_query = '?device={device}&group={group}'.format(group = group_name, device = device_name)
-        else:
-            device_query = ''
-        script = ('\r\n<script>\r\n' +
-                  'setTimeout(function () {\r\n' +
-                  'checkListings(\'/web/tvguide' + device_query + '\');\r\n' +
-                  '}, 5000);\r\n' +
-                  '</script>\r\n')
-        return urlopen('web/html_tvguide/tvguide-nodata.html').read().encode('utf-8').format(script=script,
-                                                                                             type='alert-danger',
-                                                                                             body='<strong>An error has occurred!!</strong> The programme listings are still being retrieved - please wait and refresh shortly.')
+        device_query = ''
+    #
+    script = ('\r\n<script>\r\n' +
+              'setTimeout(function () {\r\n' +
+              'checkListings(\'/web/tvguide' + device_query + '\');\r\n' +
+              '}, 5000);\r\n' +
+              '</script>\r\n')
+    body = '<strong>An error has occurred!!</strong> The programme listings are still being retrieved - please wait and refresh shortly.'
+    #
+    return urlopen('web/html_tvguide/tvguide-nodata.html').read().encode('utf-8').format(script=script,
+                                                                                         type='alert-danger',
+                                                                                         body=body)
 
 
-def _listings(listings, device=None, chan_current=False, group_name=False, device_name=False, user=False):
+def _html_listings(listings, group_name=False, device_name=False, chan_current=False, user=False):
+    #
+    if group_name and device_name:
+        script = '<script>setTimeout(function () {getChannel(\'/command?group=' + str(group_name) +\
+                 '&device=' + str(device_name) +\
+                 '&command=getchannel\', true);}, 10000);</script>'
+    else:
+        script = ''
+    style = '<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>'
+    lstngs = _listings(listings,
+                       group_name=group_name,
+                       device_name=device_name,
+                       chan_current=chan_current,
+                       user=user)
+    #
+    return urlopen('web/html_tvguide/tvguide-data.html').read().encode('utf-8').format(script=script,
+                                                                                       style=style,
+                                                                                       listings=lstngs)
+
+
+def _listings(listings, group_name=False, device_name=False, chan_current=False, user=False):
     STRlistings = ""
     x = 0
     for lstg in listings:
-        if lstg.getEnabled():
-            STRlistings += _listingsrow(x, lstg, device, chan_current, group_name, device_name, user=user)
-            x += 1
+        STRlistings += _listingsrow(x, lstg, chan_current, group_name, device_name, user=user)
+        x += 1
     return STRlistings
 
 
-def _listingsrow(x, channelitem, device, chan_current, group_name=False, device_name=False, user=False, last=False):
+def _listingsrow(x, channelitem, chan_current, group_name=False, device_name=False, user=False, last=False):
     #
     try:
-        channo = channelitem.devicekeys(device.getType())
+        channo = channelitem.devicekeys(get_device_config_detail(group_name,
+                                                                 device_name,
+                                                                 'type'))
     except:
         channo = False
     #
@@ -125,6 +187,7 @@ def _listingsrow(x, channelitem, device, chan_current, group_name=False, device_
     # Create element id, including user name if required (user name prevents duplication of id names within page)
     if user:
         chan_id = str(user).lower()+'_'
+    chan_id += channelitem.category().replace(' ', '').lower()
     chan_id += channelitem.name().replace(' ', '').lower()
     #
     return urlopen('web/html_tvguide/tvguide-row.html').read().encode('utf-8').format(id=('chan' + str(channo)),

@@ -43,8 +43,9 @@ def tvlistings_process():
     while True:
         try:
             q_listings.put(build_channel_array())
+            print_msg('Building of channels and listings completed')
             time.sleep(604800)
-        except:
+        except Exception as e:
             print_error('Creation of TV listings failed - retrying in 10 seconds')
             # if creation of listings crashes, retry in 10 seconds
             time.sleep(10)

@@ -9,36 +9,76 @@ from console_messages import print_channelbuild
 def build_channel_array():
     with open(os.path.join('lists', 'list_channels.json'), 'r') as data_file:
         data = json.load(data_file)
+    #
+    list_channels = {'categories': data['categories']}
+    list_channels['channels'] = {}
+    #
     data_channels = data["channels"]
     #
-    list_channels = []
+    # Count number of channels in total
+    total = 0
+    for cat in data['categories']:
+        total += len(data_channels[cat])
+    #
     x = 0
-    for chan in data_channels:
-        #
-        x += 1
-        #
-        print_channelbuild(x, len(data_channels), chan['name'])
-        #
-        dict_devicekeys = {}
-        for k, v in chan['devicekeys'].items():
-            dict_devicekeys[k] = v
-        #
-        dict_listingsrc = {}
-        dict_listings = {}
-        for k, v in chan['listingsrc'].items():
-            dict_listingsrc[k] = v
-            dict_listings[k] = getlisting(k, v)
-        #
-        objchan = object_channel(chan['name'],
-                                 chan['logo'],
-                                 chan['type'],
-                                 chan['enabled'],
-                                 dict_devicekeys,
-                                 dict_listingsrc,
-                                 dict_listings,
-                                 datetime.now())
-        #
-        list_channels.append(objchan)
+    for cat in data['categories']:
+        cat_channels = []
+        data_categories = data_channels[cat]
+        for chan in data_categories:
+            #
+            x += 1
+            #
+            print_channelbuild(x, total, chan['name'])
+            #
+            # Channel logo (sd & hd)
+            try:
+                sd_logo = chan['sd']['logo']
+            except:
+                sd_logo = None
+            try:
+                hd_logo = chan['hd']['logo']
+            except:
+                hd_logo = None
+            #
+            dict_logo = {'sd': sd_logo, 'hd': hd_logo}
+            #
+            # Device keys (sd & hd)
+            try:
+                dict_sd_devicekeys = {}
+                for k, v in chan['sd']['devicekeys'].items():
+                    dict_sd_devicekeys[k] = v
+            except:
+                dict_sd_devicekeys = None
+            #
+            try:
+                dict_hd_devicekeys = {}
+                for k, v in chan['hd']['devicekeys'].items():
+                    dict_hd_devicekeys[k] = v
+            except:
+                dict_hd_devicekeys = None
+            #
+            dict_devicekeys = {'sd': dict_sd_devicekeys, 'hd': dict_hd_devicekeys}
+            #
+            # Listing sources
+            dict_listingsrc = {}
+            dict_listings = {}
+            for k, v in chan['listingsrc'].items():
+                dict_listingsrc[k] = v
+                dict_listings[k] = getlisting(k, v)
+            #
+            # Compile into object
+            objchan = object_channel(chan['name'],
+                                     cat,
+                                     dict_logo,
+                                     chan['type'],
+                                     dict_devicekeys,
+                                     dict_listingsrc,
+                                     dict_listings,
+                                     datetime.now())
+            #
+            cat_channels.append(objchan)
+            #
+        list_channels['channels'][cat] = cat_channels
         #
     return list_channels
 

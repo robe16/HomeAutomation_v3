@@ -1,10 +1,10 @@
 class object_channel:
 
-    def __init__ (self, name, logo, type, enabled, devicekeys, listingsrc, listings, listingstimestamp):
+    def __init__ (self, name, category, logo, type, devicekeys, listingsrc, listings, listingstimestamp):
         self._name = name
+        self._category = category
         self._logo = logo
         self._type = type
-        self._enabled = enabled
         self._devicekeys = devicekeys
         self._listingsrc = listingsrc
         self._listings = listings
@@ -13,21 +13,23 @@ class object_channel:
     def name(self):
         return self._name
 
-    def logo(self):
-        return self._logo
-
     def type(self):
         return self._type
 
-    def getEnabled(self):
-        return self._enabled
+    def category(self):
+        return self._category
 
-    def setEnabled(self, enabled):
-        self._enabled = enabled
-        return
+    def logo(self, res=False):
+        if not res:
+            if self._logo['hd']:
+                return self._logo['hd']
+            else:
+                return self._logo['sd']
+        #
+        return self._logo[res]
 
-    def devicekeys(self, key):
-        return self._devicekeys[key]
+    def devicekeys(self, res, key):
+        return self._devicekeys[res][key]
 
     def listingsrc(self, key):
         return self._listingsrc[key]
@@ -38,5 +40,5 @@ class object_channel:
     def putListings(self, listings):
         self._listings = listings
 
-    def listingstimestamp(self, key):
+    def listingstimestamp(self):
         return self._listingstimestamp
