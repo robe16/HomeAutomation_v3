@@ -25,10 +25,7 @@ def _create_device_object(grp_name, data_device):
                                     pairingkey = data_device['details']['pairingkey'].encode('ascii'))
     elif device_type=="tivo":
         return object_tivo(label = data_device['details']['name'].encode('ascii'),
-                           group = grp_name,
-                           ipaddress = data_device['details']['ipaddress'].encode('ascii'),
-                           port = 31339,
-                           accesskey = data_device['details']['mak'].encode('ascii'))
+                           group = grp_name)
     elif device_type=="xbox_one":
         return object_xbox_one(label = data_device['details']['name'].encode('ascii'),
                                group = grp_name,

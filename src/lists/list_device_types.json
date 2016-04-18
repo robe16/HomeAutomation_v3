@@ -9,7 +9,8 @@
         "name": "Virgin Media",
         "html_command": "object_tivo.html",
         "logo": "logo_virgin.png",
-        "type": "tivo"
+        "type": "tivo",
+        "port": 31339
     },
     "tv_lg_netcast": {
         "settings_dict": {
@@ -21,7 +22,8 @@
         "name": "LG TV",
         "html_command": "object_tv_lg_netcast.html",
         "logo": "logo_lg.png",
-        "type": "tv_lg_netcast"
+        "type": "tv_lg_netcast",
+        "port": 8080
     },
     "nest_account": {
         "settings_dict": {

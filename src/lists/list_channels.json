@@ -1014,7 +1014,7 @@
         },
         "type": "tv",
         "sd": {
-          "logo": "e.png",
+          "logo": "e_entertainment.png",
           "devicekeys": {
             "tivo": 156
           },
@@ -2006,7 +2006,7 @@
         },
         "type": "tv",
         "sd": {
-          "logo": "-.png",
+          "logo": "eden.png",
           "devicekeys": {
             "tivo": 247
           },
@@ -2014,7 +2014,7 @@
           "virginmedia_package": ["M+", "L", "XL"]
         },
         "hd": {
-          "logo": "-.png",
+          "logo": "eden.png",
           "devicekeys": {
             "tivo": 249
           },
@@ -2029,7 +2029,7 @@
         },
         "type": "tv",
         "sd": {
-          "logo": "-.png",
+          "logo": "eden_plus1.png",
           "devicekeys": {
             "tivo": 248
           },

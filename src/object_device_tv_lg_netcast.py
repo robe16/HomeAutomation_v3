@@ -79,7 +79,7 @@ class object_tv_lg_netcast:
         x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
         return str(x.getcode()).startswith("2") if bool(x) else False
 
-    def getHtml(self):
+    def getHtml(self, listings=False, user=False):
         html = get_device_html_command(self._type)
         return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
                                                                                  device = self._label.lower().replace(' ',''),

@@ -1,11 +1,11 @@
 from urllib import urlopen
 from tvlisting import returnnownext
 from config_users import get_userchannels
-from config_devices import get_device_config_detail
+from config_devices import get_device_config_detail, get_device_config_type
 from datetime import datetime
 
 
-def html_listings_user_and_all (listings, group_name=False, device_name=False, user=False):
+def html_listings_user_and_all (listings, group_name=False, device_name=False, user=False, chan_current=False, package=False):
     #
     html_tvguide = '<p style="text-align: right">Last updated {timestamp}</p>'.format(timestamp=datetime.now().strftime('%d/%m/%Y %H:%M:%S'))
     #
@@ -39,9 +39,11 @@ def html_listings_user_and_all (listings, group_name=False, device_name=False, u
                     temp_listings.append(l)
         #
         body = _html_listings(temp_listings,
-                              group_name = group_name,
-                              device_name = device_name,
-                              user = user)
+                              group_name=group_name,
+                              device_name=device_name,
+                              user=user,
+                              chan_current=chan_current,
+                              package=package)
         #
         html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
                                                                                          category=str(user).lower(),
@@ -60,8 +62,10 @@ def html_listings_user_and_all (listings, group_name=False, device_name=False, u
                                                                                     title=cat)
         #
         body = _html_listings(listings['channels'][cat],
-                              group_name = group_name,
-                              device_name = device_name)
+                              group_name=group_name,
+                              device_name=device_name,
+                              chan_current=chan_current,
+                              package=package)
         #
         html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
                                                                                          category=cat.lower(),
@@ -101,7 +105,7 @@ def _html_no_listings(group_name=False, device_name=False):
                                                                                          body=body)
 
 
-def _html_listings(listings, group_name=False, device_name=False, chan_current=False, user=False):
+def _html_listings(listings, group_name=False, device_name=False, chan_current=False, user=False, package=False):
     #
     if group_name and device_name:
         script = '<script>setTimeout(function () {getChannel(\'/command?group=' + str(group_name) +\
@@ -114,29 +118,66 @@ def _html_listings(listings, group_name=False, device_name=False, chan_current=F
                        group_name=group_name,
                        device_name=device_name,
                        chan_current=chan_current,
-                       user=user)
+                       user=user,
+                       package=package)
     #
     return urlopen('web/html_tvguide/tvguide-data.html').read().encode('utf-8').format(script=script,
                                                                                        style=style,
                                                                                        listings=lstngs)
 
 
-def _listings(listings, group_name=False, device_name=False, chan_current=False, user=False):
+def _listings(listings, group_name=False, device_name=False, chan_current=False, user=False, package=False):
     STRlistings = ""
     x = 0
     for lstg in listings:
-        STRlistings += _listingsrow(x, lstg, chan_current, group_name, device_name, user=user)
-        x += 1
+        #
+        use = True
+        res = False
+        #
+        if bool(package):
+            use = False
+            if package[0]=='freeview':
+                if bool(lstg.freeview('hd')):
+                    res = 'hd'
+                    use = True
+                elif bool(lstg.freeview('sd')):
+                    res = 'sd'
+                    use = True
+            else:
+                device_package_name = package[0]
+                device_package_level = package[1]
+                #
+                hd_package = lstg.package('hd', device_package_name)
+                if bool(hd_package):
+                    for p in device_package_level:
+                        if p in hd_package:
+                            res = 'hd'
+                            use = True
+                else:
+                    sd_package = lstg.package('sd', device_package_name)
+                    if bool(sd_package):
+                        for p in device_package_level:
+                            if p in sd_package:
+                                res = 'sd'
+                                use = True
+        #
+        if use:
+            if (x+1) == len(listings):
+                last = True
+            else:
+                last = False
+            STRlistings += _listingsrow(x, lstg, chan_current, group_name, device_name, res=res, user=user, last=last)
+            x += 1
+    #
     return STRlistings
 
 
-def _listingsrow(x, channelitem, chan_current, group_name=False, device_name=False, user=False, last=False):
+def _listingsrow(x, channelitem, chan_current, group_name=False, device_name=False, res=False, user=False, last=False):
     #
     try:
-        channo = channelitem.devicekeys(get_device_config_detail(group_name,
-                                                                 device_name,
-                                                                 'type'))
-    except:
+        channo = channelitem.devicekeys(res,
+                                        get_device_config_type(group_name, device_name))
+    except Exception as e:
         channo = False
     #
     now = '-'
@@ -190,13 +231,20 @@ def _listingsrow(x, channelitem, chan_current, group_name=False, device_name=Fal
     chan_id += channelitem.category().replace(' ', '').lower()
     chan_id += channelitem.name().replace(' ', '').lower()
     #
+    if bool(res):
+        logo = channelitem.logo(res)
+    else:
+        logo = channelitem.logo('hd')
+        if not logo:
+            logo = channelitem.logo('sd')
+    #
     return urlopen('web/html_tvguide/tvguide-row.html').read().encode('utf-8').format(id=('chan' + str(channo)),
                                                                                       chan_id=chan_id,
                                                                                       cls_highlight=chan_highlight,
                                                                                       cls_lastitem=item_last,
                                                                                       color=color,
                                                                                       imgtype=channelitem.type(),
-                                                                                      imgchan=channelitem.logo(),
+                                                                                      imgchan=logo,
                                                                                       channame=channelitem.name(),
                                                                                       now=now,
                                                                                       next=next,

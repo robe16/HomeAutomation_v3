@@ -1,35 +1,40 @@
+from list_channels import \
+    get_channel_item_type,\
+    get_channel_item_listingsrc,\
+    get_channel_item_res_devicekey,\
+    get_channel_item_res_freeview,\
+    get_channel_item_res_logo,\
+    get_channel_item_res_package
+
 class object_channel:
 
-    def __init__ (self, name, category, logo, type, devicekeys, listingsrc, listings, listingstimestamp):
+    def __init__ (self, name, category, listingsrc, listings, listingstimestamp):
         self._name = name
         self._category = category
-        self._logo = logo
-        self._type = type
-        self._devicekeys = devicekeys
         self._listingsrc = listingsrc
         self._listings = listings
         self._listingstimestamp = listingstimestamp
+
+    def category(self):
+        return self._category
 
     def name(self):
         return self._name
 
     def type(self):
-        return self._type
+        return get_channel_item_type(self._category, self._name)
 
-    def category(self):
-        return self._category
+    def logo(self, res):
+        return get_channel_item_res_logo(self._category, self._name, res)
 
-    def logo(self, res=False):
-        if not res:
-            if self._logo['hd']:
-                return self._logo['hd']
-            else:
-                return self._logo['sd']
-        #
-        return self._logo[res]
+    def devicekeys(self, res, device_type):
+        return get_channel_item_res_devicekey(self._category, self._name, res, device_type)
 
-    def devicekeys(self, res, key):
-        return self._devicekeys[res][key]
+    def freeview(self, res):
+        return get_channel_item_res_freeview(self._category, self._name, res)
+
+    def package(self, res, package_name):
+        return get_channel_item_res_package(self._category, self._name, res, package_name)
 
     def listingsrc(self, key):
         return self._listingsrc[key]

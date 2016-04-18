@@ -30,35 +30,6 @@ def build_channel_array():
             #
             print_channelbuild(x, total, chan['name'])
             #
-            # Channel logo (sd & hd)
-            try:
-                sd_logo = chan['sd']['logo']
-            except:
-                sd_logo = None
-            try:
-                hd_logo = chan['hd']['logo']
-            except:
-                hd_logo = None
-            #
-            dict_logo = {'sd': sd_logo, 'hd': hd_logo}
-            #
-            # Device keys (sd & hd)
-            try:
-                dict_sd_devicekeys = {}
-                for k, v in chan['sd']['devicekeys'].items():
-                    dict_sd_devicekeys[k] = v
-            except:
-                dict_sd_devicekeys = None
-            #
-            try:
-                dict_hd_devicekeys = {}
-                for k, v in chan['hd']['devicekeys'].items():
-                    dict_hd_devicekeys[k] = v
-            except:
-                dict_hd_devicekeys = None
-            #
-            dict_devicekeys = {'sd': dict_sd_devicekeys, 'hd': dict_hd_devicekeys}
-            #
             # Listing sources
             dict_listingsrc = {}
             dict_listings = {}
@@ -69,9 +40,6 @@ def build_channel_array():
             # Compile into object
             objchan = object_channel(chan['name'],
                                      cat,
-                                     dict_logo,
-                                     chan['type'],
-                                     dict_devicekeys,
                                      dict_listingsrc,
                                      dict_listings,
                                      datetime.now())

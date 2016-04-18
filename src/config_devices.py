@@ -25,6 +25,13 @@ def get_device_json():
         return json.load(data_file)
 
 
+def get_device_config_type(grp_name, dvc_label):
+    #
+    data = get_device_json()
+    #
+    return data[grp_name]['devices'][dvc_label]['device']
+
+
 def get_device_config_detail(grp_name, dvc_label, key):
     #
     data = get_device_json()

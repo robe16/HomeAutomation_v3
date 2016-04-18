@@ -31,7 +31,7 @@ class object_xbox_one:
     def getName(self):
         return get_device_name(self._type)
 
-    def getHtml(self):
+    def getHtml(self, listings=False, user=False):
         device_url = 'device/{group}/{device}'.format(group=self._group.lower().replace(' ',''), device=self._label.lower().replace(' ',''))
         html = get_device_html_command(self._type)
         return urlopen('web/html_devices/' + html).read().encode('utf-8').format(url=device_url)

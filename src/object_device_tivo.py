@@ -1,49 +1,44 @@
 from send_cmds import sendTELNET
 from urllib import urlopen
-from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from config_devices import get_device_config_detail
+from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from web_tvlistings import html_listings_user_and_all
 from console_messages import print_command
 
 
 class object_tivo:
 
-    def __init__(self, label, group, ipaddress, port, accesskey=""):
+    def __init__(self, label, group):
         self._type = "tivo"
         self._label = label
         self._group = group
-        self._ipaddress = ipaddress
-        self._port = port
-        self._accesskey = accesskey
-        self._tvguide = True
 
-    def getLabel(self):
-        return self._label
+    # def getLabel(self):
+    #     return self._label
+    #
+    # def getGroup(self):
+    #     return self._group
+    #
+    # def getType(self):
+    #     return self._type
 
-    def getGroup(self):
-        return self._group
+    def _ipaddress(self):
+        return get_device_config_detail(self._group, self._label, "ipaddress")
 
-    def getType(self):
-        return self._type
+    def _port(self):
+        return get_device_detail(self._type, "port")
 
-    def getIP(self):
-        return self._ipaddress
+    def _accesskey(self):
+        return get_device_config_detail(self._group, self._label, "mak")
 
-    def getPort(self):
-        return self._port
-
-    def getAccesskey(self):
-        return self._STRaccesskey
-
-    def setAccesskey(self, STRaccesskey):
-        self._STRaccesskey = STRaccesskey
-
-    def getTvguide_use(self):
-        return self._tvguide
-
-    def getLogo(self):
+    def _logo(self):
         return get_device_logo(self._type)
 
     def getName(self):
         return get_device_name(self._type)
+
+    def _package(self):
+        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), "package")
 
     def _getChan(self):
         response = sendTELNET(self._ipaddress, self._port, response=True)
@@ -76,15 +71,27 @@ class object_tivo:
         print_command (x, get_device_name(self._type), self._ipaddress, response)
         return response
 
-    def getHtml(self):
-        html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
-                                                                                 device=self._label.lower().replace(' ',''))
+    def getHtml(self, listings=None, user=False):
+        #
+        html_file = get_device_html_command(self._type)
+        html = urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
+                                                                                      device=self._label.lower().replace(' ',''))
+        #
+        chan_current = self._getChan()
+        #
+        html += '<br>'
+        html += html_listings_user_and_all(listings,
+                                           group_name=self._group.lower().replace(' ',''),
+                                           device_name=self._label.lower().replace(' ',''),
+                                           user=user,
+                                           chan_current=chan_current,
+                                           package=["virginmedia_package", self._package()])
+        return html
 
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
         if html:
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
                                                                                               name = self._label,
                                                                                               ipaddress = self._ipaddress,
                                                                                               mak = self._accesskey,

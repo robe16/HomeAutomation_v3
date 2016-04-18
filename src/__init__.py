@@ -15,7 +15,6 @@ from web_create_preferences import create_preference_tvguide
 from web_tvlistings import html_listings_user_and_all
 from web_create_error import create_error_404, create_error_500
 from tvlisting import build_channel_array, returnnonext_xml_all
-from tvlisting_updatechannels import update_channellist
 
 
 def server_start():
@@ -198,8 +197,9 @@ def save_settings(category=''):
         if category == 'tvguide':
             data = request.body.read()
             if data:
-                if update_channellist(data):
-                    return HTTPResponse(status=200)
+                #TODO
+                # if update_channellist(data):
+                    return HTTPResponse(status=400)
         elif category == 'devices':
             data = request.body.read()
             if data:

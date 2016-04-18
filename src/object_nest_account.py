@@ -54,7 +54,7 @@ class object_nest_account:
     def getTvguide_use(self):
         return self._tvguide
 
-    def getHtml(self):
+    def getHtml(self, listings=False, user=False):
         #
         html = get_device_html_command(self._type)
         body = self._htmlbody()

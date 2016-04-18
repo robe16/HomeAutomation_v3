@@ -49,7 +49,7 @@ def create_device(user, tvlistings, group_name, device_name, request):
     if request.query.body:
         return body
     #
-    title = '{group}: {label}'.format(group=device.getGroup(), label=device.getLabel())
+    title = '{group}: {label}'.format(group=group_name, label=device_name)
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title=title) +\
            html_menu(user) +\
