@@ -23,13 +23,13 @@ class object_tivo:
     #     return self._type
 
     def _ipaddress(self):
-        return get_device_config_detail(self._group, self._label, "ipaddress")
+        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), "ipaddress")
 
     def _port(self):
         return get_device_detail(self._type, "port")
 
     def _accesskey(self):
-        return get_device_config_detail(self._group, self._label, "mak")
+        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), "mak")
 
     def _logo(self):
         return get_device_logo(self._type)
@@ -41,7 +41,7 @@ class object_tivo:
         return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), "package")
 
     def _getChan(self):
-        response = sendTELNET(self._ipaddress, self._port, response=True)
+        response = sendTELNET(self._ipaddress(), self._port(), response=True)
         if not bool(response):
             return False
         nums = [int(s) for s in response.split() if s.isdigit()]
@@ -56,19 +56,19 @@ class object_tivo:
         if command == "getchannel":
             response = self._getChan()
         elif command == "channel":
-            response = sendTELNET(self._ipaddress,
-                                  self._port,
+            response = sendTELNET(self._ipaddress(),
+                                  self._port(),
                                   data=("FORCECH {}\r").format(request.query.chan),
                                   response=True)
         elif command == 'command':
             code = self.commands[request.query.code]
             try:
-                response = sendTELNET(self._ipaddress, self._port, data=code)
+                response = sendTELNET(self._ipaddress(), self._port(), data=code)
             except:
                 response = False
         #
         x = request.query.code if code else command
-        print_command (x, get_device_name(self._type), self._ipaddress, response)
+        print_command (x, get_device_name(self._type), self._ipaddress(), response)
         return response
 
     def getHtml(self, listings=None, user=False):
@@ -91,10 +91,11 @@ class object_tivo:
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
         if html:
+            print self._ipaddress()
             return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
                                                                                               name = self._label,
-                                                                                              ipaddress = self._ipaddress,
-                                                                                              mak = self._accesskey,
+                                                                                              ipaddress = self._ipaddress(),
+                                                                                              mak = self._accesskey(),
                                                                                               dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
         else:
             return ''
