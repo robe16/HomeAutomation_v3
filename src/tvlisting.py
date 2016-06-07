@@ -60,7 +60,7 @@ def getlisting(src, value):
         else:
             print_msg('No known listing source available')
     else:
-        print_msg('No code provided for listing source ' & src)
+        print_msg('No code provided for listing source ' + src)
     return data
 
 
