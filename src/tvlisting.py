@@ -3,7 +3,7 @@ import json
 import os
 from send_cmds import sendHTTP
 from object_channel import object_channel
-from console_messages import print_channelbuild
+from console_messages import print_channelbuild, print_msg
 
 
 def build_channel_array():
@@ -52,11 +52,15 @@ def build_channel_array():
 
 
 def getlisting(src, value):
-    if src == 'radiotimes' and value != '':
-        x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code = value), 'close', contenttype='text/xml; charset=utf-8')
-        data = x.read() if bool(x) else None
+    data = None
+    if value != '':
+        if src == 'radiotimes':
+            x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code = value), 'close', contenttype='text/xml; charset=utf-8')
+            data = x.read() if bool(x) else None
+        else:
+            print_msg('No known listing source available')
     else:
-        data = None
+        print_msg('No code provided for listing source ' & src)
     return data
 
 
