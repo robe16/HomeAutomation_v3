@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 import json
 import os
-from send_cmds import sendHTTP
 from object_channel import object_channel
 from console_messages import print_channelbuild, print_msg
+import tvlisting_radiotimes, tvlisting_bleb
 
 
 def build_channel_array():
@@ -35,7 +35,10 @@ def build_channel_array():
             dict_listings = {}
             for k, v in chan['listingsrc'].items():
                 dict_listingsrc[k] = v
-                dict_listings[k] = getlisting(k, v)
+                temp_listing = getlisting(k, v)
+                if temp_listing != None:
+                    dict_listings[k] = getlisting(k, v)
+                    break
             #
             # Compile into object
             objchan = object_channel(chan['name'],
@@ -52,58 +55,21 @@ def build_channel_array():
 
 
 def getlisting(src, value):
-    data = None
     if value != '':
         if src == 'radiotimes':
-            x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code = value), 'close', contenttype='text/xml; charset=utf-8')
-            data = x.read() if bool(x) else None
+            return tvlisting_radiotimes.getlisting(value)
         else:
             print_msg('No known listing source available')
     else:
         print_msg('No code provided for listing source ' + src)
-    return data
+    return None
 
 
 def returnnownext(src, data):
     if src == 'radiotimes':
-        arr_data_alllines = filter(None, data.split('\n'))
-        count = 2
-        while count < max(arr_data_alllines):
-            arr_data_oneline = arr_data_alllines[count].split('~')
-            # String date will be in format "dd/MM/yyyy HH:mm"
-            datetime_start = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[20], '%d/%m/%Y %H:%M')
-            datetime_end = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[21], '%d/%m/%Y %H:%M')
-
-            if not datetime_start <= datetime_end:
-                datetime_end = datetime_end + timedelta(days=1)
-
-            if datetime_start <= datetime.now() <= datetime_end:
-                #
-                dict_nownext = {}
-                next = 0
-                while next <= 5:
-                    arr_data_oneline = arr_data_alllines[count + next].split('~')
-                    datetime_start = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[20],
-                                                       '%d/%m/%Y %H:%M')
-                    datetime_end = datetime.strptime(arr_data_oneline[19] + " " + arr_data_oneline[21],
-                                                     '%d/%m/%Y %H:%M')
-                    if not datetime_start <= datetime_end:
-                        datetime_end = datetime_end + timedelta(days=1)
-                    #
-                    dict_listing = {}
-                    dict_listing['startdate'] = datetime_start.strftime('%d/%m/%Y')
-                    dict_listing['starttime'] = datetime_start.strftime('%H:%M')
-                    dict_listing['enddate'] = datetime_end.strftime('%d/%m/%Y')
-                    dict_listing['endtime'] = datetime_end.strftime('%H:%M')
-                    dict_listing['title'] = arr_data_oneline[0]
-                    dict_listing['desc'] = arr_data_oneline[17]
-                    #
-                    dict_nownext[next] = dict_listing
-                    #
-                    next += 1
-                #
-                return dict_nownext
-            count += 1
+        return tvlisting_radiotimes.nownext(data)
+    if src == 'bleb':
+        return tvlisting_bleb.nownext(data)
     return None
 
 

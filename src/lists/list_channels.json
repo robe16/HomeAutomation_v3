@@ -2041,7 +2041,7 @@
       {
         "name": "Discovery Channel",
         "listingsrc": {
-          "radiotimes": "-"
+          "radiotimes": ""
         },
         "type": "tv",
         "sd": {
@@ -2064,7 +2064,7 @@
       {
         "name": "Discovery Channel +1",
         "listingsrc": {
-          "radiotimes": "-"
+          "radiotimes": ""
         },
         "type": "tv",
         "sd": {
@@ -2096,7 +2096,7 @@
       {
         "name": "Investigation Discovery +1",
         "listingsrc": {
-          "radiotimes": "-"
+          "radiotimes": ""
         },
         "type": "tv",
         "sd": {
