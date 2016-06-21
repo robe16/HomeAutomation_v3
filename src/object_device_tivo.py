@@ -3,6 +3,7 @@ from urllib import urlopen
 from config_devices import get_device_config_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from web_tvlistings import html_listings_user_and_all
+from web_tvchannels import html_channels_user_and_all
 from console_messages import print_command
 
 
@@ -80,12 +81,17 @@ class object_tivo:
         chan_current = self._getChan()
         #
         html += '<br>'
-        html += html_listings_user_and_all(listings,
-                                           group_name=self._group.lower().replace(' ',''),
+        html += html_channels_user_and_all(group_name=self._group.lower().replace(' ',''),
                                            device_name=self._label.lower().replace(' ',''),
                                            user=user,
                                            chan_current=chan_current,
                                            package=["virginmedia_package", self._package()])
+        # html += html_listings_user_and_all(listings,
+        #                                    group_name=self._group.lower().replace(' ',''),
+        #                                    device_name=self._label.lower().replace(' ',''),
+        #                                    user=user,
+        #                                    chan_current=chan_current,
+        #                                    package=["virginmedia_package", self._package()])
         return html
 
     def getHtml_settings(self, grp_num, dvc_num):

@@ -1,0 +1,35 @@
+.channel_container {
+    border-left: 1px solid #ccc;
+    border-left: 1px solid rgba(0, 0, 0, .15);
+    border-right: 1px solid #ccc;
+    border-right: 1px solid rgba(0, 0, 0, .15);
+    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid rgba(0, 0, 0, .15);
+    margin-bottom: 50px;
+}
+.channel_container_item {
+    text-align: center;
+    margin: 5px auto;
+    height: 90px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+.channel_container_item:hover {
+  background-color: #d9d9d9;
+}
+.chan_img {
+    height: 40px;
+}
+.chan_name {
+    margin: auto 10px;
+}
+
+
+@media (max-width: 500px) {
+    .chan_img {
+        height: 30px;
+    }
+    .chan_name {
+        font-size: 12px;
+    }
+}

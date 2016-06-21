@@ -17,37 +17,37 @@ from web_create_error import create_error_404, create_error_500
 from tvlisting import build_channel_array, returnnonext_xml_all
 
 
-def server_start():
-    print_msg('Starting process: "bottle" server')
-    process_bottle.start()
-    print_msg('Process started: "bottle" server')
-    print_msg('Starting process: Retrieval of TV listings')
-    process_listings.start() #mute/unmute this line if required for testing purposes
-    print_msg('Process started: Retrieval of TV listings')
+# def server_start():
+#     print_msg('Starting process: "bottle" server')
+#     process_bottle.start()
+#     print_msg('Process started: "bottle" server')
+#     #print_msg('Starting process: Retrieval of TV listings')
+#     #process_listings.start() #mute/unmute this line if required for testing purposes
+#     #print_msg('Process started: Retrieval of TV listings')
 
 
-def server_end():
-    process_listings.terminate()
-    process_bottle.terminate()
+# def server_end():
+#     process_listings.terminate()
+#     process_bottle.terminate()
 
 
 def start_bottle():
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1600, debug=True)
+    run(host='0.0.0.0', port=1605, debug=True)
 
 
-def tvlistings_process():
-    time.sleep(5)
-    # 604800 secs = 7 days
-    while True:
-        try:
-            q_listings.put(build_channel_array())
-            print_msg('Building of channels and listings completed')
-            time.sleep(604800)
-        except Exception as e:
-            print_error('Creation of TV listings failed - retrying in 10 seconds')
-            # if creation of listings crashes, retry in 10 seconds
-            time.sleep(10)
+# def tvlistings_process():
+#     time.sleep(2)
+#     # 604800 secs = 7 days
+#     while True:
+#         try:
+#             q_listings.put(build_channel_array())
+#             print_msg('Building of channels and listings completed')
+#             time.sleep(604800)
+#         except Exception as e:
+#             print_error('Creation of TV listings failed - retrying in 10 seconds')
+#             # if creation of listings crashes, retry in 10 seconds
+#             time.sleep(10)
 
 
 @route('/')
@@ -274,7 +274,8 @@ def _check_user(user_cookie):
 q_listings = Queue()
 q_devices = Queue()
 #
-process_listings = Process(target=tvlistings_process)
-process_bottle = Process(target=start_bottle)
+# process_listings = Process(target=tvlistings_process)
+# process_bottle = Process(target=start_bottle)
 # Start server
-server_start()
+print_msg('Starting process: "bottle" server')
+start_bottle()

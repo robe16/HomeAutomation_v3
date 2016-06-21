@@ -13,6 +13,11 @@ def html_listings_user_and_all (listings, group_name=False, device_name=False, u
         html_tvguide += _html_no_listings(group_name=group_name, device_name=device_name)
         return html_tvguide
     #
+    if group_name and device_name:
+        html_tvguide += '<script>setTimeout(function () {getChannel(\'/command?group=' + str(group_name) + \
+                        '&device=' + str(device_name) + \
+                        '&command=getchannel\', true);}, 10000);</script>'
+    #
     categories = listings['categories']
     all_count = 0
     html_nav_user = ''
@@ -107,12 +112,6 @@ def _html_no_listings(group_name=False, device_name=False):
 
 def _html_listings(listings, group_name=False, device_name=False, chan_current=False, user=False, package=False):
     #
-    if group_name and device_name:
-        script = '<script>setTimeout(function () {getChannel(\'/command?group=' + str(group_name) +\
-                 '&device=' + str(device_name) +\
-                 '&command=getchannel\', true);}, 10000);</script>'
-    else:
-        script = ''
     style = '<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>'
     lstngs = _listings(listings,
                        group_name=group_name,
@@ -121,8 +120,7 @@ def _html_listings(listings, group_name=False, device_name=False, chan_current=F
                        user=user,
                        package=package)
     #
-    return urlopen('web/html_tvguide/tvguide-data.html').read().encode('utf-8').format(script=script,
-                                                                                       style=style,
+    return urlopen('web/html_tvguide/tvguide-data.html').read().encode('utf-8').format(style=style,
                                                                                        listings=lstngs)
 
 
