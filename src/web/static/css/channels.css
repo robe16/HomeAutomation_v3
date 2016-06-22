@@ -13,6 +13,7 @@
     height: 90px;
     padding-bottom: 10px;
     padding-top: 10px;
+    cursor: pointer;
 }
 .channel_container_item:hover {
   background-color: #d9d9d9;
@@ -22,6 +23,9 @@
 }
 .chan_name {
     margin: auto 10px;
+}
+.chan_header {
+ margin: 10px
 }
 
 

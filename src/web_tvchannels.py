@@ -105,6 +105,8 @@ def _html_no_channels():
 
 def _html_channels(category, channels, group_name=False, device_name=False, chan_current=False, user=False, package=False):
     #
+    header = '{user}\'s favourites'.format(user=user) if user else category
+    #
     html_chans = _channels(category,
                            channels,
                            group_name=group_name,
@@ -113,7 +115,8 @@ def _html_channels(category, channels, group_name=False, device_name=False, chan
                            user=user,
                            package=package)
     #
-    return urlopen('web/html_tvguide/tvguide-grid.html').read().encode('utf-8').format(html_chans=html_chans)
+    return urlopen('web/html_tvguide/tvguide-grid.html').read().encode('utf-8').format(header=header,
+                                                                                       html_chans=html_chans)
 
 
 def _channels(category, channels, group_name=False, device_name=False, chan_current=False, user=False, package=False):
