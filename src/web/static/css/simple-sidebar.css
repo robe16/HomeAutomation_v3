@@ -1,6 +1,6 @@
 
 #page-content-wrapper {
-    padding: 20px 80px;
+    padding: 20px 70px;
 }
 
 /* Sidebar spans */
@@ -29,6 +29,22 @@
     right: 20px;
     top: 20px;
     width: 50px;
+}
+
+
+@media (max-width: 575px) {
+    .sidebar_lhs {
+        left: 10px;
+    }
+    .sidebar_rhs {
+        right: 10px;
+    }
+    .sidebar_cmd_alert {
+        right: 10px;
+    }
+    #page-content-wrapper {
+        padding: 20px 50px;
+    }
 }
 
 /* Sidebar buttons */
