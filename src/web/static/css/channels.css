@@ -9,10 +9,8 @@
 }
 .channel_container_item {
     text-align: center;
-    margin: 5px auto;
-    height: 90px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    height: 100px;
+    padding: 15px 5px;
     cursor: pointer;
 }
 .channel_container_item:hover {
@@ -25,7 +23,7 @@
     margin: auto 10px;
 }
 .chan_header {
- margin: 10px
+    margin: 10px
 }
 
 

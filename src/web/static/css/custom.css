@@ -18,7 +18,7 @@
 .btn-txt {
     padding: 7px 12px;
 }
-@media (max-width: 575px) {
+@media (max-width: 700px) {
     .btn-remote  .glyphicon {
         font-size: 10px;
         padding: 5px 0px;
@@ -58,6 +58,8 @@
 .btn-col-green {background-color: #4CAF50;}
 .btn-col-yellow {background-color: #FFEB3B;}
 .btn-col-blue {background-color: #2196F3;}
+.btn-col-grey {background-color: #EEEEEE;}
+.btn-col-grey:hover {background-color: #E0E0E0;}
 /*grey*/
 .material-col-grey-50 {background-color: #FAFAFA;}
 .material-col-grey-100 {background-color: #F5F5F5;}

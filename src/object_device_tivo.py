@@ -75,23 +75,24 @@ class object_tivo:
     def getHtml(self, listings=None, user=False):
         #
         html_file = get_device_html_command(self._type)
-        html = urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
-                                                                                      device=self._label.lower().replace(' ',''))
         #
         chan_current = self._getChan()
         #
-        html += '<br>'
-        html += html_channels_user_and_all(group_name=self._group.lower().replace(' ',''),
-                                           device_name=self._label.lower().replace(' ',''),
-                                           user=user,
-                                           chan_current=chan_current,
-                                           package=["virginmedia_package", self._package()])
+        html_channels = html_channels_user_and_all(group_name=self._group.lower().replace(' ',''),
+                                                   device_name=self._label.lower().replace(' ',''),
+                                                   user=user,
+                                                   chan_current=chan_current,
+                                                   package=["virginmedia_package", self._package()])
         # html += html_listings_user_and_all(listings,
         #                                    group_name=self._group.lower().replace(' ',''),
         #                                    device_name=self._label.lower().replace(' ',''),
         #                                    user=user,
         #                                    chan_current=chan_current,
         #                                    package=["virginmedia_package", self._package()])
+        #
+        html = urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
+                                                                                      device=self._label.lower().replace(' ',''),
+                                                                                      html_channels = html_channels)
         return html
 
     def getHtml_settings(self, grp_num, dvc_num):
