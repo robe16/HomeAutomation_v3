@@ -6,6 +6,7 @@
     border-bottom: 1px solid #ccc;
     border-bottom: 1px solid rgba(0, 0, 0, .15);
     margin-bottom: 50px;
+    border-radius: 2px;
 }
 .channel_container_item {
     text-align: center;
@@ -13,9 +14,7 @@
     padding: 15px 5px;
     cursor: pointer;
 }
-.channel_container_item:hover {
-  background-color: #d9d9d9;
-}
+
 .chan_img {
     height: 40px;
 }
@@ -34,4 +33,9 @@
     .chan_name {
         font-size: 12px;
     }
+}
+
+.chan-highlight {
+    border:2px solid #FFC400;
+    border-radius: 2px;
 }

@@ -1,12 +1,12 @@
 function channelhighlight(channo) {
-    var all = document.getElementsByTagName("tr");
+    var all = document.getElementsByTagName("div");
     for (var i = 0; i < all.length; i++)
         {
             if (all[i].id==(channo)) {
-                document.getElementById(all[i].id).className="highlight";
+                document.getElementById(all[i].id).classList.add("chan-highlight");
             }
             else if (all[i].id.startsWith('chan')) {
-                document.getElementById(all[i].id).className="";
+                document.getElementById(all[i].id).classList.remove("chan-highlight");
             };
         };
 }

@@ -44,6 +44,12 @@
 }
 
 
+.grid_item:hover {
+  background-color: #d9d9d9;
+}
+
+
+
 .material-text-dark-primary {color: #000000; opacity: 0.87;}
 .material-text-dark-seconday {color: #000000; opacity: 0.54;}
 .material-text-dark-disabled {color: #000000; opacity: 0.38;}

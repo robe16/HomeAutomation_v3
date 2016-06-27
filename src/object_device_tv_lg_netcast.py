@@ -122,7 +122,7 @@ class object_tv_lg_netcast:
                     icon_name = data.find('icon_name').text
                     #
 
-                    html += ('<td style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command?group={group}&device={device}&command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
+                    html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command?group={group}&device={device}&command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
                              '<img src="/command?group={group}&device={device}&command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
                              '</td>').format(group = self._group.lower().replace(' ',''),

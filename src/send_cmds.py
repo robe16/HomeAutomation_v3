@@ -72,8 +72,11 @@ def sendTELNET(ipaddress, port, data=None, response=False):
         if data:
             tn.write(str(data)+"\n")
             time.sleep(0.1)
-            output = tn.read_eager()
-            output = output if (response and not bool(output)) else True
+            op = tn.read_eager()
+            if op=='':
+                output = True
+            else:
+                output = op if (response and not bool(op)) else True
         tn.close()
         return output
     except:

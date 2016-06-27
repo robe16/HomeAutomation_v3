@@ -181,7 +181,7 @@ def _channelitem(x, category, channel, res, chan_current, group_name=False, devi
     #
     # If current channel, create element class text for highlighting
     if bool(chan_current) and channo == chan_current:
-        chan_highlight = ' highlight'
+        chan_highlight = 'chan-highlight'
     else:
         chan_highlight = ''
     #
