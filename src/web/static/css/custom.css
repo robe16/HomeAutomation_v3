@@ -61,9 +61,13 @@
 
 
 .btn-col-red {background-color: #D50000;}
+.btn-col-red:hover {background-color: #B71C1C;}
 .btn-col-green {background-color: #4CAF50;}
+.btn-col-green:hover {background-color: #43A047;}
 .btn-col-yellow {background-color: #FFEB3B;}
+.btn-col-yellow:hover {background-color: #FDD835;}
 .btn-col-blue {background-color: #2196F3;}
+.btn-col-blue:hover {background-color: #1E88E5;}
 .btn-col-grey {background-color: #EEEEEE;}
 .btn-col-grey:hover {background-color: #E0E0E0;}
 /*grey*/
