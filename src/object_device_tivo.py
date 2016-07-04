@@ -1,10 +1,18 @@
-from send_cmds import sendTELNET
+from send_cmds import sendTELNET, sendHTTP
 from urllib import urlopen
 from config_devices import get_device_config_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from web_tvlistings import html_listings_user_and_all
 from web_tvchannels import html_channels_user_and_all
 from console_messages import print_command
+
+from urllib2 import Request, urlopen, HTTPError
+from urllib2 import HTTPBasicAuthHandler, HTTPDigestAuthHandler, build_opener, install_opener
+import ssl
+import hashlib
+import random
+from console_messages import print_error, print_http
+from list_devices import set_device_detail
 
 
 class object_tivo:
@@ -54,13 +62,16 @@ class object_tivo:
         code = False
         response = False
         #
-        if command == "getchannel":
+        if command == 'getchannel':
             response = self._getChan()
-        elif command == "channel":
+        elif command == 'channel':
             response = sendTELNET(self._ipaddress(),
                                   self._port(),
-                                  data=("FORCECH {}\r").format(request.query.chan),
+                                  data=("SETCH {}\r").format(request.query.chan),
                                   response=True)
+            if response.startswith('CH_FAILED'):
+                print_command('channel', get_device_name(self._type), self._ipaddress(), response)
+                return False
         elif command == 'command':
             code = self.commands[request.query.code]
             try:
@@ -99,10 +110,10 @@ class object_tivo:
         html = get_device_html_settings(self._type)
         if html:
             print self._ipaddress()
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
-                                                                                              name = self._label,
-                                                                                              ipaddress = self._ipaddress(),
-                                                                                              mak = self._accesskey(),
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img=self._logo(),
+                                                                                              name=self._label,
+                                                                                              ipaddress=self._ipaddress(),
+                                                                                              mak=self._accesskey(),
                                                                                               dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
         else:
             return ''
@@ -149,3 +160,133 @@ class object_tivo:
                 "actiond": "IRCODE ACTION_D\r",
                 "clear": "IRCODE CLEAR\r",
                 "enter": "IRCODE ENTER\r"}
+
+    def _retrieve_recordings(self):
+        recordings = self.sendHTTP_test(self._ipaddress(),
+                                        'close',
+                                        '/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse=Yes',
+                                        password=['tivo', self._accesskey(), 'TiVo DVR'])
+        return recordings
+
+
+    def sendHTTP_test(self, url1a, connection, url2a, method=False, data=False, contenttype=False, header_auth=False, password=False):
+        #
+        if password:
+            authhandler_d = HTTPDigestAuthHandler()
+            authhandler_d.add_password(password[2],
+                                       url1a + url2a.split('?', 1)[0],
+                                       password[0],
+                                       password[1])
+            authhandler_b = HTTPBasicAuthHandler()
+            authhandler_b.add_password(password[2],
+                                       url1a + url2a.split('?', 1)[0],
+                                       password[0],
+                                       password[1])
+            opener = build_opener(authhandler_d, authhandler_b)
+            install_opener(opener)
+        #
+        url = 'https://' + url1a + url2a
+        #
+        if data:
+            req = Request(url, data=data)
+        else:
+            req = Request(url)
+        #
+        if bool(method):
+            req.get_method = lambda: method
+        #
+        if bool(contenttype):
+            req.add_header("content-type", contenttype)
+        #
+        if bool(header_auth):
+            req.add_header("Authorization", header_auth)
+        #
+        req.add_header("Connection", connection)
+        # req.add_header("User-Agent", "Linux/2.6.18 UDAP/2.0 CentOS/5.8")
+        #
+        #
+        # https://www.afpy.org/doc/python/2.7/whatsnew/2.7.html#pep-476-enabling-certificate-verification-by-default-for-stdlib-http-clients
+        # 'ssl._create_unverified_context()' is used as per above link to overcome failing ssl certification verification
+        #
+        #
+        # https://docs.python.org/2/howto/urllib2.html#id6
+        # if password:
+        #     #
+        #     ps = HTTPPasswordMgrWithDefaultRealm()
+        #     ps.add_password(None, _check_prefix(url1, https), password[0], password[1])
+        #     opener = build_opener(HTTPDigestAuthHandler(ps),
+        #                           HTTPBasicAuthHandler(ps),
+        #                           HTTPSHandler(ssl._create_unverified_context()))
+        #     install_opener(opener)
+        #
+        try:
+            x = urlopen(req, timeout=10, context=ssl._create_unverified_context())
+            print_http(x.getcode(), 'HTTP request - ' + url)
+            return False if not str(x.getcode()).startswith("2") else x
+        except HTTPError as h:
+            # if str(h.getcode()).startswith("3"):
+            #     print_http(h.getcode(), 'Redirect of http request - ' + url + ' - ' + str(h))
+            #     url_redirect = h.headers['Location']
+            #     if redirect_type:
+            #         if url_redirect[-len(url2a):] == url2a:
+            #             url_redirect = url_redirect[:(len(url_redirect) - len(url2))]
+            #         set_device_detail(redirect_type, 'redirect_url', url_redirect)
+            #     return sendHTTP(url_redirect, connection, url2a=url2a, method=method, data=data, contenttype=contenttype,
+            #                     header_auth=header_auth, retry=retry + 1)
+            # el
+            if str(h.getcode()).startswith("401"):
+                #
+                if password:
+                    hd_auth = h.headers['www-authenticate'].split(', ')
+                    cookie = h.headers['set-cookie'].split(';', 1)[0]
+                    #
+                    nc = '00000001'
+                    cnonce = hashlib.md5('testcnonce' + str(random.randint(0, 100))).hexdigest()
+                    realm = ''
+                    nonce = ''
+                    qop = ''
+                    opaque = ''
+                    for item in hd_auth:
+                        if item.split("=")[0] == 'Digest realm':
+                            realm = item.split("=")[1].strip('"')
+                        elif item.split("=")[0] == 'nonce':
+                            nonce = item.split("=")[1].strip('"')
+                        elif item.split("=")[0] == 'qop':
+                            qop = item.split("=")[1].strip('"')
+                        elif item.split("=")[0] == 'opaque':
+                            opaque = item.split("=")[1].strip('"')
+                    #
+                    # Digest Authorisation as per https://en.wikipedia.org/wiki/Digest_access_authentication
+                    HA1 = hashlib.md5(password[0] + ':' + realm + ':' + password[1]).hexdigest()
+                    HA2 = hashlib.md5('GET:' + url2a.split('?', 1)[0]).hexdigest()
+                    response = hashlib.md5(
+                        HA1 + ':' + nonce + ':' + nc + ':' + cnonce + ':' + qop + ':' + HA2).hexdigest()
+                    #
+                    header_auth = 'Digest username = "' + password[0] + '", ' + \
+                                  'realm = "' + realm + '", ' + \
+                                  'nonce = "' + nonce + '", ' + \
+                                  'uri = "' + url2a.split('?', 1)[0] + '", ' + \
+                                  'qop = "' + qop + '", ' + \
+                                  'nc = ' + nc + ', ' + \
+                                  'cnonce = "' + cnonce + '", ' + \
+                                  'response = "' + response + '", ' + \
+                                  'opaque = "' + opaque + '"'
+                    req.add_header('Authorization', header_auth)
+                    req.add_header('cookie', cookie)
+                    # req.add_header("Host", socket.gethostbyname(socket.gethostname()))
+                    #
+                    #
+                    #
+                    try:
+                        req.add_header('Content-Type', 'application/xml')
+                        x = urlopen(req, timeout=10, context=ssl._create_unverified_context())
+                        print_http(x.getcode(), 'HTTP request - ' + url)
+                        return False if not str(x.getcode()).startswith("2") else x
+                    except Exception as e:
+                        print_error('Could not send http request - ' + url + ' - ' + str(e))
+                        return False
+                print_http(h.getcode(), 'Could not send http request - ' + url + ' - ' + str(h))
+                return False
+        except Exception as e:
+            print_error('Could not send http request - ' + url + ' - ' + str(e))
+            return False
