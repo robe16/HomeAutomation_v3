@@ -5,15 +5,13 @@ from command_forwarder import cmd_fwrd
 from config_devices import write_config_devices
 from config_devices_create import create_device_object
 from config_users import check_user, get_userrole, update_user_channels
-from console_messages import print_msg, print_error
-from src.packages.bottle.bottle import route, request, run, static_file, HTTPResponse, template, redirect, response
-from tvlisting import build_channel_array, returnnonext_xml_all
+from console_messages import print_msg
+from src.packages.bottle import route, request, run, static_file, HTTPResponse, redirect, response
 from web_create_error import create_error_404, create_error_500
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_create_preferences import create_preference_tvguide
 from web_create_settings import create_settings_devices, settings_devices_requests, create_settings_tvguide
 from web_devices import refresh_tvguide
-from web_tvlistings import html_listings_user_and_all
 
 
 # def server_start():
