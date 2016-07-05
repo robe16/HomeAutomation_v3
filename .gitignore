@@ -7,6 +7,7 @@ config_devices_new_avrecs.json
 config_nest.json
 config_tvguide.json
 config_users.json
+.idea/*
 
 # Test files for development purposes
 web_testpage.py
