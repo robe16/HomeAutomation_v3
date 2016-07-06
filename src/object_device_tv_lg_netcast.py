@@ -1,9 +1,9 @@
-from send_cmds import sendHTTP
 from urllib import urlopen
 import xml.etree.ElementTree as ET
-from list_devices import get_device_name, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from config_devices import get_device_config_detail, set_device_config_detail
 from console_messages import print_command
+import src.packages.requests as requests
 
 
 class object_tv_lg_netcast:
@@ -57,10 +57,19 @@ class object_tv_lg_netcast:
         return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired')
 
     def _pairDevice(self):
+        #
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey, str(self._port))
-        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-        set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', bool(x))
-        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired')
+        headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
+                   'content-type': 'text/xml; charset=utf-8'}
+        #
+        r = requests.post('http://' + self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair),
+                          STRxml,
+                          headers=headers)
+        #
+        r_pass = True if r.status_code == requests.codes.ok else False
+        set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', r_pass)
+        #
+        return r_pass
 
     def _check_paired(self):
         if not get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
@@ -75,9 +84,18 @@ class object_tv_lg_netcast:
         return True
 
     def showPairingkey(self):
+        #
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
-        x = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-        return str(x.getcode()).startswith("2") if bool(x) else False
+        headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
+                   'content-type': 'text/xml; charset=utf-8'}
+        #
+        r = requests.post('http://' + self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair),
+                          STRxml,
+                          headers=headers)
+        #
+        r_pass = True if r.status_code == requests.codes.ok else False
+        #
+        return r_pass
 
     def getHtml(self, listings=False, user=False):
         html = get_device_html_command(self._type)
@@ -145,23 +163,31 @@ class object_tv_lg_netcast:
             return ''
 
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
-        #
-        if not self._check_paired():
-            print_command ('getApplist', get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
-            return False
-        #
-        STRurl = "/udap/api/data?target=applist_get&type={}&index={}&number={}".format(str(APPtype), str(APPindex), str(APPnumber))
-        x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
-        #
-        if not bool(x):
-            set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
+        try:
+            #
             if not self._check_paired():
+                print_command ('getApplist', get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
                 return False
-            x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
-        #
-        if bool(x):
-            return x.read() if str(x.getcode()).startswith("2") else False
-        else:
+            #
+            STRurl = "/udap/api/data?target=applist_get&type={type}&index={index}&number={number}".format(type=str(APPtype),
+                                                                                                          index=str(APPindex),
+                                                                                                          number=str(APPnumber))
+            headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
+            r = requests.get('http://' + self._ipaddress+":"+str(self._port) + STRurl,
+                             headers=headers)
+            #
+            if not r.status_code == requests.codes.ok:
+                set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
+                if not self._check_paired():
+                    return False
+                r = requests.post('http://' + self._ipaddress+":"+str(self._port) + STRurl,
+                                  headers=headers)
+            #
+            if r.status_code == requests.codes.ok:
+                return r.content
+            else:
+                return False
+        except:
             return False
         # http://developer.lgappstv.com/TV_HELP/index.jsp?topic=%2Flge.tvsdk.references.book%2Fhtml%2FUDAP%2FUDAP%2FObtaining+the+Apps+list+Controller+Host.htm
         # Note - If both index and number are 0, the list of all apps in the category specified by type is fetched.
@@ -200,16 +226,19 @@ class object_tv_lg_netcast:
         # name = App name
         STRurl = "/udap/api/data?target=appicon_get&auid={auid}&appname={appname}".format(auid = auid,
                                                                                           appname = name)
-        x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
+        headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
+        r = requests.get('http://' + self._ipaddress + ":" + str(self._port) + STRurl,
+                         headers=headers)
         #
-        if not bool(x):
+        if not r.status_code == requests.codes.ok:
             set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
             if not self._check_paired():
                 return False
-            x = sendHTTP(self._ipaddress+":"+str(self._port)+STRurl, "keep-alive")
+            r = requests.post('http://' + self._ipaddress + ":" + str(self._port) + STRurl,
+                              headers=headers)
         #
-        if bool(x):
-            return x.read() if str(x.getcode()).startswith("2") else False
+        if r.status_code == requests.codes.ok:
+            return r.content
         else:
             return False
 
@@ -232,46 +261,48 @@ class object_tv_lg_netcast:
                 print_command (command + ':' + request.query.name, get_device_name(self._type), self._ipaddress, bool(response))
                 return response
                 #
-            elif command == 'app':
-                STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
-                          '<envelope>' +
-                          '<api type="command">' +
-                          '<name>AppExecute</name>' +
-                          '<auid>{auid}</auid>' +
-                          '<appname>{app_name}</appname>' +
-                          #'<contentId>Content ID</contentId>' +
-                          '</api>' +
-                          '</envelope>').format(auid = request.query.auid,
-                                                app_name = request.query.name.replace(' ','%20'))
-                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-                if not bool(response):
-                    set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
-                    if not self._check_paired():
-                        return False
-                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-                #
-                response = str(response.getcode()).startswith("2") if bool(response) else False
-                print_command (command, get_device_name(self._type), self._ipaddress, bool(response))
-                return response
-                #
             else:
-                code = self.commands[request.query.command]
-                STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
-                          '<envelope>' +
-                          '<api type="command">' +
-                          '<name>HandleKeyInput</name>' +
-                          '<value>{value}</value>' +
-                          '</api>' +
-                          '</envelope>').format(value = code)
-                response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
-                if not bool(response):
+                if command == 'app':
+                    STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
+                              '<envelope>' +
+                              '<api type="command">' +
+                              '<name>AppExecute</name>' +
+                              '<auid>{auid}</auid>' +
+                              '<appname>{app_name}</appname>' +
+                              #'<contentId>Content ID</contentId>' +
+                              '</api>' +
+                              '</envelope>').format(auid = request.query.auid,
+                                                    app_name = request.query.name.replace(' ','%20'))
+                    headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
+                               'content-type': 'text/xml; charset=utf-8'}
+                    cmd = command
+                else:
+                    code = self.commands[request.query.command]
+                    STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
+                              '<envelope>' +
+                              '<api type="command">' +
+                              '<name>HandleKeyInput</name>' +
+                              '<value>{value}</value>' +
+                              '</api>' +
+                              '</envelope>').format(value=code)
+                    headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
+                               'content-type': 'text/xml; charset=utf-8'}
+                    cmd = request.query.command
+                #
+                r = requests.post('http://' + self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand),
+                                  STRxml,
+                                  headers=headers)
+                #
+                if not r.status_code == requests.codes.ok:
                     set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
                     if not self._check_paired():
                         return False
-                    response = sendHTTP(self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand), "close", data=STRxml, contenttype='text/xml; charset=utf-8')
+                    r = requests.post('http://' + self._ipaddress + ":" + str(self._port) + str(self.STRtv_PATHcommand),
+                                      STRxml,
+                                      headers=headers)
                 #
-                response = str(response.getcode()).startswith("2") if bool(response) else False
-                print_command(request.query.command, get_device_name(self._type), self._ipaddress, bool(response))
+                response = (r.status_code == requests.codes.ok)
+                print_command (cmd, get_device_name(self._type), self._ipaddress, response)
                 return response
                 #
         except:
