@@ -1,6 +1,4 @@
 from urllib2 import Request, urlopen, HTTPError
-import telnetlib
-import time
 from console_messages import print_error, print_http
 from list_devices import set_device_detail
 
@@ -62,22 +60,3 @@ def _check_prefix(url):
         return "http://" + url
     else:
         return url
-
-
-def sendTELNET(ipaddress, port, data=None, response=False):
-    try:
-        tn = telnetlib.Telnet(ipaddress, port)
-        time.sleep(0.1)
-        output = tn.read_eager() if response else None
-        if data:
-            tn.write(str(data)+"\n")
-            time.sleep(0.1)
-            op = tn.read_eager()
-            if op=='':
-                output = True
-            else:
-                output = op if (response and not bool(op)) else True
-        tn.close()
-        return output
-    except:
-        return False
