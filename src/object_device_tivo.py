@@ -50,8 +50,8 @@ class object_tivo:
         if command == 'getchannel':
             response = self._getChan()
         elif command == 'channel':
-            response = self._send_telnet(self._ipaddress(),
-                                         self._port(),
+            response = self._send_telnet(ipaddress=self._ipaddress(),
+                                         port=self._port(),
                                          data=("SETCH {}\r").format(request.query.chan),
                                          response=True)
             if response.startswith('CH_FAILED'):
@@ -102,7 +102,7 @@ class object_tivo:
         else:
             return ''
 
-    def _send_telnet(ipaddress, port, data=None, response=False):
+    def _send_telnet(self, ipaddress, port, data=False, response=False):
         try:
             tn = telnetlib.Telnet(ipaddress, port)
             time.sleep(0.1)
