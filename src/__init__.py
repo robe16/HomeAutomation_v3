@@ -208,10 +208,10 @@ def save_settings(category=''):
         return HTTPResponse(status=500)
 
 
-@route('/preferences/<x>', method='POST')
-def save_prefernces(x='-'):
+@route('/preferences/<category>', method='POST')
+def save_prefernces(category='-'):
     if _check_user(request.get_cookie('user')):
-        if x == 'tvguide':
+        if category == 'tvguide':
             user = request.get_cookie('user')
             data = request.body
             if update_user_channels(user, data):
