@@ -44,8 +44,12 @@
 }
 
 
+.btn_pointer {
+    cursor: pointer;
+}
+
 .grid_item:hover {
-  background-color: #d9d9d9;
+    background-color: #d9d9d9;
 }
 
 
