@@ -4,7 +4,7 @@ from object_device_tivo import object_tivo
 from object_device_other import object_other
 from object_device_xbox_one import object_xbox_one
 from object_device_raspberrypi import object_raspberrypi
-from object_nest_account import object_nest_account
+from object_account_nest import object_nest_account
 
 
 def create_device_object(grp_name, dvc_label):
