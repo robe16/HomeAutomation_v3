@@ -4,8 +4,8 @@ from list_devices import get_device_detail, get_device_name, get_device_logo, ge
 from list_channels import get_channel_item_image_from_devicekey
 from web_tvchannels import html_channels_user_and_all
 from console_messages import print_command
-import src.packages.requests as requests
-from src.packages.requests.auth import HTTPDigestAuth
+import packages.requests as requests
+from packages.requests.auth import HTTPDigestAuth
 import xml.etree.ElementTree as ET
 import telnetlib
 import time

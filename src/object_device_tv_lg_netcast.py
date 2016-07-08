@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from config_devices import get_device_config_detail, set_device_config_detail
 from console_messages import print_command
-import src.packages.requests as requests
+import packages.requests as requests
 
 
 class object_tv_lg_netcast:
