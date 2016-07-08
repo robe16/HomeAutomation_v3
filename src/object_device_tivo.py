@@ -3,7 +3,7 @@ from config_devices import get_device_config_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from list_channels import get_channel_item_image_from_devicekey
 from web_tvchannels import html_channels_user_and_all
-from console_messages import print_command
+from console_messages import print_command, print_error
 import packages.requests as requests
 from packages.requests.auth import HTTPDigestAuth
 import xml.etree.ElementTree as ET
@@ -101,92 +101,96 @@ class object_tivo:
 
     def _getHTML_recordings(self):
         #
-        recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-        recordings_files = self._retrieve_recordings('Yes').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-        #
-        series = []
-        # Run through items in 'folders' xml and identify group/series names, adding to the series[] variable
-        if recordings_folders:
-            xml_folders = ET.fromstring(recordings_folders)
-            for item in xml_folders.iter('Item'):
-                details = item.find('Details')
-                # details.find('ContentType').text == 'x-tivo-container/folder'
-                if details.find('Title').text != 'Suggestions' and details.find('Title').text != 'HD Recordings':
-                    series.append(details.find('Title').text)
-        #
-        seriesdrop_html = {}
-        series_count = {}
-        # Build html group containers for adding file html to later.
-        if len(series) > 0:
-            for title in series:
-                series_count[title] = 0
-                seriesdrop_html[title] = ''
-        #
-        # Run through items in 'files' xml and commence building html
-        if recordings_files:
-            xml_files = ET.fromstring(recordings_files)
+        try:
+            recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+            recordings_files = self._retrieve_recordings('Yes').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
             #
-            # Run through individual items
-            for item in xml_files.iter('Item'):
-                details = item.find('Details')
-                #
-                # If part of a series (check against list created above) then create 'folder' group
-                if details.find('Title').text in series:
-                    series_count[details.find('Title').text] += 1
-                    # not always an episode title!!
-                    try:
-                        ep_title = details.find('EpisodeTitle').text
-                    except Exception as e:
-                        ep_title = '-'
-                    #
-                    try:
-                        imgchan = get_channel_item_image_from_devicekey(self._type, int(details.find('SourceChannel').text))
-                        img = '<img style="height: 25px;" src="/img/channel/{imgchan}"/>'.format(imgchan=imgchan)
-                    except Exception as e:
-                        img = False
-                    #
-                    try:
-                        desc = '<div class="row"><div class="col-xs-12"><p>{desc}</p></div></div>'.format(desc=details.find('Description').text)
-                    except Exception as e:
-                        desc = ''
-                    #
-                    try:
-                        date = int(details.find('CaptureDate').text, 0)
-                        date = datetime.datetime.fromtimestamp(date)
-                        date = date.strftime('%d-%m-%Y')
-                        date = '<div class="row"><div class="col-xs-12"><p>{date}</p></div></div>'.format(date=date)
-                    except Exception as e:
-                        date = '-'
-                    #
-                    seriesdrop_html[details.find('Title').text] += '<div class="row">'
-                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-9">'
-                    seriesdrop_html[details.find('Title').text] += '<h5>{ep_title}</h5>'.format(ep_title=ep_title)
-                    seriesdrop_html[details.find('Title').text] += '</div>'
-                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-3" style="text-align: right;">'
-                    seriesdrop_html[details.find('Title').text] += '{img}'.format(img=img)
-                    seriesdrop_html[details.find('Title').text] += '</div>'
-                    seriesdrop_html[details.find('Title').text] += '</div>'
-                    seriesdrop_html[details.find('Title').text] += '{desc}'.format(desc=desc)
-                    seriesdrop_html[details.find('Title').text] += '{date}'.format(date=date)
-                #
+            series = []
+            # Run through items in 'folders' xml and identify group/series names, adding to the series[] variable
+            if recordings_folders:
+                xml_folders = ET.fromstring(recordings_folders)
+                for item in xml_folders.iter('Item'):
+                    details = item.find('Details')
+                    # details.find('ContentType').text == 'x-tivo-container/folder'
+                    if details.find('Title').text != 'Suggestions' and details.find('Title').text != 'HD Recordings':
+                        series.append(details.find('Title').text)
             #
-            # Run through each item in series_html and add to master html_recordings
-            html_recordings = '<div class="container-fluid"><div class="row">'
-            html_recordings += '<div class="col-xs-10"><h5>Title</h5></div>'
-            html_recordings += '<div class="col-xs-2" style="text-align: right;"><h5>#</h5></div>'
-            html_recordings += '</div>'
-            count = 0
-            for title in series:
-                html_recordings += '<div class="row btn-col-grey btn_pointer" style="margin-bottom: 5px;" data-toggle="collapse" data-target="#collapse_series{count}">'.format(count=count)
-                html_recordings += '<div class="col-xs-10"><h5>{title}</h5></div>'.format(title=title)
-                html_recordings += '<div class="col-xs-2" style="text-align: right;"><h6>{count}</h6></div>'.format(count=series_count[title])
+            seriesdrop_html = {}
+            series_count = {}
+            # Build html group containers for adding file html to later.
+            if len(series) > 0:
+                for title in series:
+                    series_count[title] = 0
+                    seriesdrop_html[title] = ''
+            #
+            # Run through items in 'files' xml and commence building html
+            if recordings_files:
+                xml_files = ET.fromstring(recordings_files)
+                #
+                # Run through individual items
+                for item in xml_files.iter('Item'):
+                    details = item.find('Details')
+                    #
+                    # If part of a series (check against list created above) then create 'folder' group
+                    if details.find('Title').text in series:
+                        series_count[details.find('Title').text] += 1
+                        # not always an episode title!!
+                        try:
+                            ep_title = details.find('EpisodeTitle').text
+                        except Exception as e:
+                            ep_title = '-'
+                        #
+                        try:
+                            imgchan = get_channel_item_image_from_devicekey(self._type, int(details.find('SourceChannel').text))
+                            img = '<img style="height: 25px;" src="/img/channel/{imgchan}"/>'.format(imgchan=imgchan)
+                        except Exception as e:
+                            img = False
+                        #
+                        try:
+                            desc = '<div class="row"><div class="col-xs-12"><p>{desc}</p></div></div>'.format(desc=details.find('Description').text)
+                        except Exception as e:
+                            desc = ''
+                        #
+                        try:
+                            date = int(details.find('CaptureDate').text, 0)
+                            date = datetime.datetime.fromtimestamp(date)
+                            date = date.strftime('%d-%m-%Y')
+                            date = '<div class="row"><div class="col-xs-12"><p>{date}</p></div></div>'.format(date=date)
+                        except Exception as e:
+                            date = '-'
+                        #
+                        seriesdrop_html[details.find('Title').text] += '<div class="row">'
+                        seriesdrop_html[details.find('Title').text] += '<div class="col-xs-9">'
+                        seriesdrop_html[details.find('Title').text] += '<h5>{ep_title}</h5>'.format(ep_title=ep_title)
+                        seriesdrop_html[details.find('Title').text] += '</div>'
+                        seriesdrop_html[details.find('Title').text] += '<div class="col-xs-3" style="text-align: right;">'
+                        seriesdrop_html[details.find('Title').text] += '{img}'.format(img=img)
+                        seriesdrop_html[details.find('Title').text] += '</div>'
+                        seriesdrop_html[details.find('Title').text] += '</div>'
+                        seriesdrop_html[details.find('Title').text] += '{desc}'.format(desc=desc)
+                        seriesdrop_html[details.find('Title').text] += '{date}'.format(date=date)
+                    #
+                #
+                # Run through each item in series_html and add to master html_recordings
+                html_recordings = '<div class="container-fluid"><div class="row">'
+                html_recordings += '<div class="col-xs-10"><h5>Title</h5></div>'
+                html_recordings += '<div class="col-xs-2" style="text-align: right;"><h5>#</h5></div>'
                 html_recordings += '</div>'
-                html_recordings += '<div class="row collapse out" id="collapse_series{count}"><div class="container-fluid">{drop}</div></div>'.format(count=count, drop=seriesdrop_html[title])
-                count += 1
-            html_recordings += '</div>'
-            #
-            return html_recordings
-        else:
+                count = 0
+                for title in series:
+                    html_recordings += '<div class="row btn-col-grey btn_pointer" style="margin-bottom: 5px;" data-toggle="collapse" data-target="#collapse_series{count}">'.format(count=count)
+                    html_recordings += '<div class="col-xs-10"><h5>{title}</h5></div>'.format(title=title)
+                    html_recordings += '<div class="col-xs-2" style="text-align: right;"><h6>{count}</h6></div>'.format(count=series_count[title])
+                    html_recordings += '</div>'
+                    html_recordings += '<div class="row collapse out" id="collapse_series{count}"><div class="container-fluid">{drop}</div></div>'.format(count=count, drop=seriesdrop_html[title])
+                    count += 1
+                html_recordings += '</div>'
+                #
+                return html_recordings
+            else:
+                return '<p>Error</p>'
+        except Exception as e:
+            print_error('Attempted to create recordings html - {error}'.format(error=e))
             return '<p>Error</p>'
     #
     # <?xml version="1.0" encoding="utf-8"?>
@@ -254,6 +258,10 @@ class object_tivo:
             r = requests.get('https://{ipaddress}/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse={recurse}'.format(ipaddress=self._ipaddress(), recurse=recurse),
                              auth=HTTPDigestAuth('tivo', self._accesskey()),
                              verify=False)
+            print_command('retrieve listings (recurse={recurse})'.format(recurse=recurse),
+                          self._type,
+                          self._ipaddress(),
+                          r.status_code)
             if r.status_code == requests.codes.ok:
                 return r.content
             else:

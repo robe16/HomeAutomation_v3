@@ -3,12 +3,12 @@ from datetime import datetime
 timeformat = '%d/%m/%Y %H:%M:%S.%f'
 
 def print_command(command, device, ipaddress, response):
-    print ("{timestamp} - \'{command}\' request sent to {device} device {ipaddress} - {response}").format(
+    print ("{timestamp} - \'{command}\' request sent to {device} device {ipaddress} - {response}".format(
         ipaddress=ipaddress,
         timestamp=datetime.now().strftime(timeformat),
         command=command.replace('/r',''),
         device=device,
-        response=response)
+        response=response))
 
 
 def print_channelbuild(num_current, num_total, name_chan):
