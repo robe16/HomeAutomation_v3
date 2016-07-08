@@ -1,6 +1,7 @@
 from urllib import urlopen
 from config_devices import get_device_config_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from list_channels import get_channel_item_image_from_devicekey
 from web_tvchannels import html_channels_user_and_all
 from console_messages import print_command
 import src.packages.requests as requests
@@ -8,6 +9,7 @@ from src.packages.requests.auth import HTTPDigestAuth
 import xml.etree.ElementTree as ET
 import telnetlib
 import time
+import datetime
 
 
 class object_tivo:
@@ -112,7 +114,6 @@ class object_tivo:
                 if details.find('Title').text != 'Suggestions' and details.find('Title').text != 'HD Recordings':
                     series.append(details.find('Title').text)
         #
-        series_html = {}
         seriesdrop_html = {}
         series_count = {}
         # Build html group containers for adding file html to later.
@@ -133,31 +134,58 @@ class object_tivo:
                 if details.find('Title').text in series:
                     series_count[details.find('Title').text] += 1
                     # not always an episode title!!
-                    ep_title = ''
                     try:
                         ep_title = details.find('EpisodeTitle').text
                     except:
-                        ep_title = '*'
+                        ep_title = '-'
+                    #
+                    try:
+                        imgchan = get_channel_item_image_from_devicekey(self._type, int(details.find('SourceChannel').text))
+                        img = '<img style="height: 25px;" src="/img/channel/{imgchan}"/>'.format(imgchan=imgchan)
+                    except:
+                        img = ''
+                    #
+                    try:
+                        desc = details.find('Description').text
+                    except:
+                        desc = '*'
+                    #
+                    try:
+                        date = details.find('CaptureDate').text
+                        date = datetime.datetime.fromtimestamp(date)
+                    except:
+                        date = '*'
+                    #
                     seriesdrop_html[details.find('Title').text] += '<div class="row">'
-                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-10">'
-                    seriesdrop_html[details.find('Title').text] += '<p>- {ep_title}</p>'.format(ep_title=ep_title)
+                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-9">'
+                    seriesdrop_html[details.find('Title').text] += '<h5>{ep_title}</h5>'.format(ep_title=ep_title)
                     seriesdrop_html[details.find('Title').text] += '</div>'
-                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-2">'
+                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-3" style="text-align: right;">'
+                    seriesdrop_html[details.find('Title').text] += '{img}'.format(img=img)
                     seriesdrop_html[details.find('Title').text] += '</div>'
                     seriesdrop_html[details.find('Title').text] += '</div>'
+                    seriesdrop_html[details.find('Title').text] += '<div class="row"><div class="col-xs-12">'
+                    seriesdrop_html[details.find('Title').text] += '<p>{desc}</p>'.format(desc=desc)
+                    seriesdrop_html[details.find('Title').text] += '</div></div>'
+                    seriesdrop_html[details.find('Title').text] += '<div class="row"><div class="col-xs-12">'
+                    seriesdrop_html[details.find('Title').text] += '<p>{date}</p>'.format(date=date)
+                    seriesdrop_html[details.find('Title').text] += '</div></div>'
                 #
             #
             # Run through each item in series_html and add to master html_recordings
             html_recordings = '<div class="container-fluid"><div class="row">'
             html_recordings += '<div class="col-xs-10"><h5>Title</h5></div>'
             html_recordings += '<div class="col-xs-2"><h5>#</h5></div>'
-            html_recordings += '</div></div>'
+            html_recordings += '</div>'
+            count = 0
             for title in series:
-                html_recordings += '<div class="row">'
+                html_recordings += '<div class="row btn-col-grey btn_pointer" data-toggle="collapse" data-target="#collapse_series{count}">'.format(count=count)
                 html_recordings += '<div class="col-xs-10"><h5>{title}</h5></div>'.format(title=title)
-                html_recordings += '<div class="col-xs-2"><h5>{count}</h5></div>'.format(count=series_count[title])
+                html_recordings += '<div class="col-xs-2"><h6>{count}</h6></div>'.format(count=series_count[title])
                 html_recordings += '</div>'
-                html_recordings += '<div class="container-fluid"><div class="row">{drop}</div></div>'.format(drop=seriesdrop_html[title])
+                html_recordings += '<div class="row collapse out" id="collapse_series{count}"><div class="container-fluid">{drop}</div></div>'.format(count=count, drop=seriesdrop_html[title])
+                count += 1
+            html_recordings += '</div>'
             #
             return html_recordings
         else:
