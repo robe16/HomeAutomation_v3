@@ -61,10 +61,12 @@ class object_tv_lg_netcast:
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey, str(self._port))
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
                    'content-type': 'text/xml; charset=utf-8'}
+        url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=str(self.STRtv_PATHpair))
         #
-        r = requests.post('http://' + self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair),
+        r = requests.post(url,
                           STRxml,
                           headers=headers)
+        print_command('pairDevice', get_device_name(self._type), url, r.status_code)
         #
         r_pass = True if r.status_code == requests.codes.ok else False
         set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', r_pass)
@@ -88,10 +90,12 @@ class object_tv_lg_netcast:
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
                    'content-type': 'text/xml; charset=utf-8'}
+        url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=str(self.STRtv_PATHpair))
         #
-        r = requests.post('http://' + self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHpair),
+        r = requests.post(url,
                           STRxml,
                           headers=headers)
+        print_command('showPairingkey', get_device_name(self._type), url, r.status_code)
         #
         r_pass = True if r.status_code == requests.codes.ok else False
         #
@@ -169,19 +173,21 @@ class object_tv_lg_netcast:
                 print_command ('getApplist', get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
                 return False
             #
-            STRurl = "/udap/api/data?target=applist_get&type={type}&index={index}&number={number}".format(type=str(APPtype),
-                                                                                                          index=str(APPindex),
-                                                                                                          number=str(APPnumber))
+            uri = "/udap/api/data?target=applist_get&type={type}&index={index}&number={number}".format(type=str(APPtype),
+                                                                                                       index=str(APPindex),
+                                                                                                       number=str(APPnumber))
             headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
-            r = requests.get('http://' + self._ipaddress+":"+str(self._port) + STRurl,
-                             headers=headers)
+            url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=uri)
+            #
+            r = requests.get(url, headers=headers)
+            print_command('getApplist', get_device_name(self._type), url, r.status_code)
             #
             if not r.status_code == requests.codes.ok:
                 set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
                 if not self._check_paired():
                     return False
-                r = requests.post('http://' + self._ipaddress+":"+str(self._port) + STRurl,
-                                  headers=headers)
+                r = requests.post(url, headers=headers)
+                print_command('getApplist', get_device_name(self._type), url, r.status_code)
             #
             if r.status_code == requests.codes.ok:
                 return r.content
@@ -224,18 +230,20 @@ class object_tv_lg_netcast:
         #
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
         # name = App name
-        STRurl = "/udap/api/data?target=appicon_get&auid={auid}&appname={appname}".format(auid = auid,
-                                                                                          appname = name)
+        uri = "/udap/api/data?target=appicon_get&auid={auid}&appname={appname}".format(auid = auid,
+                                                                                       appname = name)
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
-        r = requests.get('http://' + self._ipaddress + ":" + str(self._port) + STRurl,
-                         headers=headers)
+        url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=uri)
+        #
+        r = requests.get(url, headers=headers)
+        print_command('getAppicon', get_device_name(self._type), url, r.status_code)
         #
         if not r.status_code == requests.codes.ok:
             set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
             if not self._check_paired():
                 return False
-            r = requests.post('http://' + self._ipaddress + ":" + str(self._port) + STRurl,
-                              headers=headers)
+            r = requests.post(url, headers=headers)
+            print_command('getAppicon', get_device_name(self._type), url, r.status_code)
         #
         if r.status_code == requests.codes.ok:
             return r.content
@@ -258,7 +266,6 @@ class object_tv_lg_netcast:
             #
             if command == 'image':
                 response = self.getAppicon(request.query.auid, request.query.name.replace(' ','%20'))
-                print_command (command + ':' + request.query.name, get_device_name(self._type), self._ipaddress, bool(response))
                 return response
                 #
             else:
@@ -289,17 +296,20 @@ class object_tv_lg_netcast:
                                'content-type': 'text/xml; charset=utf-8'}
                     cmd = request.query.command
                 #
-                r = requests.post('http://' + self._ipaddress+":"+str(self._port)+str(self.STRtv_PATHcommand),
+                url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=str(self.STRtv_PATHcommand))
+                r = requests.post(url,
                                   STRxml,
                                   headers=headers)
+                print_command('command', get_device_name(self._type), url, r.status_code)
                 #
                 if not r.status_code == requests.codes.ok:
                     set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
                     if not self._check_paired():
                         return False
-                    r = requests.post('http://' + self._ipaddress + ":" + str(self._port) + str(self.STRtv_PATHcommand),
+                    r = requests.post(url,
                                       STRxml,
                                       headers=headers)
+                    print_command('command', get_device_name(self._type), url, r.status_code)
                 #
                 response = (r.status_code == requests.codes.ok)
                 print_command (cmd, get_device_name(self._type), self._ipaddress, response)
