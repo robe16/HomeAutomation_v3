@@ -136,25 +136,27 @@ class object_tivo:
                     # not always an episode title!!
                     try:
                         ep_title = details.find('EpisodeTitle').text
-                    except:
+                    except Exception as e:
                         ep_title = '-'
                     #
                     try:
                         imgchan = get_channel_item_image_from_devicekey(self._type, int(details.find('SourceChannel').text))
                         img = '<img style="height: 25px;" src="/img/channel/{imgchan}"/>'.format(imgchan=imgchan)
-                    except:
-                        img = ''
+                    except Exception as e:
+                        img = False
                     #
                     try:
-                        desc = details.find('Description').text
-                    except:
-                        desc = '*'
+                        desc = '<div class="row"><div class="col-xs-12"><p>{desc}</p></div></div>'.format(desc=details.find('Description').text)
+                    except Exception as e:
+                        desc = ''
                     #
                     try:
-                        date = details.find('CaptureDate').text
+                        date = int(details.find('CaptureDate').text, 0)
                         date = datetime.datetime.fromtimestamp(date)
-                    except:
-                        date = '*'
+                        date = date.strftime('%d-%m-%Y')
+                        date = '<div class="row"><div class="col-xs-12"><p>{date}</p></div></div>'.format(date=date)
+                    except Exception as e:
+                        date = '-'
                     #
                     seriesdrop_html[details.find('Title').text] += '<div class="row">'
                     seriesdrop_html[details.find('Title').text] += '<div class="col-xs-9">'
@@ -164,24 +166,20 @@ class object_tivo:
                     seriesdrop_html[details.find('Title').text] += '{img}'.format(img=img)
                     seriesdrop_html[details.find('Title').text] += '</div>'
                     seriesdrop_html[details.find('Title').text] += '</div>'
-                    seriesdrop_html[details.find('Title').text] += '<div class="row"><div class="col-xs-12">'
-                    seriesdrop_html[details.find('Title').text] += '<p>{desc}</p>'.format(desc=desc)
-                    seriesdrop_html[details.find('Title').text] += '</div></div>'
-                    seriesdrop_html[details.find('Title').text] += '<div class="row"><div class="col-xs-12">'
-                    seriesdrop_html[details.find('Title').text] += '<p>{date}</p>'.format(date=date)
-                    seriesdrop_html[details.find('Title').text] += '</div></div>'
+                    seriesdrop_html[details.find('Title').text] += '{desc}'.format(desc=desc)
+                    seriesdrop_html[details.find('Title').text] += '{date}'.format(date=date)
                 #
             #
             # Run through each item in series_html and add to master html_recordings
             html_recordings = '<div class="container-fluid"><div class="row">'
             html_recordings += '<div class="col-xs-10"><h5>Title</h5></div>'
-            html_recordings += '<div class="col-xs-2"><h5>#</h5></div>'
+            html_recordings += '<div class="col-xs-2" style="text-align: right;"><h5>#</h5></div>'
             html_recordings += '</div>'
             count = 0
             for title in series:
-                html_recordings += '<div class="row btn-col-grey btn_pointer" data-toggle="collapse" data-target="#collapse_series{count}">'.format(count=count)
+                html_recordings += '<div class="row btn-col-grey btn_pointer" style="margin-bottom: 5px;" data-toggle="collapse" data-target="#collapse_series{count}">'.format(count=count)
                 html_recordings += '<div class="col-xs-10"><h5>{title}</h5></div>'.format(title=title)
-                html_recordings += '<div class="col-xs-2"><h6>{count}</h6></div>'.format(count=series_count[title])
+                html_recordings += '<div class="col-xs-2" style="text-align: right;"><h6>{count}</h6></div>'.format(count=series_count[title])
                 html_recordings += '</div>'
                 html_recordings += '<div class="row collapse out" id="collapse_series{count}"><div class="container-fluid">{drop}</div></div>'.format(count=count, drop=seriesdrop_html[title])
                 count += 1
