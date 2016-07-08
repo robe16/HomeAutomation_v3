@@ -6,7 +6,7 @@ from config_devices import write_config_devices
 from config_devices_create import create_device_object
 from config_users import check_user, get_userrole, update_user_channels
 from console_messages import print_msg
-from packages.bottle import route, request, run, static_file, HTTPResponse, redirect, response
+from bottle import route, request, run, static_file, HTTPResponse, redirect, response
 from web_create_error import create_error_404, create_error_500
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_create_preferences import create_preference_tvguide

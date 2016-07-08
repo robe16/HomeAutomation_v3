@@ -4,8 +4,8 @@ from list_devices import get_device_detail, get_device_name, get_device_logo, ge
 from list_channels import get_channel_item_image_from_devicekey
 from web_tvchannels import html_channels_user_and_all
 from console_messages import print_command, print_error
-import packages.requests as requests
-from packages.requests.auth import HTTPDigestAuth
+import requests as requests
+from requests.auth import HTTPDigestAuth
 import xml.etree.ElementTree as ET
 import telnetlib
 import time
@@ -269,12 +269,12 @@ class object_tivo:
         except Exception as e:
             return False
 
-    def _send_telnet(self, ipaddress, port, data=False, response=False):
+    def _send_telnet(self, ipaddress, port, data='', response=False):
         try:
             tn = telnetlib.Telnet(ipaddress, port)
             time.sleep(0.1)
             output = tn.read_eager() if response else None
-            if data:
+            if data != '':
                 tn.write(str(data)+"\n")
                 time.sleep(0.1)
                 op = tn.read_eager()
