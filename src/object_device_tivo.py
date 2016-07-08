@@ -5,6 +5,7 @@ from web_tvchannels import html_channels_user_and_all
 from console_messages import print_command
 import src.packages.requests as requests
 from src.packages.requests.auth import HTTPDigestAuth
+import xml.etree.ElementTree as ET
 import telnetlib
 import time
 
@@ -80,27 +81,159 @@ class object_tivo:
                                                    chan_current=chan_current,
                                                    package=["virginmedia_package", self._package()])
         #
-        html = urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
+        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
                                                                                       device=self._label.lower().replace(' ',''),
+                                                                                      html_recordings = self._getHTML_recordings(),
                                                                                       html_channels = html_channels)
-        return html
-
-    def _retrieve_recordings(self):
-        recordings = requests.get('https://' + self._ipaddress() + '/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse=Yes',
-                                  auth=HTTPDigestAuth('tivo', self._accesskey()),
-                                  verify=False)
-        return recordings
 
     def getHtml_settings(self, grp_num, dvc_num):
-        html = get_device_html_settings(self._type)
-        if html:
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img=self._logo(),
-                                                                                              name=self._label,
-                                                                                              ipaddress=self._ipaddress(),
-                                                                                              mak=self._accesskey(),
-                                                                                              dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
+        html_file = get_device_html_settings(self._type)
+        if html_file:
+            return urlopen('web/html_settings/devices/' + html_file).read().encode('utf-8').format(img=self._logo(),
+                                                                                                   name=self._label,
+                                                                                                   ipaddress=self._ipaddress(),
+                                                                                                   mak=self._accesskey(),
+                                                                                                   dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
         else:
             return ''
+
+    def _getHTML_recordings(self):
+        #
+        recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+        recordings_files = self._retrieve_recordings('Yes').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+        #
+        series = []
+        # Run through items in 'folders' xml and identify group/series names, adding to the series[] variable
+        if recordings_folders:
+            xml_folders = ET.fromstring(recordings_folders)
+            for item in xml_folders.iter('Item'):
+                details = item.find('Details')
+                # details.find('ContentType').text == 'x-tivo-container/folder'
+                if details.find('Title').text != 'Suggestions' and details.find('Title').text != 'HD Recordings':
+                    series.append(details.find('Title').text)
+        #
+        series_html = {}
+        seriesdrop_html = {}
+        series_count = {}
+        # Build html group containers for adding file html to later.
+        if len(series) > 0:
+            for title in series:
+                series_count[title] = 0
+                seriesdrop_html[title] = ''
+        #
+        # Run through items in 'files' xml and commence building html
+        if recordings_files:
+            xml_files = ET.fromstring(recordings_files)
+            #
+            # Run through individual items
+            for item in xml_files.iter('Item'):
+                details = item.find('Details')
+                #
+                # If part of a series (check against list created above) then create 'folder' group
+                if details.find('Title').text in series:
+                    series_count[details.find('Title').text] += 1
+                    # not always an episode title!!
+                    ep_title = ''
+                    try:
+                        ep_title = details.find('EpisodeTitle').text
+                    except:
+                        ep_title = '*'
+                    seriesdrop_html[details.find('Title').text] += '<div class="row">'
+                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-10">'
+                    seriesdrop_html[details.find('Title').text] += '<p>- {ep_title}</p>'.format(ep_title=ep_title)
+                    seriesdrop_html[details.find('Title').text] += '</div>'
+                    seriesdrop_html[details.find('Title').text] += '<div class="col-xs-2">'
+                    seriesdrop_html[details.find('Title').text] += '</div>'
+                    seriesdrop_html[details.find('Title').text] += '</div>'
+                #
+            #
+            # Run through each item in series_html and add to master html_recordings
+            html_recordings = '<div class="container-fluid"><div class="row">'
+            html_recordings += '<div class="col-xs-10"><h5>Title</h5></div>'
+            html_recordings += '<div class="col-xs-2"><h5>#</h5></div>'
+            html_recordings += '</div></div>'
+            for title in series:
+                html_recordings += '<div class="row">'
+                html_recordings += '<div class="col-xs-10"><h5>{title}</h5></div>'.format(title=title)
+                html_recordings += '<div class="col-xs-2"><h5>{count}</h5></div>'.format(count=series_count[title])
+                html_recordings += '</div>'
+                html_recordings += '<div class="container-fluid"><div class="row">{drop}</div></div>'.format(drop=seriesdrop_html[title])
+            #
+            return html_recordings
+        else:
+            return '<p>Error</p>'
+    #
+    # <?xml version="1.0" encoding="utf-8"?>
+    #   <TiVoContainer xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/">
+    #       <Details>
+    #           <ContentType>x-tivo-container/tivo-videos</ContentType>
+    #           <SourceFormat>x-tivo-container/tivo-dvr</SourceFormat>
+    #           <Title>Now Playing</Title>
+    #           <LastChangeDate>0x577D7A25</LastChangeDate>
+    #           <TotalItems>18</TotalItems>
+    #           <UniqueId>/NowPlaying</UniqueId>
+    #       </Details>
+    #       <SortOrder>Type,CaptureDate</SortOrder>
+    #       <GlobalSort>Yes</GlobalSort>
+    #       <ItemStart>0</ItemStart>
+    #       <ItemCount>16</ItemCount>
+    #       <Item>
+    #           <Details>
+    #               <ContentType>video/x-tivo-raw-tts</ContentType>
+    #               <SourceFormat>video/x-tivo-raw-tts</SourceFormat>
+    #               <Title>24 Hours in A&amp;E</Title>
+    #               <CopyProtected>Yes</CopyProtected>
+    #               <SourceSize>4729077760</SourceSize>
+    #               <Duration>3899000</Duration>
+    #               <CaptureDate>0x577D6302</CaptureDate>
+    #               <ShowingDuration>3600000</ShowingDuration>
+    #               <StartPadding>60000</StartPadding>
+    #               <EndPadding>240000</EndPadding>
+    #               <ShowingStartTime>0x577D6340</ShowingStartTime>
+    #               <Description>Cyclist Athar, who's 22, is rushed to St George's...</Description>
+    #               <SourceChannel>142</SourceChannel>
+    #               <SourceStation>4 HD</SourceStation>
+    #               <HighDefinition>Yes</HighDefinition>
+    #               <ProgramId>EP014129450131</ProgramId>
+    #               <SeriesId>SH01412945</SeriesId>
+    #               <StreamingPermission>Yes</StreamingPermission>
+    #               <ShowingBits>20996</ShowingBits>
+    #               <SourceType>2</SourceType>
+    #               <IdGuideSource>50716</IdGuideSource>
+    #           </Details>
+    #           <Links>
+    #               <Content>
+    #                   <Url>http://192.168.0.111:80/download/24%20Hours%20in%20A%26E.TiVo?Container=%2FNowPlaying&amp;id=1360</Url>
+    #                   <ContentType>video/x-tivo-raw-tts</ContentType>
+    #                   <Available>No</Available>
+    #               </Content><CustomIcon>
+    #               <Url>urn:tivo:image:save-until-i-delete-recording</Url>
+    #               <ContentType>image/*</ContentType>
+    #               <AcceptsParams>No</AcceptsParams>
+    #               </CustomIcon><TiVoVideoDetails>
+    #               <Url>https://192.168.0.111:443/TiVoVideoDetails?id=1360</Url>
+    #               <ContentType>text/xml</ContentType>
+    #               <AcceptsParams>No</AcceptsParams>
+    #               </TiVoVideoDetails>
+    #           </Links>
+    #       </Item>
+    #       <Item>
+    #               etc.
+    #       </Item>
+    #   </TiVoContainer>
+    #
+
+    def _retrieve_recordings(self, recurse):
+        try:
+            r = requests.get('https://{ipaddress}/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse={recurse}'.format(ipaddress=self._ipaddress(), recurse=recurse),
+                             auth=HTTPDigestAuth('tivo', self._accesskey()),
+                             verify=False)
+            if r.status_code == requests.codes.ok:
+                return r.content
+            else:
+                return False
+        except Exception as e:
+            return False
 
     def _send_telnet(self, ipaddress, port, data=False, response=False):
         try:
