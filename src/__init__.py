@@ -53,7 +53,7 @@ def web_redirect():
     redirect('/web/home')
 
 
-@route('/web/login')
+@route('/web/login', method='GET')
 def web():
     user = request.query.user
     if not user:
@@ -63,13 +63,13 @@ def web():
         return redirect('/web/home')
 
 
-@route('/web/logout')
+@route('/web/logout', method='GET')
 def web():
     response.delete_cookie('user')
     return redirect('/web/login')
 
 
-@route('/web/<page>')
+@route('/web/<page>', method='GET')
 def web(page=''):
     # Get and check user
     user = _check_user(request.get_cookie('user'))
@@ -101,7 +101,7 @@ def web(page=''):
         return HTTPResponse(body=create_error_500(user), status=500)
 
 
-@route('/web/device/<group_name>/<device_name>')
+@route('/web/device/<group_name>/<device_name>', method='GET')
 def web(group_name='', device_name=''):
     user = _check_user(request.get_cookie('user'))
     try:
@@ -114,7 +114,7 @@ def web(group_name='', device_name=''):
         return HTTPResponse(body=create_error_500(user), status=500)
 
 
-@route('/web/settings/<page>')
+@route('/web/settings/<page>', method='GET')
 def web(page=''):
     user = _check_user(request.get_cookie('user'))
     try:
@@ -133,7 +133,7 @@ def web(page=''):
         return HTTPResponse(body=create_error_500(user), status=500)
 
 
-@route('/web/settings')
+@route('/web/settings', method='GET')
 def web():
     try:
         body = settings_devices_requests(request)
@@ -145,7 +145,7 @@ def web():
         return HTTPResponse(status=500)
 
 
-@route('/web/preferences/<page>')
+@route('/web/preferences/<page>', method='GET')
 def web(page=''):
     user = _check_user(request.get_cookie('user'))
     try:
@@ -159,7 +159,7 @@ def web(page=''):
         return HTTPResponse(body=create_error_500(user), status=500)
 
 
-@route('/web/static/<folder>/<filename>')
+@route('/web/static/<folder>/<filename>', method='GET')
 def get_image(folder, filename):
     try:
         return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
@@ -220,13 +220,13 @@ def save_prefernces(x='-'):
         return HTTPResponse(status=400)
 
 
-@route('/favicon.ico')
+@route('/favicon.ico', method='GET')
 def send_favicon():
     root = os.path.join(os.path.dirname(__file__), '..', 'img/logo')
     return static_file('favicon.ico', root=root)
 
 
-@route('/img/<category>/<filename:re:.*\.png>')
+@route('/img/<category>/<filename:re:.*\.png>', method='GET')
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/{}'.format(category))
     return static_file(filename, root=root, mimetype='image/png')
