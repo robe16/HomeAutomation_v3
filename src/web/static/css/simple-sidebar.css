@@ -43,7 +43,7 @@
         right: 10px;
     }
     #page-content-wrapper {
-        padding: 20px 50px;
+        padding: 20px 60px;
     }
 }
 
@@ -72,6 +72,7 @@
 .btn_sidebar_rhs {
     float: right;
     margin-top: 20px;
+    display: inherit;
 }
 
 .icon_cmd_alert {
