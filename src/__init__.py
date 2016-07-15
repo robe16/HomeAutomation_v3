@@ -28,9 +28,9 @@ from web_devices import refresh_tvguide
 #     process_bottle.terminate()
 
 
-def start_bottle():
+def start_bottle(port):
     # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
-    run(host='0.0.0.0', port=1605, debug=True)
+    run(host='0.0.0.0', port=port, debug=True)
 
 
 # def tvlistings_process():
@@ -275,4 +275,4 @@ q_devices = Queue()
 # process_bottle = Process(target=start_bottle)
 # Start server
 print_msg('Starting process: "bottle" server')
-start_bottle()
+start_bottle(1605)
