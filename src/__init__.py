@@ -114,35 +114,35 @@ def web(group_name='', device_name=''):
         return HTTPResponse(body=create_error_500(user), status=500)
 
 
-@route('/web/settings/<page>', method='GET')
-def web(page=''):
-    user = _check_user(request.get_cookie('user'))
-    try:
-        if not user and page != 'login':
-            redirect('/web/login')
-        if get_userrole(user) != 'admin':
-            return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
-                                     'Please consult your administrator for further information.', status=400)
-        if page == 'devices':
-            return HTTPResponse(body=create_settings_devices(user), status=200)
-        elif page == 'tvguide':
-            return HTTPResponse(body=create_settings_tvguide(user), status=200)
-        else:
-            return HTTPResponse(body=create_error_404(user), status=400)
-    except:
-        return HTTPResponse(body=create_error_500(user), status=500)
-
-
-@route('/web/settings', method='GET')
-def web():
-    try:
-        body = settings_devices_requests(request)
-        if body:
-            return HTTPResponse(body=body, status=200)
-        else:
-            return HTTPResponse(status=400)
-    except:
-        return HTTPResponse(status=500)
+# @route('/web/settings/<page>', method='GET')
+# def web(page=''):
+#     user = _check_user(request.get_cookie('user'))
+#     try:
+#         if not user and page != 'login':
+#             redirect('/web/login')
+#         if get_userrole(user) != 'admin':
+#             return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
+#                                      'Please consult your administrator for further information.', status=400)
+#         if page == 'devices':
+#             return HTTPResponse(body=create_settings_devices(user), status=200)
+#         elif page == 'tvguide':
+#             return HTTPResponse(body=create_settings_tvguide(user), status=200)
+#         else:
+#             return HTTPResponse(body=create_error_404(user), status=400)
+#     except:
+#         return HTTPResponse(body=create_error_500(user), status=500)
+#
+#
+# @route('/web/settings', method='GET')
+# def web():
+#     try:
+#         body = settings_devices_requests(request)
+#         if body:
+#             return HTTPResponse(body=body, status=200)
+#         else:
+#             return HTTPResponse(status=400)
+#     except:
+#         return HTTPResponse(status=500)
 
 
 @route('/web/preferences/<page>', method='GET')
@@ -182,30 +182,30 @@ def send_command():
         return HTTPResponse(status=400)
 
 
-@route('/settings/<category>', method='POST')
-def save_settings(category=''):
-    user = _check_user(request.get_cookie('user'))
-    try:
-        if not user:
-            redirect('/web/login')
-        if get_userrole(user) != 'admin':
-            return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
-                                     'Please consult your administrator for further information.', status=400)
-        if category == 'tvguide':
-            data = request.body.read()
-            if data:
-                #TODO
-                # if update_channellist(data):
-                    return HTTPResponse(status=400)
-        elif category == 'devices':
-            data = request.body.read()
-            if data:
-                if write_config_devices(data):
-                    return HTTPResponse(status=200)
-            # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
-        return HTTPResponse(status=400)
-    except:
-        return HTTPResponse(status=500)
+# @route('/settings/<category>', method='POST')
+# def save_settings(category=''):
+#     user = _check_user(request.get_cookie('user'))
+#     try:
+#         if not user:
+#             redirect('/web/login')
+#         if get_userrole(user) != 'admin':
+#             return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
+#                                      'Please consult your administrator for further information.', status=400)
+#         if category == 'tvguide':
+#             data = request.body.read()
+#             if data:
+#                 #TODO
+#                 # if update_channellist(data):
+#                     return HTTPResponse(status=400)
+#         elif category == 'devices':
+#             data = request.body.read()
+#             if data:
+#                 if write_config_devices(data):
+#                     return HTTPResponse(status=200)
+#             # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
+#         return HTTPResponse(status=400)
+#     except:
+#         return HTTPResponse(status=500)
 
 
 @route('/preferences/<category>', method='POST')
