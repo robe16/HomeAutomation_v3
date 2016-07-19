@@ -1486,13 +1486,13 @@
         "hd": {}
       },
       {
-        "name": "Sky Movies Premiere",
+        "name": "Sky Cinema Premiere",
         "listingsrc": {
           "radiotimes": "249"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_premiere.png",
           "devicekeys": {
             "tivo": 401
           },
@@ -1500,7 +1500,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_premiere_hd.png",
           "devicekeys": {
             "tivo": 431
           },
@@ -1509,13 +1509,13 @@
         }
       },
       {
-        "name": "Sky Movies Premiere +1",
+        "name": "Sky Cinema Premiere +1",
         "listingsrc": {
           "radiotimes": "250"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_premiere_plus1.png",
           "devicekeys": {
             "tivo": 402
           },
@@ -1525,13 +1525,13 @@
         "hd": {}
       },
       {
-        "name": "Sky Movies Showcase",
+        "name": "Sky Cinema Hits",
         "listingsrc": {
           "radiotimes": ""
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_hits.png",
           "devicekeys": {
             "tivo": 403
           },
@@ -1539,7 +1539,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_hits_hd.png",
           "devicekeys": {
             "tivo": 433
           },
@@ -1548,13 +1548,13 @@
         }
       },
       {
-        "name": "Sky Movies Greats",
+        "name": "Sky Cinema Greats",
         "listingsrc": {
           "radiotimes": "260"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_greats.png",
           "devicekeys": {
             "tivo": 404
           },
@@ -1562,7 +1562,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_greats_hd.png",
           "devicekeys": {
             "tivo": 434
           },
@@ -1571,13 +1571,13 @@
         }
       },
       {
-        "name": "Sky Movies Disney",
+        "name": "Sky Cinema Disney",
         "listingsrc": {
           "radiotimes": ""
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_disney.png",
           "devicekeys": {
             "tivo": 405
           },
@@ -1585,7 +1585,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_disney_hd.png",
           "devicekeys": {
             "tivo": 435
           },
@@ -1594,13 +1594,13 @@
         }
       },
       {
-        "name": "Sky Movies Family",
+        "name": "Sky Cinema Family",
         "listingsrc": {
           "radiotimes": "258"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_family.png",
           "devicekeys": {
             "tivo": 406
           },
@@ -1608,7 +1608,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_family_hd.png",
           "devicekeys": {
             "tivo": 436
           },
@@ -1617,13 +1617,13 @@
         }
       },
       {
-        "name": "Sky Movies Action & Adventure",
+        "name": "Sky Cinema Action & Adventure",
         "listingsrc": {
           "radiotimes": "2204"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_action.png",
           "devicekeys": {
             "tivo": 407
           },
@@ -1631,7 +1631,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_action_hd.png",
           "devicekeys": {
             "tivo": 437
           },
@@ -1640,13 +1640,13 @@
         }
       },
       {
-        "name": "Sky Movies Comedy",
+        "name": "Sky Cinema Comedy",
         "listingsrc": {
           "radiotimes": "257"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_comedy.png",
           "devicekeys": {
             "tivo": 408
           },
@@ -1654,7 +1654,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_comedy_hd.png",
           "devicekeys": {
             "tivo": 438
           },
@@ -1663,13 +1663,13 @@
         }
       },
       {
-        "name": "Sky Movies Crime & Thriller",
+        "name": "Sky Cinema Crime & Thriller",
         "listingsrc": {
           "radiotimes": "2206"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_crime.png",
           "devicekeys": {
             "tivo": 409
           },
@@ -1677,7 +1677,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_crime_hd.png",
           "devicekeys": {
             "tivo": 439
           },
@@ -1686,13 +1686,13 @@
         }
       },
       {
-        "name": "Sky Movies Drama & Romance",
+        "name": "Sky Cinema Drama & Romance",
         "listingsrc": {
           "radiotimes": "2208"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_drama.png",
           "devicekeys": {
             "tivo": 410
           },
@@ -1700,7 +1700,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_drama_hd.png",
           "devicekeys": {
             "tivo": 440
           },
@@ -1709,13 +1709,13 @@
         }
       },
       {
-        "name": "Sky Movies Sci Fi & Horror",
+        "name": "Sky Cinema Sci Fi & Horror",
         "listingsrc": {
           "radiotimes": "2168"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_scifi.png",
           "devicekeys": {
             "tivo": 411
           },
@@ -1723,7 +1723,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_scifi_hd.png",
           "devicekeys": {
             "tivo": 441
           },
@@ -1732,13 +1732,13 @@
         }
       },
       {
-        "name": "Sky Movies Select",
+        "name": "Sky Cinema Select",
         "listingsrc": {
           "radiotimes": "253"
         },
         "type": "tv",
         "sd": {
-          "logo": "sky_movies.png",
+          "logo": "sky_cinema_select.png",
           "devicekeys": {
             "tivo": 412
           },
@@ -1746,7 +1746,7 @@
           "virginmedia_package": ["movies_sky"]
         },
         "hd": {
-          "logo": "sky_movies_hd.png",
+          "logo": "sky_cinema_select_hd.png",
           "devicekeys": {
             "tivo": 442
           },
