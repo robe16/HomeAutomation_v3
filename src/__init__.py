@@ -4,9 +4,11 @@ from port_listener import start_bottle
 
 
 def server_start():
-    print_msg('Starting process: "bottle" server')
-    #process_bottle.start()
-    print_msg('Process started: "bottle" server')
+    port = 1605
+    print_msg('Starting process: "bottle" server for port {port}'.format(port=port))
+    process_bottle = Process(target=start_bottle, args=(port,))
+    process_bottle.start()
+    print_msg('Process started: "bottle" server for port {port}'.format(port=port))
     #print_msg('Starting process: Retrieval of TV listings')
     #process_listings.start() #mute/unmute this line if required for testing purposes
     #print_msg('Process started: Retrieval of TV listings')
@@ -39,9 +41,6 @@ def server_start():
 # Create process for creating retrieving TV Listings and creating objects in queue
 # q_listings = Queue()
 # process_listings = Process(target=tvlistings_process)
-
-# Create bottle process
-process_bottle = Process(target=start_bottle(1605))
 
 
 # Start server
