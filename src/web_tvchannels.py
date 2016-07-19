@@ -151,7 +151,7 @@ def _channels(category, channels, group_name=False, device_name=False, chan_curr
                         if p in hd_package:
                             res = 'hd'
                             use = True
-                else:
+                if not bool(hd_package) or not use:
                     sd_package = get_channel_item_res_package(cat, chan['name'], 'sd', device_package_name)
                     if bool(sd_package):
                         for p in device_package_level:
