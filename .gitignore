@@ -1,6 +1,7 @@
 # Home Auto configuration file (specific to user setup incl IP addresses etc)
 *.ini
 _test_.py
+_testQ_.py
 _test_cdata.pem
 config_devices.json
 config_devices_new_avrecs.json
