@@ -138,7 +138,7 @@ def web_preferences(page=''):
 
 @get('/web/static/<folder>/<filename>')
 def get_resource(folder, filename):
-    return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
+    return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{folder}'.format(folder=folder))))
 
 
 ################################################################################################
@@ -218,7 +218,7 @@ def send_favicon():
 
 @get('/img/<category>/<filename:re:.*\.png>')
 def get_image(category, filename):
-    root = os.path.join(os.path.dirname(__file__), '..', 'img/{}'.format(category))
+    root = os.path.join(os.path.dirname(__file__), '..', 'img/{img_cat}'.format(img_cat=category))
     return static_file(filename, root=root, mimetype='image/png')
 
 
