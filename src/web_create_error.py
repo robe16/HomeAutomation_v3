@@ -3,10 +3,10 @@ from web_menu import html_menu
 
 
 def create_error_404(user):
-    body = urlopen('web/error.html').read().encode('utf-8').format(code='400',
+    body = urlopen('web/error.html').read().encode('utf-8').format(code='404',
                                                                    desc='Page not found',
                                                                    mesg='The page you are looking for does not exist!!')
-    return urlopen('web/header.html').read().encode('utf-8').format(title='400') + \
+    return urlopen('web/header.html').read().encode('utf-8').format(title='404') + \
            html_menu(user) +\
            urlopen('web/body.html').read().encode('utf-8').format(header='', body=body) +\
            urlopen('web/footer.html').read().encode('utf-8')
