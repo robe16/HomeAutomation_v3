@@ -4,14 +4,23 @@ from port_listener import start_bottle
 
 
 def server_start():
-    port = 1605
+    port = 1600
     print_msg('Starting process: "bottle" server for port {port}'.format(port=port))
     process_bottle = Process(target=start_bottle, args=(port,))
     process_bottle.start()
     print_msg('Process started: "bottle" server for port {port}'.format(port=port))
-    #print_msg('Starting process: Retrieval of TV listings')
-    #process_listings.start() #mute/unmute this line if required for testing purposes
-    #print_msg('Process started: Retrieval of TV listings')
+    ################################
+    # Below is used for the process to retrieve TV listings. Not currently in use due to decommision of radiotimes API
+    ################################
+    # print_msg('Starting process: Retrieval of TV listings')
+    # process_listings = Process(target=tvlistings_process)
+    # process_listings.start() #mute/unmute this line if required for testing purposes
+    # process_listingsint_msg('Process started: Retrieval of TV listings')
+    ################################
+
+
+# Start server
+server_start()
 
 
 # def tvlistings_process():
@@ -40,8 +49,3 @@ def server_start():
 
 # Create process for creating retrieving TV Listings and creating objects in queue
 # q_listings = Queue()
-# process_listings = Process(target=tvlistings_process)
-
-
-# Start server
-server_start()

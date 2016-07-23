@@ -1,5 +1,7 @@
 import os
-from bottle import route, request, run, static_file, HTTPResponse, redirect, response
+from bottle import route, get, post
+from bottle import error
+from bottle import request, run, static_file, HTTPResponse, redirect, response
 
 from command_forwarder import cmd_fwrd
 from config_devices import write_config_devices
@@ -12,14 +14,17 @@ from web_create_settings import create_settings_devices, settings_devices_reques
 from web_devices import refresh_tvguide
 
 
-@route('/')
-@route('/web/')
+################################################################################################
+# Web UI
+################################################################################################
+
+@get('/')
 def web_redirect():
-    redirect('/web/home')
+    redirect('/web/')
 
 
-@route('/web/login', method='GET')
-def web():
+@get('/web/login')
+def web_login():
     user = request.query.user
     if not user:
         return HTTPResponse(body=create_login(), status=200)
@@ -28,59 +33,69 @@ def web():
         return redirect('/web/home')
 
 
-@route('/web/logout', method='GET')
-def web():
+@get('/web/logout')
+def web_logout():
     response.delete_cookie('user')
     return redirect('/web/login')
 
 
-@route('/web/<page>', method='GET')
-def web(page=''):
+@get('/web/')
+@get('/web/home/')
+def web_home():
     # Get and check user
     user = _check_user(request.get_cookie('user'))
-    if not user and page != 'login':
+    if not user:
         redirect('/web/login')
     #
-    try:
-        #
-        # Retrieve tvlistings from queue
-        tvlistings = _check_tvlistingsqueue()
-        #
-        if page == 'home':
-            return HTTPResponse(body=create_home(user), status=200)
-        elif page == 'tvguide':
-            if bool(request.query.group) and bool(request.query.device):
-                return HTTPResponse(body=refresh_tvguide(tvlistings,
-                                                         device = create_device_object(request.query.group, request.query.device),
-                                                         group_name = request.query.group,
-                                                         device_name = request.query.device,
-                                                         user=user),
-                                    status=200) if bool(tvlistings) else HTTPResponse(status=400)
-            else:
-                return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
-        elif page == 'about':
-            return HTTPResponse(body=create_about(user), status=200)
-        else:
-            return HTTPResponse(body=create_error_404(user), status=400)
-    except:
-        return HTTPResponse(body=create_error_500(user), status=500)
+    return HTTPResponse(body=create_home(user), status=200)
 
 
-@route('/web/device/<group_name>/<device_name>', method='GET')
-def web(group_name='', device_name=''):
+@get('/web/about/')
+def web_about():
+    # Get and check user
     user = _check_user(request.get_cookie('user'))
-    try:
-        if not user:
-            redirect('/web/login')
-        tvlistings = _check_tvlistingsqueue()
-        # Create and return web interface page
-        return HTTPResponse(body=create_device(user, tvlistings, group_name, device_name, request), status=200)
-    except Exception as e:
-        return HTTPResponse(body=create_error_500(user), status=500)
+    if not user:
+        redirect('/web/login')
+    #
+    return HTTPResponse(body=create_about(user), status=200)
 
 
-# @route('/web/settings/<page>', method='GET')
-# def web(page=''):
+@get('/web/tvguide')
+def web_tvguide():
+    # Get and check user
+    user = _check_user(request.get_cookie('user'))
+    if not user:
+        redirect('/web/login')
+    #
+    # Retrieve tvlistings from queue
+    tvlistings = _check_tvlistingsqueue()
+    #
+    if bool(request.query.group) and bool(request.query.device):
+        return HTTPResponse(body=refresh_tvguide(tvlistings,
+                                                 device = create_device_object(request.query.group, request.query.device),
+                                                 group_name = request.query.group,
+                                                 device_name = request.query.device,
+                                                 user=user),
+                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
+    else:
+        return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
+
+
+@get('/web/device/<group_name>/<device_name>')
+def web_devices(group_name='', device_name=''):
+    # Get and check user
+    user = _check_user(request.get_cookie('user'))
+    if not user:
+        redirect('/web/login')
+    #
+    # Retrieve tvlistings from queue
+    tvlistings = _check_tvlistingsqueue()
+    # Create and return web interface page
+    return HTTPResponse(body=create_device(user, tvlistings, group_name, device_name, request), status=200)
+
+
+# @get('/web/settings/<page>')
+# def web_settings(page=''):
 #     user = _check_user(request.get_cookie('user'))
 #     try:
 #         if not user and page != 'login':
@@ -110,27 +125,25 @@ def web(group_name='', device_name=''):
 #         return HTTPResponse(status=500)
 
 
-@route('/web/preferences/<page>', method='GET')
-def web(page=''):
+@get('/web/preferences/<page>')
+def web_preferences(page=''):
     user = _check_user(request.get_cookie('user'))
-    try:
-        if not user and page != 'login':
-            redirect('/web/login')
-        if page == 'tvguide':
-            return HTTPResponse(body=create_preference_tvguide(user), status=200)
-        else:
-            return HTTPResponse(body=create_error_404(user), status=400)
-    except:
-        return HTTPResponse(body=create_error_500(user), status=500)
+    if not user:
+        redirect('/web/login')
+    if page == 'tvguide':
+        return HTTPResponse(body=create_preference_tvguide(user), status=200)
+    else:
+        return HTTPResponse(body=create_error_404(user), status=400)
 
 
-@route('/web/static/<folder>/<filename>', method='GET')
-def get_image(folder, filename):
-    try:
-        return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
-    except:
-        return HTTPResponse(status=400)
+@get('/web/static/<folder>/<filename>')
+def get_resource(folder, filename):
+    return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/static/{}'.format(folder))))
 
+
+################################################################################################
+# Handle commands
+################################################################################################
 
 @route('/command')
 def send_command():
@@ -147,7 +160,11 @@ def send_command():
         return HTTPResponse(status=400)
 
 
-# @route('/settings/<category>', method='POST')
+################################################################################################
+# Update settings/server config
+################################################################################################
+
+# @post('/settings/<category>')
 # def save_settings(category=''):
 #     user = _check_user(request.get_cookie('user'))
 #     try:
@@ -173,7 +190,11 @@ def send_command():
 #         return HTTPResponse(status=500)
 
 
-@route('/preferences/<category>', method='POST')
+################################################################################################
+# Update user preferences
+################################################################################################
+
+@post('/preferences/<category>')
 def save_prefernces(category='-'):
     if _check_user(request.get_cookie('user')):
         if category == 'tvguide':
@@ -185,16 +206,40 @@ def save_prefernces(category='-'):
         return HTTPResponse(status=400)
 
 
-@route('/favicon.ico', method='GET')
+################################################################################################
+# Image files
+################################################################################################
+
+@get('/favicon.ico')
 def send_favicon():
     root = os.path.join(os.path.dirname(__file__), '..', 'img/logo')
     return static_file('favicon.ico', root=root)
 
 
-@route('/img/<category>/<filename:re:.*\.png>', method='GET')
+@get('/img/<category>/<filename:re:.*\.png>')
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/{}'.format(category))
     return static_file(filename, root=root, mimetype='image/png')
+
+
+################################################################################################
+# Error pages/responses
+################################################################################################
+
+@error(404)
+def error404(error):
+    user = _check_user(request.get_cookie('user'))
+    if not user:
+        redirect('/web/login')
+    return HTTPResponse(body=create_error_404(user), status=400)
+
+
+@error(500)
+def error500(error):
+    user = _check_user(request.get_cookie('user'))
+    if not user:
+        redirect('/web/login')
+    return HTTPResponse(body=create_error_500(user), status=500)
 
 
 ################################################################################################
