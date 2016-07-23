@@ -231,7 +231,7 @@ def error404(error):
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
-    return HTTPResponse(body=create_error_404(user), status=400)
+    return HTTPResponse(body=create_error_404(user), status=404)
 
 
 @error(500)
