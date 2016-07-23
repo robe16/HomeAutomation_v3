@@ -1,13 +1,13 @@
 import os
 from bottle import route, get, post
-from bottle import error
+from bottle import error, HTTPError
 from bottle import request, run, static_file, HTTPResponse, redirect, response
 
 from command_forwarder import cmd_fwrd
 from config_devices import write_config_devices
 from config_devices_create import create_device_object
 from config_users import check_user, get_userrole, update_user_channels
-from web_create_error import create_error_404, create_error_500
+from web_create_error import create_error
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_create_preferences import create_preference_tvguide
 from web_create_settings import create_settings_devices, settings_devices_requests, create_settings_tvguide
@@ -133,7 +133,7 @@ def web_preferences(page=''):
     if page == 'tvguide':
         return HTTPResponse(body=create_preference_tvguide(user), status=200)
     else:
-        return HTTPResponse(body=create_error_404(user), status=400)
+        raise HTTPError(404)
 
 
 @get('/web/static/<folder>/<filename>')
@@ -231,7 +231,7 @@ def error404(error):
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
-    return HTTPResponse(body=create_error_404(user), status=404)
+    return HTTPResponse(body=create_error(user, 404), status=404)
 
 
 @error(500)
@@ -239,7 +239,7 @@ def error500(error):
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
-    return HTTPResponse(body=create_error_500(user), status=500)
+    return HTTPResponse(body=create_error(user, 500), status=500)
 
 
 ################################################################################################
