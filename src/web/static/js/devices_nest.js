@@ -16,7 +16,7 @@ function sendNestCmd(group, device, command, value, nest_model, nest_device, nes
 
 function updateNest(url){
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open('GET', url, false);
+    xmlHttp.open('POST', url, false);
     xmlHttp.send(null);
     if (xmlHttp.status==200) {
         document.getElementById('body_nest').innerHTML = xmlHttp.responseText}

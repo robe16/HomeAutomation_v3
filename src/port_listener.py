@@ -135,7 +135,7 @@ def get_resource(folder, filename):
 # Handle commands
 ################################################################################################
 
-@route('/command')
+@post('/command')
 def send_command():
     #
     try:

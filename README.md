@@ -47,7 +47,7 @@ Elements planned for development in future:
 <code>GET</code> <code>/web/static/{folder}/{filename}</code>
 <br>Returns static files such as css, js and fonts/glyphicons.
 </p><br><p>
-<code>-</code> <code>/command</code>
+<code>POST</code> <code>/command</code>
 <br>Submit commands to the server for relaying to devices. Query parameters identify device (<code>group</code> and <code>device</code>) and command to be sent (<code>command</code> and others that are device specific).
 </p><br><p>
 <code>POST</code> <code>/settings/{category}</code>
