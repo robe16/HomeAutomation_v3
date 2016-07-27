@@ -1,9 +1,13 @@
 from urllib import urlopen
 import xml.etree.ElementTree as ET
-from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-from config_devices import get_device_config_detail, set_device_config_detail
-from console_messages import print_command
 import requests as requests
+import time
+import threading
+from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
+from config_devices import get_device_config_detail, set_device_config_detail
+from console_messages import print_command, print_msg
+from tvlisting_getfromqueue import _check_tvlistingsqueue
+import cfg
 
 
 class object_tv_lg_netcast:
@@ -13,48 +17,73 @@ class object_tv_lg_netcast:
     STRtv_PATHevent = "/udap/api/event"
     STRtv_PATHquery = "/udap/api/data"
 
-    def __init__ (self, label, group, ipaddress, port, pairingkey=None):
+    def __init__ (self, grp_num, dvc_num, q_dvc, queues):
         self._type = "tv_lg_netcast"
-        self._label = label
-        self._group = group
-        self._ipaddress = ipaddress
-        self._port = port
-        self._pairingkey = pairingkey
-        self._tvguide = True
+        self._grp_num = grp_num
+        self._dvc_num = dvc_num
+        #
+        self._queue = q_dvc
+        self._q_response_web = queues[cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[cfg.key_q_response_command]
+        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        #
+        self._active = True
+        self.run()
 
-    def getType(self):
-        return self._type
+    def run(self):
+            time.sleep(5)
+            while self._active:
+                # Keep in a loop
+                '''
+                    Use of self._active allows for object to close itself, however may wish
+                    to take different approach of terminting the thread the object loop resides in
+                '''
+                time.sleep(0.1)
+                qItem = self._getFromQueue()
+                if bool(qItem):
+                    if qItem['response_queue'] == 'stop':
+                        self._active = False
+                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                        self._q_response_web.put(self.getHtml())
+                    elif qItem['response_queue'] == cfg.key_q_response_command:
+                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
+                    else:
+                        # Code to go here to handle other items added to the queue!!
+                        True
+                    self._queue.task_done()
+            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
+                                                                                         dvc_num=self._dvc_num,
+                                                                                         type=self._type))
 
-    def getLabel(self):
-        return self._label
+    def _getFromQueue(self):
+        if not self._queue.empty():
+            return self._queue.get(block=True)
+        else:
+            return False
 
-    def getGroup(self):
-        return self._group
+    def _ipaddress(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "ipaddress")
 
-    def getIP(self):
-        return self._ipaddress
+    def _port(self):
+        return get_device_detail(self._type, "port")
 
-    def getPort(self):
-        return self._port
+    def _pairingkey(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "pairingkey")
 
-    def getPairingkey(self):
-        return self._pairingkey
-
-    def setPairingkey(self, STRpairingkey):
-        self._pairingkey = STRpairingkey
-        self._pairDevice()
-
-    def getTvguide_use(self):
-        return self._tvguide
-
-    def getLogo(self):
+    def _logo(self):
         return get_device_logo(self._type)
 
-    def getName(self):
+    def _dvc_name(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "name")
+
+    def _type_name(self):
         return get_device_name(self._type)
 
-    def isPaired(self):
-        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired')
+    def _get_paired(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, 'paired')
+
+    def _set_paired(self, status):
+        set_device_config_detail(self._grp_num, self._dvc_num, 'paired', status)
 
     def _pairDevice(self):
         #
@@ -66,22 +95,22 @@ class object_tv_lg_netcast:
         r = requests.post(url,
                           STRxml,
                           headers=headers)
-        print_command('pairDevice', get_device_name(self._type), url, r.status_code)
+        print_command('pairDevice', self._type_name(), url, r.status_code)
         #
         r_pass = True if r.status_code == requests.codes.ok else False
-        set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', r_pass)
+        self._set_paired(r_pass)
         #
         return r_pass
 
     def _check_paired(self):
-        if not get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
+        if not self._get_paired():
             count = 0
             while count < 2:
                 self._pairDevice()
-                if get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
+                if self._get_paired():
                     return True
                 count+=1
-            if count==5 and not get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired'):
+            if count==5 and not self._get_paired():
                 return False
         return True
 
@@ -95,23 +124,23 @@ class object_tv_lg_netcast:
         r = requests.post(url,
                           STRxml,
                           headers=headers)
-        print_command('showPairingkey', get_device_name(self._type), url, r.status_code)
+        print_command('showPairingkey', self._type_name(), url, r.status_code)
         #
         r_pass = True if r.status_code == requests.codes.ok else False
         #
         return r_pass
 
-    def getHtml(self, listings=False, user=False):
+    def getHtml(self):
         html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
-                                                                                 device = self._label.lower().replace(' ',''),
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = str(self._grp_num),
+                                                                                 device = str(self._dvc_num),
                                                                                  apps = self._html_apps())
 
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
         if html:
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
-                                                                                              name = self._label,
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
+                                                                                              name = self._dvc_name(),
                                                                                               ipaddress = self._ipaddress,
                                                                                               pairingkey = self._pairingkey,
                                                                                               dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
@@ -144,11 +173,11 @@ class object_tv_lg_netcast:
                     icon_name = data.find('icon_name').text
                     #
 
-                    html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command?group={group}&device={device}&command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
-                             '<img src="/command?group={group}&device={device}&command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
+                    html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command/{group}/{device}?command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
+                             '<img src="/command/device/{group}/{device}?command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
-                             '</td>').format(group = self._group.lower().replace(' ',''),
-                                             device = self._label.lower().replace(' ',''),
+                             '</td>').format(group = str(self._grp_num),
+                                             device = str(self._dvc_num),
                                              auid = auid,
                                              app_name = name.replace(' ', '%20'),
                                              name = name)
@@ -170,7 +199,7 @@ class object_tv_lg_netcast:
         try:
             #
             if not self._check_paired():
-                print_command ('getApplist', get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
+                print_command ('getApplist', self._type_name(), self._ipaddress, "ERROR: Device could not be paired")
                 return False
             #
             uri = "/udap/api/data?target=applist_get&type={type}&index={index}&number={number}".format(type=str(APPtype),
@@ -180,14 +209,14 @@ class object_tv_lg_netcast:
             url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=uri)
             #
             r = requests.get(url, headers=headers)
-            print_command('getApplist', get_device_name(self._type), url, r.status_code)
+            print_command('getApplist', self._type_name(), url, r.status_code)
             #
             if not r.status_code == requests.codes.ok:
-                set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
+                self._set_paired(False)
                 if not self._check_paired():
                     return False
                 r = requests.post(url, headers=headers)
-                print_command('getApplist', get_device_name(self._type), url, r.status_code)
+                print_command('getApplist', self._type_name(), url, r.status_code)
             #
             if r.status_code == requests.codes.ok:
                 return r.content
@@ -225,7 +254,7 @@ class object_tv_lg_netcast:
     def getAppicon (self, auid, name):
         #
         if not self._check_paired():
-            print_command ('getAppicon', get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
+            print_command ('getAppicon', self._type_name(), self._ipaddress, "ERROR: Device could not be paired")
             return False
         #
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
@@ -236,14 +265,14 @@ class object_tv_lg_netcast:
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=uri)
         #
         r = requests.get(url, headers=headers)
-        print_command('getAppicon', get_device_name(self._type), url, r.status_code)
+        print_command('getAppicon', self._type_name(), url, r.status_code)
         #
         if not r.status_code == requests.codes.ok:
-            set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
+            set_device_config_detail(self._grp_num, self._dvc_num, 'paired', False)
             if not self._check_paired():
                 return False
             r = requests.post(url, headers=headers)
-            print_command('getAppicon', get_device_name(self._type), url, r.status_code)
+            print_command('getAppicon', self._type_name(), url, r.status_code)
         #
         if r.status_code == requests.codes.ok:
             return r.content
@@ -256,20 +285,18 @@ class object_tv_lg_netcast:
 
     def sendCmd(self, request):
         #
-        command = request.query.command
-        #
         try:
             #
             if not self._check_paired():
-                print_command (command, get_device_name(self._type), self._ipaddress, "ERROR: Device could not be paired")
+                print_command (request['command'], self._type_name(), self._ipaddress, "ERROR: Device could not be paired")
                 return False
             #
-            if command == 'image':
-                response = self.getAppicon(request.query.auid, request.query.name.replace(' ','%20'))
+            if request['command'] == 'image':
+                response = self.getAppicon(request['auid'], request['name'].replace(' ','%20'))
                 return response
                 #
             else:
-                if command == 'app':
+                if request['command'] == 'app':
                     STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
                               '<envelope>' +
                               '<api type="command">' +
@@ -278,13 +305,13 @@ class object_tv_lg_netcast:
                               '<appname>{app_name}</appname>' +
                               #'<contentId>Content ID</contentId>' +
                               '</api>' +
-                              '</envelope>').format(auid = request.query.auid,
-                                                    app_name = request.query.name.replace(' ','%20'))
+                              '</envelope>').format(auid = request['auid'],
+                                                    app_name = request['name'].replace(' ','%20'))
                     headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
                                'content-type': 'text/xml; charset=utf-8'}
-                    cmd = command
+                    cmd = request['command']
                 else:
-                    code = self.commands[request.query.command]
+                    code = self.commands[request['command']]
                     STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
                               '<envelope>' +
                               '<api type="command">' +
@@ -294,29 +321,31 @@ class object_tv_lg_netcast:
                               '</envelope>').format(value=code)
                     headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
                                'content-type': 'text/xml; charset=utf-8'}
-                    cmd = request.query.command
+                    cmd = request['command']
                 #
-                url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress, port=str(self._port), uri=str(self.STRtv_PATHcommand))
+                url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress,
+                                                              port=str(self._port),
+                                                              uri=str(self.STRtv_PATHcommand))
                 r = requests.post(url,
                                   STRxml,
                                   headers=headers)
-                print_command('command', get_device_name(self._type), url, r.status_code)
+                print_command('command', self._type_name(), url, r.status_code)
                 #
                 if not r.status_code == requests.codes.ok:
-                    set_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), 'paired', False)
+                    self._set_paired(False)
                     if not self._check_paired():
                         return False
                     r = requests.post(url,
                                       STRxml,
                                       headers=headers)
-                    print_command('command', get_device_name(self._type), url, r.status_code)
+                    print_command('command', self._type_name(), url, r.status_code)
                 #
                 response = (r.status_code == requests.codes.ok)
-                print_command (cmd, get_device_name(self._type), self._ipaddress, response)
+                print_command (cmd, self._type_name(), self._ipaddress, response)
                 return response
                 #
         except:
-            print_command (command, get_device_name(self._type), self._ipaddress, "ERROR: Exception encountered")
+            print_command (request['command'], self._type_name(), self._ipaddress, "ERROR: Exception encountered")
             return False
 
     commands = {"power": "1",

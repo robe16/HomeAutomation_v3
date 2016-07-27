@@ -1,41 +1,87 @@
 from urllib import urlopen
-from config_devices import get_device_config_detail
-from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-from list_channels import get_channel_item_image_from_devicekey
-from web_tvchannels import html_channels_user_and_all
-from console_messages import print_command, print_error
 import requests as requests
 from requests.auth import HTTPDigestAuth
 import xml.etree.ElementTree as ET
 import telnetlib
-import time
 import datetime
+import time
+from config_devices import get_device_config_detail
+from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from list_channels import get_channel_item_image_from_devicekey
+from web_tvchannels import html_channels_user_and_all
+from console_messages import print_command, print_error, print_msg
+from tvlisting_getfromqueue import _check_tvlistingsqueue
+
+import cfg
 
 
 class object_tivo:
 
-    def __init__(self, label, group):
+    def __init__(self, grp_num, dvc_num, q_dvc, queues):
         self._type = "tivo"
-        self._label = label
-        self._group = group
+        self._grp_num = grp_num
+        self._dvc_num = dvc_num
+        #
+        self._queue = q_dvc
+        self._q_response_web = queues[cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[cfg.key_q_response_command]
+        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        #
+        self._active = True
+        self.run()
+
+
+    def run(self):
+            time.sleep(5)
+            while self._active:
+                # Keep in a loop
+                '''
+                    Use of self._active allows for object to close itself, however may wish
+                    to take different approach of terminting the thread the object loop resides in
+                '''
+                time.sleep(0.1)
+                qItem = self._getFromQueue()
+                if bool(qItem):
+                    if qItem['response_queue'] == 'stop':
+                        self._active = False
+                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                        self._q_response_web.put(self.getHtml(user=qItem['user'],
+                                                              listings=_check_tvlistingsqueue(self._q_tvlistings)))
+                    elif qItem['response_queue'] == cfg.key_q_response_command:
+                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
+                    else:
+                        # Code to go here to handle other items added to the queue!!
+                        True
+            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
+                                                                                         dvc_num=self._dvc_num,
+                                                                                         type=self._type))
+
+    def _getFromQueue(self):
+        if not self._queue.empty():
+            return self._queue.get(block=True)
+        else:
+            return False
 
     def _ipaddress(self):
-        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), "ipaddress")
+        return get_device_config_detail(self._grp_num, self._dvc_num, "ipaddress")
 
     def _port(self):
         return get_device_detail(self._type, "port")
 
     def _accesskey(self):
-        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), "mak")
+        return get_device_config_detail(self._grp_num, self._dvc_num, "mak")
+
+    def _package(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "package")
 
     def _logo(self):
         return get_device_logo(self._type)
 
-    def getName(self):
-        return get_device_name(self._type)
+    def _dvc_name(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "name")
 
-    def _package(self):
-        return get_device_config_detail(self._group.lower().replace(' ',''), self._label.lower().replace(' ',''), "package")
+    def _type_name(self):
+        return get_device_name(self._type)
 
     def _getChan(self):
         response = self._send_telnet(self._ipaddress(), self._port(), response=True)
@@ -46,47 +92,46 @@ class object_tivo:
 
     def sendCmd(self, request):
         #
-        command = request.query.command
         code = False
         response = False
         #
-        if command == 'getHtml_recordings':
+        if request['command'] == 'getHtml_recordings':
             response = self._getHtml_recordings()
-        elif command == 'getchannel':
+        elif request['command'] == 'getchannel':
             response = self._getChan()
-        elif command == 'channel':
+        elif request['command'] == 'channel':
             response = self._send_telnet(ipaddress=self._ipaddress(),
                                          port=self._port(),
-                                         data=("SETCH {}\r").format(request.query.chan),
+                                         data=("SETCH {}\r").format(request['chan']),
                                          response=True)
             if response.startswith('CH_FAILED'):
-                print_command('channel', get_device_name(self._type), self._ipaddress(), response)
+                print_command('channel', self._type_name(), self._ipaddress(), response)
                 return False
-        elif command == 'command':
-            code = self.commands[request.query.code]
+        elif request['command'] == 'command':
+            code = self.commands[request['code']]
             try:
                 response = self._send_telnet(self._ipaddress(), self._port(), data=code)
             except:
                 response = False
         #
-        x = request.query.code if code else command
-        print_command (x, get_device_name(self._type), self._ipaddress(), response)
+        x = request['code'] if code else request['command']
+        print_command (x, self._type_name(), self._ipaddress(), response)
         return response
 
-    def getHtml(self, listings=None, user=False):
+    def getHtml(self, user=False, listings=None):
         #
         html_file = get_device_html_command(self._type)
         #
         chan_current = self._getChan()
         #
-        html_channels = html_channels_user_and_all(group_name=self._group.lower().replace(' ',''),
-                                                   device_name=self._label.lower().replace(' ',''),
+        html_channels = html_channels_user_and_all(group_name=self._grp_num,
+                                                   device_name=self._dvc_num,
                                                    user=user,
                                                    chan_current=chan_current,
                                                    package=["virginmedia_package", self._package()])
         #
-        url = "'/command?group={group}&device={device}&command=getHtml_recordings'".format(group=self._group.lower().replace(' ',''),
-                                                                                                 device=self._label.lower().replace(' ',''))
+        url = "'/command/device/{grp_num}/{dvc_num}?command=getHtml_recordings'".format(grp_num=self._grp_num,
+                                                                                        dvc_num=self._dvc_num)
         #
         html_recordings = "<script type='text/javascript'>" + \
                           "window.onload = function checkRecordings(url){" + \
@@ -98,8 +143,8 @@ class object_tivo:
                               "else {setTimeout(function () {checkRecordings(" + url + ");}, 5000);}" + "}" + \
                           "</script>"
         #
-        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._group.lower().replace(' ',''),
-                                                                                      device=self._label.lower().replace(' ',''),
+        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._grp_num,
+                                                                                      device=self._dvc_num,
                                                                                       html_recordings = html_recordings,
                                                                                       html_channels = html_channels)
 
@@ -107,7 +152,7 @@ class object_tivo:
         html_file = get_device_html_settings(self._type)
         if html_file:
             return urlopen('web/html_settings/devices/' + html_file).read().encode('utf-8').format(img=self._logo(),
-                                                                                                   name=self._label,
+                                                                                                   name=self._dvc_name(),
                                                                                                    ipaddress=self._ipaddress(),
                                                                                                    mak=self._accesskey(),
                                                                                                    dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
@@ -207,66 +252,6 @@ class object_tivo:
         except Exception as e:
             print_error('Attempted to create recordings html - {error}'.format(error=e))
             return '<p>Error</p>'
-    #
-    # <?xml version="1.0" encoding="utf-8"?>
-    #   <TiVoContainer xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/">
-    #       <Details>
-    #           <ContentType>x-tivo-container/tivo-videos</ContentType>
-    #           <SourceFormat>x-tivo-container/tivo-dvr</SourceFormat>
-    #           <Title>Now Playing</Title>
-    #           <LastChangeDate>0x577D7A25</LastChangeDate>
-    #           <TotalItems>18</TotalItems>
-    #           <UniqueId>/NowPlaying</UniqueId>
-    #       </Details>
-    #       <SortOrder>Type,CaptureDate</SortOrder>
-    #       <GlobalSort>Yes</GlobalSort>
-    #       <ItemStart>0</ItemStart>
-    #       <ItemCount>16</ItemCount>
-    #       <Item>
-    #           <Details>
-    #               <ContentType>video/x-tivo-raw-tts</ContentType>
-    #               <SourceFormat>video/x-tivo-raw-tts</SourceFormat>
-    #               <Title>24 Hours in A&amp;E</Title>
-    #               <CopyProtected>Yes</CopyProtected>
-    #               <SourceSize>4729077760</SourceSize>
-    #               <Duration>3899000</Duration>
-    #               <CaptureDate>0x577D6302</CaptureDate>
-    #               <ShowingDuration>3600000</ShowingDuration>
-    #               <StartPadding>60000</StartPadding>
-    #               <EndPadding>240000</EndPadding>
-    #               <ShowingStartTime>0x577D6340</ShowingStartTime>
-    #               <Description>Cyclist Athar, who's 22, is rushed to St George's...</Description>
-    #               <SourceChannel>142</SourceChannel>
-    #               <SourceStation>4 HD</SourceStation>
-    #               <HighDefinition>Yes</HighDefinition>
-    #               <ProgramId>EP014129450131</ProgramId>
-    #               <SeriesId>SH01412945</SeriesId>
-    #               <StreamingPermission>Yes</StreamingPermission>
-    #               <ShowingBits>20996</ShowingBits>
-    #               <SourceType>2</SourceType>
-    #               <IdGuideSource>50716</IdGuideSource>
-    #           </Details>
-    #           <Links>
-    #               <Content>
-    #                   <Url>http://192.168.0.111:80/download/24%20Hours%20in%20A%26E.TiVo?Container=%2FNowPlaying&amp;id=1360</Url>
-    #                   <ContentType>video/x-tivo-raw-tts</ContentType>
-    #                   <Available>No</Available>
-    #               </Content><CustomIcon>
-    #               <Url>urn:tivo:image:save-until-i-delete-recording</Url>
-    #               <ContentType>image/*</ContentType>
-    #               <AcceptsParams>No</AcceptsParams>
-    #               </CustomIcon><TiVoVideoDetails>
-    #               <Url>https://192.168.0.111:443/TiVoVideoDetails?id=1360</Url>
-    #               <ContentType>text/xml</ContentType>
-    #               <AcceptsParams>No</AcceptsParams>
-    #               </TiVoVideoDetails>
-    #           </Links>
-    #       </Item>
-    #       <Item>
-    #               etc.
-    #       </Item>
-    #   </TiVoContainer>
-    #
 
     def _retrieve_recordings(self, recurse):
         try:

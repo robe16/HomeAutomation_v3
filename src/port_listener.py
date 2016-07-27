@@ -1,11 +1,14 @@
 import os
+import datetime
+import time
 from bottle import route, get, post
 from bottle import error, HTTPError
 from bottle import request, run, static_file, HTTPResponse, redirect, response
 
-from command_forwarder import cmd_fwrd
+import cfg
+
 from config_devices import write_config_devices
-from config_devices_create import create_device_object
+from config_devices import get_group_config_name, get_device_config_name
 from config_users import check_user, get_userrole, update_user_channels
 from web_create_error import create_error
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
@@ -13,6 +16,19 @@ from web_create_preferences import create_preference_tvguide
 from web_create_settings import create_settings_devices, settings_devices_requests, create_settings_tvguide
 from web_devices import refresh_tvguide
 
+from tvlisting_getfromqueue import _check_tvlistingsqueue
+
+
+################################################################################################
+
+def start_bottle(port, q_dvcs, queues):
+    # '0.0.0.0' - all interfaces including the external one
+    # 'localhost' - internal interfaces only
+    global q_devices
+    global q_dict
+    q_devices = q_dvcs
+    q_dict = queues
+    run_bottle(port)
 
 ################################################################################################
 # Web UI
@@ -68,30 +84,51 @@ def web_tvguide():
         redirect('/web/login')
     #
     # Retrieve tvlistings from queue
-    tvlistings = _check_tvlistingsqueue()
+    tvlistings = _check_tvlistingsqueue(q_dict[cfg.key_q_tvlistings])
     #
-    if bool(request.query.group) and bool(request.query.device):
-        return HTTPResponse(body=refresh_tvguide(tvlistings,
-                                                 device = create_device_object(request.query.group, request.query.device),
-                                                 group_name = request.query.group,
-                                                 device_name = request.query.device,
-                                                 user=user),
-                            status=200) if bool(tvlistings) else HTTPResponse(status=400)
-    else:
-        return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
+    # if bool(request.query.group) and bool(request.query.device):
+    #     return HTTPResponse(body=refresh_tvguide(tvlistings,
+    #                                              device = False, #create_device_object(request.query.group, request.query.device),
+    #                                              group_name = request.query.group,
+    #                                              device_name = request.query.device,
+    #                                              user=user),
+    #                         status=200) if bool(tvlistings) else HTTPResponse(status=400)
+    # else:
+    return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
 
 
-@get('/web/device/<group_name>/<device_name>')
-def web_devices(group_name='', device_name=''):
+@get('/web/device/<grp_num>/<dvc_num>')
+def web_devices(grp_num=False, dvc_num=False):
     # Get and check user
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
     #
-    # Retrieve tvlistings from queue
-    tvlistings = _check_tvlistingsqueue()
-    # Create and return web interface page
-    return HTTPResponse(body=create_device(user, tvlistings, group_name, device_name, request), status=200)
+    try:
+        grp_num = int(grp_num)
+        dvc_num = int(dvc_num)
+    except:
+        raise HTTPError(404)
+    #
+    timestamp = datetime.datetime.now()
+    queue_item = {'timestamp': timestamp,
+                  'response_queue': cfg.key_q_response_web_device,
+                  'grp_num': grp_num,
+                  'dvc_num': dvc_num,
+                  'user': request.get_cookie('user')}
+    #
+    q_devices[grp_num][dvc_num].put(queue_item)
+    #
+    time.sleep(0.1)
+    #
+    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
+        if not q_dict[cfg.key_q_response_web_device].empty():
+            return create_device(user,
+                                 q_dict[cfg.key_q_response_web_device].get(),
+                                 '{grp}: {dvc}'.format(grp=get_group_config_name(grp_num),
+                                                       dvc=get_device_config_name(grp_num, dvc_num)),
+                                 get_device_config_name(grp_num, dvc_num))
+    raise HTTPError(500)
 
 
 # @get('/web/settings/<page>')
@@ -135,19 +172,40 @@ def get_resource(folder, filename):
 # Handle commands
 ################################################################################################
 
-@post('/command')
-def send_command():
+@route('/command/device/<grp_num>/<dvc_num>') #done as 'route' as both get and post accepted
+def send_command(grp_num=False, dvc_num=False):
     #
     try:
-        #
-        rsp = cmd_fwrd(request)
-        #
-        if isinstance(rsp, bool):
-            return HTTPResponse(status=200) if bool(rsp) else HTTPResponse(status=400)
-        else:
-            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+        grp_num = int(grp_num)
+        dvc_num = int(dvc_num)
     except:
-        return HTTPResponse(status=400)
+        raise HTTPError(404)
+    #
+    timestamp = datetime.datetime.now()
+    #
+    cmd_dict = dict(request.query)
+    #
+    queue_item = {'timestamp': timestamp,
+                  'response_queue': cfg.key_q_response_command,
+                  'grp_num': grp_num,
+                  'dvc_num': dvc_num,
+                  'request': cmd_dict}
+    #
+    q_devices[grp_num][dvc_num].put(queue_item)
+    #
+    time.sleep(0.1)
+    #
+    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
+        if not q_dict[cfg.key_q_response_command].empty():
+            #
+            rsp = q_dict[cfg.key_q_response_command].get()
+            #
+            if isinstance(rsp, bool):
+                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+            else:
+                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+            #
+    raise HTTPError(500)
 
 
 ################################################################################################
@@ -184,7 +242,7 @@ def send_command():
 ################################################################################################
 
 @post('/preferences/<category>')
-def save_prefernces(category='-'):
+def save_preferences(category='-'):
     if _check_user(request.get_cookie('user')):
         if category == 'tvguide':
             user = request.get_cookie('user')
@@ -246,10 +304,6 @@ def error500(error):
 ################################################################################################
 
 
-def _check_tvlistingsqueue():
-    return False
-
-
 def _check_user(user_cookie):
     if not user_cookie:
         return False
@@ -259,7 +313,5 @@ def _check_user(user_cookie):
         else:
             return 'Guest'
 
-
-def start_bottle(port):
-    # '0.0.0.0' will listen on all interfaces including the external one (alternative for local testing is 'localhost')
+def run_bottle(port):
     run(host='0.0.0.0', port=port, debug=True)

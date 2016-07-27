@@ -16,9 +16,9 @@ def html_channels_user_and_all (group_name=False, device_name=False, user=False,
     html_channels = ''
     #
     if group_name and device_name:
-        html_channels += '<script>setTimeout(function () {getChannel(\'/command?group=' + str(group_name) + \
-                         '&device=' + str(device_name) + \
-                         '&command=getchannel\', true);}, 10000);</script>'
+        html_channels += '<script>setTimeout(function () {getChannel(\'/command/device/' + str(group_name) + \
+                         '/' + str(device_name) + \
+                         '?command=getchannel\', true);}, 10000);</script>'
     #
     all_count = 0
     html_nav_user = ''

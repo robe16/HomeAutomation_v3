@@ -16,7 +16,7 @@ def create_error(user, code):
                                                                        desc='Unknown',
                                                                        mesg='An error has been encountered, please try again!!')
     #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='404') + \
+    return urlopen('web/header.html').read().encode('utf-8').format(title=str(code)) + \
            html_menu(user) +\
            urlopen('web/body.html').read().encode('utf-8').format(header='', body=body) +\
            urlopen('web/footer.html').read().encode('utf-8')

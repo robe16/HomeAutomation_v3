@@ -3,7 +3,7 @@ import json
 import os
 from object_channel import object_channel
 from console_messages import print_channelbuild, print_msg
-import tvlisting_radiotimes, tvlisting_bleb
+import tvlisting_radiotimes
 
 
 def build_channel_array():
@@ -68,8 +68,6 @@ def getlisting(src, value):
 def returnnownext(src, data):
     if src == 'radiotimes':
         return tvlisting_radiotimes.nownext(data)
-    if src == 'bleb':
-        return tvlisting_bleb.nownext(data)
     return None
 
 

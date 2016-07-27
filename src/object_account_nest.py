@@ -4,9 +4,13 @@ import string
 import random
 import os
 import json
+import time
 from send_cmds import sendHTTP
-from console_messages import print_command, print_error
-from list_devices import get_device_name, get_device_logo, get_device_html_command, get_device_html_settings, get_device_detail, get_device_name, set_device_detail
+from console_messages import print_command, print_error, print_msg
+from config_devices import get_device_config_detail
+from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from list_devices import set_device_detail
+import cfg
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
 
@@ -23,52 +27,84 @@ class object_nest_account:
     _dateformat = '%d/%m/%Y %H:%M:%S'
     _temp_unit = 'c'
 
-
-    def __init__ (self, group, token, tokenexpiry, pincode, state):
+    def __init__ (self, grp_num, dvc_num, q_dvc, queues):
         self._type = 'nest_account'
-        self._label = 'Nest'
-        self._group = group
-        self._token = token
-        self._tokenexpiry = datetime.datetime.strptime(tokenexpiry, self._dateformat) if bool(tokenexpiry) else False
-        self._pincode = pincode
-        self._state = state
-        # if bool(self._pincode) and not self._checkToken():
-        #     self._getNewToken()
-        self._tvguide = False
+        self._grp_num = grp_num
+        self._dvc_num = dvc_num
+        #
+        self._queue = q_dvc
+        self._q_response_web = queues[cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[cfg.key_q_response_command]
+        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        #
+        self._active = True
+        self.run()
 
-    def getLabel(self):
-        return self._label
 
-    def getGroup(self):
-        return self._group
+    def run(self):
+            time.sleep(5)
+            while self._active:
+                # Keep in a loop
+                '''
+                    Use of self._active allows for object to close itself, however may wish
+                    to take different approach of terminting the thread the object loop resides in
+                '''
+                time.sleep(0.1)
+                qItem = self._getFromQueue()
+                if bool(qItem):
+                    if qItem['response_queue'] == 'stop':
+                        self._active = False
+                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                        self._q_response_web.put(self.getHtml())
+                    elif qItem['response_queue'] == cfg.key_q_response_command:
+                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
+                    else:
+                        # Code to go here to handle other items added to the queue!!
+                        True
+            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
+                                                                                         dvc_num=self._dvc_num,
+                                                                                         type=self._type))
 
-    def getType(self):
-        return self._type
+    def _getFromQueue(self):
+        if not self._queue.empty():
+            return self._queue.get(block=True)
+        else:
+            return False
 
-    def getLogo(self):
+    def _logo(self):
         return get_device_logo(self._type)
 
-    def getName(self):
+    def _dvc_name(self):
+        return 'Nest'
+        #return get_device_config_detail(self._grp_num, self._dvc_num, "name")
+
+    def _type_name(self):
         return get_device_name(self._type)
 
-    def getTvguide_use(self):
-        return self._tvguide
+    def _pincode(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "pincode")
 
-    def getHtml(self, listings=False, user=False):
+    def _state(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "state")
+
+    def _token(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "token")
+
+    def getHtml(self):
         #
         html = get_device_html_command(self._type)
         body = self._htmlbody()
         #
         script = ("\r\n<script>\r\n" +
                   "setTimeout(function () {\r\n" +
-                  "updateNest('/web/device/" + self._group.lower().replace(' ','') + "/" + self._label.lower().replace(' ','') + "?body=true');\r\n" +
+                  "updateNest('/web/device/" + str(self._grp_num) + "/" + str(self._dvc_num) + "?body=true');\r\n" +
                   "}, 30000);\r\n" +
                   "</script>\r\n")
         #
         timestamp = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         #
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = self._group.lower().replace(' ',''),
-                                                                                 device = self._label.lower().replace(' ',''),
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = str(self._grp_num),
+                                                                                 device = str(self._dvc_num),
                                                                                  timestamp=timestamp,
                                                                                  script=script,
                                                                                  body_nest=body)
@@ -152,8 +188,8 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_therm}'.format(html_therm=html_therm))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           group=self._group.lower().replace(' ',''),
-                                                           device=self._label.lower().replace(' ',''),
+                                                           group=str(self._grp_num),
+                                                           device=str(self._dvc_num),
                                                            nest_device_id=nest_device_id,
                                                            name=therm_name,
                                                            therm_label=therm_label,
@@ -226,8 +262,8 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_smoke}'.format(html_smoke=html_smoke))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           group=self._group.lower().replace(' ',''),
-                                                           device=self._label.lower().replace(' ',''),
+                                                           group=str(self._grp_num),
+                                                           device=str(self._dvc_num),
                                                            nest_device_id=nest_device_id,
                                                            name=smoke_name,
                                                            online=smoke_online,
@@ -284,8 +320,8 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_cam}'.format(html_cam=html_cam))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           group=self._group.lower().replace(' ',''),
-                                                           device=self._label.lower().replace(' ',''),
+                                                           group=str(self._grp_num),
+                                                           device=str(self._dvc_num),
                                                            nest_device_id=nest_device_id,
                                                            name=cam_name,
                                                            color=img_color,
@@ -297,7 +333,6 @@ class object_nest_account:
             #
         except Exception as e:
             print_error('Nest devices could not be compiled into html - ' + str(e))
-            raise Exception
         #
         devices_html += '</div>'
         return devices_html
@@ -307,17 +342,17 @@ class object_nest_account:
         randomstring = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
         #
         try:
-            tokexp = self._tokenexpiry.strftime(self._dateformat)
+            tokexp = self._tokenexpiry().strftime(self._dateformat)
         except:
             tokexp = ''
         #
         if html:
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self.getLogo(),
-                                                                                              name = self._label,
-                                                                                              pincode = self._pincode,
+            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
+                                                                                              name = self._dvc_name(),
+                                                                                              pincode = self._pincode(),
                                                                                               clientid = get_device_detail(self._type, 'client_id'),
                                                                                               state = randomstring,
-                                                                                              token = self._token,
+                                                                                              token = self._token(),
                                                                                               tokenexpiry = tokexp,
                                                                                               dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
         else:
@@ -353,7 +388,7 @@ class object_nest_account:
             return False
 
     def _tokencheck(self):
-        if bool(self._pincode):
+        if bool(self._pincode()):
             if self._checkToken():
                 return True
             else:
@@ -361,11 +396,17 @@ class object_nest_account:
         else:
             return False
 
+    def _tokenexpiry(self):
+        try:
+            return datetime.datetime.strptime(get_device_config_detail(self._grp_num, self._dvc_num, "tokenexpiry"), self._dateformat)
+        except:
+            return False
+
     def _checkToken(self):
-        return datetime.datetime.now() < self._tokenexpiry if bool(self._tokenexpiry) else False
+        return datetime.datetime.now() < self._tokenexpiry() if bool(self._tokenexpiry()) else False
 
     def _getNewToken(self):
-        url = (self.nesturl_tokenexchange).format(authcode=self._pincode,
+        url = (self.nesturl_tokenexchange).format(authcode=self._pincode(),
                                                   clientid=get_device_detail(self._type, 'client_id'),
                                                   clientsecret=get_device_detail(self._type, 'client_secret'))
         #
@@ -388,48 +429,34 @@ class object_nest_account:
                 print_error('Nest auth code not processed into json object - ' + str(e))
                 return False
             #
-            token = data['access_token']
-            tokenexpiry = datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in'])
-            #
-            self._token = token
-            self._tokenexpiry = tokenexpiry
-            #
-            self._updateConfig()
+            self._updateConfig(data['access_token'],
+                               datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in']),
+                               self._pincode(),
+                               get_device_config_detail(self._grp_num, self._dvc_num, "state"))
             #
             return True
         else:
             return False
 
-    def _updateConfig(self):
+    def _updateConfig(self, token, tokenexpiry, pincode, state):
         #
         data = json.load(open(os.path.join('config', 'config_devices.json'), 'r'))
         #
-        grpX = 0
-        for data_group in data:
-            if data_group['group'] == self._group:
-                dvcX = 0
-                for data_dvc in data_group['devices']:
-                    if data_dvc['device'] == self._type:
-                        data[grpX]['devices'][dvcX]['details']['token'] = self._token
-                        data[grpX]['devices'][dvcX]['details']['tokenexpiry'] = self._tokenexpiry.strftime(self._dateformat)
-                        data[grpX]['devices'][dvcX]['details']['pincode'] = self._pincode
-                        data[grpX]['devices'][dvcX]['details']['state'] = self._state
-                        #
-                        try:
-                            #
-                            with open(os.path.join('config', 'config_devices.json'), 'w+') as output_file:
-                                output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
-                                output_file.close()
-                            #
-                            return True
-                        except Exception as e:
-                            print_error('Nest token and expiry not saved to config - ' + str(e))
-                            return False
-                        #
-                    dvcX += 1
-            grpX += 1
+        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['token'] = token
+        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['tokenexpiry'] = tokenexpiry
+        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['pincode'] = pincode
+        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['state'] = state
         #
-        return False
+        try:
+            #
+            with open(os.path.join('config', 'config_devices.json'), 'w+') as output_file:
+                output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
+                output_file.close()
+            #
+            return True
+        except Exception as e:
+            print_error('Nest token and expiry not saved to config - ' + str(e))
+            return False
 
     def _read_json_all(self):
         return self._read_nest_json()
@@ -479,4 +506,4 @@ class object_nest_account:
             return self.nesturl_api
 
     def _header_token(self):
-        return 'Bearer {authcode}'.format(authcode=self._token)
+        return 'Bearer {authcode}'.format(authcode=self._token())

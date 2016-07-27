@@ -1,7 +1,6 @@
 from urllib import urlopen
 from list_devices import read_list_devices, get_device_name, get_device_logo
 from config_devices import get_device_json
-from config_devices_create import create_device_object
 
 
 def settings_devices():
@@ -20,7 +19,9 @@ def settings_devices():
         dvc_keys = data[grp]['devices'].keys()
         for dvc in dvc_keys:
             try:
-                device = create_device_object(grp, dvc)
+                raise Exception
+                #TODO
+                #device = create_device_object(grp, dvc)
                 html_devices += device.getHtml_settings(grp_num, dvc_num)
             except Exception as e:
                 html_devices += ''

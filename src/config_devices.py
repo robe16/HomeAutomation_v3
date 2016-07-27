@@ -25,24 +25,52 @@ def get_device_json():
         return json.load(data_file)
 
 
-def get_device_config_type(grp_name, dvc_label):
+def count_groups():
     #
     data = get_device_json()
     #
-    return data[grp_name]['devices'][dvc_label]['device']
+    return len(data)
 
 
-def get_device_config_detail(grp_name, dvc_label, key):
+def get_group_config_name(grp_num):
     #
     data = get_device_json()
     #
-    return data[grp_name]['devices'][dvc_label]['details'][key]
+    return data[str(grp_num)]['name']
 
 
-def set_device_config_detail(grp_name, dvc_label, key, value):
+def count_devices(grp_num):
     #
     data = get_device_json()
     #
-    data[grp_name]['devices'][dvc_label]['details'][key] = value
+    return len(data[str(grp_num)]['devices'])
+
+
+def get_device_config_type(grp_num, dvc_num):
+    #
+    data = get_device_json()
+    #
+    return data[str(grp_num)]['devices'][str(dvc_num)]['device']
+
+
+def get_device_config_name(grp_num, dvc_num):
+    #
+    data = get_device_json()
+    #
+    return data[str(grp_num)]['devices'][str(dvc_num)]['details']['name']
+
+
+def get_device_config_detail(grp_num, dvc_num, key):
+    #
+    data = get_device_json()
+    #
+    return data[str(grp_num)]['devices'][str(dvc_num)]['details'][key]
+
+
+def set_device_config_detail(grp_num, dvc_num, key, value):
+    #
+    data = get_device_json()
+    #
+    data[str(grp_num)]['devices'][str(dvc_num)]['details'][key] = value
     #
     return write_config_devices(data)

@@ -1,48 +1,62 @@
-from config_devices import get_device_json
+from config_devices import count_groups, count_devices, get_device_config_type
+from console_messages import print_msg
+
 from object_device_tv_lg_netcast import object_tv_lg_netcast
 from object_device_tivo import object_tivo
-from object_device_other import object_other
-from object_device_xbox_one import object_xbox_one
-from object_device_raspberrypi import object_raspberrypi
 from object_account_nest import object_nest_account
 
+import threading
 
-def create_device_object(grp_name, dvc_label):
+
+def create_device_threads(q_devices, queues):
     #
-    data = get_device_json()
+    grp_count = count_groups()
+    grp_num = 0
+    t = 0
+    thread = []
     #
-    return _create_device_object(data[grp_name]['group'], data[grp_name]['devices'][dvc_label])
+    while grp_num < grp_count:
+        dvc_count = count_devices(grp_num)
+        dvc_num = 0
+        while dvc_num < dvc_count:
+            #
+            thread.append(threading.Thread(target=_create_device, args=(grp_num,
+                                                                        dvc_num,
+                                                                        q_devices[grp_num][dvc_num],
+                                                                        queues, )))
+            thread[t].daemon = True
+            thread[t].start()
+            #
+            # _create_device(grp_num, dvc_num, q_devices[grp_num][dvc_num], queues)
+            #
+            print_msg('Thread created - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=grp_num,
+                                                                                         dvc_num=dvc_num,
+                                                                                         type=get_device_config_type(grp_num, dvc_num)))
+            #
+            t += 1
+            dvc_num += 1
+        grp_num += 1
+    #
+    x = 0
+    while x < t:
+        thread[x].join()
 
 
-def _create_device_object(grp_name, data_device):
-    device_type = data_device['device']
+def _create_device(grp_num, dvc_num, q_dvc, queues):
+    device_type = get_device_config_type(grp_num, dvc_num)
     #
     if device_type=="tv_lg_netcast":
-        return object_tv_lg_netcast(label = data_device['details']['name'].encode('ascii'),
-                                    group = grp_name,
-                                    ipaddress = data_device['details']['ipaddress'].encode('ascii'),
-                                    port = 8080,
-                                    pairingkey = data_device['details']['pairingkey'].encode('ascii'))
+        object_tv_lg_netcast(grp_num=grp_num,
+                             dvc_num=dvc_num,
+                             q_dvc=q_dvc,
+                             queues=queues)
     elif device_type=="tivo":
-        return object_tivo(label = data_device['details']['name'].encode('ascii'),
-                           group = grp_name)
-    elif device_type=="xbox_one":
-        return object_xbox_one(label = data_device['details']['name'].encode('ascii'),
-                               group = grp_name,
-                               ipaddress = data_device['details']['ipaddress'].encode('ascii'))
-    elif device_type=="raspberrypi":
-        return object_raspberrypi(label = data_device['details']['name'].encode('ascii'),
-                                  group = grp_name,
-                                  ipaddress = data_device['details']['ipaddress'].encode('ascii'))
-    elif device_type=="other":
-        return object_other(label = data_device['details']['name'].encode('ascii'),
-                            group = grp_name,
-                            ipaddress = data_device['details']['ipaddress'].encode('ascii'))
+        object_tivo(grp_num=grp_num,
+                             dvc_num=dvc_num,
+                             q_dvc=q_dvc,
+                             queues=queues)
     elif device_type=="nest_account":
-        return object_nest_account(group = grp_name,
-                                   token = data_device['details']['token'].encode('ascii'),
-                                   tokenexpiry = data_device['details']['tokenexpiry'].encode('ascii'),
-                                   pincode = data_device['details']['pincode'].encode('ascii'),
-                                   state = data_device['details']['state'].encode('ascii'))
-    else:
-        return None
+        object_nest_account(grp_num=grp_num,
+                            dvc_num=dvc_num,
+                            q_dvc=q_dvc,
+                            queues=queues)
