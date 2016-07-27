@@ -1,6 +1,6 @@
 # Schema for data returned when retrieving recorded shows from TiVo devices
 
-<code>
+```
 <?xml version="1.0" encoding="utf-8"?>
 <TiVoContainer xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/">
   <Details>
@@ -59,4 +59,4 @@
           etc.
   </Item>
 </TiVoContainer>
-</code>
+```
