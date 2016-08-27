@@ -1,49 +1,214 @@
-commands = {"power": "KEY_POWEROFF",
-            "0": "KEY_0",
-            "1": "KEY_1",
-            "2": "KEY_2",
-            "3": "KEY_3",
-            "4": "KEY_4",
-            "5": "KEY_5",
-            "6": "KEY_6",
-            "7": "KEY_7",
-            "8": "KEY_8",
-            "9": "KEY_9",
-            "aspect": "KEY_ASPECT",
-            "ratio43": "KEY_4_3",
-            "ratio169": "KEY_16_9",
-            "applist": "KEY_APP_LIST",
-            "inputav1": "KEY_AV1",
-            "inputav2": "KEY_AV2",
-            "inputav3": "KEY_AV3",
-            "inputcomponent1": "KEY_COMPONENT1",
-            "inputcomponent2": "KEY_COMPONENT2",
-            "hdmi": "KEY_HDMI",
-            "hdmi1": "KEY_HDMI1",
-            "hdmi2": "KEY_HDMI2",
-            "hdmi3": "KEY_HDMI3",
-            "hdmi4": "KEY_HDMI4",
-            "up": "KEY_UP",
-            "down": "KEY_DOWN",
-            "left": "KEY_LEFT",
-            "right": "KEY_RIGHT",
-            "enter": "KEY_ENTER",
-            "home": "KEY_HOME",
-            "menu": "KEY_MENU",
-            "tools": "KEY_TOOLS",
-            "clear": "KEY_CLEAR",
-            "return": "KEY_RETURN",
-            "volup": "KEY_UP",
-            "voldown": "KEY_VOLDOWN",
-            "mute": "KEY_MUTE",
-            "chanup": "KEY_CHUP",
-            "chandown": "KEY_CHDOWN",
-            "blue": "KEY_CYAN",
-            "green": "KEY_GREEN",
-            "red": "KEY_RED",
-            "yellow": "KEY_YELLOW",
-            "play": "KEY_PLAY",
-            "pause": "KEY_PAUSE",
-            "stop": "KEY_STOP",
-            "rewind": "KEY_REWIND",
-            "record": "KEY_REC"}
+from urllib import urlopen
+import requests as requests
+import time
+from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
+from config_devices import get_device_config_detail, set_device_config_detail
+from console_messages import print_command, print_msg
+import cfg
+
+import socket
+from uuid import getnode as get_mac
+import base64
+
+
+class object_tv_samsung:
+
+    def __init__ (self, grp_num, dvc_num, q_dvc, queues):
+        self._type = "tv_samsung"
+        self._grp_num = grp_num
+        self._dvc_num = dvc_num
+        #
+        self._queue = q_dvc
+        self._q_response_web = queues[cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[cfg.key_q_response_command]
+        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        #
+        self._active = True
+        self.run()
+
+    def run(self):
+            time.sleep(5)
+            while self._active:
+                # Keep in a loop
+                '''
+                    Use of self._active allows for object to close itself, however may wish
+                    to take different approach of terminting the thread the object loop resides in
+                '''
+                time.sleep(0.1)
+                qItem = self._getFromQueue()
+                if bool(qItem):
+                    if qItem['response_queue'] == 'stop':
+                        self._active = False
+                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                        self._q_response_web.put(self.getHtml())
+                    elif qItem['response_queue'] == cfg.key_q_response_command:
+                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
+                    else:
+                        # Code to go here to handle other items added to the queue!!
+                        True
+                    self._queue.task_done()
+            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
+                                                                                         dvc_num=self._dvc_num,
+                                                                                         type=self._type))
+
+    def _getFromQueue(self):
+        if not self._queue.empty():
+            return self._queue.get(block=True)
+        else:
+            return False
+
+    def _ipaddress(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "ipaddress")
+
+    def _port(self):
+        return get_device_detail(self._type, "port")
+
+    def _pairingkey(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "pairingkey")
+
+    def _logo(self):
+        return get_device_logo(self._type)
+
+    def _dvc_name(self):
+        return get_device_config_detail(self._grp_num, self._dvc_num, "name")
+
+    def _type_name(self):
+        return get_device_name(self._type)
+
+    # TODO
+    def getHtml(self):
+        html = get_device_html_command(self._type)
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = str(self._grp_num),
+                                                                                 device = str(self._dvc_num))
+
+    #TODO
+    def sendCmd(self, request):
+        #
+        try:
+            #
+            if request['command'] == 'image':
+                True
+            else:
+                code = self.commands[request['command']]
+                STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
+                          '<envelope>' +
+                          '<api type="command">' +
+                          '<name>HandleKeyInput</name>' +
+                          '<value>{value}</value>' +
+                          '</api>' +
+                          '</envelope>').format(value=code)
+                headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
+                           'content-type': 'text/xml; charset=utf-8'}
+                cmd = request['command']
+                #
+                url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(),
+                                                              port=str(self._port()),
+                                                              uri=str(self.STRtv_PATHcommand))
+                r = requests.post(url,
+                                  STRxml,
+                                  headers=headers)
+                print_command('command', self._type_name(), url, r.status_code)
+                #
+                response = (r.status_code == requests.codes.ok)
+                print_command (cmd, self._type_name(), self._ipaddress(), response)
+                return response
+                #
+        except:
+            print_command (request['command'], self._type_name(), self._ipaddress(), "ERROR: Exception encountered")
+            return False
+
+
+
+    #TODO - the following is still be worked on. Code is based on http://deneb.homedns.org/things/?p=232
+
+    # What the iPhone app reports
+    appstring = "iphone..iapp.samsung"
+    # Might need changing to match your TV type
+    tvappstring = "iphone.UE55C8000.iapp.samsung"
+    # What gets reported when it asks for permission
+    remotename = "Python Samsung Remote"
+
+
+    def sendCmd_new(self, cmd):
+        #
+        myip = socket.gethostbyname(socket.gethostname())
+        mymac = ':'.join(("%012X" % get_mac())[i:i+2] for i in range(0, 12, 2))
+        #
+        _skey = code = self.commands[cmd]
+        #
+        # Open Socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((self._ipaddress(), 55000))
+        #
+        # First configure the connection
+        ipencoded = base64.b64encode(myip)
+        macencoded = base64.b64encode(self.mymac)
+        messagepart1 = chr(0x64) + chr(0x00) + chr(len(ipencoded)) \
+                       + chr(0x00) + ipencoded + chr(len(macencoded)) + chr(0x00) \
+                       + macencoded + chr(len(base64.b64encode(self.remotename))) + chr(0x00) \
+                       + base64.b64encode(self.remotename)
+        #
+        part1 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart1)) + chr(0x00) + messagepart1
+        sock.send(part1)
+        #
+        messagepart2 = chr(0xc8) + chr(0x00)
+        part2 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart2)) + chr(0x00) + messagepart2
+        sock.send(part2)
+        #
+        messagepart3 = chr(0x00) + chr(0x00) + chr(0x00) + chr(len(base64.b64encode(_skey))) + chr(0x00) + base64.b64encode(_skey)
+        part3 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart3)) + chr(0x00) + messagepart3
+        sock.send(part3)
+        #
+        sock.close()
+
+
+
+    commands = {"power": "KEY_POWEROFF",
+                "0": "KEY_0",
+                "1": "KEY_1",
+                "2": "KEY_2",
+                "3": "KEY_3",
+                "4": "KEY_4",
+                "5": "KEY_5",
+                "6": "KEY_6",
+                "7": "KEY_7",
+                "8": "KEY_8",
+                "9": "KEY_9",
+                "aspect": "KEY_ASPECT",
+                "ratio43": "KEY_4_3",
+                "ratio169": "KEY_16_9",
+                "applist": "KEY_APP_LIST",
+                "av1": "KEY_AV1",
+                "av2": "KEY_AV2",
+                "av3": "KEY_AV3",
+                "component1": "KEY_COMPONENT1",
+                "component2": "KEY_COMPONENT2",
+                "hdmi": "KEY_HDMI",
+                "hdmi1": "KEY_HDMI1",
+                "hdmi2": "KEY_HDMI2",
+                "hdmi3": "KEY_HDMI3",
+                "hdmi4": "KEY_HDMI4",
+                "up": "KEY_UP",
+                "down": "KEY_DOWN",
+                "left": "KEY_LEFT",
+                "right": "KEY_RIGHT",
+                "enter": "KEY_ENTER",
+                "home": "KEY_HOME",
+                "menu": "KEY_MENU",
+                "tools": "KEY_TOOLS",
+                "clear": "KEY_CLEAR",
+                "return": "KEY_RETURN",
+                "volup": "KEY_UP",
+                "voldown": "KEY_VOLDOWN",
+                "mute": "KEY_MUTE",
+                "chanup": "KEY_CHUP",
+                "chandown": "KEY_CHDOWN",
+                "blue": "KEY_CYAN",
+                "green": "KEY_GREEN",
+                "red": "KEY_RED",
+                "yellow": "KEY_YELLOW",
+                "play": "KEY_PLAY",
+                "pause": "KEY_PAUSE",
+                "stop": "KEY_STOP",
+                "rewind": "KEY_REWIND",
+                "record": "KEY_REC"}

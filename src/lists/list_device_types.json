@@ -25,6 +25,18 @@
         "type": "tv_lg_netcast",
         "port": 8080
     },
+    "tv_samsung": {
+        "settings_dict": {
+            "ipaddress": "",
+            "name": ""
+        },
+        "html_settings": "",
+        "name": "Samsung TV",
+        "html_command": "object_device_tv_samsung.html",
+        "logo": "logo_samsung.png",
+        "type": "tv_samsung",
+        "port": 55000
+    },
     "nest_account": {
         "settings_dict": {
             "pincode": ""
@@ -40,29 +52,5 @@
         "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI",
         "logo": "logo_nest_blue.png",
         "type": "nest_account"
-    },
-    "xboxone": {
-        "settings_dict": {},
-        "html_settings": "",
-        "name": "Xbox One",
-        "html_command": "object_device_xboxone.html",
-        "logo": "logo_xboxone.png",
-        "type": "xboxone"
-    },
-    "raspberrypi": {
-        "settings_dict": {},
-        "html_settings": "",
-        "name": "Raspberry Pi",
-        "html_command": "object_device_raspberrypi.html",
-        "logo": "logo_raspberrypi.png",
-        "type": "raspberrypi"
-    },
-    "other": {
-        "settings_dict": {},
-        "html_settings": "",
-        "name": "Other",
-        "html_command": "object_device_other.html",
-        "logo": "logo_other.png",
-        "type": "other"
     }
 }
