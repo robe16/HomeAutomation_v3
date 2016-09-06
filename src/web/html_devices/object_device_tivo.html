@@ -233,11 +233,16 @@
         <br>
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="row">
-                    <h4 class="chan_header">Recorded Shows</h4>
-                </div>
-                <div id="tivo_recordings">
-                    {html_recordings}
+                <div class="container-fluid">
+                    <div class="row">
+                        <h4 class="chan_header">Recorded Shows</h4>
+                    </div>
+                    <div id="tivo_recordings">
+                        {html_recordings}
+                    </div>
+                    <div class="row" style="text-align: right;">
+                        <p>Last updated {timestamp_recordings}</p>
+                    </div>
                 </div>
             </div>
         </div>

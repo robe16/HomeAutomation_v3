@@ -1,4 +1,5 @@
 from urllib import urlopen
+import threading
 import requests as requests
 from requests.auth import HTTPDigestAuth
 import xml.etree.ElementTree as ET
@@ -18,6 +19,9 @@ import cfg
 class object_tivo:
 
     def __init__(self, grp_num, dvc_num, q_dvc, queues):
+        #
+        self._active = True
+        #
         self._type = "tivo"
         self._grp_num = grp_num
         self._dvc_num = dvc_num
@@ -27,8 +31,25 @@ class object_tivo:
         self._q_response_cmd = queues[cfg.key_q_response_command]
         self._q_tvlistings = queues[cfg.key_q_tvlistings]
         #
-        self._active = True
+        self.recordings_timestamp = False
+        self.recordings_folders = False
+        self.recordings_files = False
+        t = threading.Thread(target=self.get_recordings, args=())
+        t.daemon = True
+        t.start()
+        #
         self.run()
+
+
+    def get_recordings(self):
+        while self._active:
+            self.recordings_timestamp = datetime.datetime.now()
+            self.recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+            self.recordings_files = self._retrieve_recordings('Yes').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+            print_msg('TV recording information retrieved - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
+                                                                                                             dvc_num=self._dvc_num,
+                                                                                                             type=self._type))
+            time.sleep(600) # 600 = 10 minutes
 
 
     def run(self):
@@ -37,7 +58,7 @@ class object_tivo:
                 # Keep in a loop
                 '''
                     Use of self._active allows for object to close itself, however may wish
-                    to take different approach of terminting the thread the object loop resides in
+                    to take different approach of terminating the thread the object loop resides in
                 '''
                 time.sleep(0.1)
                 qItem = self._getFromQueue()
@@ -92,31 +113,35 @@ class object_tivo:
 
     def sendCmd(self, request):
         #
-        code = False
-        response = False
-        #
-        if request['command'] == 'getHtml_recordings':
-            response = self._getHtml_recordings()
-        elif request['command'] == 'getchannel':
-            response = self._getChan()
-        elif request['command'] == 'channel':
-            response = self._send_telnet(ipaddress=self._ipaddress(),
-                                         port=self._port(),
-                                         data=("SETCH {}\r").format(request['chan']),
-                                         response=True)
-            if response.startswith('CH_FAILED'):
-                print_command('channel', self._type_name(), self._ipaddress(), response)
-                return False
-        elif request['command'] == 'command':
-            code = self.commands[request['code']]
-            try:
-                response = self._send_telnet(self._ipaddress(), self._port(), data=code)
-            except:
-                response = False
-        #
-        x = request['code'] if code else request['command']
-        print_command (x, self._type_name(), self._ipaddress(), response)
-        return response
+        try:
+            code = False
+            response = False
+            #
+            if request['command'] == 'getHtml_recordings':
+                response = self._getHtml_recordings()
+            elif request['command'] == 'getchannel':
+                response = self._getChan()
+            elif request['command'] == 'channel':
+                response = self._send_telnet(ipaddress=self._ipaddress(),
+                                             port=self._port(),
+                                             data=("SETCH {}\r").format(request['chan']),
+                                             response=True)
+                if response.startswith('CH_FAILED'):
+                    print_command('channel', self._type_name(), self._ipaddress(), response)
+                    return False
+            elif request['command'] == 'command':
+                code = self.commands[request['code']]
+                try:
+                    response = self._send_telnet(self._ipaddress(), self._port(), data=code)
+                except:
+                    response = False
+            #
+            x = request['code'] if code else request['command']
+            print_command (x, self._type_name(), self._ipaddress(), response)
+            return response
+        except:
+            print_command('channel', self._type_name(), self._ipaddress(), 'ERROR')
+            return False
 
     def getHtml(self, user=False, listings=None):
         #
@@ -143,10 +168,16 @@ class object_tivo:
                               "else {setTimeout(function () {checkRecordings(" + url + ");}, 5000);}" + "}" + \
                           "</script>"
         #
+        if self.recordings_timestamp:
+            recordings_datetime = self.recordings_timestamp.strftime('%d/%m/%Y %H:%M:%S')
+        else:
+            recordings_datetime = ''
+        #
         return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._grp_num,
                                                                                       device=self._dvc_num,
-                                                                                      html_recordings = html_recordings,
-                                                                                      html_channels = html_channels)
+                                                                                      html_recordings=html_recordings,
+                                                                                      timestamp_recordings=recordings_datetime,
+                                                                                      html_channels=html_channels)
 
     def getHtml_settings(self, grp_num, dvc_num):
         html_file = get_device_html_settings(self._type)
@@ -162,13 +193,14 @@ class object_tivo:
     def _getHtml_recordings(self):
         #
         try:
-            recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-            recordings_files = self._retrieve_recordings('Yes').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+            # self.recordings_timestamp = datetime.datetime.now()
+            # self.recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+            # self.recordings_files = self._retrieve_recordings('Yes').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
             #
             series = []
             # Run through items in 'folders' xml and identify group/series names, adding to the series[] variable
-            if recordings_folders:
-                xml_folders = ET.fromstring(recordings_folders)
+            if self.recordings_folders:
+                xml_folders = ET.fromstring(self.recordings_folders)
                 for item in xml_folders.iter('Item'):
                     details = item.find('Details')
                     # details.find('ContentType').text == 'x-tivo-container/folder'
@@ -184,8 +216,8 @@ class object_tivo:
                     seriesdrop_html[title] = ''
             #
             # Run through items in 'files' xml and commence building html
-            if recordings_files:
-                xml_files = ET.fromstring(recordings_files)
+            if self.recordings_files:
+                xml_files = ET.fromstring(self.recordings_files)
                 #
                 # Run through individual items
                 for item in xml_files.iter('Item'):
@@ -232,7 +264,7 @@ class object_tivo:
                     #
                 #
                 # Run through each item in series_html and add to master html_recordings
-                html_recordings = '<div class="container-fluid"><div class="row">'
+                html_recordings = '<div class="row">'
                 html_recordings += '<div class="col-xs-10"><h5>Title</h5></div>'
                 html_recordings += '<div class="col-xs-2" style="text-align: right;"><h5>#</h5></div>'
                 html_recordings += '</div>'
@@ -244,7 +276,6 @@ class object_tivo:
                     html_recordings += '</div>'
                     html_recordings += '<div class="row collapse out" id="collapse_series{count}"><div class="container-fluid">{drop}</div></div>'.format(count=count, drop=seriesdrop_html[title])
                     count += 1
-                html_recordings += '</div>'
                 #
                 return html_recordings
             else:
