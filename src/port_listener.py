@@ -46,7 +46,7 @@ def web_login():
         return HTTPResponse(body=create_login(), status=200)
     else:
         response.set_cookie('user', user, path='/', secret=None)
-        return redirect('/web/home')
+        return redirect('/web/')
 
 
 @get('/web/logout')
