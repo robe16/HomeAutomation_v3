@@ -33,8 +33,8 @@ class object_tv_lg_netcast:
             while self._active:
                 # Keep in a loop
                 '''
-                    Use of self._active allows for object to close itself, however may wish
-                    to take different approach of terminting the thread the object loop resides in
+                Use of self._active allows for object to close itself, however may wish
+                to take different approach of terminting the thread the object loop resides in
                 '''
                 time.sleep(0.1)
                 qItem = self._getFromQueue()
@@ -85,7 +85,7 @@ class object_tv_lg_netcast:
 
     def _pairDevice(self):
         #
-        STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey, str(self._port()))
+        STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey(), str(self._port()))
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
                    'content-type': 'text/xml; charset=utf-8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=str(self.STRtv_PATHpair))
