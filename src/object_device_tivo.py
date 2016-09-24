@@ -298,8 +298,9 @@ class object_tivo:
                     html_recordings += '<div class="col-xs-10"><h5>{title}</h5></div>'.format(title=title)
                     if series_type[title]=='series':
                         html_recordings += '<div class="col-xs-2" style="text-align: right;"><h6>{count}</h6></div>'.format(count=series_count[title])
-                    elif series_type[title]=='movie':
-                        html_recordings += '<div class="col-xs-2" style="text-align: right; padding: 5px;"><img style="height: 25px;" src="/img/movie_rating/BBFC_{rating}.png"/></div>'.format(rating=movie_rating[title])
+                    # TODO Movie age rating image removed as uses key as opposed to actual age rating in xml
+                    # elif series_type[title]=='movie':
+                    #     html_recordings += '<div class="col-xs-2" style="text-align: right; padding: 5px;"><img style="height: 25px;" src="/img/movie_rating/BBFC_{rating}.png"/></div>'.format(rating=movie_rating[title])
                     else:
                         html_recordings += '<div class="col-xs-2" style="text-align: right;"></div>'
                     html_recordings += '</div>'
