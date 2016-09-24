@@ -43,6 +43,11 @@ class object_tivo:
 
     def get_recordings(self):
         while self._active:
+            # Reset values
+            self.recordings_timestamp = False
+            self.recordings_folders = False
+            self.recordings_files = []
+            #
             self.recordings_timestamp = datetime.datetime.now()
             self.recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
             #self.recordings_files = self._retrieve_recordings('Yes', itemCount='&ItemCount=50').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
