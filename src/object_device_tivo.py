@@ -261,7 +261,7 @@ class object_tivo:
                             img = False
                         #
                         try:
-                            desc = '<div class="row"><div class="col-xs-12"><p>{desc}</p></div></div>'.format(desc=item.find('Description').text)
+                            desc = desc=item.find('Description').text
                         except Exception as e:
                             desc = ''
                         #
@@ -269,9 +269,16 @@ class object_tivo:
                             date = int(item.find('CaptureDate').text, 0)
                             date = datetime.datetime.fromtimestamp(date)
                             date = date.strftime('%d-%m-%Y')
-                            date = '<div class="row"><div class="col-xs-12"><p>{date}</p></div></div>'.format(date=date)
                         except Exception as e:
                             date = '-'
+                        #
+                        try:
+                            episodenumber = item.find('EpisodeNumber').text
+                            se = episodenumber[:-2]
+                            ep = episodenumber[-2:]
+                            episodenumber = 'Series {se} Episode {ep}'.format(se=se,ep=ep)
+                        except:
+                            episodenumber = ''
                         #
                         if item.find('ProgramId').text.startswith('EP'):
                             series_type[item.find('Title').text] = 'tv'
@@ -282,15 +289,14 @@ class object_tivo:
                             series_type[item.find('Title').text] = '-'
                         #
                         seriesdrop_html[item.find('Title').text] += '<div class="row">'
-                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-9">'
-                        seriesdrop_html[item.find('Title').text] += '<h5>{ep_title}</h5>'.format(ep_title=ep_title)
+                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-9"><h5>{ep_title}</h5></div>'.format(ep_title=ep_title)
+                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-3" style="text-align: right;">{img}</div>'.format(img=img)
                         seriesdrop_html[item.find('Title').text] += '</div>'
-                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-3" style="text-align: right;">'
-                        seriesdrop_html[item.find('Title').text] += '{img}'.format(img=img)
+                        seriesdrop_html[item.find('Title').text] += '<div class="row"><div class="col-xs-12"><p>{desc}</p></div></div>'.format(desc=desc)
+                        seriesdrop_html[item.find('Title').text] += '<div class="row" style="margin-bottom: 20px">'
+                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-6"><p>{episodenumber}</p></div>'.format(episodenumber=episodenumber)
+                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-6" align="right"><p>{date}</p></div>'.format(date=date)
                         seriesdrop_html[item.find('Title').text] += '</div>'
-                        seriesdrop_html[item.find('Title').text] += '</div>'
-                        seriesdrop_html[item.find('Title').text] += '{desc}'.format(desc=desc)
-                        seriesdrop_html[item.find('Title').text] += '{date}'.format(date=date)
                 #
                 # Run through each item in series_html and add to master html_recordings
                 html_recordings = '<div class="row">'
@@ -300,6 +306,13 @@ class object_tivo:
                 count = 0
                 for title in series:
                     html_recordings += '<div class="row btn-col-grey btn_pointer" style="margin-bottom: 5px;" data-toggle="collapse" data-target="#collapse_series{count}">'.format(count=count)
+                    #
+                    # Based Bootstrap's Scaffolding (12-column grid)
+                    # | (9) Title | (2) Number of episodes | (1) Movie/TV Image |
+                    # | (9) Episode title | (3) Channel logo |
+                    # | (12) Description |
+                    # | (6) Series & Episode number | (6) Recording date |
+                    #
                     html_recordings += '<div class="col-xs-9"><h5>{title}</h5></div>'.format(title=title)
                     #
                     if series_type[title]=='tv':
