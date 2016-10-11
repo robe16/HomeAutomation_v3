@@ -138,3 +138,59 @@ def get_channel_item_image_from_devicekey(device_type, device_key):
         return False
     except:
         return False
+
+
+def get_channel_name_from_devicekey(device_type, channo):
+    try:
+        #
+        categories = get_channel_categories()
+        #
+        data = read_list_channels()
+        cat_chans = data['channels']
+        #
+        for cat in categories:
+            chans = cat_chans[cat]
+            #
+            for chan in chans:
+                try:
+                    if chan['sd']['devicekeys'][device_type] == channo:
+                        return chan['name']
+                except:
+                    True
+                try:
+                    if chan['hd']['devicekeys'][device_type] == channo:
+                        return chan['name']
+                except:
+                    True
+            #
+        return '-'
+    except:
+        return 'error'
+
+
+def get_channel_logo_from_devicekey(device_type, channo):
+    try:
+        #
+        categories = get_channel_categories()
+        #
+        data = read_list_channels()
+        cat_chans = data['channels']
+        #
+        for cat in categories:
+            chans = cat_chans[cat]
+            #
+            for chan in chans:
+                try:
+                    if chan['sd']['devicekeys'][device_type] == channo:
+                        return chan['sd']['logo']
+                except:
+                    True
+                try:
+                    if chan['hd']['devicekeys'][device_type] == channo:
+                        return chan['hd']['logo']
+                except:
+                    True
+            #
+        return '-'
+    except:
+        return 'error'

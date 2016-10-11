@@ -249,6 +249,18 @@
     </div>
     <br>
     <div class="col-md-6" style="padding: 10px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-11">
+                    <h5 style="display: inline-block; margin-right: 2px;">Currently viewing:</h5>
+                    <img id="now_viewing_logo" src="/img/channel/{now_viewing_logo}" style="height: 15px;"/>
+                    <p id="now_viewing" style="display: inline;">{now_viewing}</p>
+                </div>
+                <div class="col-xs-1">
+                    <img src="/img/icon/ic_refresh.png" style="height: 20px; margin-top: 10px; margin-bottom: 10px; cursor: pointer;" onclick="getChannel('{now_viewing_refresh_url}', false)"/>
+                </div>
+            </div>
+        </div>
         {html_channels}
     </div>
 </div>

@@ -8,7 +8,7 @@ import datetime
 import time
 from config_devices import get_device_config_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-from list_channels import get_channel_item_image_from_devicekey
+from list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
 from web_tvchannels import html_channels_user_and_all
 from console_messages import print_command, print_error, print_msg
 from tvlisting_getfromqueue import _check_tvlistingsqueue
@@ -153,7 +153,15 @@ class object_tivo:
             #     response = self._getHtml_recordings()
             # el
             if request['command'] == 'getchannel':
-                response = self._getChan()
+                chan_no = self._getChan()
+                if bool(chan_no):
+                    chan_name = get_channel_name_from_devicekey(self._type, chan_no)
+                    chan_logo = get_channel_logo_from_devicekey(self._type, chan_no)
+                    response = '{"chan_no": ' + str(chan_no) + ', ' + \
+                               '"chan_name": "' + chan_name + '", ' + \
+                               '"chan_logo": "' + chan_logo + '"}'
+                else:
+                    response = False
             elif request['command'] == 'channel':
                 response = self._send_telnet(ipaddress=self._ipaddress(),
                                              port=self._port(),
@@ -173,7 +181,7 @@ class object_tivo:
             print_command (x, self._type_name(), self._ipaddress(), response)
             return response
         except:
-            print_command('channel', self._type_name(), self._ipaddress(), 'ERROR')
+            print_command(request['command'], self._type_name(), self._ipaddress(), 'ERROR')
             return False
 
     def getHtml(self, user=False, listings=None):
@@ -188,6 +196,11 @@ class object_tivo:
                                                    chan_current=chan_current,
                                                    package=["virginmedia_package", self._package()])
         #
+        now_viewing = get_channel_name_from_devicekey(self._type, chan_current)
+        now_viewing_logo = get_channel_logo_from_devicekey(self._type, chan_current)
+        #
+        now_viewing_refresh_url = '/command/device/' + str(self._grp_num) + '/' + str(self._dvc_num) + '?command=getchannel'
+        #
         if self.recordings_timestamp:
             recordings_datetime = self.recordings_timestamp.strftime('%d/%m/%Y %H:%M:%S')
         else:
@@ -197,6 +210,9 @@ class object_tivo:
                                                                                       device=self._dvc_num,
                                                                                       html_recordings=self._getHtml_recordings(),
                                                                                       timestamp_recordings=recordings_datetime,
+                                                                                      now_viewing_logo=now_viewing_logo,
+                                                                                      now_viewing=now_viewing,
+                                                                                      now_viewing_refresh_url=now_viewing_refresh_url,
                                                                                       html_channels=html_channels)
 
     def getHtml_settings(self, grp_num, dvc_num):
