@@ -172,7 +172,8 @@ def get_resource(folder, filename):
 # Handle commands
 ################################################################################################
 
-@route('/command/device/<grp_num>/<dvc_num>') #done as 'route' as both get and post accepted
+@get('/command/device/<grp_num>/<dvc_num>')
+@post('/command/device/<grp_num>/<dvc_num>')
 def send_command(grp_num=False, dvc_num=False):
     #
     try:
