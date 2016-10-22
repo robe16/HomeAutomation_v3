@@ -25,6 +25,9 @@ class object_tv_lg_netcast:
         self._grp_num = grp_num
         self._dvc_num = dvc_num
         #
+        self.is_paired = False
+        self._pairDevice()
+        #
         self._queue = q_dvc
         self._q_response_web = queues[cfg.key_q_response_web_device]
         self._q_response_cmd = queues[cfg.key_q_response_command]
@@ -73,6 +76,7 @@ class object_tv_lg_netcast:
             #
             ############
             #
+            # Potential to convert xml into array/list here instead of within HTML cration def
             #
             ############
             #
@@ -105,12 +109,6 @@ class object_tv_lg_netcast:
     def _type_name(self):
         return get_device_name(self._type)
 
-    def _get_paired(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, 'paired')
-
-    def _set_paired(self, status):
-        set_device_config_detail(self._grp_num, self._dvc_num, 'paired', status)
-
     def _pairDevice(self):
         #
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey(), str(self._port()))
@@ -124,19 +122,19 @@ class object_tv_lg_netcast:
         print_command('pairDevice', self._type_name(), url, r.status_code)
         #
         r_pass = True if r.status_code == requests.codes.ok else False
-        self._set_paired(r_pass)
+        self.is_paired = r_pass
         #
         return r_pass
 
     def _check_paired(self):
-        if not self._get_paired():
+        if not self.is_paired:
             count = 0
             while count < 2:
                 self._pairDevice()
-                if self._get_paired():
+                if self.is_paired:
                     return True
                 count+=1
-            if count==5 and not self._get_paired():
+            if count==5 and not self.is_paired:
                 return False
         return True
 
@@ -240,7 +238,7 @@ class object_tv_lg_netcast:
             print_command('getApplist', self._type_name(), url, r.status_code)
             #
             if not r.status_code == requests.codes.ok:
-                self._set_paired(False)
+                self.is_paired = False
                 if not self._check_paired():
                     return False
                 r = requests.post(url, headers=headers)
@@ -360,7 +358,7 @@ class object_tv_lg_netcast:
                 print_command('command', self._type_name(), url, r.status_code)
                 #
                 if not r.status_code == requests.codes.ok:
-                    self._set_paired(False)
+                    self.is_paired = False
                     if not self._check_paired():
                         return False
                     r = requests.post(url,
