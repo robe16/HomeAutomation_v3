@@ -1,6 +1,8 @@
 from urllib import urlopen
+import threading
 import xml.etree.ElementTree as ET
 import requests as requests
+import datetime
 import time
 from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
 from config_devices import get_device_config_detail, set_device_config_detail
@@ -16,6 +18,9 @@ class object_tv_lg_netcast:
     STRtv_PATHquery = "/udap/api/data"
 
     def __init__ (self, grp_num, dvc_num, q_dvc, queues):
+        #
+        self._active = True
+        #
         self._type = "tv_lg_netcast"
         self._grp_num = grp_num
         self._dvc_num = dvc_num
@@ -25,33 +30,56 @@ class object_tv_lg_netcast:
         self._q_response_cmd = queues[cfg.key_q_response_command]
         self._q_tvlistings = queues[cfg.key_q_tvlistings]
         #
-        self._active = True
+        self.apps_timestamp = False
+        self.apps_xml = False
+        self.apps_list = []
+        t = threading.Thread(target=self.get_apps, args=())
+        t.daemon = True
+        t.start()
+        #
         self.run()
 
     def run(self):
-            time.sleep(5)
-            while self._active:
-                # Keep in a loop
-                '''
-                Use of self._active allows for object to close itself, however may wish
-                to take different approach of terminting the thread the object loop resides in
-                '''
-                time.sleep(0.1)
-                qItem = self._getFromQueue()
-                if bool(qItem):
-                    if qItem['response_queue'] == 'stop':
-                        self._active = False
-                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
-                        self._q_response_web.put(self.getHtml())
-                    elif qItem['response_queue'] == cfg.key_q_response_command:
-                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
-                    else:
-                        # Code to go here to handle other items added to the queue!!
-                        True
-                    self._queue.task_done()
-            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
-                                                                                         dvc_num=self._dvc_num,
-                                                                                         type=self._type))
+        time.sleep(5)
+        while self._active:
+            # Keep in a loop
+            '''
+            Use of self._active allows for object to close itself, however may wish
+            to take different approach of terminting the thread the object loop resides in
+            '''
+            time.sleep(0.1)
+            qItem = self._getFromQueue()
+            if bool(qItem):
+                if qItem['response_queue'] == 'stop':
+                    self._active = False
+                elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                    self._q_response_web.put(self.getHtml())
+                elif qItem['response_queue'] == cfg.key_q_response_command:
+                    self._q_response_cmd.put(self.sendCmd(qItem['request']))
+                else:
+                    # Code to go here to handle other items added to the queue!!
+                    True
+                self._queue.task_done()
+        print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
+                                                                                     dvc_num=self._dvc_num,
+                                                                                     type=self._type))
+
+    def get_apps(self):
+        while self._active:
+            # Reset values
+            self.apps_timestamp = datetime.datetime.now()
+            self.apps_xml = self._getApplist()
+            #self.apps_list = []
+            #
+            ############
+            #
+            #
+            ############
+            #
+            print_msg('TV Apps list retrieved - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
+                                                                                                 dvc_num=self._dvc_num,
+                                                                                                 type=self._type))
+            time.sleep(600) # 600 = 10 minutes
 
     def _getFromQueue(self):
         if not self._queue.empty():
@@ -149,11 +177,15 @@ class object_tv_lg_netcast:
         #
         if not self._check_paired():
             return '<p style="text-align:center">App list could not be retrieved from the device.</p>'+\
-                   '<p style="text-align:center">Please check it is turned on and then try again.</p>'
+                   '<p style="text-align:center">Please check the TV is turned on and then try again.</p>'
         #
-        applist = self._getApplist()
+        #applist = self._getApplist()
+        applist = self.apps_xml
         #
-        if applist:
+        if not applist:
+            return '<p style="text-align:center">App list could has not been retrieved from the device.</p>'+\
+                   '<p style="text-align:center">Please check the TV is turned on and then try again.</p>'
+        else:
             #
             html = '<table style="width:100%">' +\
                    '<tr style="height:80px; padding-bottom:2px; padding-top:2px">'
@@ -190,8 +222,6 @@ class object_tv_lg_netcast:
             #
             html += '</table></div>'
             return html
-        else:
-            return ''
 
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         try:
