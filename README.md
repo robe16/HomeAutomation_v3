@@ -1,4 +1,4 @@
-# HomeAutomation v3
+# Home Control - Server
 
 Written in a server-client format with the intention to have the server side being run 24/7 on a Raspberry Pi, while seperate clients can be written for different devices and systems.
 
