@@ -5,11 +5,10 @@ import random
 import os
 import json
 import time
-from send_cmds import sendHTTP
+import requests as requests
 from console_messages import print_command, print_error, print_msg
-from config_devices import get_device_config_detail
+from config_devices import get_device_config_detail, set_device_config_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-from list_devices import set_device_detail
 import cfg
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
@@ -31,6 +30,16 @@ class object_nest_account:
         self._type = 'nest_account'
         self._grp_num = grp_num
         self._dvc_num = dvc_num
+        #
+        self._token = ''
+        self._tokenexpiry = ''
+        self._pincode = ''
+        self._state = ''
+        self._getConfig()
+        #
+        self._tokencheck()
+        #
+        self._redirect_url = ''
         #
         self._queue = q_dvc
         self._q_response_web = queues[cfg.key_q_response_web_device]
@@ -84,11 +93,11 @@ class object_nest_account:
     def _pincode(self):
         return get_device_config_detail(self._grp_num, self._dvc_num, "pincode")
 
-    def _state(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "state")
+    def _clientid(self):
+        return get_device_detail(self._type, 'client_id')
 
-    def _token(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "token")
+    def _clientsecret(self):
+        return get_device_detail(self._type, 'client_secret')
 
     def getHtml(self):
         #
@@ -342,17 +351,17 @@ class object_nest_account:
         randomstring = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
         #
         try:
-            tokexp = self._tokenexpiry().strftime(self._dateformat)
+            tokexp = self._tokenexpiry.strftime(self._dateformat)
         except:
             tokexp = ''
         #
         if html:
             return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
                                                                                               name = self._dvc_name(),
-                                                                                              pincode = self._pincode(),
+                                                                                              pincode = self._pincode,
                                                                                               clientid = get_device_detail(self._type, 'client_id'),
                                                                                               state = randomstring,
-                                                                                              token = self._token(),
+                                                                                              token = self._token,
                                                                                               tokenexpiry = tokexp,
                                                                                               dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
         else:
@@ -368,6 +377,7 @@ class object_nest_account:
                 print_error('Nest command could not be sent - error encountered with retrieving new authorisation code')
                 return False
             #
+            #TODO - possibly update to remove request and set as json payload
             nest_model = request.query.nest_model or False
             nest_device_id = request.query.nest_device_id or False
             nest_device = request.query.nest_device or False
@@ -388,7 +398,8 @@ class object_nest_account:
             return False
 
     def _tokencheck(self):
-        if bool(self._pincode()):
+        print_msg('Nest - Checking Auth Token')
+        if bool(self._pincode):
             if self._checkToken():
                 return True
             else:
@@ -396,67 +407,60 @@ class object_nest_account:
         else:
             return False
 
-    def _tokenexpiry(self):
-        try:
-            return datetime.datetime.strptime(get_device_config_detail(self._grp_num, self._dvc_num, "tokenexpiry"), self._dateformat)
-        except:
-            return False
-
     def _checkToken(self):
-        return datetime.datetime.now() < self._tokenexpiry() if bool(self._tokenexpiry()) else False
+        return datetime.datetime.now() < self._tokenexpiry if bool(self._tokenexpiry) else False
 
     def _getNewToken(self):
-        url = (self.nesturl_tokenexchange).format(authcode=self._pincode(),
-                                                  clientid=get_device_detail(self._type, 'client_id'),
-                                                  clientsecret=get_device_detail(self._type, 'client_secret'))
         #
-        response = sendHTTP(url, 'close', method='POST')
+        url = 'https://api.home.nest.com/oauth2/access_token'
+        payload = 'code=' + self._pincode + \
+                  '&client_id=' + self._clientid() + \
+                  '&client_secret=' + self._clientsecret() + \
+                  '&grant_type=authorization_code'
         #
-        if isinstance(response, bool):
-            print_error('Nest auth code not received by Nest server')
+        headers = {'Connection': 'close',
+                   'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
+        #
+        r = requests.post(url,
+                          data=payload,
+                          headers=headers)
+        #
+        if r.status_code != requests.codes.ok:
+            print_error('Nest - Auth code not received by Nest server')
             return False
         #
         try:
-            response = response.read()
+            response = r.content
         except Exception as e:
-            print_error('Nest auth code not received by Nest server - ' + str(e))
+            print_error('Nest - Auth code not received by Nest server - ' + str(e))
             return False
         #
         if response:
             try:
                 data = json.loads(response)
             except Exception as e:
-                print_error('Nest auth code not processed into json object - ' + str(e))
+                print_error('Nest - Auth code not processed into json object - ' + str(e))
                 return False
             #
-            self._updateConfig(data['access_token'],
-                               datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in']),
-                               self._pincode(),
-                               get_device_config_detail(self._grp_num, self._dvc_num, "state"))
+            exp = datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in'])
+            #
+            set_device_config_detail(self._grp_num, self._dvc_num, 'token', data['access_token'])
+            set_device_config_detail(self._grp_num, self._dvc_num, 'tokenexpiry', exp)
+            #
+            self._token = data['access_token']
+            self._tokenexpiry = exp
+            #
+            print_msg('Nest: Success retrieving new Access Token')
             #
             return True
         else:
             return False
 
-    def _updateConfig(self, token, tokenexpiry, pincode, state):
-        #
-        data = json.load(open(os.path.join('config', 'config_devices.json'), 'r'))
-        #
-        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['token'] = token
-        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['tokenexpiry'] = tokenexpiry
-        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['pincode'] = pincode
-        data[str(self._grp_num)]['devices'][str(self._dvc_num)]['details']['state'] = state
-        #
-        try:
-            #
-            with open(os.path.join('config', 'config_devices.json'), 'w+') as output_file:
-                output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
-                output_file.close()
-            #
-            return True
-        except Exception as e:
-            print_error('Nest token and expiry not saved to config - ' + str(e))
-            return False
+    def _getConfig(self):
+        self._token = get_device_config_detail(self._grp_num, self._dvc_num, "token")
+        self._tokenexpiry = datetime.datetime.strptime(get_device_config_detail(self._grp_num, self._dvc_num, "tokenexpiry"), self._dateformat)
+        self._pincode = get_device_config_detail(self._grp_num, self._dvc_num, "pincode")
+        self._state = get_device_config_detail(self._grp_num, self._dvc_num, "state")
 
     def _read_json_all(self):
         return self._read_nest_json()
@@ -466,7 +470,7 @@ class object_nest_account:
 
     def _read_json_devices(self, device=False, device_id=False):
         if bool(device) and bool(device_id):
-            device_url = '/{device}/{device_id}'.format(device=device, device_id=device_id, redirect_type=self._type)
+            device_url = '/{device}/{device_id}'.format(device=device, device_id=device_id)
         else:
             device_url = ''
         return self._read_nest_json(model='/devices'+device_url)
@@ -476,9 +480,20 @@ class object_nest_account:
 
     def _read_nest_json(self, model=''):
         #
-        response = sendHTTP(self.nesturl_api, 'close', url2=model, header_auth=self._header_token(), redirect_type=self._type)
+        headers = {'Authorization': self._header_token(),
+                   'Connection': 'close',
+                   'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
         #
-        return json.load(response)
+        r = requests.put(self._get_url() + model,
+                         data='',
+                         headers=headers)
+        #
+        if str(r.status_code).startswith('4'):
+            return False
+        elif str(r.status_code).startswith('3'):
+            self._redirect_url = r.url
+        #
+        return json.load(r.content)
 
     def _send_nest_json (self, json_cmd, model, device, id, retry=0):
         #
@@ -487,23 +502,30 @@ class object_nest_account:
         #
         url2 = '/{model}/{device}/{id}'.format(model=model, device=device, id=id)
         #
-        response = sendHTTP(self._get_url(), 'close', url2=url2, method='PUT', header_auth=self._header_token(), data=json.dumps(json_cmd), contenttype='application/json', redirect_type=self._type)
+        headers = {'Authorization': self._header_token(),
+                   'Connection': 'close',
+                   'content-type': 'application/json',
+                   'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
         #
-        if not response and not get_device_detail(self._type, 'redirect_url') == '':
-            # if the command failed and there is redirect url, attempt without the url
-            retry += 1
-            set_device_detail(self._type, 'redirect_url', '')
-            return self._send_nest_json (json_cmd, model, device, id, retry=retry)
-        else:
-            return response
+        r = requests.put(self._get_url() + url2,
+                         data=json.dumps(json_cmd),
+                         headers=headers)
         #
+        if str(r.status_code).startswith('4'):
+            return False
+        elif str(r.status_code).startswith('3'):
+            self._redirect_url = r.url
+        #
+        return json.load(r.content)
 
     def _get_url(self):
         #
-        if get_device_detail(self._type, 'redirect_url') != '':
-            return get_device_detail(self._type, 'redirect_url')
+        if self._redirect_url != '':
+            return self._redirect_url
         else:
             return self.nesturl_api
 
     def _header_token(self):
-        return 'Bearer {authcode}'.format(authcode=self._token())
+        #print('**************** TEST MESSAGE ****************')
+
+        return 'Bearer {authcode}'.format(authcode=self._token)
