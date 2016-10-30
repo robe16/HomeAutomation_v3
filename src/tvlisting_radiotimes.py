@@ -1,11 +1,19 @@
 from datetime import datetime, timedelta
-from send_cmds import sendHTTP
+import requests as requests
 
 
 def getlisting(value):
-    x = sendHTTP('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code=value), 'close',
-                 contenttype='text/xml; charset=utf-8')
-    return x.read() if bool(x) else None
+    #
+    headers = {'Connection': 'close',
+               'content-type': 'text/xml; charset=utf-8'}
+    #
+    r = requests.get('http://xmltv.radiotimes.com/xmltv/{code}.dat'.format(code=value),
+                     headers=headers)
+    #
+    if r.status_code == requests.codes.ok:
+        r.content()
+    else:
+        return None
 
 def nownext(data):
     arr_data_alllines = filter(None, data.split('\n'))
