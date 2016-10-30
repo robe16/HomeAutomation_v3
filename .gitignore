@@ -1,16 +1,11 @@
 # Home Auto configuration file (specific to user setup incl IP addresses etc)
 *.ini
-_test_.py
-_testQ_.py
-_test_cdata.pem
 config_devices.json
-config_devices_new_avrecs.json
-config_nest.json
-config_tvguide.json
 config_users.json
 .idea/*
 
 # Test files for development purposes
+_test_.py
 web_testpage.py
 
 # Byte-compiled / optimized / DLL files

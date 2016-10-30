@@ -1,0 +1,1 @@
+Folder used for server specific json config files
