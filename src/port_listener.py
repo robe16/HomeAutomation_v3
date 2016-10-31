@@ -8,27 +8,76 @@ from bottle import request, run, static_file, HTTPResponse, redirect, response
 import cfg
 
 from config_devices import write_config_devices
-from config_devices import get_group_config_name, get_device_config_name
+from config_devices import get_cfg_structure_name, get_cfg_room_name, get_cfg_device_name, get_cfg_account_name
+from config_devices import get_cfg_structure_index, get_cfg_room_index, get_cfg_device_index, get_cfg_account_index
 from config_users import check_user, get_userrole, update_user_channels
 from web_create_error import create_error
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_create_preferences import create_preference_tvguide
 from web_create_settings import create_settings_devices, settings_devices_requests, create_settings_tvguide
-from web_devices import refresh_tvguide
+# from web_devices import refresh_tvguide
 
 from tvlisting_getfromqueue import _check_tvlistingsqueue
 
 
 ################################################################################################
 
-def start_bottle(port, q_dvcs, queues):
+def start_bottle(port, q_dvcs, q_accs, queues):
     # '0.0.0.0' - all interfaces including the external one
     # 'localhost' - internal interfaces only
     global q_devices
+    global q_accounts
     global q_dict
     q_devices = q_dvcs
+    q_accounts = q_accs
     q_dict = queues
     run_bottle(port)
+
+################################################################################################
+# Provision of server config for clients
+################################################################################################
+
+#TODO
+
+@get('/cfg/structure')
+def cfg_structure():
+    # open config file
+    # run through list and extract rooms and devices
+    # present in json format
+    # return to client
+    return True
+
+'''
+{
+    "structure": {
+        "1": {
+            "room_id": "1",
+            "room_name": "Lounge",
+            "room_name_alt": ["lounge", "living room", "front room"]
+            "devices": {
+                "0": {
+                    "device_id": "0",
+                    "device_type": "tivo",
+                    "device_name": "tivo",
+                    "device_name_alt": ["tivo", "virgin", "virgin media", "set top", "cable"]
+                },
+                "1": {
+                    "device_id": "1",
+                    "device_type": "tv_lg_netcast",
+                    "device_name": "tv",
+                    "device_name_alt": ["tv", "television"]
+                }
+            }
+        },
+        "2": {
+            "room_id": "2",
+            "room_name": "Kitchen",
+            "room_name_alt": ["kitchen"]
+            "devices": {}
+        }
+     }
+ }
+'''
 
 ################################################################################################
 # Web UI
@@ -97,27 +146,33 @@ def web_tvguide():
     return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
 
 
-@get('/web/device/<grp_num>/<dvc_num>')
-def web_devices(grp_num=False, dvc_num=False):
+@get('/web/device/<structure_id>/<room_id>/<device_id>')
+def web_devices(structure_id=False, room_id=False, device_id=False):
+    #
+    if (not structure_id) or (not room_id) or (not device_id):
+        raise HTTPError(404)
+    #
     # Get and check user
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
     #
-    try:
-        grp_num = int(grp_num)
-        dvc_num = int(dvc_num)
-    except:
+    structure_num = get_cfg_structure_index(structure_id)
+    room_num = get_cfg_room_index(structure_id, room_id)
+    device_num = get_cfg_device_index(structure_id, room_id, device_id)
+    #
+    if structure_id == -1 or room_id == -1 or device_id == -1:
         raise HTTPError(404)
     #
     timestamp = datetime.datetime.now()
     queue_item = {'timestamp': timestamp,
                   'response_queue': cfg.key_q_response_web_device,
-                  'grp_num': grp_num,
-                  'dvc_num': dvc_num,
+                  'structure_num': structure_num,
+                  'room_num': room_num,
+                  'device_num': device_num,
                   'user': request.get_cookie('user')}
     #
-    q_devices[grp_num][dvc_num].put(queue_item)
+    q_devices[structure_num][room_num][device_num].put(queue_item)
     #
     time.sleep(0.1)
     #
@@ -125,9 +180,53 @@ def web_devices(grp_num=False, dvc_num=False):
         if not q_dict[cfg.key_q_response_web_device].empty():
             return create_device(user,
                                  q_dict[cfg.key_q_response_web_device].get(),
-                                 '{grp}: {dvc}'.format(grp=get_group_config_name(grp_num),
-                                                       dvc=get_device_config_name(grp_num, dvc_num)),
-                                 get_device_config_name(grp_num, dvc_num))
+                                 '{structure_name}: {room_name}: {device_name}'.format(structure_name=get_cfg_structure_name(structure_id),
+                                                                                       room_name=get_cfg_room_name(structure_id, room_id),
+                                                                                       device_name=get_cfg_device_name(structure_id, room_id, device_id)),
+                                 '{structure_name}: {room_name}: {device_name}'.format(structure_name=get_cfg_structure_name(structure_id),
+                                                                                       room_name=get_cfg_room_name(structure_id, room_id),
+                                                                                       device_name=get_cfg_device_name(structure_id, room_id, device_id)))
+    #
+    raise HTTPError(500)
+
+
+@get('/web/account/<structure_id>/<account_id>')
+def web_accounts(structure_id=False, account_id=False):
+    #
+    if (not structure_id) or (not account_id):
+        raise HTTPError(404)
+    #
+    # Get and check user
+    user = _check_user(request.get_cookie('user'))
+    if not user:
+        redirect('/web/login')
+    #
+    structure_num = get_cfg_structure_index(structure_id)
+    account_num = get_cfg_account_index(structure_id, account_id)
+    #
+    if structure_id == -1 or account_id == -1:
+        raise HTTPError(404)
+    #
+    timestamp = datetime.datetime.now()
+    queue_item = {'timestamp': timestamp,
+                  'response_queue': cfg.key_q_response_web_device,
+                  'structure_num': structure_num,
+                  'account_num': account_num,
+                  'user': request.get_cookie('user')}
+    #
+    q_accounts[structure_num][account_num].put(queue_item)
+    #
+    time.sleep(0.1)
+    #
+    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
+        if not q_dict[cfg.key_q_response_web_device].empty():
+            return create_device(user,
+                                 q_dict[cfg.key_q_response_web_device].get(),
+                                 '{structure_name}: {account_name}'.format(structure_name=get_cfg_structure_name(structure_id),
+                                                                           account_name=get_cfg_account_name(structure_id, account_id)),
+                                 '{structure_name}: {account_name}'.format(structure_name=get_cfg_structure_name(structure_id),
+                                                                           account_name=get_cfg_account_name(structure_id, account_id)))
+    #
     raise HTTPError(500)
 
 
@@ -172,27 +271,73 @@ def get_resource(folder, filename):
 # Handle commands
 ################################################################################################
 
-@get('/command/device/<grp_num>/<dvc_num>')
-@post('/command/device/<grp_num>/<dvc_num>')
-def send_command(grp_num=False, dvc_num=False):
+
+@get('/command/device/<structure_id>/<room_id>/<device_id>')
+@post('/command/device/<structure_id>/<room_id>/<device_id>')
+def send_command_device(structure_id=False, room_id=False, device_id=False):
     #
-    try:
-        grp_num = int(grp_num)
-        dvc_num = int(dvc_num)
-    except:
+    if (not structure_id) or (not room_id) or (not device_id):
         raise HTTPError(404)
     #
     timestamp = datetime.datetime.now()
+    #
+    structure_num = get_cfg_structure_index(structure_id)
+    room_num = get_cfg_room_index(structure_id, room_id)
+    device_num = get_cfg_device_index(structure_id, room_id, device_id)
+    #
+    if structure_id == -1 or room_id == -1 or device_id == -1:
+        raise HTTPError(404)
     #
     cmd_dict = dict(request.query)
     #
     queue_item = {'timestamp': timestamp,
                   'response_queue': cfg.key_q_response_command,
-                  'grp_num': grp_num,
-                  'dvc_num': dvc_num,
+                  'structure_num': structure_num,
+                  'room_num': room_num,
+                  'device_num': device_num,
                   'request': cmd_dict}
     #
-    q_devices[grp_num][dvc_num].put(queue_item)
+    q_devices[structure_num][room_num][device_num].put(queue_item)
+    #
+    time.sleep(0.1)
+    #
+    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
+        if not q_dict[cfg.key_q_response_command].empty():
+            #
+            rsp = q_dict[cfg.key_q_response_command].get()
+            #
+            if isinstance(rsp, bool):
+                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+            else:
+                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+            #
+    raise HTTPError(500)
+
+
+@get('/command/account/<structure_id>/<account_id>')
+@post('/command/account/<structure_id>/<account_id>')
+def send_command_account(structure_id=False, account_id=False):
+    #
+    if (not structure_id) or (not account_id):
+        raise HTTPError(404)
+    #
+    timestamp = datetime.datetime.now()
+    #
+    structure_num = get_cfg_structure_index(structure_id)
+    account_num = get_cfg_account_index(structure_id, account_id)
+    #
+    if structure_id == -1 or account_id == -1:
+        raise HTTPError(404)
+    #
+    cmd_dict = dict(request.query)
+    #
+    queue_item = {'timestamp': timestamp,
+                  'response_queue': cfg.key_q_response_command,
+                  'structure_num': structure_num,
+                  'account_num': account_num,
+                  'request': cmd_dict}
+    #
+    q_devices[structure_num][account_num].put(queue_item)
     #
     time.sleep(0.1)
     #

@@ -7,7 +7,7 @@ import json
 import time
 import requests as requests
 from console_messages import print_command, print_error, print_msg
-from config_devices import get_device_config_detail, set_device_config_detail
+from config_devices import get_cfg_account_detail, set_cfg_account_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 import cfg
 
@@ -26,10 +26,10 @@ class object_nest_account:
     _dateformat = '%d/%m/%Y %H:%M:%S'
     _temp_unit = 'c'
 
-    def __init__ (self, grp_num, dvc_num, q_dvc, queues):
+    def __init__ (self, structure_id, account_id, q_dvc, queues):
         self._type = 'nest_account'
-        self._grp_num = grp_num
-        self._dvc_num = dvc_num
+        self._structure_id = structure_id
+        self._account_id = account_id
         #
         self._token = ''
         self._tokenexpiry = ''
@@ -70,9 +70,9 @@ class object_nest_account:
                     else:
                         # Code to go here to handle other items added to the queue!!
                         True
-            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
-                                                                                         dvc_num=self._dvc_num,
-                                                                                         type=self._type))
+            print_msg('Thread stopped - Structure "{structure_id}" Account "{account_id}": {type}'.format(structure_id=self._structure_id,
+                                                                                                          account_id=self._account_id,
+                                                                                                          type=self._type))
 
     def _getFromQueue(self):
         if not self._queue.empty():
@@ -91,7 +91,7 @@ class object_nest_account:
         return get_device_name(self._type)
 
     def _pincode(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "pincode")
+        return get_cfg_account_detail(self._structure_id, self._account_id, "pincode")
 
     def _clientid(self):
         return get_device_detail(self._type, 'client_id')
@@ -106,14 +106,14 @@ class object_nest_account:
         #
         script = ("\r\n<script>\r\n" +
                   "setTimeout(function () {\r\n" +
-                  "updateNest('/web/device/" + str(self._grp_num) + "/" + str(self._dvc_num) + "?body=true');\r\n" +
+                  "updateNest('/web/account/" + str(self._structure_id) + "/" + str(self._account_id) + "?body=true');\r\n" +
                   "}, 30000);\r\n" +
                   "</script>\r\n")
         #
         timestamp = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         #
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = str(self._grp_num),
-                                                                                 device = str(self._dvc_num),
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(structure_id = str(self._structure_id),
+                                                                                 account_id = str(self._account_id),
                                                                                  timestamp=timestamp,
                                                                                  script=script,
                                                                                  body_nest=body)
@@ -197,8 +197,8 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_therm}'.format(html_therm=html_therm))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           group=str(self._grp_num),
-                                                           device=str(self._dvc_num),
+                                                           structure_id=str(self._structure_id),
+                                                           account_id=str(self._account_id),
                                                            nest_device_id=nest_device_id,
                                                            name=therm_name,
                                                            therm_label=therm_label,
@@ -271,8 +271,8 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_smoke}'.format(html_smoke=html_smoke))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           group=str(self._grp_num),
-                                                           device=str(self._dvc_num),
+                                                           structure_id=str(self._structure_id),
+                                                           account_id=str(self._account_id),
                                                            nest_device_id=nest_device_id,
                                                            name=smoke_name,
                                                            online=smoke_online,
@@ -329,8 +329,8 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_cam}'.format(html_cam=html_cam))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           group=str(self._grp_num),
-                                                           device=str(self._dvc_num),
+                                                           structure_id=str(self._structure_id),
+                                                           account_id=str(self._account_id),
                                                            nest_device_id=nest_device_id,
                                                            name=cam_name,
                                                            color=img_color,
@@ -444,8 +444,8 @@ class object_nest_account:
             #
             exp = datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in'])
             #
-            set_device_config_detail(self._grp_num, self._dvc_num, 'token', data['access_token'])
-            set_device_config_detail(self._grp_num, self._dvc_num, 'tokenexpiry', exp)
+            set_cfg_account_detail(self._structure_id, self._account_id, 'token', data['access_token'])
+            set_cfg_account_detail(self._structure_id, self._account_id, 'tokenexpiry', exp)
             #
             self._token = data['access_token']
             self._tokenexpiry = exp
@@ -457,10 +457,10 @@ class object_nest_account:
             return False
 
     def _getConfig(self):
-        self._token = get_device_config_detail(self._grp_num, self._dvc_num, "token")
-        self._tokenexpiry = datetime.datetime.strptime(get_device_config_detail(self._grp_num, self._dvc_num, "tokenexpiry"), self._dateformat)
-        self._pincode = get_device_config_detail(self._grp_num, self._dvc_num, "pincode")
-        self._state = get_device_config_detail(self._grp_num, self._dvc_num, "state")
+        self._token = get_cfg_account_detail(self._structure_id, self._account_id, "token")
+        self._tokenexpiry = datetime.datetime.strptime(get_cfg_account_detail(self._structure_id, self._account_id, "tokenexpiry"), self._dateformat)
+        self._pincode = get_cfg_account_detail(self._structure_id, self._account_id, "pincode")
+        self._state = get_cfg_account_detail(self._structure_id, self._account_id, "state")
 
     def _read_json_all(self):
         return self._read_nest_json()
@@ -526,6 +526,4 @@ class object_nest_account:
             return self.nesturl_api
 
     def _header_token(self):
-        #print('**************** TEST MESSAGE ****************')
-
         return 'Bearer {authcode}'.format(authcode=self._token)

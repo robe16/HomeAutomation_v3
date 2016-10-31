@@ -1,22 +1,23 @@
 from urllib import urlopen
 from tvlisting import returnnownext
-from config_users import get_userchannels
-from config_devices import get_device_config_detail, get_device_config_type
 from datetime import datetime
+from config_users import get_userchannels
+from config_devices import get_cfg_device_detail, get_cfg_device_type
 
 
-def html_listings_user_and_all (listings, group_name=False, device_name=False, user=False, chan_current=False, package=False):
+def html_listings_user_and_all (listings, structure_id=False, room_id=False, device_id=False, user=False, chan_current=False, package=False):
     #
     html_tvguide = '<p style="text-align: right">Last updated {timestamp}</p>'.format(timestamp=datetime.now().strftime('%d/%m/%Y %H:%M:%S'))
     #
     if not listings:
-        html_tvguide += _html_no_listings(group_name=group_name, device_name=device_name)
+        html_tvguide += _html_no_listings(structure_id=structure_id, room_id=room_id, device_id=device_id)
         return html_tvguide
     #
-    if group_name and device_name:
-        html_tvguide += '<script>setTimeout(function () {getChannel(\'/command?group=' + str(group_name) + \
-                        '&device=' + str(device_name) + \
-                        '&command=getchannel\', true);}, 10000);</script>'
+    if structure_id and room_id and device_id:
+        html_tvguide += '<script>setTimeout(function () {getChannel(\'/command/' + str(structure_id) + \
+                        '/' + str(room_id) + \
+                        '/' + str(device_id) + \
+                        '?command=getchannel\', true);}, 10000);</script>'
     #
     categories = listings['categories']
     all_count = 0
@@ -44,8 +45,9 @@ def html_listings_user_and_all (listings, group_name=False, device_name=False, u
                     temp_listings.append(l)
         #
         body = _html_listings(temp_listings,
-                              group_name=group_name,
-                              device_name=device_name,
+                              structure_id=structure_id,
+                              room_id=room_id,
+                              device_id=device_id,
                               user=user,
                               chan_current=chan_current,
                               package=package)
@@ -67,8 +69,9 @@ def html_listings_user_and_all (listings, group_name=False, device_name=False, u
                                                                                     title=cat)
         #
         body = _html_listings(listings['channels'][cat],
-                              group_name=group_name,
-                              device_name=device_name,
+                              structure_id=structure_id,
+                              room_id=room_id,
+                              device_id=device_id,
                               chan_current=chan_current,
                               package=package)
         #
@@ -91,10 +94,13 @@ def html_listings_user_and_all (listings, group_name=False, device_name=False, u
     return html_tvguide
 
 
-def _html_no_listings(group_name=False, device_name=False):
+def _html_no_listings(structure_id=False, room_id=False, device_id=False):
     #
-    if group_name and device_name:
-        device_query = '?group={group_name}&device={device_name}'.format(group_name=group_name, device_name=device_name)
+    #TODO
+    if structure_id and room_id and device_id:
+        device_query = '?structure_id={structure_id}&room_id={room_id}&device_id={device_id}'.format(structure_id=structure_id,
+                                                                                                     room_id=room_id,
+                                                                                                     device_id=device_id)
     else:
         device_query = ''
     #
@@ -110,12 +116,13 @@ def _html_no_listings(group_name=False, device_name=False):
                                                                                          body=body)
 
 
-def _html_listings(listings, group_name=False, device_name=False, chan_current=False, user=False, package=False):
+def _html_listings(listings, structure_id=False, room_id=False, device_id=False, chan_current=False, user=False, package=False):
     #
     style = '<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>'
     lstngs = _listings(listings,
-                       group_name=group_name,
-                       device_name=device_name,
+                       structure_id=structure_id,
+                       room_id=room_id,
+                       device_id=device_id,
                        chan_current=chan_current,
                        user=user,
                        package=package)
@@ -124,7 +131,7 @@ def _html_listings(listings, group_name=False, device_name=False, chan_current=F
                                                                                        listings=lstngs)
 
 
-def _listings(listings, group_name=False, device_name=False, chan_current=False, user=False, package=False):
+def _listings(listings, structure_id=False, room_id=False, device_id=False, chan_current=False, user=False, package=False):
     STRlistings = ""
     x = 0
     for lstg in listings:
@@ -164,17 +171,17 @@ def _listings(listings, group_name=False, device_name=False, chan_current=False,
                 last = True
             else:
                 last = False
-            STRlistings += _listingsrow(x, lstg, chan_current, group_name, device_name, res=res, user=user, last=last)
+            STRlistings += _listingsrow(x, lstg, chan_current, structure_id, room_id, device_id, res=res, user=user, last=last)
             x += 1
     #
     return STRlistings
 
 
-def _listingsrow(x, channelitem, chan_current, group_name=False, device_name=False, res=False, user=False, last=False):
+def _listingsrow(x, channelitem, chan_current, structure_id=False, room_id=False, device_id=False, res=False, user=False, last=False):
     #
     try:
         channo = channelitem.devicekeys(res,
-                                        get_device_config_type(group_name, device_name))
+                                        get_cfg_device_type(structure_id, room_id, device_id))
     except Exception as e:
         channo = False
     #
@@ -218,8 +225,9 @@ def _listingsrow(x, channelitem, chan_current, group_name=False, device_name=Fal
         item_last = ''
     # If device can change channel, add 'go' button
     if group_name and device_name and channo:
-        go = urlopen('web/html_tvguide/tvguide-row_go.html').read().encode('utf-8').format(group=group_name,
-                                                                                           device=device_name,
+        go = urlopen('web/html_tvguide/tvguide-row_go.html').read().encode('utf-8').format(structure_id=structure_id,
+                                                                                           room_id=room_id,
+                                                                                           device_id=device_id,
                                                                                            channo=channo)
     else:
         go = ''

@@ -5,7 +5,7 @@ import requests as requests
 import datetime
 import time
 from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
-from config_devices import get_device_config_detail, set_device_config_detail
+from config_devices import get_cfg_device_detail, set_cfg_device_detail
 from console_messages import print_command, print_msg
 import cfg
 
@@ -17,13 +17,14 @@ class object_tv_lg_netcast:
     STRtv_PATHevent = "/udap/api/event"
     STRtv_PATHquery = "/udap/api/data"
 
-    def __init__ (self, grp_num, dvc_num, q_dvc, queues):
+    def __init__ (self, structure_id, room_id, device_id, q_dvc, queues):
         #
         self._active = True
         #
         self._type = "tv_lg_netcast"
-        self._grp_num = grp_num
-        self._dvc_num = dvc_num
+        self._structure_id = structure_id
+        self._room_id = room_id
+        self._device_id = device_id
         #
         self.is_paired = False
         self._pairDevice()
@@ -63,9 +64,10 @@ class object_tv_lg_netcast:
                     # Code to go here to handle other items added to the queue!!
                     True
                 self._queue.task_done()
-        print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
-                                                                                     dvc_num=self._dvc_num,
-                                                                                     type=self._type))
+        print_msg('Thread stopped - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
+                                                                                                                     room_id=self._room_id,
+                                                                                                                     device_id=self._device_id,
+                                                                                                                     type=self._type))
 
     def get_apps(self):
         while self._active:
@@ -76,13 +78,14 @@ class object_tv_lg_netcast:
             #
             ############
             #
-            # Potential to convert xml into array/list here instead of within HTML cration def
+            # Potential to convert xml into array/list here instead of within HTML creation def
             #
             ############
             #
-            print_msg('TV Apps list retrieved - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
-                                                                                                 dvc_num=self._dvc_num,
-                                                                                                 type=self._type))
+            print_msg('TV Apps list retrieved - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
+                                                                                                                                 room_id=self._room_id,
+                                                                                                                                 device_id=self._device_id,
+                                                                                                                                 type=self._type))
             time.sleep(600) # 600 = 10 minutes
 
     def _getFromQueue(self):
@@ -92,19 +95,19 @@ class object_tv_lg_netcast:
             return False
 
     def _ipaddress(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "ipaddress")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
 
     def _port(self):
         return get_device_detail(self._type, "port")
 
     def _pairingkey(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "pairingkey")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "pairingkey")
 
     def _logo(self):
         return get_device_logo(self._type)
 
     def _dvc_name(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "name")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "name")
 
     def _type_name(self):
         return get_device_name(self._type)
@@ -156,8 +159,9 @@ class object_tv_lg_netcast:
 
     def getHtml(self):
         html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = str(self._grp_num),
-                                                                                 device = str(self._dvc_num),
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(structure_id=self._structure_id,
+                                                                                 room_id=self._room_id,
+                                                                                 device_id=self._device_id,
                                                                                  apps = self._html_apps())
 
     def getHtml_settings(self, grp_num, dvc_num):
@@ -167,7 +171,9 @@ class object_tv_lg_netcast:
                                                                                               name = self._dvc_name(),
                                                                                               ipaddress = self._ipaddress(),
                                                                                               pairingkey = self._pairingkey,
-                                                                                              dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
+                                                                                              dvc_ref='{structure_id}_{room_id}_{device_id}'.format(structure_id=self._structure_id,
+                                                                                                                                                    room_id=self._room_id,
+                                                                                                                                                    device_id=self._device_id))
         else:
             return ''
 
@@ -202,10 +208,11 @@ class object_tv_lg_netcast:
                     #
 
                     html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command/{group}/{device}?command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
-                             '<img src="/command/device/{group}/{device}?command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
+                             '<img src="/command/device/{structure_id}/{room_id}/{device_id}?command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
-                             '</td>').format(group = str(self._grp_num),
-                                             device = str(self._dvc_num),
+                             '</td>').format(structure_id=self._structure_id,
+                                             room_id=self._room_id,
+                                             device_id=self._device_id,
                                              auid = auid,
                                              app_name = name.replace(' ', '%20'),
                                              name = name)
@@ -294,7 +301,7 @@ class object_tv_lg_netcast:
         print_command('getAppicon', self._type_name(), url, r.status_code)
         #
         if not r.status_code == requests.codes.ok:
-            set_device_config_detail(self._grp_num, self._dvc_num, 'paired', False)
+            self.is_paired = False
             if not self._check_paired():
                 return False
             r = requests.post(url, headers=headers)

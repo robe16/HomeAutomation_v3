@@ -1,14 +1,14 @@
 from urllib import urlopen
 from list_devices import read_list_devices, get_device_name, get_device_logo
-from config_devices import get_device_json
+from config_devices import get_cfg_device_json
 
-
+#TODO - needs completely rewriting!!
 def settings_devices():
     #
     html_groups = ''
     grp_num = 0
     #
-    data = get_device_json()
+    data = get_cfg_device_json()
     #
     grp_keys = data.keys()
     for grp in grp_keys:

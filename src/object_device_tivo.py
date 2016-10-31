@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import telnetlib
 import datetime
 import time
-from config_devices import get_device_config_detail
+from config_devices import get_cfg_device_detail
 from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
 from web_tvchannels import html_channels_user_and_all
@@ -18,13 +18,14 @@ import cfg
 
 class object_tivo:
 
-    def __init__(self, grp_num, dvc_num, q_dvc, queues):
+    def __init__(self, structure_id, room_id, device_id, q_dvc, queues):
         #
         self._active = True
         #
         self._type = "tivo"
-        self._grp_num = grp_num
-        self._dvc_num = dvc_num
+        self._structure_id = structure_id
+        self._room_id = room_id
+        self._device_id = device_id
         #
         self._queue = q_dvc
         self._q_response_web = queues[cfg.key_q_response_web_device]
@@ -78,36 +79,38 @@ class object_tivo:
             #
             ############
             #
-            print_msg('TV recording information retrieved - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
-                                                                                                             dvc_num=self._dvc_num,
-                                                                                                             type=self._type))
+            print_msg('TV recording information retrieved - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
+                                                                                                                                             room_id=self._room_id,
+                                                                                                                                             device_id=self._device_id,
+                                                                                                                                             type=self._type))
             time.sleep(600) # 600 = 10 minutes
 
 
     def run(self):
-            time.sleep(5)
-            while self._active:
-                # Keep in a loop
-                '''
-                    Use of self._active allows for object to close itself, however may wish
-                    to take different approach of terminating the thread the object loop resides in
-                '''
-                time.sleep(0.1)
-                qItem = self._getFromQueue()
-                if bool(qItem):
-                    if qItem['response_queue'] == 'stop':
-                        self._active = False
-                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
-                        self._q_response_web.put(self.getHtml(user=qItem['user'],
-                                                              listings=_check_tvlistingsqueue(self._q_tvlistings)))
-                    elif qItem['response_queue'] == cfg.key_q_response_command:
-                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
-                    else:
-                        # Code to go here to handle other items added to the queue!!
-                        True
-            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
-                                                                                         dvc_num=self._dvc_num,
-                                                                                         type=self._type))
+        time.sleep(5)
+        while self._active:
+            # Keep in a loop
+            '''
+                Use of self._active allows for object to close itself, however may wish
+                to take different approach of terminating the thread the object loop resides in
+            '''
+            time.sleep(0.1)
+            qItem = self._getFromQueue()
+            if bool(qItem):
+                if qItem['response_queue'] == 'stop':
+                    self._active = False
+                elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                    self._q_response_web.put(self.getHtml(user=qItem['user'],
+                                                          listings=_check_tvlistingsqueue(self._q_tvlistings)))
+                elif qItem['response_queue'] == cfg.key_q_response_command:
+                    self._q_response_cmd.put(self.sendCmd(qItem['request']))
+                else:
+                    # Code to go here to handle other items added to the queue!!
+                    True
+        print_msg('Thread stopped - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
+                                                                                                                     room_id=self._room_id,
+                                                                                                                     device_id=self._device_id,
+                                                                                                                     type=self._type))
 
     def _getFromQueue(self):
         if not self._queue.empty():
@@ -116,22 +119,22 @@ class object_tivo:
             return False
 
     def _ipaddress(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "ipaddress")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
 
     def _port(self):
         return get_device_detail(self._type, "port")
 
     def _accesskey(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "mak")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "mak")
 
     def _package(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "package")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "package")
 
     def _logo(self):
         return get_device_logo(self._type)
 
     def _dvc_name(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "name")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "name")
 
     def _type_name(self):
         return get_device_name(self._type)
@@ -190,8 +193,9 @@ class object_tivo:
         #
         chan_current = self._getChan()
         #
-        html_channels = html_channels_user_and_all(group_name=self._grp_num,
-                                                   device_name=self._dvc_num,
+        html_channels = html_channels_user_and_all(structure_id=self._structure_id,
+                                                   room_id=self._room_id,
+                                                   device_id=self._device_id,
                                                    user=user,
                                                    chan_current=chan_current,
                                                    package=["virginmedia_package", self._package()])
@@ -199,15 +203,18 @@ class object_tivo:
         now_viewing = get_channel_name_from_devicekey(self._type, chan_current)
         now_viewing_logo = get_channel_logo_from_devicekey(self._type, chan_current)
         #
-        now_viewing_refresh_url = '/command/device/' + str(self._grp_num) + '/' + str(self._dvc_num) + '?command=getchannel'
+        now_viewing_refresh_url = '/command/device/{structure_id}/{room_id}/{device_id}?command=getchannel'.format(structure_id=self._structure_id,
+                                                                                                                   room_id=self._room_id,
+                                                                                                                   device_id=self._device_id)
         #
         if self.recordings_timestamp:
             recordings_datetime = self.recordings_timestamp.strftime('%d/%m/%Y %H:%M:%S')
         else:
             recordings_datetime = ''
         #
-        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(group=self._grp_num,
-                                                                                      device=self._dvc_num,
+        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(structure_id=self._structure_id,
+                                                                                      room_id=self._room_id,
+                                                                                      device_id=self._device_id,
                                                                                       html_recordings=self._getHtml_recordings(),
                                                                                       timestamp_recordings=recordings_datetime,
                                                                                       now_viewing_logo=now_viewing_logo,
@@ -215,14 +222,16 @@ class object_tivo:
                                                                                       now_viewing_refresh_url=now_viewing_refresh_url,
                                                                                       html_channels=html_channels)
 
-    def getHtml_settings(self, grp_num, dvc_num):
+    def getHtml_settings(self):
         html_file = get_device_html_settings(self._type)
         if html_file:
             return urlopen('web/html_settings/devices/' + html_file).read().encode('utf-8').format(img=self._logo(),
                                                                                                    name=self._dvc_name(),
                                                                                                    ipaddress=self._ipaddress(),
                                                                                                    mak=self._accesskey(),
-                                                                                                   dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
+                                                                                                   dvc_ref='{structure_id}_{room_id}_{device_id}'.format(structure_id=self._structure_id,
+                                                                                                                                                         room_id=self._room_id,
+                                                                                                                                                         device_id=self._device_id))
         else:
             return ''
 

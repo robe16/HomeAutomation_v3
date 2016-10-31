@@ -2,7 +2,7 @@ from urllib import urlopen
 import requests as requests
 import time
 from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
-from config_devices import get_device_config_detail, set_device_config_detail
+from config_devices import get_cfg_device_detail, set_cfg_device_detail
 from console_messages import print_command, print_msg
 import cfg
 
@@ -13,10 +13,14 @@ import base64
 
 class object_tv_samsung:
 
-    def __init__ (self, grp_num, dvc_num, q_dvc, queues):
+    STRtv_PATHcommand = ''
+
+    def __init__ (self, structure_id, room_id, device_id, q_dvc, queues):
+        #
         self._type = "tv_samsung"
-        self._grp_num = grp_num
-        self._dvc_num = dvc_num
+        self._structure_id = structure_id
+        self._room_id = room_id
+        self._device_id = device_id
         #
         self._queue = q_dvc
         self._q_response_web = queues[cfg.key_q_response_web_device]
@@ -47,9 +51,10 @@ class object_tv_samsung:
                         # Code to go here to handle other items added to the queue!!
                         True
                     self._queue.task_done()
-            print_msg('Thread stopped - Group {grp_num} Device {dvc_num}: {type}'.format(grp_num=self._grp_num,
-                                                                                         dvc_num=self._dvc_num,
-                                                                                         type=self._type))
+            print_msg('Thread stopped - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
+                                                                                                                         room_id=self._room_id,
+                                                                                                                         device_id=self._device_id,
+                                                                                                                         type=self._type))
 
     def _getFromQueue(self):
         if not self._queue.empty():
@@ -58,19 +63,19 @@ class object_tv_samsung:
             return False
 
     def _ipaddress(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "ipaddress")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
 
     def _port(self):
         return get_device_detail(self._type, "port")
 
     def _pairingkey(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "pairingkey")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "pairingkey")
 
     def _logo(self):
         return get_device_logo(self._type)
 
     def _dvc_name(self):
-        return get_device_config_detail(self._grp_num, self._dvc_num, "name")
+        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "name")
 
     def _type_name(self):
         return get_device_name(self._type)
@@ -78,8 +83,9 @@ class object_tv_samsung:
     # TODO
     def getHtml(self):
         html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(group = str(self._grp_num),
-                                                                                 device = str(self._dvc_num))
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(structure_id=self._structure_id,
+                                                                                 room_id=self._room_id,
+                                                                                 device_id=self._device_id)
 
     #TODO
     def sendCmd(self, request):
@@ -119,7 +125,7 @@ class object_tv_samsung:
 
 
 
-    #TODO - the following is still be worked on. Code is based on http://deneb.homedns.org/things/?p=232
+    #TODO - the following is still to be worked on. Code is based on http://deneb.homedns.org/things/?p=232
 
     # What the iPhone app reports
     appstring = "iphone..iapp.samsung"
@@ -142,7 +148,7 @@ class object_tv_samsung:
         #
         # First configure the connection
         ipencoded = base64.b64encode(myip)
-        macencoded = base64.b64encode(self.mymac)
+        macencoded = base64.b64encode(mymac)
         messagepart1 = chr(0x64) + chr(0x00) + chr(len(ipencoded)) \
                        + chr(0x00) + ipencoded + chr(len(macencoded)) + chr(0x00) \
                        + macencoded + chr(len(base64.b64encode(self.remotename))) + chr(0x00) \

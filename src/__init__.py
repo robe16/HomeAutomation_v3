@@ -2,7 +2,10 @@ from multiprocessing import Process, Manager
 from console_messages import print_msg
 from port_listener import start_bottle
 from config_devices_create import create_device_threads
-from config_devices import get_device_json, count_groups, count_devices
+
+from config_devices import get_cfg_device_json
+from config_devices import get_cfg_idlist_structures, get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
+
 import cfg
 
 
@@ -11,19 +14,49 @@ import cfg
 ################################
 #
 device_queues = []
+account_queues = []
 #
-grp_count = count_groups()
-grp_num = 0
+s_list = get_cfg_idlist_structures()
+s_num = 0
 #
-while grp_num < grp_count:
-    dvc_count = count_devices(grp_num)
-    dvc_num = 0
+while s_num < len(s_list):
+    #
+    r_list = get_cfg_idlist_rooms(s_list[s_num])
+    r_num = 0
+    #
     device_queues.append([])
-    while dvc_num < dvc_count:
-        device_queues[grp_num].append([])
-        device_queues[grp_num][dvc_num] = Manager().Queue()
-        dvc_num += 1
-    grp_num += 1
+    device_queues[s_num] = []
+    #
+    while r_num < len(r_list):
+        #
+        d_list = get_cfg_idlist_devices(s_list[s_num], r_list[r_num])
+        d_num = 0
+        #
+        device_queues[s_num].append([])
+        device_queues[s_num][r_num] = []
+        #
+        while d_num < len(d_list):
+            #
+            device_queues[s_num][r_num].append([])
+            device_queues[s_num][r_num][d_num] = Manager().Queue()
+            #
+            d_num += 1
+        r_num += 1
+    #
+    a_list = get_cfg_idlist_accounts(s_list[s_num])
+    a_num = 0
+    #
+    account_queues.append([])
+    account_queues[s_num] = []
+    #
+    while a_num < len(a_list):
+        #
+        account_queues[s_num].append([])
+        account_queues[s_num][a_num] = Manager().Queue()
+        #
+        a_num += 1
+    #
+    s_num += 1
 
 ################################
 # Queues for responses back to port_listener
@@ -52,7 +85,7 @@ def server_start():
     ################################
     port = 1600
     print_msg('Starting process: "bottle" server for port {port}'.format(port=port))
-    process_bottle = Process(target=start_bottle, args=(port, device_queues, queues, ))
+    process_bottle = Process(target=start_bottle, args=(port, device_queues, account_queues, queues, ))
     process_bottle.start()
     print_msg('Process started: "bottle" server for port {port}'.format(port=port))
     #
@@ -60,7 +93,7 @@ def server_start():
     # Process for device threads
     ################################
     print_msg('Starting process: Creation of device threads')
-    process_devices = Process(target=create_device_threads, args=(device_queues, queues, ))
+    process_devices = Process(target=create_device_threads, args=(device_queues, account_queues, queues, ))
     process_devices.start()
     print_msg('Process started: Creation of device threads')
     #
