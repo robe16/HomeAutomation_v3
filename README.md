@@ -28,9 +28,14 @@ Elements planned for development in future:
 <code>GET</code> <code>/web/{page}</code>
 <br>Returns a HTML page dependant on the variable {page}. Pages include home, tvguide and about.</p>
 <br><p>
-<code>GET</code> <code>/web/device/{grp_num}/{dvc_num}</code>
-<br>Returns a HTML page created for the particular device as requested by the {grp_num} and {dvc_num} variables.
-</p><br><p>
+<code>GET</code> <code>/web/device/{structure_id}/{room_id}/{device_id}</code>
+<br>Returns a HTML page created for the particular device as requested by the {structure_id}, {room_id} and {device_id} variables.
+</p><br>
+<code>GET</code> <code>/web/account/{structure_id}/{account_id}</code>
+<br>Returns a HTML page created for the particular account as requested by the {structure_id} and {account_id} variables.
+</p><br>
+
+<strike><p>
 <code>GET</code> <code>/web/settings/{page}</code>
 <br>Returns a HTML page for creating/amending the configuration for the server. Page returned dependant on the {page} variable, including devices and tvguide. Only accessible if user has admin rights.
 </p><br><p>
@@ -43,16 +48,25 @@ Elements planned for development in future:
 </p><br><p>
 <code>GET</code> <code>/web/preferences/{page}</code>
 <br>Only one value available at present for {page} - tvguide. Returns a page for the logged in user to choose their favourite channels for showing in channel lists.
-</p><br><p>
+</p></strike>
+
+<br><p>
 <code>GET</code> <code>/web/static/{folder}/{filename}</code>
 <br>Returns static files such as css, js and fonts/glyphicons.
 </p><br><p>
-<code>POST/GET</code> <code>/command/{grp_num}/{dvc_num}</code>
-<br>Submit commands to the server for relaying to the particular device as requested by the {group_num} and {device_num} variables.. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
+<code>POST/GET</code> <code>/command/device/{structure_id}/{room_id}/{device_id}</code>
+<br>Submit commands to the server for relaying to the particular device as requested by the {structure_id}, {room_id} and {device_id} variables. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
 </p><br><p>
+<code>POST/GET</code> <code>/command/account/{structure_id}/{account_id}</code>
+<br>Submit commands to the server for relaying to the particular account as requested by the {structure_id} and {account_id} variables. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
+</p><br>
+
+<strike><p>
 <code>POST</code> <code>/settings/{category}</code>
 <br>Used to submit and save the config/settings via a json payload. Variables for {category} include 'tvguide' and 'devices' and admin access is required.
-</p><br><p>
+</p></strike>
+
+<br><p>
 <code>POST</code> <code>/preferences/{category}</code>
 <br>Used to submit and save the user preferences via a json payload.
 </p><br><p>
