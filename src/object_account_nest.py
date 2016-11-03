@@ -412,17 +412,14 @@ class object_nest_account:
 
     def _getNewToken(self):
         #
-        url = 'https://api.home.nest.com/oauth2/access_token'
-        payload = 'code=' + self._pincode + \
-                  '&client_id=' + self._clientid() + \
-                  '&client_secret=' + self._clientsecret() + \
-                  '&grant_type=authorization_code'
+        url = 'https://api.home.nest.com/oauth2/access_token?code={PIN_CODE}&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&grant_type=authorization_code'.format(PIN_CODE=self._pincode,
+                                                                                                                                                                       CLIENT_ID=self._clientid(),
+                                                                                                                                                                       CLIENT_SECRET=self._clientsecret())
         #
         headers = {'Connection': 'close',
                    'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
         #
         r = requests.post(url,
-                          data=payload,
                           headers=headers)
         #
         if r.status_code != requests.codes.ok:
@@ -445,7 +442,7 @@ class object_nest_account:
             exp = datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in'])
             #
             set_cfg_account_detail(self._structure_id, self._account_id, 'token', data['access_token'])
-            set_cfg_account_detail(self._structure_id, self._account_id, 'tokenexpiry', exp)
+            set_cfg_account_detail(self._structure_id, self._account_id, 'tokenexpiry', exp.strftime(self._dateformat))
             #
             self._token = data['access_token']
             self._tokenexpiry = exp
@@ -458,9 +455,14 @@ class object_nest_account:
 
     def _getConfig(self):
         self._token = get_cfg_account_detail(self._structure_id, self._account_id, "token")
-        self._tokenexpiry = datetime.datetime.strptime(get_cfg_account_detail(self._structure_id, self._account_id, "tokenexpiry"), self._dateformat)
         self._pincode = get_cfg_account_detail(self._structure_id, self._account_id, "pincode")
         self._state = get_cfg_account_detail(self._structure_id, self._account_id, "state")
+        #
+        token_exp = get_cfg_account_detail(self._structure_id, self._account_id, "tokenexpiry")
+        if bool(token_exp):
+            self._tokenexpiry = datetime.datetime.strptime(token_exp, self._dateformat)
+        else:
+            self._tokenexpiry = False
 
     def _read_json_all(self):
         return self._read_nest_json()

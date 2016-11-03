@@ -49,40 +49,45 @@ class object_tivo:
             self.recordings_folders = False
             self.recordings_files = []
             #
-            self.recordings_timestamp = datetime.datetime.now()
-            self.recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-            #self.recordings_files = self._retrieve_recordings('Yes', itemCount='&ItemCount=50').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-            #
-            ############
-            #
-            retrieve_items = 50
-            #
-            files_repeat = True
-            loop_count = 0
-            itemCount = '&ItemCount={retrieve_items}'.format(retrieve_items=retrieve_items)
-            #
-            while files_repeat:
-                files_count = 0
-                files = self._retrieve_recordings('Yes', itemCount=itemCount).replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-                xml_files = ET.fromstring(files)
-                # Run through individual items
-                for item in xml_files.iter('Item'):
-                    self.recordings_files.append(item.find('Details'))
-                    files_count += 1
+            try:
+                self.recordings_timestamp = datetime.datetime.now()
+                self.recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+                #self.recordings_files = self._retrieve_recordings('Yes', itemCount='&ItemCount=50').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
                 #
-                if files_count<50:
-                    files_repeat = False
-                else:
-                    loop_count += 1
-                    itemCount = '&ItemCount={retrieve_items}&AnchorOffset={AnchorOffset}'.format(retrieve_items=retrieve_items,
-                                                                                                 AnchorOffset=(retrieve_items*loop_count))
+                ############
+                #
+                retrieve_items = 50
+                #
+                files_repeat = True
+                loop_count = 0
+                itemCount = '&ItemCount={retrieve_items}'.format(retrieve_items=retrieve_items)
+                #
+                while files_repeat:
+                    files_count = 0
+                    files = self._retrieve_recordings('Yes', itemCount=itemCount).replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+                    xml_files = ET.fromstring(files)
+                    # Run through individual items
+                    for item in xml_files.iter('Item'):
+                        self.recordings_files.append(item.find('Details'))
+                        files_count += 1
+                    #
+                    if files_count<50:
+                        files_repeat = False
+                    else:
+                        loop_count += 1
+                        itemCount = '&ItemCount={retrieve_items}&AnchorOffset={AnchorOffset}'.format(retrieve_items=retrieve_items,
+                                                                                                     AnchorOffset=(retrieve_items*loop_count))
+                #
+                ############
+                #
+                print_msg('TV recording information retrieved - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
+                                                                                                                                                 room_id=self._room_id,
+                                                                                                                                                 device_id=self._device_id,
+                                                                                                                                                 type=self._type))
+            except:
+                self.recordings_timestamp = 0
+                self.recordings_folders = ''
             #
-            ############
-            #
-            print_msg('TV recording information retrieved - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
-                                                                                                                                             room_id=self._room_id,
-                                                                                                                                             device_id=self._device_id,
-                                                                                                                                             type=self._type))
             time.sleep(600) # 600 = 10 minutes
 
 
