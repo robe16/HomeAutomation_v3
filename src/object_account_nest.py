@@ -80,6 +80,9 @@ class object_nest_account:
         else:
             return False
 
+    def dvc_or_acc_id(self):
+        return self._structure_id + ':' + self._account_id
+
     def _logo(self):
         return get_device_logo(self._type)
 
@@ -126,7 +129,7 @@ class object_nest_account:
             json_devices = self._read_json_devices()
             #
             if not json_devices:
-                print_error('Nest devices could not retrieved from Nest server')
+                print_error('Nest devices could not retrieved from Nest server', dvc_or_acc_id=self.dvc_or_acc_id())
                 return False
             #
             # Thermostats
@@ -341,7 +344,7 @@ class object_nest_account:
             #
             #
         except Exception as e:
-            print_error('Nest devices could not be compiled into html - ' + str(e))
+            print_error('Nest devices could not be compiled into html - ' + str(e), dvc_or_acc_id=self.dvc_or_acc_id())
         #
         devices_html += '</div>'
         return devices_html
@@ -374,7 +377,7 @@ class object_nest_account:
         try:
             #
             if not self._tokencheck():
-                print_error('Nest command could not be sent - error encountered with retrieving new authorisation code')
+                print_error('Nest command could not be sent - error encountered with retrieving new authorisation code', dvc_or_acc_id=self.dvc_or_acc_id())
                 return False
             #
             #TODO - possibly update to remove request and set as json payload
@@ -394,11 +397,11 @@ class object_nest_account:
             return False
             #
         except Exception as e:
-            print_command(command, get_device_name(self._type), '', 'ERROR: Exception encountered - ' + str(e))
+            print_error('Exception encountered sending ' + command + ' - ' + str(e), dvc_or_acc_id=self.dvc_or_acc_id())
             return False
 
     def _tokencheck(self):
-        print_msg('Nest - Checking Auth Token')
+        print_msg('Checking Auth Token', dvc_or_acc_id=self.dvc_or_acc_id())
         if bool(self._pincode):
             if self._checkToken():
                 return True
@@ -423,20 +426,20 @@ class object_nest_account:
                           headers=headers)
         #
         if r.status_code != requests.codes.ok:
-            print_error('Nest - Auth code not received by Nest server')
+            print_error('Auth code not received by Nest server', dvc_or_acc_id=self.dvc_or_acc_id())
             return False
         #
         try:
             response = r.content
         except Exception as e:
-            print_error('Nest - Auth code not received by Nest server - ' + str(e))
+            print_error('Auth code not received by Nest server - ' + str(e), dvc_or_acc_id=self.dvc_or_acc_id())
             return False
         #
         if response:
             try:
                 data = json.loads(response)
             except Exception as e:
-                print_error('Nest - Auth code not processed into json object - ' + str(e))
+                print_error('Auth code not processed into json object - ' + str(e), dvc_or_acc_id=self.dvc_or_acc_id())
                 return False
             #
             exp = datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in'])
@@ -447,7 +450,7 @@ class object_nest_account:
             self._token = data['access_token']
             self._tokenexpiry = exp
             #
-            print_msg('Nest: Success retrieving new Access Token')
+            print_msg('Success retrieving new Access Token', dvc_or_acc_id=self.dvc_or_acc_id())
             #
             return True
         else:

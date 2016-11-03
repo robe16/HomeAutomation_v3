@@ -34,10 +34,8 @@ def create_device_threads(q_devices, q_accounts, queues):
                 thread[t].daemon = True
                 thread[t].start()
                 #
-                print_msg('Thread created - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=s_list[s_num],
-                                                                                                                             room_id=r_list[r_num],
-                                                                                                                             device_id=d_list[d_num],
-                                                                                                                             type=get_cfg_device_type(s_list[s_num], r_list[r_num], d_list[d_num])))
+                print_msg('Thread created: {type}'.format(type=get_cfg_device_type(s_list[s_num], r_list[r_num], d_list[d_num])),
+                          dvc_or_acc_id=s_list[s_num]+':'+r_list[r_num]+':'+d_list[d_num])
                 #
                 t += 1
                 d_num += 1
@@ -56,9 +54,8 @@ def create_device_threads(q_devices, q_accounts, queues):
             thread[t].daemon = True
             thread[t].start()
             #
-            print_msg('Thread created - Structure "{structure_id}" Account "{account_id}": {type}'.format(structure_id=s_list[s_num],
-                                                                                                          account_id=a_list[a_num],
-                                                                                                          type=get_cfg_account_type(s_list[s_num], a_list[a_num])))
+            print_msg('Thread created: {type}'.format(type=get_cfg_account_type(s_list[s_num], a_list[a_num])),
+                      dvc_or_acc_id=s_list[s_num]+':'+a_list[a_num])
             #
             t += 1
             a_num += 1

@@ -80,10 +80,7 @@ class object_tivo:
                 #
                 ############
                 #
-                print_msg('TV recording information retrieved - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
-                                                                                                                                                 room_id=self._room_id,
-                                                                                                                                                 device_id=self._device_id,
-                                                                                                                                                 type=self._type))
+                print_msg('TV recording information retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
             except:
                 self.recordings_timestamp = 0
                 self.recordings_folders = ''
@@ -112,16 +109,16 @@ class object_tivo:
                 else:
                     # Code to go here to handle other items added to the queue!!
                     True
-        print_msg('Thread stopped - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
-                                                                                                                     room_id=self._room_id,
-                                                                                                                     device_id=self._device_id,
-                                                                                                                     type=self._type))
+        print_msg('Thread stopped: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
 
     def _getFromQueue(self):
         if not self._queue.empty():
             return self._queue.get(block=True)
         else:
             return False
+
+    def dvc_or_acc_id(self):
+        return self._structure_id + ':' + self._room_id + ':' + self._device_id
 
     def _ipaddress(self):
         return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
@@ -176,7 +173,11 @@ class object_tivo:
                                              data=("SETCH {}\r").format(request['chan']),
                                              response=True)
                 if response.startswith('CH_FAILED'):
-                    print_command('channel', self._type_name(), self._ipaddress(), response)
+                    print_command('channel',
+                                  self.dvc_or_acc_id(),
+                                  self._type,
+                                  self._ipaddress(),
+                                  response)
                     return False
             elif request['command'] == 'command':
                 code = self.commands[request['code']]
@@ -186,10 +187,18 @@ class object_tivo:
                     response = False
             #
             x = request['code'] if code else request['command']
-            print_command (x, self._type_name(), self._ipaddress(), response)
+            print_command (x,
+                           self.dvc_or_acc_id(),
+                           self._type,
+                           self._ipaddress(),
+                           response)
             return response
         except:
-            print_command(request['command'], self._type_name(), self._ipaddress(), 'ERROR')
+            print_command(request['command'],
+                          self.dvc_or_acc_id(),
+                          self._type,
+                          self._ipaddress(),
+                          'ERROR')
             return False
 
     def getHtml(self, user=False, listings=None):
@@ -375,6 +384,7 @@ class object_tivo:
                              auth=HTTPDigestAuth('tivo', self._accesskey()),
                              verify=False)
             print_command('retrieve listings (recurse={recurse})'.format(recurse=recurse),
+                          self.dvc_or_acc_id(),
                           self._type,
                           self._ipaddress(),
                           r.status_code)

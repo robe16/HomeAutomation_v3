@@ -62,6 +62,9 @@ class object_tv_samsung:
         else:
             return False
 
+    def dvc_or_acc_id(self):
+        return self._structure_id + ':' + self._room_id + ':' + self._device_id
+
     def _ipaddress(self):
         return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
 
@@ -113,14 +116,26 @@ class object_tv_samsung:
                 r = requests.post(url,
                                   STRxml,
                                   headers=headers)
-                print_command('command', self._type_name(), url, r.status_code)
+                print_command('command',
+                              self.dvc_or_acc_id(),
+                              self._type,
+                              self._ipaddress(),
+                              r.status_code)
                 #
                 response = (r.status_code == requests.codes.ok)
-                print_command (cmd, self._type_name(), self._ipaddress(), response)
+                print_command (cmd,
+                               self.dvc_or_acc_id(),
+                               self._type,
+                               self._ipaddress(),
+                               response)
                 return response
                 #
         except:
-            print_command (request['command'], self._type_name(), self._ipaddress(), "ERROR: Exception encountered")
+            print_command (request['command'],
+                           self.dvc_or_acc_id(),
+                           self._type,
+                           self._ipaddress(),
+                           'ERROR: Exception encountered')
             return False
 
 
