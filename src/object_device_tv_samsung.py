@@ -141,6 +141,8 @@ class object_tv_samsung:
 
 
     #TODO - the following is still to be worked on. Code is based on http://deneb.homedns.org/things/?p=232
+    # SAMSUNG OS/Platform - ORSAY
+    # (new OS is Tizen)
 
     # What the iPhone app reports
     appstring = "iphone..iapp.samsung"
