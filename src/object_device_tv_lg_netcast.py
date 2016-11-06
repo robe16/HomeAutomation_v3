@@ -9,6 +9,9 @@ from config_devices import get_cfg_device_detail, set_cfg_device_detail
 from console_messages import print_command, print_msg
 import cfg
 
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 
 class object_tv_lg_netcast:
 
@@ -69,14 +72,10 @@ class object_tv_lg_netcast:
     def get_apps(self):
         while self._active:
             # Reset values
-            self.apps_timestamp = datetime.datetime.now()
-            self.apps_xml = self._getApplist()
-            #self.apps_list = []
+            self._get_apps()
             #
             ############
-            #
             # Potential to convert xml into array/list here instead of within HTML creation def
-            #
             ############
             #
             print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
@@ -109,32 +108,51 @@ class object_tv_lg_netcast:
     def _type_name(self):
         return get_device_name(self._type)
 
-    def _pairDevice(self):
+    def _pairDevice(self, pair_reason=''):
+        #
+        command = 'Device pairing'
+        if not pair_reason=='':
+            command += '\' - \'{pair_reason}'.format(pair_reason=pair_reason)
         #
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey(), str(self._port()))
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
                    'content-type': 'text/xml; charset=utf-8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=str(self.STRtv_PATHpair))
         #
-        r = requests.post(url,
+        try:
+            r = requests.post(url,
                           STRxml,
                           headers=headers)
-        print_command('pairDevice',
-                      self.dvc_or_acc_id(),
-                      self._type,
-                      url,
-                      r.status_code)
-        #
-        r_pass = True if r.status_code == requests.codes.ok else False
-        self.is_paired = r_pass
-        #
-        return r_pass
+            print_command(command,
+                          self.dvc_or_acc_id(),
+                          self._type,
+                          url,
+                          r.status_code)
+            #
+            r_pass = True if r.status_code == requests.codes.ok else False
+            self.is_paired = r_pass
+            #
+            return r_pass
+        except requests.exceptions.ConnectionError as e:
+            print_command(command,
+                          self.dvc_or_acc_id(),
+                          self._type,
+                          self._ipaddress(),
+                          'ERROR: connection error')
+            return False
+        except Exception as e:
+            print_command(command,
+                          self.dvc_or_acc_id(),
+                          self._type,
+                          self._ipaddress(),
+                          'ERROR: {error}'.format(error=e))
+            return False
 
-    def _check_paired(self):
+    def _check_paired(self, pair_reason=''):
         if not self.is_paired:
             count = 0
             while count < 2:
-                self._pairDevice()
+                self._pairDevice(pair_reason)
                 if self.is_paired:
                     return True
                 count+=1
@@ -182,17 +200,31 @@ class object_tv_lg_netcast:
         else:
             return ''
 
+    def _html_app_check(self, attempt=1):
+        #
+        if not bool(self.apps_xml):
+            self._get_apps()
+        #
+        if bool(self.apps_xml):
+            return
+        elif not bool(self.apps_xml) and attempt<3:
+            attempt += 1
+            self._html_app_check(attempt)
+        else:
+            raise Exception
+
     def _html_apps(self):
         #
-        if not self._check_paired():
-            return '<p style="text-align:center">App list could not be retrieved from the device.</p>'+\
+        try:
+            self._html_app_check()
+        except:
+            return '<p style="text-align:center">App list could not be retrieved from the device.</p>' +\
                    '<p style="text-align:center">Please check the TV is turned on and then try again.</p>'
         #
-        #applist = self._getApplist()
         applist = self.apps_xml
         #
         if not applist:
-            return '<p style="text-align:center">App list could has not been retrieved from the device.</p>'+\
+            return '<p style="text-align:center">App list could has not been retrieved from the device.</p>' +\
                    '<p style="text-align:center">Please check the TV is turned on and then try again.</p>'
         else:
             #
@@ -233,15 +265,15 @@ class object_tv_lg_netcast:
             html += '</table></div>'
             return html
 
+    def _get_apps(self):
+        # Reset values
+        self.apps_timestamp = datetime.datetime.now()
+        self.apps_xml = self._getApplist()
+
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         try:
             #
-            if not self._check_paired():
-                print_command ('getApplist',
-                               self.dvc_or_acc_id(),
-                               self._type,
-                               self._ipaddress(),
-                               'ERROR: Device could not be paired')
+            if not self._check_paired(pair_reason='getApplist'):
                 return False
             #
             uri = "/udap/api/data?target=applist_get&type={type}&index={index}&number={number}".format(type=str(APPtype),
@@ -251,6 +283,7 @@ class object_tv_lg_netcast:
             url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=uri)
             #
             r = requests.get(url, headers=headers)
+            #
             print_command('getApplist',
                           self.dvc_or_acc_id(),
                           self._type,
@@ -259,7 +292,7 @@ class object_tv_lg_netcast:
             #
             if not r.status_code == requests.codes.ok:
                 self.is_paired = False
-                if not self._check_paired():
+                if not self._check_paired(pair_reason='getApplist'):
                     return False
                 r = requests.post(url, headers=headers)
                 print_command('getApplist',
@@ -301,14 +334,9 @@ class object_tv_lg_netcast:
         #     </dataList>
         # </envelope>
 
-    def getAppicon (self, auid, name):
+    def getAppicon(self, auid, name):
         #
-        if not self._check_paired():
-            print_command ('getAppicon',
-                           self.dvc_or_acc_id(),
-                           self._type,
-                           self._ipaddress(),
-                           'ERROR: Device could not be paired')
+        if not self._check_paired(pair_reason='getAppicon'):
             return False
         #
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
@@ -327,7 +355,7 @@ class object_tv_lg_netcast:
         #
         if not r.status_code == requests.codes.ok:
             self.is_paired = False
-            if not self._check_paired():
+            if not self._check_paired(pair_reason='getAppicon'):
                 return False
             r = requests.post(url, headers=headers)
             print_command('getAppicon',
@@ -349,12 +377,7 @@ class object_tv_lg_netcast:
         #
         try:
             #
-            if not self._check_paired():
-                print_command (request['command'],
-                               self.dvc_or_acc_id(),
-                               self._type,
-                               self._ipaddress(),
-                               'ERROR: Device could not be paired')
+            if not self._check_paired(pair_reason=request['command']):
                 return False
             #
             if request['command'] == 'image':
@@ -403,7 +426,7 @@ class object_tv_lg_netcast:
                 #
                 if not r.status_code == requests.codes.ok:
                     self.is_paired = False
-                    if not self._check_paired():
+                    if not self._check_paired(pair_reason='command'):
                         return False
                     r = requests.post(url,
                                       STRxml,
