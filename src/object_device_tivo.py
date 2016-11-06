@@ -160,8 +160,12 @@ class object_tivo:
             if request['command'] == 'getchannel':
                 chan_no = self._getChan()
                 if bool(chan_no):
+                    #
                     chan_name = get_channel_name_from_devicekey(self._type, chan_no)
+                    #
                     chan_logo = get_channel_logo_from_devicekey(self._type, chan_no)
+                    chan_logo = chan_logo if not chan_logo=='-' else 'ic_blank.png'
+                    #
                     response = '{"chan_no": ' + str(chan_no) + ', ' + \
                                '"chan_name": "' + chan_name + '", ' + \
                                '"chan_logo": "' + chan_logo + '"}'
