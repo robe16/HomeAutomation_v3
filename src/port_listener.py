@@ -10,6 +10,7 @@ import cfg
 from config_devices import write_config_devices
 from config_devices import get_cfg_structure_name, get_cfg_room_name, get_cfg_device_name, get_cfg_account_name
 from config_devices import get_cfg_structure_index, get_cfg_room_index, get_cfg_device_index, get_cfg_account_index
+from config_compiler_for_client import compile_config
 from config_users import check_user, get_userrole, update_user_channels
 from web_create_error import create_error
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
@@ -37,47 +38,16 @@ def start_bottle(port, q_dvcs, q_accs, queues):
 # Provision of server config for clients
 ################################################################################################
 
-#TODO
+# TODO
+# Same as config json with the removal of 'details'
+# Consider adding 'structure_name_alt', 'account_name_alt', 'room_name_alt' and 'device_name_alt'
 
 @get('/cfg/structure')
 def cfg_structure():
-    # open config file
-    # run through list and extract rooms and devices
-    # present in json format
-    # return to client
-    return True
-
-'''
-{
-    "structure": {
-        "1": {
-            "room_id": "1",
-            "room_name": "Lounge",
-            "room_name_alt": ["lounge", "living room", "front room"]
-            "devices": {
-                "0": {
-                    "device_id": "0",
-                    "device_type": "tivo",
-                    "device_name": "tivo",
-                    "device_name_alt": ["tivo", "virgin", "virgin media", "set top", "cable"]
-                },
-                "1": {
-                    "device_id": "1",
-                    "device_type": "tv_lg_netcast",
-                    "device_name": "tv",
-                    "device_name_alt": ["tv", "television"]
-                }
-            }
-        },
-        "2": {
-            "room_id": "2",
-            "room_name": "Kitchen",
-            "room_name_alt": ["kitchen"]
-            "devices": {}
-        }
-     }
- }
-'''
+    try:
+        return compile_config()
+    except:
+        return HTTPError(404)
 
 ################################################################################################
 # Web UI
