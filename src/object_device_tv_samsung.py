@@ -1,5 +1,6 @@
 from urllib import urlopen
 import requests as requests
+import telnetlib
 import time
 from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
 from config_devices import get_cfg_device_detail, set_cfg_device_detail
@@ -159,10 +160,6 @@ class object_tv_samsung:
         #
         _skey = code = self.commands[cmd]
         #
-        # Open Socket
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((self._ipaddress(), 55000))
-        #
         # First configure the connection
         ipencoded = base64.b64encode(myip)
         macencoded = base64.b64encode(mymac)
@@ -172,17 +169,43 @@ class object_tv_samsung:
                        + base64.b64encode(self.remotename)
         #
         part1 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart1)) + chr(0x00) + messagepart1
-        sock.send(part1)
         #
         messagepart2 = chr(0xc8) + chr(0x00)
         part2 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart2)) + chr(0x00) + messagepart2
-        sock.send(part2)
         #
         messagepart3 = chr(0x00) + chr(0x00) + chr(0x00) + chr(len(base64.b64encode(_skey))) + chr(0x00) + base64.b64encode(_skey)
         part3 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart3)) + chr(0x00) + messagepart3
-        sock.send(part3)
         #
-        sock.close()
+        # Create data array to send via socket/telnet
+        data = []
+        data[0] = part1
+        data[1] = part2
+        data[2] = part3
+        #
+        # Send commands
+        self._send_telnet(data)
+
+    def _send_telnet(self, data, response=False):
+        try:
+            tn = telnetlib.Telnet(self._ipaddress(), 55000)
+            time.sleep(0.1)
+            output = tn.read_eager() if response else None
+            #
+            x = 0
+            while x < len(data):
+                if data[x]:
+                    tn.write(str(data[x])+"\n")
+                    time.sleep(0.1)
+                    op = tn.read_eager()
+                    if op=='':
+                        output = True
+                    else:
+                        output = op if (response and not bool(op)) else True
+                x += 1
+            tn.close()
+            return output
+        except:
+            return False
 
 
 
