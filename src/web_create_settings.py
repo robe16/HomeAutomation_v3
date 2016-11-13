@@ -1,8 +1,9 @@
 from urllib import urlopen
+
+from src.lists.devices.list_devices import get_device_logo, get_device_html_settings, get_device_settings_dict
 from web_menu import html_menu
 from web_settings_devices import settings_devices, settings_devices_selection, settings_devices_group
 from web_settings_tvguide import settings_tvguide
-from list_devices import get_device_logo, get_device_html_settings, get_device_settings_dict
 
 
 def create_settings_devices(user):

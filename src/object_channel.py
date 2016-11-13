@@ -1,6 +1,5 @@
-from list_channels import \
-    get_channel_item_type,\
-    get_channel_item_listingsrc,\
+from src.lists.channels.list_channels import \
+    get_channel_item_type, \
     get_channel_item_res_devicekey,\
     get_channel_item_res_freeview,\
     get_channel_item_res_logo,\

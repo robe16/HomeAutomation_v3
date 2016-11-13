@@ -1,8 +1,8 @@
 from urllib import urlopen
-from tvlisting import returnnownext
-from list_channels import *
-from config_users import get_userchannels
-from config_devices import get_cfg_device_type, get_cfg_device_detail
+
+from src.config.devices.config_devices import get_cfg_device_type
+from src.config.users.config_users import get_userchannels
+from src.lists.channels.list_channels import *
 
 
 def html_channels_user_and_all (room_id=False, device_id=False, user=False, chan_current=False, package=False):

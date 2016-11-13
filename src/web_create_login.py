@@ -1,5 +1,7 @@
 from urllib import urlopen
-from config_users import get_usernames
+
+from src.config.users.config_users import get_usernames
+
 
 def html_users():
     return urlopen('web/login.html').read().encode('utf-8').format(users=_useritems())

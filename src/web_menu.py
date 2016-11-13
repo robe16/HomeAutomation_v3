@@ -1,10 +1,10 @@
 from urllib import urlopen
-from config_users import get_userrole, get_userimage
-from list_devices import get_device_logo
 
-from config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
-from config_devices import get_cfg_room_name, get_cfg_device_name, get_cfg_account_name
-from config_devices import get_cfg_device_type, get_cfg_account_type
+from src.config.devices.config_devices import get_cfg_device_type, get_cfg_account_type
+from src.config.devices.config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
+from src.config.devices.config_devices import get_cfg_room_name, get_cfg_device_name, get_cfg_account_name
+from src.config.users.config_users import get_userrole, get_userimage
+from src.lists.devices.list_devices import get_device_logo
 
 
 def html_menu(user):

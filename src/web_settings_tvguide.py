@@ -1,7 +1,6 @@
-from urllib import urlopen
-import os
 import json
-from config_users import get_userchannels
+import os
+from urllib import urlopen
 
 
 def settings_tvguide():

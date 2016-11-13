@@ -1,8 +1,9 @@
-from urllib import urlopen
-from tvlisting import returnnownext
 from datetime import datetime
-from config_users import get_userchannels
-from config_devices import get_cfg_device_detail, get_cfg_device_type
+from urllib import urlopen
+
+from src.config.devices.config_devices import get_cfg_device_type
+from src.config.users.config_users import get_userchannels
+from tvlisting import returnnownext
 
 
 def html_listings_user_and_all (listings, room_id=False, device_id=False, user=False, chan_current=False, package=False):

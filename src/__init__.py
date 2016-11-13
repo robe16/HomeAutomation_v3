@@ -1,13 +1,11 @@
 from multiprocessing import Process, Manager
-from console_messages import print_msg
-from port_listener import start_bottle
-from config_devices_create import create_device_threads
-
-from config_devices import get_cfg_device_json
-from config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
 
 import cfg
-
+from config_devices_create import create_device_threads
+from console_messages import print_msg
+from port_listener import start_bottle
+from src.config.devices.config_devices import get_cfg_device_json
+from src.config.devices.config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
 
 ################################
 # Create queues for each device

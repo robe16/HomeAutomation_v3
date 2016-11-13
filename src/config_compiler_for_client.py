@@ -1,5 +1,7 @@
-from config_devices import get_cfg_device_json
 import ast
+
+from src.config.devices.config_devices import get_cfg_device_json
+
 
 def compile_config():
     #

@@ -1,15 +1,17 @@
-from urllib import urlopen
-import threading
-import xml.etree.ElementTree as ET
-import requests as requests
 import datetime
+import threading
 import time
-from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
-from config_devices import get_cfg_device_detail, set_cfg_device_detail
-from console_messages import print_command, print_msg
-import cfg
+import xml.etree.ElementTree as ET
+from urllib import urlopen
 
+import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+import src.cfg
+from src.config.devices.config_devices import get_cfg_device_detail
+from src.console_messages import print_command, print_msg
+from src.lists.devices.list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
@@ -32,9 +34,9 @@ class object_tv_lg_netcast:
         self._pairDevice()
         #
         self._queue = q_dvc
-        self._q_response_web = queues[cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[cfg.key_q_response_command]
-        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        self._q_response_web = queues[src.cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[src.cfg.key_q_response_command]
+        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
         #
         self.apps_timestamp = False
         self.apps_xml = False
@@ -58,9 +60,9 @@ class object_tv_lg_netcast:
             if bool(qItem):
                 if qItem['response_queue'] == 'stop':
                     self._active = False
-                elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
                     self._q_response_web.put(self.getHtml())
-                elif qItem['response_queue'] == cfg.key_q_response_command:
+                elif qItem['response_queue'] == src.cfg.key_q_response_command:
                     self._q_response_cmd.put(self.sendCmd(qItem['request']))
                 else:
                     # Code to go here to handle other items added to the queue!!

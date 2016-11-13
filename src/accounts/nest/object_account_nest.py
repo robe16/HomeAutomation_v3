@@ -1,15 +1,17 @@
-from urllib import urlopen
 import datetime
-import string
-import random
-import os
 import json
+import random
+import string
 import time
+from urllib import urlopen
+
 import requests as requests
-from console_messages import print_command, print_error, print_msg
-from config_devices import get_cfg_account_detail, set_cfg_account_detail
-from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-import cfg
+
+import src.cfg
+from src.config.devices.config_devices import get_cfg_account_detail, set_cfg_account_detail
+from src.console_messages import print_error, print_msg
+from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
 
@@ -41,9 +43,9 @@ class object_nest_account:
         self._redirect_url = ''
         #
         self._queue = q_dvc
-        self._q_response_web = queues[cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[cfg.key_q_response_command]
-        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        self._q_response_web = queues[src.cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[src.cfg.key_q_response_command]
+        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
         #
         self._active = True
         self.run()
@@ -62,9 +64,9 @@ class object_nest_account:
                 if bool(qItem):
                     if qItem['response_queue'] == 'stop':
                         self._active = False
-                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                    elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
                         self._q_response_web.put(self.getHtml())
-                    elif qItem['response_queue'] == cfg.key_q_response_command:
+                    elif qItem['response_queue'] == src.cfg.key_q_response_command:
                         self._q_response_cmd.put(self.sendCmd(qItem['request']))
                     else:
                         # Code to go here to handle other items added to the queue!!

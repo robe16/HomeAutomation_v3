@@ -1,19 +1,20 @@
-from urllib import urlopen
+import datetime
+import telnetlib
 import threading
+import time
+import xml.etree.ElementTree as ET
+from urllib import urlopen
+
 import requests as requests
 from requests.auth import HTTPDigestAuth
-import xml.etree.ElementTree as ET
-import telnetlib
-import datetime
-import time
-from config_devices import get_cfg_device_detail
-from list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-from list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
-from web_tvchannels import html_channels_user_and_all
-from console_messages import print_command, print_error, print_msg
-from tvlisting_getfromqueue import _check_tvlistingsqueue
 
-import cfg
+import src.cfg
+from src.config.devices.config_devices import get_cfg_device_detail
+from src.console_messages import print_command, print_error, print_msg
+from src.lists.channels.list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
+from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
+from src.tvlisting_getfromqueue import _check_tvlistingsqueue
+from src.web_tvchannels import html_channels_user_and_all
 
 
 class object_tivo:
@@ -27,9 +28,9 @@ class object_tivo:
         self._device_id = device_id
         #
         self._queue = q_dvc
-        self._q_response_web = queues[cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[cfg.key_q_response_command]
-        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        self._q_response_web = queues[src.cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[src.cfg.key_q_response_command]
+        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
         #
         self.recordings_timestamp = False
         self.recordings_folders = False
@@ -100,10 +101,10 @@ class object_tivo:
             if bool(qItem):
                 if qItem['response_queue'] == 'stop':
                     self._active = False
-                elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
                     self._q_response_web.put(self.getHtml(user=qItem['user'],
                                                           listings=_check_tvlistingsqueue(self._q_tvlistings)))
-                elif qItem['response_queue'] == cfg.key_q_response_command:
+                elif qItem['response_queue'] == src.cfg.key_q_response_command:
                     self._q_response_cmd.put(self.sendCmd(qItem['request']))
                 else:
                     # Code to go here to handle other items added to the queue!!

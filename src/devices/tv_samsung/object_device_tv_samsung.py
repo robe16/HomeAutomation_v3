@@ -1,15 +1,14 @@
-from urllib import urlopen
-import requests as requests
-import telnetlib
-import time
-from list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
-from config_devices import get_cfg_device_detail, set_cfg_device_detail
-from console_messages import print_command, print_msg
-import cfg
-
-from cfg import my_ip, my_mac
-import socket
 import base64
+import socket
+import time
+from urllib import urlopen
+
+import src.cfg
+from src.cfg import my_ip
+from src.config.devices.config_devices import get_cfg_device_detail
+from src.console_messages import print_command, print_msg
+from src.lists.devices.list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command
+
 
 #TODO on screen messages - http://tech.shantanugoel.com/2013/07/14/samsung-tv-message-box-python.html
 
@@ -34,9 +33,9 @@ class object_tv_samsung:
         self._device_id = device_id
         #
         self._queue = q_dvc
-        self._q_response_web = queues[cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[cfg.key_q_response_command]
-        self._q_tvlistings = queues[cfg.key_q_tvlistings]
+        self._q_response_web = queues[src.cfg.key_q_response_web_device]
+        self._q_response_cmd = queues[src.cfg.key_q_response_command]
+        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
         #
         self._active = True
         self.run()
@@ -54,9 +53,9 @@ class object_tv_samsung:
                 if bool(qItem):
                     if qItem['response_queue'] == 'stop':
                         self._active = False
-                    elif qItem['response_queue'] == cfg.key_q_response_web_device:
+                    elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
                         self._q_response_web.put(self.getHtml())
-                    elif qItem['response_queue'] == cfg.key_q_response_command:
+                    elif qItem['response_queue'] == src.cfg.key_q_response_command:
                         self._q_response_cmd.put(self.sendCmd(qItem['request']))
                     else:
                         # Code to go here to handle other items added to the queue!!

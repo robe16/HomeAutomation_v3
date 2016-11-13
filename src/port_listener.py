@@ -1,21 +1,20 @@
-import os
 import datetime
+import os
 import time
-from bottle import route, get, post
+
 from bottle import error, HTTPError
+from bottle import get, post
 from bottle import request, run, static_file, HTTPResponse, redirect, response
 
 import cfg
-
-from config_devices import write_config_devices
-from config_devices import get_cfg_room_name, get_cfg_device_name, get_cfg_account_name
-from config_devices import get_cfg_room_index, get_cfg_device_index, get_cfg_account_index
 from config_compiler_for_client import compile_config
-from config_users import check_user, get_userrole, update_user_channels
+from src.config.devices.config_devices import get_cfg_room_index, get_cfg_device_index, get_cfg_account_index
+from src.config.devices.config_devices import get_cfg_room_name, get_cfg_device_name, get_cfg_account_name
+from src.config.users.config_users import check_user, update_user_channels
 from web_create_error import create_error
 from web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
 from web_create_preferences import create_preference_tvguide
-from web_create_settings import create_settings_devices, settings_devices_requests, create_settings_tvguide
+
 # from web_devices import refresh_tvguide
 
 from tvlisting_getfromqueue import _check_tvlistingsqueue
