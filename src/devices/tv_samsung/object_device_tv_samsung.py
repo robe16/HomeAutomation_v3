@@ -1,19 +1,17 @@
 import base64
 import socket
 import time
-from urllib import urlopen
 
-import src.cfg
 from src.cfg import my_ip
-from src.config.devices.config_devices import get_cfg_device_detail
 from src.console_messages import print_command, print_msg
-from src.lists.devices.list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command
+
+from src.devices.device import Device
 
 
 #TODO on screen messages - http://tech.shantanugoel.com/2013/07/14/samsung-tv-message-box-python.html
 
 
-class object_tv_samsung:
+class object_tv_samsung(Device):
 
     # Used in authentication of socket datagrams
     appstring = "python.iapp.samsung"
@@ -25,80 +23,20 @@ class object_tv_samsung:
     DENIED_BYTES = [chr(0x64), chr(0x00), chr(0x00), chr(0x00)]
     TIMEOUT_BYTES = [chr(0x65), chr(0x00)]
 
-    def __init__ (self, structure_id, room_id, device_id, q_dvc, queues):
+    def __init__ (self, room_id, device_id, q_dvc, queues):
         #
-        self._type = "tv_samsung"
-        self._structure_id = structure_id
-        self._room_id = room_id
-        self._device_id = device_id
+        Device.__init__(self, "tv_samsung", room_id, device_id, q_dvc, queues)
         #
-        self._queue = q_dvc
-        self._q_response_web = queues[src.cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[src.cfg.key_q_response_command]
-        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
-        #
-        self._active = True
         self.run()
 
-    def run(self):
-            time.sleep(5)
-            while self._active:
-                # Keep in a loop
-                '''
-                    Use of self._active allows for object to close itself, however may wish
-                    to take different approach of terminting the thread the object loop resides in
-                '''
-                time.sleep(0.1)
-                qItem = self._getFromQueue()
-                if bool(qItem):
-                    if qItem['response_queue'] == 'stop':
-                        self._active = False
-                    elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
-                        self._q_response_web.put(self.getHtml())
-                    elif qItem['response_queue'] == src.cfg.key_q_response_command:
-                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
-                    else:
-                        # Code to go here to handle other items added to the queue!!
-                        True
-                    self._queue.task_done()
-            print_msg('Thread stopped - Structure "{structure_id}" Room "{room_id}" Device "{device_id}": {type}'.format(structure_id=self._structure_id,
-                                                                                                                         room_id=self._room_id,
-                                                                                                                         device_id=self._device_id,
-                                                                                                                         type=self._type))
-
-    def _getFromQueue(self):
-        if not self._queue.empty():
-            return self._queue.get(block=True)
-        else:
-            return False
-
-    def dvc_or_acc_id(self):
-        return self._structure_id + ':' + self._room_id + ':' + self._device_id
-
-    def _ipaddress(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
-
-    def _port(self):
-        return get_device_detail(self._type, "port")
-
-    def _pairingkey(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "pairingkey")
-
-    def _logo(self):
-        return get_device_logo(self._type)
-
-    def _dvc_name(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "name")
-
-    def _type_name(self):
-        return get_device_name(self._type)
 
     # TODO
-    def getHtml(self):
-        html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(structure_id=self._structure_id,
-                                                                                 room_id=self._room_id,
-                                                                                 device_id=self._device_id)
+    def getHtml(self, user=False):
+        #
+        args = {'room_id': self._room_id,
+                'device_id': self._device_id}
+        #
+        return self._getHtml_generic(args)
 
 
     #TODO - the following is still to be worked on. Code is based on http://deneb.homedns.org/things/?p=232

@@ -2,20 +2,19 @@ import datetime
 import threading
 import time
 import xml.etree.ElementTree as ET
-from urllib import urlopen
 
 import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-import src.cfg
 from src.config.devices.config_devices import get_cfg_device_detail
 from src.console_messages import print_command, print_msg
-from src.lists.devices.list_devices import get_device_name, get_device_detail, get_device_logo, get_device_html_command, get_device_html_settings
+
+from src.devices.device import Device
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
-class object_tv_lg_netcast:
+class object_tv_lg_netcast(Device):
 
     STRtv_PATHpair = "/udap/api/pairing"
     STRtv_PATHcommand = "/udap/api/command"
@@ -24,19 +23,10 @@ class object_tv_lg_netcast:
 
     def __init__ (self, room_id, device_id, q_dvc, queues):
         #
-        self._active = True
-        #
-        self._type = "tv_lg_netcast"
-        self._room_id = room_id
-        self._device_id = device_id
+        Device.__init__(self, "tv_lg_netcast", room_id, device_id, q_dvc, queues)
         #
         self.is_paired = False
         self._pairDevice()
-        #
-        self._queue = q_dvc
-        self._q_response_web = queues[src.cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[src.cfg.key_q_response_command]
-        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
         #
         self.apps_timestamp = False
         self.apps_xml = False
@@ -46,29 +36,6 @@ class object_tv_lg_netcast:
         t.start()
         #
         self.run()
-
-    def run(self):
-        time.sleep(5)
-        while self._active:
-            # Keep in a loop
-            '''
-            Use of self._active allows for object to close itself, however may wish
-            to take different approach of terminting the thread the object loop resides in
-            '''
-            time.sleep(0.1)
-            qItem = self._getFromQueue()
-            if bool(qItem):
-                if qItem['response_queue'] == 'stop':
-                    self._active = False
-                elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
-                    self._q_response_web.put(self.getHtml())
-                elif qItem['response_queue'] == src.cfg.key_q_response_command:
-                    self._q_response_cmd.put(self.sendCmd(qItem['request']))
-                else:
-                    # Code to go here to handle other items added to the queue!!
-                    True
-                self._queue.task_done()
-        print_msg('Thread stopped: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
 
     def get_apps(self):
         while self._active:
@@ -82,32 +49,8 @@ class object_tv_lg_netcast:
             print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
             time.sleep(600) # 600 = 10 minutes
 
-    def _getFromQueue(self):
-        if not self._queue.empty():
-            return self._queue.get(block=True)
-        else:
-            return False
-
-    def dvc_or_acc_id(self):
-        return self._room_id + ':' + self._device_id
-
-    def _ipaddress(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, "ipaddress")
-
-    def _port(self):
-        return get_device_detail(self._type, "port")
-
     def _pairingkey(self):
         return get_cfg_device_detail(self._room_id, self._device_id, "pairingkey")
-
-    def _logo(self):
-        return get_device_logo(self._type)
-
-    def _dvc_name(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, "name")
-
-    def _type_name(self):
-        return get_device_name(self._type)
 
     def _pairDevice(self, pair_reason=''):
         #
@@ -181,23 +124,23 @@ class object_tv_lg_netcast:
         #
         return r_pass
 
-    def getHtml(self):
-        html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(room_id=self._room_id,
-                                                                                 device_id=self._device_id,
-                                                                                 apps = self._html_apps())
+    def getHtml(self, user):
+        #
+        args = {'room_id': self._room_id,
+                'device_id': self._device_id,
+                'apps': self._html_apps()}
+        #
+        return self._getHtml_generic(args)
 
-    def getHtml_settings(self, grp_num, dvc_num):
-        html = get_device_html_settings(self._type)
-        if html:
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
-                                                                                              name = self._dvc_name(),
-                                                                                              ipaddress = self._ipaddress(),
-                                                                                              pairingkey = self._pairingkey,
-                                                                                              dvc_ref='{{room_id}_{device_id}'.format(room_id=self._room_id,
-                                                                                                                                      device_id=self._device_id))
-        else:
-            return ''
+    def getHtml_settings(self, room_num, dvc_num):
+        #
+        args = {'img': self._logo(),
+                'name': self._dvc_name(),
+                'ipaddress': self._ipaddress(),
+                'pairingkey': self._pairingkey(),
+                'dvc_ref': self.dvc_or_acc_ref()}
+        #
+        return self.getHtml_settings_generic(args)
 
     def _html_app_check(self, attempt=1):
         #

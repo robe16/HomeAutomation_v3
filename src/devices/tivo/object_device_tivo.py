@@ -3,34 +3,24 @@ import telnetlib
 import threading
 import time
 import xml.etree.ElementTree as ET
-from urllib import urlopen
 
 import requests as requests
 from requests.auth import HTTPDigestAuth
 
-import src.cfg
 from src.config.devices.config_devices import get_cfg_device_detail
 from src.console_messages import print_command, print_error, print_msg
 from src.lists.channels.list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
-from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 from src.tvlisting_getfromqueue import _check_tvlistingsqueue
 from src.web_tvchannels import html_channels_user_and_all
 
+from src.devices.device import Device
 
-class object_tivo:
+
+class object_tivo(Device):
 
     def __init__(self, room_id, device_id, q_dvc, queues):
         #
-        self._active = True
-        #
-        self._type = "tivo"
-        self._room_id = room_id
-        self._device_id = device_id
-        #
-        self._queue = q_dvc
-        self._q_response_web = queues[src.cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[src.cfg.key_q_response_command]
-        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
+        Device.__init__(self, "tivo", room_id, device_id, q_dvc, queues)
         #
         self.recordings_timestamp = False
         self.recordings_folders = False
@@ -88,58 +78,11 @@ class object_tivo:
             time.sleep(600) # 600 = 10 minutes
 
 
-    def run(self):
-        time.sleep(5)
-        while self._active:
-            # Keep in a loop
-            '''
-                Use of self._active allows for object to close itself, however may wish
-                to take different approach of terminating the thread the object loop resides in
-            '''
-            time.sleep(0.1)
-            qItem = self._getFromQueue()
-            if bool(qItem):
-                if qItem['response_queue'] == 'stop':
-                    self._active = False
-                elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
-                    self._q_response_web.put(self.getHtml(user=qItem['user'],
-                                                          listings=_check_tvlistingsqueue(self._q_tvlistings)))
-                elif qItem['response_queue'] == src.cfg.key_q_response_command:
-                    self._q_response_cmd.put(self.sendCmd(qItem['request']))
-                else:
-                    # Code to go here to handle other items added to the queue!!
-                    True
-        print_msg('Thread stopped: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
-
-    def _getFromQueue(self):
-        if not self._queue.empty():
-            return self._queue.get(block=True)
-        else:
-            return False
-
-    def dvc_or_acc_id(self):
-        return self._room_id + ':' + self._device_id
-
-    def _ipaddress(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, "ipaddress")
-
-    def _port(self):
-        return get_device_detail(self._type, "port")
-
     def _accesskey(self):
         return get_cfg_device_detail(self._room_id, self._device_id, "mak")
 
     def _package(self):
         return get_cfg_device_detail(self._room_id, self._device_id, "package")
-
-    def _logo(self):
-        return get_device_logo(self._type)
-
-    def _dvc_name(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, "name")
-
-    def _type_name(self):
-        return get_device_name(self._type)
 
     def _getChan(self):
         response = self._send_telnet(self._ipaddress(), self._port(), response=True)
@@ -205,9 +148,9 @@ class object_tivo:
                           'ERROR')
             return False
 
-    def getHtml(self, user=False, listings=None):
+    def getHtml(self, user=False):
         #
-        html_file = get_device_html_command(self._type)
+        #listings = _check_tvlistingsqueue(self._q_tvlistings)
         #
         chan_current = self._getChan()
         #
@@ -217,37 +160,30 @@ class object_tivo:
                                                    chan_current=chan_current,
                                                    package=["virginmedia_package", self._package()])
         #
-        now_viewing = get_channel_name_from_devicekey(self._type, chan_current)
-        now_viewing_logo = get_channel_logo_from_devicekey(self._type, chan_current)
-        #
-        now_viewing_refresh_url = '/command/device/{room_id}/{device_id}?command=getchannel'.format(room_id=self._room_id,
-                                                                                                    device_id=self._device_id)
-        #
         if self.recordings_timestamp:
             recordings_datetime = self.recordings_timestamp.strftime('%d/%m/%Y %H:%M:%S')
         else:
             recordings_datetime = ''
         #
-        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(room_id=self._room_id,
-                                                                                      device_id=self._device_id,
-                                                                                      html_recordings=self._getHtml_recordings(),
-                                                                                      timestamp_recordings=recordings_datetime,
-                                                                                      now_viewing_logo=now_viewing_logo,
-                                                                                      now_viewing=now_viewing,
-                                                                                      now_viewing_refresh_url=now_viewing_refresh_url,
-                                                                                      html_channels=html_channels)
+        args = {'room_id': self._room_id,
+                'device_id': self._device_id,
+                'html_recordings': self._getHtml_recordings(),
+                'timestamp_recordings': recordings_datetime,
+                'now_viewing_logo': get_channel_logo_from_devicekey(self._type, chan_current),
+                'now_viewing': get_channel_name_from_devicekey(self._type, chan_current),
+                'html_channels': html_channels}
+        #
+        return self._getHtml_generic(args)
 
-    def getHtml_settings(self):
-        html_file = get_device_html_settings(self._type)
-        if html_file:
-            return urlopen('web/html_settings/devices/' + html_file).read().encode('utf-8').format(img=self._logo(),
-                                                                                                   name=self._dvc_name(),
-                                                                                                   ipaddress=self._ipaddress(),
-                                                                                                   mak=self._accesskey(),
-                                                                                                   dvc_ref='{room_id}_{device_id}'.format(room_id=self._room_id,
-                                                                                                                                          device_id=self._device_id))
-        else:
-            return ''
+    def getHtml_settings(self, room_num, dvc_num):
+        #
+        args = {'img': self._logo(),
+                'name': self._dvc_name(),
+                'ipaddress': self._ipaddress(),
+                'mak': self._accesskey(),
+                'dvc_ref': self.dvc_or_acc_ref()}
+        #
+        return self.getHtml_settings_generic(args)
 
     def _getHtml_recordings(self):
         #
