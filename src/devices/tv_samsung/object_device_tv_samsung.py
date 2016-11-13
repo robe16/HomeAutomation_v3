@@ -1,11 +1,9 @@
 import base64
 import socket
-import time
 
 from src.cfg import my_ip
-from src.console_messages import print_command, print_msg
-
 from src.devices.device import Device
+from src.log.console_messages import print_command
 
 
 #TODO on screen messages - http://tech.shantanugoel.com/2013/07/14/samsung-tv-message-box-python.html

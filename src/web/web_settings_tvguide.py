@@ -7,7 +7,7 @@ def settings_tvguide():
     #
     color_gen = 'primary'
     #
-    return urlopen('web/html_settings/settings_tvguide.html').read().encode('utf-8').format(color_gen = color_gen,
+    return urlopen('web/html/html_settings/settings_tvguide.html').read().encode('utf-8').format(color_gen = color_gen,
                                                                                             channels = _settings_tvguide_items(color_gen))
 
 def _settings_tvguide_items(color_gen):
@@ -26,7 +26,7 @@ def _settings_tvguide_items(color_gen):
         # Create alternating row colours
         rowcolor = '#e8e8e8' if rowcolor == '#ffffff' else '#ffffff'
         #
-        html += urlopen('web/html_settings/settings_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
+        html += urlopen('web/html/html_settings/settings_tvguide_item.html').read().encode('utf-8').format(chan_id = chan_id,
                                                                                                       rowcolor = rowcolor,
                                                                                                       color_gen = color_gen,
                                                                                                       channame = chan['name'],

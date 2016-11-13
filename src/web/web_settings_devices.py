@@ -35,7 +35,7 @@ def settings_devices():
                                               devices=html_devices)
         grp_num += 1
     #
-    return urlopen('web/html_settings/settings_devices.html').read().encode('utf-8').format(groups = html_groups,
+    return urlopen('web/html/html_settings/settings_devices.html').read().encode('utf-8').format(groups = html_groups,
                                                                                             grpnum = str(grp_num))
 
 def settings_devices_selection(grpnum, dvcnum):
@@ -53,7 +53,7 @@ def settings_devices_selection(grpnum, dvcnum):
         name = get_device_name(devices[dvc_key]['type'])
         img = get_device_logo(devices[dvc_key]['type'])
         #
-        body += urlopen('web/html_settings/settings_devices_selection_item.html').read().encode('utf-8').format(name=name,
+        body += urlopen('web/html/html_settings/settings_devices_selection_item.html').read().encode('utf-8').format(name=name,
                                                                                                                 img=img,
                                                                                                                 grpnum=grpnum,
                                                                                                                 dvcnum=dvcnum,
@@ -67,7 +67,7 @@ def settings_devices_selection(grpnum, dvcnum):
 
 def settings_devices_group(grpnum, dvcnum, group_name = '', devices = ''):
     #
-    return urlopen('web/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name=group_name,
+    return urlopen('web/html/html_settings/settings_devices_group.html').read().encode('utf-8').format(group_name=group_name,
                                                                                                   devices=devices,
                                                                                                   grpnum=str(grpnum),
                                                                                                   dvcnum=str(dvcnum),

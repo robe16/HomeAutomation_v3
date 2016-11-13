@@ -9,11 +9,11 @@ from web_settings_tvguide import settings_tvguide
 def create_settings_devices(user):
     body = settings_devices()
     #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: Devices') + \
+    return urlopen('web/html/header.html').read().encode('utf-8').format(title='Settings: Devices') + \
            html_menu(user) + \
-           urlopen('web/body.html').read().encode('utf-8').format(header='Settings: Devices', body=body) + \
-           urlopen('web/message_popup.html').read().encode('utf-8') + \
-           urlopen('web/footer.html').read().encode('utf-8')
+           urlopen('web/html/body.html').read().encode('utf-8').format(header='Settings: Devices', body=body) + \
+           urlopen('web/html/message_popup.html').read().encode('utf-8') + \
+           urlopen('web/html/footer.html').read().encode('utf-8')
 
 
 def settings_devices_requests(request):
@@ -35,7 +35,7 @@ def settings_devices_requests(request):
             dict['img'] = get_device_logo(request.query.device)
             dict['dvc_ref'] = '{grpnum}_{dvcnum}'.format(grpnum=request.query.grpnum, dvcnum=request.query.dvcnum)
             #
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(**dict)
+            return urlopen('web/html/html_settings/devices/' + html).read().encode('utf-8').format(**dict)
         else:
             return ''
         #
@@ -46,8 +46,8 @@ def settings_devices_requests(request):
 def create_settings_tvguide(user):
     body = settings_tvguide()
     #
-    return urlopen('web/header.html').read().encode('utf-8').format(title='Settings: TV Guide') + \
+    return urlopen('web/html/header.html').read().encode('utf-8').format(title='Settings: TV Guide') + \
            html_menu(user) + \
-           urlopen('web/body.html').read().encode('utf-8').format(header='Settings: TV Guide', body=body) + \
-           urlopen('web/message_popup.html').read().encode('utf-8') + \
-           urlopen('web/footer.html').read().encode('utf-8')
+           urlopen('web/html/body.html').read().encode('utf-8').format(header='Settings: TV Guide', body=body) + \
+           urlopen('web/html/message_popup.html').read().encode('utf-8') + \
+           urlopen('web/html/footer.html').read().encode('utf-8')

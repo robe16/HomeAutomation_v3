@@ -1,9 +1,10 @@
-from datetime import datetime, timedelta
 import json
 import os
-from object_channel import object_channel
-from console_messages import print_channelbuild, print_msg
+from datetime import datetime
+
 import tvlisting_radiotimes
+from src.channels.object_channel import object_channel
+from src.log.console_messages import print_channelbuild, print_msg
 
 
 def build_channel_array():

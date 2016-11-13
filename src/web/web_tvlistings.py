@@ -3,7 +3,7 @@ from urllib import urlopen
 
 from src.config.devices.config_devices import get_cfg_device_type
 from src.config.users.config_users import get_userchannels
-from tvlisting import returnnownext
+from src.tvlistings.tvlisting import returnnownext
 
 
 def html_listings_user_and_all (listings, room_id=False, device_id=False, user=False, chan_current=False, package=False):
@@ -34,7 +34,7 @@ def html_listings_user_and_all (listings, room_id=False, device_id=False, user=F
         all_count += 1
         active = 'active' if all_count == 1 else ''
         #
-        html_nav_user += urlopen('web/pills_nav.html').read().encode('utf-8').format(active=active,
+        html_nav_user += urlopen('web/html/pills_nav.html').read().encode('utf-8').format(active=active,
                                                                                     category=str(user).lower(),
                                                                                     title=str(user)+'\'s favourites')
         #
@@ -51,7 +51,7 @@ def html_listings_user_and_all (listings, room_id=False, device_id=False, user=F
                               chan_current=chan_current,
                               package=package)
         #
-        html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
+        html_content += urlopen('web/html/pills_contents.html').read().encode('utf-8').format(active=active,
                                                                                          category=str(user).lower(),
                                                                                          body=body)
         #
@@ -63,7 +63,7 @@ def html_listings_user_and_all (listings, room_id=False, device_id=False, user=F
         all_count += 1
         active = 'active' if all_count == 1 else ''
         #
-        html_nav_all += urlopen('web/pills_nav.html').read().encode('utf-8').format(active=active,
+        html_nav_all += urlopen('web/html/pills_nav.html').read().encode('utf-8').format(active=active,
                                                                                     category=cat.lower(),
                                                                                     title=cat)
         #
@@ -73,20 +73,20 @@ def html_listings_user_and_all (listings, room_id=False, device_id=False, user=F
                               chan_current=chan_current,
                               package=package)
         #
-        html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
+        html_content += urlopen('web/html/pills_contents.html').read().encode('utf-8').format(active=active,
                                                                                          category=cat.lower(),
                                                                                          body=body)
         #
     #
     # If user channels available, change categories into dropdown menu
     if user_channels:
-        html_nav_all = urlopen('web/pills_nav_dropdown.html').read().encode('utf-8').format(title='All Channels',
+        html_nav_all = urlopen('web/html/pills_nav_dropdown.html').read().encode('utf-8').format(title='All Channels',
                                                                                             dropdowns=html_nav_all)
     #
     # Combine pills for 'user' and 'all' channel listings
     html_nav = html_nav_user + html_nav_all
     #
-    html_tvguide += urlopen('web/pills_parent.html').read().encode('utf-8').format(nav=html_nav,
+    html_tvguide += urlopen('web/html/pills_parent.html').read().encode('utf-8').format(nav=html_nav,
                                                                                    content=html_content)
     #
     return html_tvguide
@@ -103,12 +103,12 @@ def _html_no_listings(room_id=False, device_id=False):
     #
     script = ('\r\n<script>\r\n' +
               'setTimeout(function () {\r\n' +
-              'checkListings(\'/web/tvguide' + device_query + '\');\r\n' +
+              'checkListings(\'/web/html/tvguide' + device_query + '\');\r\n' +
               '}, 5000);\r\n' +
               '</script>\r\n')
     body = '<strong>An error has occurred!!</strong> The programme listings are still being retrieved - please wait and refresh shortly.'
     #
-    return urlopen('web/html_tvguide/tvguide-nodata.html').read().encode('utf-8').format(script=script,
+    return urlopen('web/html/html_tvguide/tvguide-nodata.html').read().encode('utf-8').format(script=script,
                                                                                          type='alert-danger',
                                                                                          body=body)
 
@@ -123,7 +123,7 @@ def _html_listings(listings, room_id=False, device_id=False, chan_current=False,
                        user=user,
                        package=package)
     #
-    return urlopen('web/html_tvguide/tvguide-data.html').read().encode('utf-8').format(style=style,
+    return urlopen('web/html/html_tvguide/tvguide-data.html').read().encode('utf-8').format(style=style,
                                                                                        listings=lstngs)
 
 
@@ -221,7 +221,7 @@ def _listingsrow(x, channelitem, chan_current, room_id=False, device_id=False, r
         item_last = ''
     # If device can change channel, add 'go' button
     if room_id and device_id and channo:
-        go = urlopen('web/html_tvguide/tvguide-row_go.html').read().encode('utf-8').format(room_id=room_id,
+        go = urlopen('web/html/html_tvguide/tvguide-row_go.html').read().encode('utf-8').format(room_id=room_id,
                                                                                            device_id=device_id,
                                                                                            channo=channo)
     else:
@@ -239,7 +239,7 @@ def _listingsrow(x, channelitem, chan_current, room_id=False, device_id=False, r
         if not logo:
             logo = channelitem.logo('sd')
     #
-    return urlopen('web/html_tvguide/tvguide-row.html').read().encode('utf-8').format(id=('chan' + str(channo)),
+    return urlopen('web/html/html_tvguide/tvguide-row.html').read().encode('utf-8').format(id=('chan' + str(channo)),
                                                                                       chan_id=chan_id,
                                                                                       cls_highlight=chan_highlight,
                                                                                       cls_lastitem=item_last,

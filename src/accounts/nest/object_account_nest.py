@@ -2,17 +2,14 @@ import datetime
 import json
 import random
 import string
-import time
 from urllib import urlopen
 
 import requests as requests
 
-import src.cfg
-from src.config.devices.config_devices import get_cfg_account_detail, set_cfg_account_detail
-from src.console_messages import print_error, print_msg
-from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-
 from src.accounts.account import Account
+from src.config.devices.config_devices import get_cfg_account_detail, set_cfg_account_detail
+from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
+from src.log.console_messages import print_error, print_msg
 
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference

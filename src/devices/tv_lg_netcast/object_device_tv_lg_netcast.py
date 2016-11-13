@@ -7,9 +7,8 @@ import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from src.config.devices.config_devices import get_cfg_device_detail
-from src.console_messages import print_command, print_msg
-
 from src.devices.device import Device
+from src.log.console_messages import print_command, print_msg
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 

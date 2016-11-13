@@ -1,9 +1,10 @@
 import time
 from urllib import urlopen
+
 import src.cfg as cfg
 from src.config.devices.config_devices import get_cfg_device_detail
 from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
-from src.console_messages import print_command, print_error, print_msg
+from src.log.console_messages import print_msg
 
 
 class Device:
@@ -80,7 +81,7 @@ class Device:
         True
 
     def _getHtml_generic(self, args):
-        return urlopen('web/html_devices/' + get_device_html_command(self._type)).read().encode('utf-8').format(**args)
+        return urlopen('web/html/html_devices/' + get_device_html_command(self._type)).read().encode('utf-8').format(**args)
 
     def getHtml_settings(self, room_num, dvc_num):
         # Mastered in each of the device specific classes
@@ -89,6 +90,6 @@ class Device:
     def getHtml_settings_generic(self, args):
         html_file = get_device_html_settings(self._type)
         if html_file:
-            return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(**args)
+            return urlopen('web/html/html_devices/' + html_file).read().encode('utf-8').format(**args)
         else:
             return ''

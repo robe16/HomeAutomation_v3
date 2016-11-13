@@ -1,6 +1,7 @@
 import json
 import os
-from src.console_messages import print_error
+
+from src.log.console_messages import print_error
 
 
 def read_list_devices():

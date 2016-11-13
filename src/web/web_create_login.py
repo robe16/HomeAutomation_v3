@@ -4,7 +4,7 @@ from src.config.users.config_users import get_usernames
 
 
 def html_users():
-    return urlopen('web/login.html').read().encode('utf-8').format(users=_useritems())
+    return urlopen('web/html/login.html').read().encode('utf-8').format(users=_useritems())
 
 
 def _useritems():

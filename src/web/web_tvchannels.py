@@ -32,7 +32,7 @@ def html_channels_user_and_all (room_id=False, device_id=False, user=False, chan
         all_count += 1
         active = 'active' if all_count == 1 else ''
         #
-        html_nav_user += urlopen('web/pills_nav.html').read().encode('utf-8').format(active=active,
+        html_nav_user += urlopen('web/html/pills_nav.html').read().encode('utf-8').format(active=active,
                                                                                     category=str(user).lower(),
                                                                                     title=str(user)+'\'s favourites')
         #
@@ -53,7 +53,7 @@ def html_channels_user_and_all (room_id=False, device_id=False, user=False, chan
                               chan_current=chan_current,
                               package=package)
         #
-        html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
+        html_content += urlopen('web/html/pills_contents.html').read().encode('utf-8').format(active=active,
                                                                                          category=str(user).lower(),
                                                                                          body=body)
         #
@@ -65,7 +65,7 @@ def html_channels_user_and_all (room_id=False, device_id=False, user=False, chan
         all_count += 1
         active = 'active' if all_count == 1 else ''
         #
-        html_nav_all += urlopen('web/pills_nav.html').read().encode('utf-8').format(active=active,
+        html_nav_all += urlopen('web/html/pills_nav.html').read().encode('utf-8').format(active=active,
                                                                                     category=cat.lower(),
                                                                                     title=cat)
         #
@@ -76,20 +76,20 @@ def html_channels_user_and_all (room_id=False, device_id=False, user=False, chan
                               chan_current=chan_current,
                               package=package)
         #
-        html_content += urlopen('web/pills_contents.html').read().encode('utf-8').format(active=active,
+        html_content += urlopen('web/html/pills_contents.html').read().encode('utf-8').format(active=active,
                                                                                          category=cat.lower(),
                                                                                          body=body)
         #
     #
     # If user channels available, change categories into dropdown menu
     if user_channels:
-        html_nav_all = urlopen('web/pills_nav_dropdown.html').read().encode('utf-8').format(title='All Channels',
+        html_nav_all = urlopen('web/html/pills_nav_dropdown.html').read().encode('utf-8').format(title='All Channels',
                                                                                             dropdowns=html_nav_all)
     #
     # Combine pills for 'user' and 'all' channel listings
     html_nav = html_nav_user + html_nav_all
     #
-    html_channels += urlopen('web/pills_parent.html').read().encode('utf-8').format(nav=html_nav,
+    html_channels += urlopen('web/html/pills_parent.html').read().encode('utf-8').format(nav=html_nav,
                                                                                    content=html_content)
     #
     return html_channels
@@ -99,7 +99,7 @@ def _html_no_channels():
     #
     body = '<strong>An error has occurred!!</strong> The list of channels on the server is empty. Please check server setup.'
     #
-    return urlopen('web/comp_alert.html').read().encode('utf-8').format(type='alert-danger',
+    return urlopen('web/html/comp_alert.html').read().encode('utf-8').format(type='alert-danger',
                                                                         body=body)
 
 
@@ -115,7 +115,7 @@ def _html_channels(category, channels, room_id=False, device_id=False, chan_curr
                            user=user,
                            package=package)
     #
-    return urlopen('web/html_tvguide/tvguide-grid.html').read().encode('utf-8').format(header=header,
+    return urlopen('web/html/html_tvguide/tvguide-grid.html').read().encode('utf-8').format(header=header,
                                                                                        html_chans=html_chans)
 
 
@@ -193,7 +193,7 @@ def _channelitem(x, category, channel, res, chan_current, room_id=False, device_
     if x > 1 and x % 6 == 0:
         html += '</div><div class="row">'
     #
-    html += urlopen('web/html_tvguide/tvguide-grid_item.html').read().encode('utf-8').format(id=('chan' + str(channo)),
+    html += urlopen('web/html/html_tvguide/tvguide-grid_item.html').read().encode('utf-8').format(id=('chan' + str(channo)),
                                                                                              chan_id=chan_id,
                                                                                              cls_highlight=chan_highlight,
                                                                                              imgchan=channel[res]['logo'],

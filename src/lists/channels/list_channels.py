@@ -1,6 +1,5 @@
 import json
 import os
-from src.console_messages import print_error
 
 
 def read_list_channels():

@@ -8,12 +8,10 @@ import requests as requests
 from requests.auth import HTTPDigestAuth
 
 from src.config.devices.config_devices import get_cfg_device_detail
-from src.console_messages import print_command, print_error, print_msg
-from src.lists.channels.list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
-from src.tvlisting_getfromqueue import _check_tvlistingsqueue
-from src.web_tvchannels import html_channels_user_and_all
-
 from src.devices.device import Device
+from src.lists.channels.list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
+from src.log.console_messages import print_command, print_error, print_msg
+from src.web.web_tvchannels import html_channels_user_and_all
 
 
 class object_tivo(Device):
