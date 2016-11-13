@@ -4,10 +4,6 @@ config_devices.json
 config_users.json
 .idea/*
 
-# Test files for development purposes
-_test_.py
-web_testpage.py
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
