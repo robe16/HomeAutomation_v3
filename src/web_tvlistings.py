@@ -5,17 +5,16 @@ from config_users import get_userchannels
 from config_devices import get_cfg_device_detail, get_cfg_device_type
 
 
-def html_listings_user_and_all (listings, structure_id=False, room_id=False, device_id=False, user=False, chan_current=False, package=False):
+def html_listings_user_and_all (listings, room_id=False, device_id=False, user=False, chan_current=False, package=False):
     #
     html_tvguide = '<p style="text-align: right">Last updated {timestamp}</p>'.format(timestamp=datetime.now().strftime('%d/%m/%Y %H:%M:%S'))
     #
     if not listings:
-        html_tvguide += _html_no_listings(structure_id=structure_id, room_id=room_id, device_id=device_id)
+        html_tvguide += _html_no_listings(room_id=room_id, device_id=device_id)
         return html_tvguide
     #
-    if structure_id and room_id and device_id:
-        html_tvguide += '<script>setTimeout(function () {getChannel(\'/command/' + str(structure_id) + \
-                        '/' + str(room_id) + \
+    if room_id and device_id:
+        html_tvguide += '<script>setTimeout(function () {getChannel(\'/command/' + str(room_id) + \
                         '/' + str(device_id) + \
                         '?command=getchannel\', true);}, 10000);</script>'
     #
@@ -45,7 +44,6 @@ def html_listings_user_and_all (listings, structure_id=False, room_id=False, dev
                     temp_listings.append(l)
         #
         body = _html_listings(temp_listings,
-                              structure_id=structure_id,
                               room_id=room_id,
                               device_id=device_id,
                               user=user,
@@ -69,7 +67,6 @@ def html_listings_user_and_all (listings, structure_id=False, room_id=False, dev
                                                                                     title=cat)
         #
         body = _html_listings(listings['channels'][cat],
-                              structure_id=structure_id,
                               room_id=room_id,
                               device_id=device_id,
                               chan_current=chan_current,
@@ -94,13 +91,12 @@ def html_listings_user_and_all (listings, structure_id=False, room_id=False, dev
     return html_tvguide
 
 
-def _html_no_listings(structure_id=False, room_id=False, device_id=False):
+def _html_no_listings(room_id=False, device_id=False):
     #
     #TODO
-    if structure_id and room_id and device_id:
-        device_query = '?structure_id={structure_id}&room_id={room_id}&device_id={device_id}'.format(structure_id=structure_id,
-                                                                                                     room_id=room_id,
-                                                                                                     device_id=device_id)
+    if room_id and device_id:
+        device_query = '?&room_id={room_id}&device_id={device_id}'.format(room_id=room_id,
+                                                                          device_id=device_id)
     else:
         device_query = ''
     #
@@ -116,11 +112,10 @@ def _html_no_listings(structure_id=False, room_id=False, device_id=False):
                                                                                          body=body)
 
 
-def _html_listings(listings, structure_id=False, room_id=False, device_id=False, chan_current=False, user=False, package=False):
+def _html_listings(listings, room_id=False, device_id=False, chan_current=False, user=False, package=False):
     #
     style = '<style>tr.highlight {border:2px solid #FFBF47;border-radius=7px}</style>'
     lstngs = _listings(listings,
-                       structure_id=structure_id,
                        room_id=room_id,
                        device_id=device_id,
                        chan_current=chan_current,
@@ -131,7 +126,7 @@ def _html_listings(listings, structure_id=False, room_id=False, device_id=False,
                                                                                        listings=lstngs)
 
 
-def _listings(listings, structure_id=False, room_id=False, device_id=False, chan_current=False, user=False, package=False):
+def _listings(listings, room_id=False, device_id=False, chan_current=False, user=False, package=False):
     STRlistings = ""
     x = 0
     for lstg in listings:
@@ -171,17 +166,17 @@ def _listings(listings, structure_id=False, room_id=False, device_id=False, chan
                 last = True
             else:
                 last = False
-            STRlistings += _listingsrow(x, lstg, chan_current, structure_id, room_id, device_id, res=res, user=user, last=last)
+            STRlistings += _listingsrow(x, lstg, chan_current, room_id, device_id, res=res, user=user, last=last)
             x += 1
     #
     return STRlistings
 
 
-def _listingsrow(x, channelitem, chan_current, structure_id=False, room_id=False, device_id=False, res=False, user=False, last=False):
+def _listingsrow(x, channelitem, chan_current, room_id=False, device_id=False, res=False, user=False, last=False):
     #
     try:
         channo = channelitem.devicekeys(res,
-                                        get_cfg_device_type(structure_id, room_id, device_id))
+                                        get_cfg_device_type(room_id, device_id))
     except Exception as e:
         channo = False
     #
@@ -224,9 +219,8 @@ def _listingsrow(x, channelitem, chan_current, structure_id=False, room_id=False
     else:
         item_last = ''
     # If device can change channel, add 'go' button
-    if group_name and device_name and channo:
-        go = urlopen('web/html_tvguide/tvguide-row_go.html').read().encode('utf-8').format(structure_id=structure_id,
-                                                                                           room_id=room_id,
+    if room_id and device_id and channo:
+        go = urlopen('web/html_tvguide/tvguide-row_go.html').read().encode('utf-8').format(room_id=room_id,
                                                                                            device_id=device_id,
                                                                                            channo=channo)
     else:

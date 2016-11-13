@@ -4,7 +4,7 @@ from port_listener import start_bottle
 from config_devices_create import create_device_threads
 
 from config_devices import get_cfg_device_json
-from config_devices import get_cfg_idlist_structures, get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
+from config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
 
 import cfg
 
@@ -16,47 +16,36 @@ import cfg
 device_queues = []
 account_queues = []
 #
-s_list = get_cfg_idlist_structures()
-s_num = 0
+r_list = get_cfg_idlist_rooms()
+r_num = 0
 #
-while s_num < len(s_list):
+#
+while r_num < len(r_list):
     #
-    r_list = get_cfg_idlist_rooms(s_list[s_num])
-    r_num = 0
+    d_list = get_cfg_idlist_devices(r_list[r_num])
+    d_num = 0
     #
     device_queues.append([])
-    device_queues[s_num] = []
+    device_queues[r_num] = []
     #
-    while r_num < len(r_list):
+    while d_num < len(d_list):
         #
-        d_list = get_cfg_idlist_devices(s_list[s_num], r_list[r_num])
-        d_num = 0
+        device_queues[r_num].append([])
+        device_queues[r_num][d_num] = Manager().Queue()
         #
-        device_queues[s_num].append([])
-        device_queues[s_num][r_num] = []
-        #
-        while d_num < len(d_list):
-            #
-            device_queues[s_num][r_num].append([])
-            device_queues[s_num][r_num][d_num] = Manager().Queue()
-            #
-            d_num += 1
-        r_num += 1
-    #
-    a_list = get_cfg_idlist_accounts(s_list[s_num])
-    a_num = 0
+        d_num += 1
+    r_num += 1
+#
+a_list = get_cfg_idlist_accounts()
+a_num = 0
+#
+#
+while a_num < len(a_list):
     #
     account_queues.append([])
-    account_queues[s_num] = []
+    account_queues[a_num] = Manager().Queue()
     #
-    while a_num < len(a_list):
-        #
-        account_queues[s_num].append([])
-        account_queues[s_num][a_num] = Manager().Queue()
-        #
-        a_num += 1
-    #
-    s_num += 1
+    a_num += 1
 
 ################################
 # Queues for responses back to port_listener

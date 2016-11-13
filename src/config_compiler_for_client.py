@@ -7,12 +7,12 @@ def compile_config():
     #
     for s in cfg['structures']:
         #
-        for a in cfg['structures'][s]['accounts']:
-            del cfg['structures'][s]['accounts'][a]['details']
+        for a in cfg['structure']['accounts']:
+            del cfg['structure']['accounts'][a]['details']
             #
-        for r in cfg['structures'][s]['rooms']:
-            for d in cfg['structures'][s]['rooms'][r]['devices']:
-                del cfg['structures'][s]['rooms'][r]['devices'][d]['details']
+        for r in cfg['structure']['rooms']:
+            for d in cfg['structure']['rooms'][r]['devices']:
+                del cfg['structure']['rooms'][r]['devices'][d]['details']
                 #
     #
     try:

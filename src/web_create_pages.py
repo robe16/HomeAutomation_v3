@@ -37,8 +37,8 @@ def create_tvguide(user, listings):
 
 
 def create_device(user, body, title, header):
-    # title = '{structure}: {room}: {device}'
-    # title = '{structure}: {account}'
+    # title = '{room}: {device}'
+    # title = '{account}'
     #
     return urlopen('web/header.html').read().encode('utf-8').format(title=title) +\
            html_menu(user) +\

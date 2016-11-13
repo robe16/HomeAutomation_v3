@@ -1,4 +1,4 @@
-from config_devices import get_cfg_idlist_structures, get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
+from config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
 from config_devices import get_cfg_device_type, get_cfg_account_type
 from console_messages import print_msg
 
@@ -11,84 +11,74 @@ import threading
 
 def create_device_threads(q_devices, q_accounts, queues):
     #
-    s_list = get_cfg_idlist_structures()
-    s_num = 0
     t = 0
     thread = []
     #
-    while s_num < len(s_list):
-        r_list = get_cfg_idlist_rooms(s_list[s_num])
-        r_num = 0
+    r_list = get_cfg_idlist_rooms()
+    r_num = 0
+    #
+    while r_num < len(r_list):
+        d_list = get_cfg_idlist_devices(r_list[r_num])
+        d_num = 0
         #
-        while r_num < len(r_list):
-            d_list = get_cfg_idlist_devices(s_list[s_num], r_list[r_num])
-            d_num = 0
+        while d_num < len(d_list):
             #
-            while d_num < len(d_list):
-                #
-                thread.append(threading.Thread(target=_create_device, args=(s_list[s_num],
-                                                                            r_list[r_num],
-                                                                            d_list[d_num],
-                                                                            q_devices[s_num][r_num][d_num],
-                                                                            queues)))
-                thread[t].daemon = True
-                thread[t].start()
-                #
-                print_msg('Thread created: {type}'.format(type=get_cfg_device_type(s_list[s_num], r_list[r_num], d_list[d_num])),
-                          dvc_or_acc_id=s_list[s_num]+':'+r_list[r_num]+':'+d_list[d_num])
-                #
-                t += 1
-                d_num += 1
-            r_num += 1
-            #
-        #
-        a_list = get_cfg_idlist_accounts(s_list[s_num])
-        a_num = 0
-        #
-        while a_num < len(a_list):
-            #
-            thread.append(threading.Thread(target=_create_account, args=(s_list[s_num],
-                                                                         a_list[a_num],
-                                                                         q_accounts[s_num][a_num],
-                                                                         queues)))
+            thread.append(threading.Thread(target=_create_device, args=(r_list[r_num],
+                                                                        d_list[d_num],
+                                                                        q_devices[r_num][d_num],
+                                                                        queues)))
             thread[t].daemon = True
             thread[t].start()
             #
-            print_msg('Thread created: {type}'.format(type=get_cfg_account_type(s_list[s_num], a_list[a_num])),
-                      dvc_or_acc_id=s_list[s_num]+':'+a_list[a_num])
+            print_msg('Thread created: {type}'.format(type=get_cfg_device_type(r_list[r_num], d_list[d_num])),
+                      dvc_or_acc_id=r_list[r_num]+':'+d_list[d_num])
             #
             t += 1
-            a_num += 1
-            #
-        s_num += 1
+            d_num += 1
+        r_num += 1
+        #
+    #
+    a_list = get_cfg_idlist_accounts()
+    a_num = 0
+    #
+    while a_num < len(a_list):
+        #
+        thread.append(threading.Thread(target=_create_account, args=(a_list[a_num],
+                                                                     q_accounts[a_num],
+                                                                     queues)))
+        thread[t].daemon = True
+        thread[t].start()
+        #
+        print_msg('Thread created: {type}'.format(type=get_cfg_account_type(a_list[a_num])),
+                  dvc_or_acc_id=a_list[a_num])
+        #
+        t += 1
+        a_num += 1
     #
     x = 0
     while x < t:
         thread[x].join()
 
 
-def _create_device(structure_id, room_id, device_id, q_dvc, queues):
-    device_type = get_cfg_device_type(structure_id, room_id, device_id)
+def _create_device(room_id, device_id, q_dvc, queues):
+    device_type = get_cfg_device_type(room_id, device_id)
     #
     if device_type=="tv_lg_netcast":
-        object_tv_lg_netcast(structure_id=structure_id,
-                             room_id=room_id,
+        object_tv_lg_netcast(room_id=room_id,
                              device_id=device_id,
                              q_dvc=q_dvc,
                              queues=queues)
     elif device_type=="tivo":
-        object_tivo(structure_id=structure_id,
-                    room_id=room_id,
+        object_tivo(room_id=room_id,
                     device_id=device_id,
                     q_dvc=q_dvc,
                     queues=queues)
 
 
-def _create_account(structure_id, account_id, q_dvc, queues):
-    device_type = get_cfg_account_type(structure_id, account_id)
+def _create_account(account_id, q_dvc, queues):
+    device_type = get_cfg_account_type(account_id)
     #
     if device_type=="nest_account":
-        object_nest_account(structure_id=structure_id,
-                            account_id=account_id,
+        object_nest_account(account_id=account_id,
                             q_dvc=q_dvc,
                             queues=queues)

@@ -5,7 +5,7 @@ from config_users import get_userchannels
 from config_devices import get_cfg_device_type, get_cfg_device_detail
 
 
-def html_channels_user_and_all (structure_id=False, room_id=False, device_id=False, user=False, chan_current=False, package=False):
+def html_channels_user_and_all (room_id=False, device_id=False, user=False, chan_current=False, package=False):
     #
     if not read_list_channels():
         return _html_no_channels()
@@ -15,9 +15,8 @@ def html_channels_user_and_all (structure_id=False, room_id=False, device_id=Fal
     #
     html_channels = ''
     #
-    if structure_id and room_id and device_id:
-        html_channels += '<script>setTimeout(function () {getChannel(\'/command/device/' + str(structure_id) + \
-                         '/' + str(room_id) + \
+    if room_id and device_id:
+        html_channels += '<script>setTimeout(function () {getChannel(\'/command/device/' + str(room_id) + \
                          '/' + str(device_id) + \
                          '?command=getchannel\', true);}, 10000);</script>'
     #
@@ -48,7 +47,6 @@ def html_channels_user_and_all (structure_id=False, room_id=False, device_id=Fal
         #
         body = _html_channels(temp_cats,
                               temp_channels,
-                              structure_id=structure_id,
                               room_id=room_id,
                               device_id=device_id,
                               user=user,
@@ -73,7 +71,6 @@ def html_channels_user_and_all (structure_id=False, room_id=False, device_id=Fal
         #
         body = _html_channels(cat,
                               get_channel_cat_list(cat),
-                              structure_id=structure_id,
                               room_id=room_id,
                               device_id=device_id,
                               chan_current=chan_current,
@@ -106,13 +103,12 @@ def _html_no_channels():
                                                                         body=body)
 
 
-def _html_channels(category, channels, structure_id=False, room_id=False, device_id=False, chan_current=False, user=False, package=False):
+def _html_channels(category, channels, room_id=False, device_id=False, chan_current=False, user=False, package=False):
     #
     header = '{user}\'s favourites'.format(user=user) if user else category
     #
     html_chans = _channels(category,
                            channels,
-                           structure_id=structure_id,
                            room_id=room_id,
                            device_id=device_id,
                            chan_current=chan_current,
@@ -123,7 +119,7 @@ def _html_channels(category, channels, structure_id=False, room_id=False, device
                                                                                        html_chans=html_chans)
 
 
-def _channels(category, channels, structure_id=False, room_id=False, device_id=False, chan_current=False, user=False, package=False):
+def _channels(category, channels, room_id=False, device_id=False, chan_current=False, user=False, package=False):
     html = ''
     x = 0
     for chan in channels:
@@ -168,18 +164,18 @@ def _channels(category, channels, structure_id=False, room_id=False, device_id=F
                 last = True
             else:
                 last = False
-            html += _channelitem(x, cat, chan, res, chan_current, structure_id, room_id, device_id, user=user)
+            html += _channelitem(x, cat, chan, res, chan_current, room_id, device_id, user=user)
             x += 1
     #
     return html
 
 
-def _channelitem(x, category, channel, res, chan_current, structure_id=False, room_id=False, device_id=False, user=False):
+def _channelitem(x, category, channel, res, chan_current, room_id=False, device_id=False, user=False):
     #
     html = ''
     #
     try:
-        channo = channel[res]['devicekeys'][get_cfg_device_type(structure_id, room_id, device_id)]
+        channo = channel[res]['devicekeys'][get_cfg_device_type(room_id, device_id)]
     except:
         channo = False
     #
@@ -202,7 +198,6 @@ def _channelitem(x, category, channel, res, chan_current, structure_id=False, ro
                                                                                              cls_highlight=chan_highlight,
                                                                                              imgchan=channel[res]['logo'],
                                                                                              channame=channel['name'],
-                                                                                             structure_id=structure_id,
                                                                                              room_id=room_id,
                                                                                              device_id=device_id,
                                                                                              channo=channo)

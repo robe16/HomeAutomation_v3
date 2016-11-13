@@ -18,12 +18,11 @@ import cfg
 
 class object_tivo:
 
-    def __init__(self, structure_id, room_id, device_id, q_dvc, queues):
+    def __init__(self, room_id, device_id, q_dvc, queues):
         #
         self._active = True
         #
         self._type = "tivo"
-        self._structure_id = structure_id
         self._room_id = room_id
         self._device_id = device_id
         #
@@ -118,25 +117,25 @@ class object_tivo:
             return False
 
     def dvc_or_acc_id(self):
-        return self._structure_id + ':' + self._room_id + ':' + self._device_id
+        return self._room_id + ':' + self._device_id
 
     def _ipaddress(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
+        return get_cfg_device_detail(self._room_id, self._device_id, "ipaddress")
 
     def _port(self):
         return get_device_detail(self._type, "port")
 
     def _accesskey(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "mak")
+        return get_cfg_device_detail(self._room_id, self._device_id, "mak")
 
     def _package(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "package")
+        return get_cfg_device_detail(self._room_id, self._device_id, "package")
 
     def _logo(self):
         return get_device_logo(self._type)
 
     def _dvc_name(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "name")
+        return get_cfg_device_detail(self._room_id, self._device_id, "name")
 
     def _type_name(self):
         return get_device_name(self._type)
@@ -211,8 +210,7 @@ class object_tivo:
         #
         chan_current = self._getChan()
         #
-        html_channels = html_channels_user_and_all(structure_id=self._structure_id,
-                                                   room_id=self._room_id,
+        html_channels = html_channels_user_and_all(room_id=self._room_id,
                                                    device_id=self._device_id,
                                                    user=user,
                                                    chan_current=chan_current,
@@ -221,17 +219,15 @@ class object_tivo:
         now_viewing = get_channel_name_from_devicekey(self._type, chan_current)
         now_viewing_logo = get_channel_logo_from_devicekey(self._type, chan_current)
         #
-        now_viewing_refresh_url = '/command/device/{structure_id}/{room_id}/{device_id}?command=getchannel'.format(structure_id=self._structure_id,
-                                                                                                                   room_id=self._room_id,
-                                                                                                                   device_id=self._device_id)
+        now_viewing_refresh_url = '/command/device/{room_id}/{device_id}?command=getchannel'.format(room_id=self._room_id,
+                                                                                                    device_id=self._device_id)
         #
         if self.recordings_timestamp:
             recordings_datetime = self.recordings_timestamp.strftime('%d/%m/%Y %H:%M:%S')
         else:
             recordings_datetime = ''
         #
-        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(structure_id=self._structure_id,
-                                                                                      room_id=self._room_id,
+        return urlopen('web/html_devices/' + html_file).read().encode('utf-8').format(room_id=self._room_id,
                                                                                       device_id=self._device_id,
                                                                                       html_recordings=self._getHtml_recordings(),
                                                                                       timestamp_recordings=recordings_datetime,
@@ -247,9 +243,8 @@ class object_tivo:
                                                                                                    name=self._dvc_name(),
                                                                                                    ipaddress=self._ipaddress(),
                                                                                                    mak=self._accesskey(),
-                                                                                                   dvc_ref='{structure_id}_{room_id}_{device_id}'.format(structure_id=self._structure_id,
-                                                                                                                                                         room_id=self._room_id,
-                                                                                                                                                         device_id=self._device_id))
+                                                                                                   dvc_ref='{room_id}_{device_id}'.format(room_id=self._room_id,
+                                                                                                                                          device_id=self._device_id))
         else:
             return ''
 

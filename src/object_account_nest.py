@@ -26,9 +26,8 @@ class object_nest_account:
     _dateformat = '%d/%m/%Y %H:%M:%S'
     _temp_unit = 'c'
 
-    def __init__ (self, structure_id, account_id, q_dvc, queues):
+    def __init__ (self, account_id, q_dvc, queues):
         self._type = 'nest_account'
-        self._structure_id = structure_id
         self._account_id = account_id
         #
         self._token = ''
@@ -70,9 +69,7 @@ class object_nest_account:
                     else:
                         # Code to go here to handle other items added to the queue!!
                         True
-            print_msg('Thread stopped - Structure "{structure_id}" Account "{account_id}": {type}'.format(structure_id=self._structure_id,
-                                                                                                          account_id=self._account_id,
-                                                                                                          type=self._type))
+                        print_msg('Thread stopped: Account - {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
 
     def _getFromQueue(self):
         if not self._queue.empty():
@@ -81,7 +78,7 @@ class object_nest_account:
             return False
 
     def dvc_or_acc_id(self):
-        return self._structure_id + ':' + self._account_id
+        return self._account_id
 
     def _logo(self):
         return get_device_logo(self._type)
@@ -94,7 +91,7 @@ class object_nest_account:
         return get_device_name(self._type)
 
     def _pincode(self):
-        return get_cfg_account_detail(self._structure_id, self._account_id, "pincode")
+        return get_cfg_account_detail(self._account_id, "pincode")
 
     def _clientid(self):
         return get_device_detail(self._type, 'client_id')
@@ -109,14 +106,13 @@ class object_nest_account:
         #
         script = ("\r\n<script>\r\n" +
                   "setTimeout(function () {\r\n" +
-                  "updateNest('/web/account/" + str(self._structure_id) + "/" + str(self._account_id) + "?body=true');\r\n" +
+                  "updateNest('/web/account/" + str(self._account_id) + "?body=true');\r\n" +
                   "}, 30000);\r\n" +
                   "</script>\r\n")
         #
         timestamp = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         #
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(structure_id = str(self._structure_id),
-                                                                                 account_id = str(self._account_id),
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(account_id = str(self._account_id),
                                                                                  timestamp=timestamp,
                                                                                  script=script,
                                                                                  body_nest=body)
@@ -200,7 +196,6 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_therm}'.format(html_therm=html_therm))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           structure_id=str(self._structure_id),
                                                            account_id=str(self._account_id),
                                                            nest_device_id=nest_device_id,
                                                            name=therm_name,
@@ -274,7 +269,6 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_smoke}'.format(html_smoke=html_smoke))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           structure_id=str(self._structure_id),
                                                            account_id=str(self._account_id),
                                                            nest_device_id=nest_device_id,
                                                            name=smoke_name,
@@ -332,7 +326,6 @@ class object_nest_account:
                         #
                         devices_html += urlopen('web/html_devices/{html_cam}'.format(html_cam=html_cam))\
                             .read().encode('utf-8').format(colwidth=colwidth,
-                                                           structure_id=str(self._structure_id),
                                                            account_id=str(self._account_id),
                                                            nest_device_id=nest_device_id,
                                                            name=cam_name,
@@ -444,8 +437,8 @@ class object_nest_account:
             #
             exp = datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in'])
             #
-            set_cfg_account_detail(self._structure_id, self._account_id, 'token', data['access_token'])
-            set_cfg_account_detail(self._structure_id, self._account_id, 'tokenexpiry', exp.strftime(self._dateformat))
+            set_cfg_account_detail(self._account_id, 'token', data['access_token'])
+            set_cfg_account_detail(self._account_id, 'tokenexpiry', exp.strftime(self._dateformat))
             #
             self._token = data['access_token']
             self._tokenexpiry = exp
@@ -457,11 +450,11 @@ class object_nest_account:
             return False
 
     def _getConfig(self):
-        self._token = get_cfg_account_detail(self._structure_id, self._account_id, "token")
-        self._pincode = get_cfg_account_detail(self._structure_id, self._account_id, "pincode")
-        self._state = get_cfg_account_detail(self._structure_id, self._account_id, "state")
+        self._token = get_cfg_account_detail(self._account_id, "token")
+        self._pincode = get_cfg_account_detail(self._account_id, "pincode")
+        self._state = get_cfg_account_detail(self._account_id, "state")
         #
-        token_exp = get_cfg_account_detail(self._structure_id, self._account_id, "tokenexpiry")
+        token_exp = get_cfg_account_detail(self._account_id, "tokenexpiry")
         if bool(token_exp):
             self._tokenexpiry = datetime.datetime.strptime(token_exp, self._dateformat)
         else:

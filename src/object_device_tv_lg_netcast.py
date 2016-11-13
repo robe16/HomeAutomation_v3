@@ -20,12 +20,11 @@ class object_tv_lg_netcast:
     STRtv_PATHevent = "/udap/api/event"
     STRtv_PATHquery = "/udap/api/data"
 
-    def __init__ (self, structure_id, room_id, device_id, q_dvc, queues):
+    def __init__ (self, room_id, device_id, q_dvc, queues):
         #
         self._active = True
         #
         self._type = "tv_lg_netcast"
-        self._structure_id = structure_id
         self._room_id = room_id
         self._device_id = device_id
         #
@@ -88,22 +87,22 @@ class object_tv_lg_netcast:
             return False
 
     def dvc_or_acc_id(self):
-        return self._structure_id + ':' + self._room_id + ':' + self._device_id
+        return self._room_id + ':' + self._device_id
 
     def _ipaddress(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "ipaddress")
+        return get_cfg_device_detail(self._room_id, self._device_id, "ipaddress")
 
     def _port(self):
         return get_device_detail(self._type, "port")
 
     def _pairingkey(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "pairingkey")
+        return get_cfg_device_detail(self._room_id, self._device_id, "pairingkey")
 
     def _logo(self):
         return get_device_logo(self._type)
 
     def _dvc_name(self):
-        return get_cfg_device_detail(self._structure_id, self._room_id, self._device_id, "name")
+        return get_cfg_device_detail(self._room_id, self._device_id, "name")
 
     def _type_name(self):
         return get_device_name(self._type)
@@ -182,8 +181,7 @@ class object_tv_lg_netcast:
 
     def getHtml(self):
         html = get_device_html_command(self._type)
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(structure_id=self._structure_id,
-                                                                                 room_id=self._room_id,
+        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(room_id=self._room_id,
                                                                                  device_id=self._device_id,
                                                                                  apps = self._html_apps())
 
@@ -194,9 +192,8 @@ class object_tv_lg_netcast:
                                                                                               name = self._dvc_name(),
                                                                                               ipaddress = self._ipaddress(),
                                                                                               pairingkey = self._pairingkey,
-                                                                                              dvc_ref='{structure_id}_{room_id}_{device_id}'.format(structure_id=self._structure_id,
-                                                                                                                                                    room_id=self._room_id,
-                                                                                                                                                    device_id=self._device_id))
+                                                                                              dvc_ref='{{room_id}_{device_id}'.format(room_id=self._room_id,
+                                                                                                                                      device_id=self._device_id))
         else:
             return ''
 
@@ -245,10 +242,9 @@ class object_tv_lg_netcast:
                     #
 
                     html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command/{group}/{device}?command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
-                             '<img src="/command/device/{structure_id}/{room_id}/{device_id}?command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
+                             '<img src="/command/device/{room_id}/{device_id}?command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
-                             '</td>').format(structure_id=self._structure_id,
-                                             room_id=self._room_id,
+                             '</td>').format(room_id=self._room_id,
                                              device_id=self._device_id,
                                              auid = auid,
                                              app_name = name.replace(' ', '%20'),

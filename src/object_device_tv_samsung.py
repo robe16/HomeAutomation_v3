@@ -7,14 +7,24 @@ from config_devices import get_cfg_device_detail, set_cfg_device_detail
 from console_messages import print_command, print_msg
 import cfg
 
+from cfg import my_ip, my_mac
 import socket
-from uuid import getnode as get_mac
 import base64
+
+#TODO on screen messages - http://tech.shantanugoel.com/2013/07/14/samsung-tv-message-box-python.html
 
 
 class object_tv_samsung:
 
-    STRtv_PATHcommand = ''
+    # Used in authentication of socket datagrams
+    appstring = "python.iapp.samsung"
+    tvappstring = "python..iapp.samsung"
+    # What gets reported when it asks for permission
+    appname = "HomeControl"
+
+    ALLOWED_BYTES = [chr(0x64), chr(0x00), chr(0x01), chr(0x00)]
+    DENIED_BYTES = [chr(0x64), chr(0x00), chr(0x00), chr(0x00)]
+    TIMEOUT_BYTES = [chr(0x65), chr(0x00)]
 
     def __init__ (self, structure_id, room_id, device_id, q_dvc, queues):
         #
@@ -91,46 +101,85 @@ class object_tv_samsung:
                                                                                  room_id=self._room_id,
                                                                                  device_id=self._device_id)
 
-    #TODO
+
+    #TODO - the following is still to be worked on. Code is based on http://deneb.homedns.org/things/?p=232
+    # http://sc0ty.pl/2012/02/samsung-tv-network-remote-control-protocol/
+    # SAMSUNG OS/Platform - ORSAY
+    # (new OS is Tizen)
+
     def sendCmd(self, request):
         #
         try:
             #
-            if request['command'] == 'image':
-                True
-            else:
-                code = self.commands[request['command']]
-                STRxml = ('<?xml version="1.0" encoding="utf-8"?>' +
-                          '<envelope>' +
-                          '<api type="command">' +
-                          '<name>HandleKeyInput</name>' +
-                          '<value>{value}</value>' +
-                          '</api>' +
-                          '</envelope>').format(value=code)
-                headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
-                           'content-type': 'text/xml; charset=utf-8'}
-                cmd = request['command']
-                #
-                url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(),
-                                                              port=str(self._port()),
-                                                              uri=str(self.STRtv_PATHcommand))
-                r = requests.post(url,
-                                  STRxml,
-                                  headers=headers)
-                print_command('command',
-                              self.dvc_or_acc_id(),
-                              self._type,
-                              self._ipaddress(),
-                              r.status_code)
-                #
-                response = (r.status_code == requests.codes.ok)
-                print_command (cmd,
-                               self.dvc_or_acc_id(),
-                               self._type,
-                               self._ipaddress(),
-                               response)
-                return response
-                #
+            cmd = self.commands[request['command']]
+            #
+            ipencoded = base64.b64encode(my_ip().encode('ascii'))
+            # macencoded = base64.b64encode(my_mac())
+            #
+            # Open Socket
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((self._ipaddress(), 55000))
+            #
+            ################################
+            # Authentication
+            sock.send(chr(0x00))
+            sock.send(self.writeText(self.appstring))
+            sock.send(chr(0x64) + chr(0x00))
+            sock.send(self.writeText(ipencoded))
+            sock.send(self.writeBase64Text(self.appname))
+            sock.send(self.writeBase64Text(self.appname))
+            #
+            data = sock.recv(4096)
+            #
+            print(data.encode("ascii"))
+            #
+            # TODO - check against ALLOWED_BYTES, DENIED_BYTES and TIMEOUT_BYTES
+            #
+            # msg = chr(0x64) + chr(0x00) + chr(len(ipencoded)) \
+            #       + chr(0x00) + ipencoded + chr(len(macencoded)) \
+            #       + chr(0x00) + macencoded + chr(len(base64.b64encode(self.appname))) \
+            #       + chr(0x00) + base64.b64encode(self.appname)
+            # msg = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(msg)) + chr(0x00) + msg
+            # sock.send(msg)
+            # #
+            # data = sock.recv(4096)
+            # data = data.encode("UTF-8")
+            #
+            ################################
+            # Send command
+            sock.send(chr(0x00))
+            sock.send(self.writeText(self.tvappstring))
+            sock.send(chr(0x00))
+            sock.send(chr(0x00))
+            sock.send(chr(0x00))
+            sock.send(self.writeBase64Text(cmd))
+            #
+            data = sock.recv(4096)
+            #
+            print(data.encode("ascii"))
+            #
+            #
+            # messagepart2 = chr(0xc8) + chr(0x00)
+            # part2 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart2)) + chr(0x00) + messagepart2
+            # sock.send(part2)
+            # #
+            # messagepart3 = chr(0x00) + chr(0x00) + chr(0x00) + chr(len(base64.b64encode(_skey))) + chr(0x00) + base64.b64encode(_skey)
+            # part3 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart3)) + chr(0x00) + messagepart3
+            # sock.send(part3)
+            #
+            ################################
+            #
+            sock.close()
+            #
+            response = True
+            print_command (cmd,
+                           self.dvc_or_acc_id(),
+                           self._type,
+                           self._ipaddress(),
+                           response)
+            return response
+            #
+            ################################
         except:
             print_command (request['command'],
                            self.dvc_or_acc_id(),
@@ -139,74 +188,11 @@ class object_tv_samsung:
                            'ERROR: Exception encountered')
             return False
 
+    def writeText(self, text):
+        return chr(len(text)) + chr(0x00) + text
 
-
-    #TODO - the following is still to be worked on. Code is based on http://deneb.homedns.org/things/?p=232
-    # SAMSUNG OS/Platform - ORSAY
-    # (new OS is Tizen)
-
-    # What the iPhone app reports
-    appstring = "iphone..iapp.samsung"
-    # Might need changing to match your TV type
-    tvappstring = "iphone.UE55C8000.iapp.samsung"
-    # What gets reported when it asks for permission
-    remotename = "Python Samsung Remote"
-
-
-    def sendCmd_new(self, cmd):
-        #
-        myip = socket.gethostbyname(socket.gethostname())
-        mymac = ':'.join(("%012X" % get_mac())[i:i+2] for i in range(0, 12, 2))
-        #
-        _skey = code = self.commands[cmd]
-        #
-        # First configure the connection
-        ipencoded = base64.b64encode(myip)
-        macencoded = base64.b64encode(mymac)
-        messagepart1 = chr(0x64) + chr(0x00) + chr(len(ipencoded)) \
-                       + chr(0x00) + ipencoded + chr(len(macencoded)) + chr(0x00) \
-                       + macencoded + chr(len(base64.b64encode(self.remotename))) + chr(0x00) \
-                       + base64.b64encode(self.remotename)
-        #
-        part1 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart1)) + chr(0x00) + messagepart1
-        #
-        messagepart2 = chr(0xc8) + chr(0x00)
-        part2 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart2)) + chr(0x00) + messagepart2
-        #
-        messagepart3 = chr(0x00) + chr(0x00) + chr(0x00) + chr(len(base64.b64encode(_skey))) + chr(0x00) + base64.b64encode(_skey)
-        part3 = chr(0x00) + chr(len(self.appstring)) + chr(0x00) + self.appstring + chr(len(messagepart3)) + chr(0x00) + messagepart3
-        #
-        # Create data array to send via socket/telnet
-        data = []
-        data[0] = part1
-        data[1] = part2
-        data[2] = part3
-        #
-        # Send commands
-        self._send_telnet(data)
-
-    def _send_telnet(self, data, response=False):
-        try:
-            tn = telnetlib.Telnet(self._ipaddress(), 55000)
-            time.sleep(0.1)
-            output = tn.read_eager() if response else None
-            #
-            x = 0
-            while x < len(data):
-                if data[x]:
-                    tn.write(str(data[x])+"\n")
-                    time.sleep(0.1)
-                    op = tn.read_eager()
-                    if op=='':
-                        output = True
-                    else:
-                        output = op if (response and not bool(op)) else True
-                x += 1
-            tn.close()
-            return output
-        except:
-            return False
-
+    def writeBase64Text(self, text):
+        return chr(len(base64.b64encode(text.encode("ascii")))) + chr(0x00) + base64.b64encode(text.encode("ascii"))
 
 
     commands = {"power": "KEY_POWEROFF",
