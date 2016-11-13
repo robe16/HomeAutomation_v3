@@ -12,10 +12,12 @@ from src.config.devices.config_devices import get_cfg_account_detail, set_cfg_ac
 from src.console_messages import print_error, print_msg
 from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo, get_device_html_command, get_device_html_settings
 
+from src.accounts.account import Account
+
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
 
-class object_nest_account:
+class object_nest_account(Account):
 
     # Static variable used as part of using Nest's APIs
     nesturl_api = 'https://developer-api.nest.com'
@@ -28,9 +30,9 @@ class object_nest_account:
     _dateformat = '%d/%m/%Y %H:%M:%S'
     _temp_unit = 'c'
 
-    def __init__ (self, account_id, q_dvc, queues):
-        self._type = 'nest_account'
-        self._account_id = account_id
+    def __init__ (self, account_id, q_acc, queues):
+        #
+        Account.__init__(self, "nest_account", account_id, q_acc, queues)
         #
         self._token = ''
         self._tokenexpiry = ''
@@ -42,48 +44,8 @@ class object_nest_account:
         #
         self._redirect_url = ''
         #
-        self._queue = q_dvc
-        self._q_response_web = queues[src.cfg.key_q_response_web_device]
-        self._q_response_cmd = queues[src.cfg.key_q_response_command]
-        self._q_tvlistings = queues[src.cfg.key_q_tvlistings]
-        #
         self._active = True
         self.run()
-
-
-    def run(self):
-            time.sleep(5)
-            while self._active:
-                # Keep in a loop
-                '''
-                    Use of self._active allows for object to close itself, however may wish
-                    to take different approach of terminting the thread the object loop resides in
-                '''
-                time.sleep(0.1)
-                qItem = self._getFromQueue()
-                if bool(qItem):
-                    if qItem['response_queue'] == 'stop':
-                        self._active = False
-                    elif qItem['response_queue'] == src.cfg.key_q_response_web_device:
-                        self._q_response_web.put(self.getHtml())
-                    elif qItem['response_queue'] == src.cfg.key_q_response_command:
-                        self._q_response_cmd.put(self.sendCmd(qItem['request']))
-                    else:
-                        # Code to go here to handle other items added to the queue!!
-                        True
-                        print_msg('Thread stopped: Account - {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
-
-    def _getFromQueue(self):
-        if not self._queue.empty():
-            return self._queue.get(block=True)
-        else:
-            return False
-
-    def dvc_or_acc_id(self):
-        return self._account_id
-
-    def _logo(self):
-        return get_device_logo(self._type)
 
     def _dvc_name(self):
         return 'Nest'
@@ -101,9 +63,8 @@ class object_nest_account:
     def _clientsecret(self):
         return get_device_detail(self._type, 'client_secret')
 
-    def getHtml(self):
+    def getHtml(self, user):
         #
-        html = get_device_html_command(self._type)
         body = self._htmlbody()
         #
         script = ("\r\n<script>\r\n" +
@@ -114,10 +75,12 @@ class object_nest_account:
         #
         timestamp = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
         #
-        return urlopen('web/html_devices/' + html).read().encode('utf-8').format(account_id = str(self._account_id),
-                                                                                 timestamp=timestamp,
-                                                                                 script=script,
-                                                                                 body_nest=body)
+        args = {'account_id': str(self._account_id),
+                'timestamp': timestamp,
+                'script': script,
+                'body_nest': body}
+        #
+        return self._getHtml_generic(args)
 
     def _htmlbody(self):
         #
@@ -344,6 +307,7 @@ class object_nest_account:
         devices_html += '</div>'
         return devices_html
 
+    #TODO
     def getHtml_settings(self, grp_num, dvc_num):
         html = get_device_html_settings(self._type)
         randomstring = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(10))
@@ -353,17 +317,16 @@ class object_nest_account:
         except:
             tokexp = ''
         #
-        if html:
-            return urlopen('web/html_settings/devices/' + html).read().encode('utf-8').format(img = self._logo(),
-                                                                                              name = self._dvc_name(),
-                                                                                              pincode = self._pincode,
-                                                                                              clientid = get_device_detail(self._type, 'client_id'),
-                                                                                              state = randomstring,
-                                                                                              token = self._token,
-                                                                                              tokenexpiry = tokexp,
-                                                                                              dvc_ref='{grpnum}_{dvcnum}'.format(grpnum=grp_num, dvcnum=dvc_num))
-        else:
-            raise Exception
+        args = {'img': self._logo(),
+                'name': self._dvc_name(),
+                'pincode': self._pincode,
+                'clientid': get_device_detail(self._type, 'client_id'),
+                'state': randomstring,
+                'token': self._token,
+                'tokenexpiry': tokexp,
+                'dvc_ref': self.dvc_or_acc_ref()}
+        #
+        return self.getHtml_settings_generic(args)
 
     def sendCmd(self, request):
         #

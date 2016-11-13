@@ -74,10 +74,10 @@ def _create_device(room_id, device_id, q_dvc, queues):
                     queues=queues)
 
 
-def _create_account(account_id, q_dvc, queues):
+def _create_account(account_id, q_acc, queues):
     device_type = get_cfg_account_type(account_id)
     #
     if device_type=="nest_account":
         object_nest_account(account_id=account_id,
-                            q_dvc=q_dvc,
+                            q_acc=q_acc,
                             queues=queues)
