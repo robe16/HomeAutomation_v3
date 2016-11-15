@@ -185,7 +185,7 @@ class object_tv_lg_netcast(Device):
                     icon_name = data.find('icon_name').text
                     #
 
-                    html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command/{group}/{device}?command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
+                    html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command/{room_id}/{device_id}?command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
                              '<img src="/command/device/{room_id}/{device_id}?command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
                              '<p style="text-align:center; font-size: 13px;">{name}</p>' +
                              '</td>').format(room_id=self._room_id,
@@ -198,7 +198,7 @@ class object_tv_lg_netcast(Device):
                         html += '</tr><tr style="height:35px; padding-bottom:2px; padding-top:2px">'
                     count += 1
                     #
-                except:
+                except Exception as e:
                     html += ''
                 #
             #
