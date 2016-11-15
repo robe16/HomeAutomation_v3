@@ -160,13 +160,13 @@
         "hd": {}
       },
       {
-        "name": "Channel 5 +24",
+        "name": "My5",
         "listingsrc": {
           "radiotimes": ""
         },
         "type": "tv",
         "sd": {
-          "logo": "channel_5_plus24.png",
+          "logo": "my5.png",
           "devicekeys": {
             "tivo": 152
           },
@@ -192,7 +192,7 @@
         "hd": {
           "logo": "bbc_four_hd.png",
           "devicekeys": {
-            "tivo": 164
+            "tivo": 163
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
@@ -496,7 +496,7 @@
         "sd": {
           "logo": "w.png",
           "devicekeys": {
-            "tivo": 124
+            "tivo": 125
           },
           "freeview": false,
           "virginmedia_package": ["M+", "L", "XL"]
@@ -519,7 +519,7 @@
         "sd": {
           "logo": "w_plus1.png",
           "devicekeys": {
-            "tivo": 125
+            "tivo": 131
           },
           "freeview": false,
           "virginmedia_package": ["M+", "L", "XL"]
@@ -535,7 +535,7 @@
         "sd": {
           "logo": "gold.png",
           "devicekeys": {
-            "tivo": 126
+            "tivo": 124
           },
           "freeview": false,
           "virginmedia_package": ["More", "M+", "L", "XL"]
@@ -551,7 +551,7 @@
         "sd": {
           "logo": "gold_plus1.png",
           "devicekeys": {
-            "tivo": 127
+            "tivo": 190
           },
           "freeview": false,
           "virginmedia_package": ["More", "M+", "L", "XL"]
@@ -567,7 +567,7 @@
         "sd": {
           "logo": "dave.png",
           "devicekeys": {
-            "tivo": 128
+            "tivo": 127
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
@@ -590,7 +590,7 @@
         "sd": {
           "logo": "dave_ja_vu.png",
           "devicekeys": {
-            "tivo": 129
+            "tivo": 211
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
@@ -606,7 +606,7 @@
         "sd": {
           "logo": "alibi.png",
           "devicekeys": {
-            "tivo": 130
+            "tivo": 126
           },
           "freeview": false,
           "virginmedia_package": ["M+", "L", "XL"]
@@ -629,7 +629,7 @@
         "sd": {
           "logo": "alibi_plus1.png",
           "devicekeys": {
-            "tivo": 131
+            "tivo": 130
           },
           "freeview": false,
           "virginmedia_package": ["M+", "L", "XL"]
@@ -767,7 +767,14 @@
           "freeview": false,
           "virginmedia_package": ["M+", "L", "XL"]
         },
-        "hd": {}
+        "hd": {
+          "logo": "universal_hd.png",
+          "devicekeys": {
+            "tivo": 164
+          },
+          "freeview": false,
+          "virginmedia_package": ["XL"]
+        }
       },
       {
         "name": "Universal Channel +1",
@@ -976,6 +983,22 @@
         "hd": {}
       },
       {
+        "name": "5* +1",
+        "listingsrc": {
+          "radiotimes": "-"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "5_star_plus1.png",
+          "devicekeys": {
+            "tivo": 186
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
         "name": "5 USA",
         "listingsrc": {
           "radiotimes": "2008"
@@ -999,6 +1022,22 @@
         "type": "tv",
         "sd": {
           "logo": "5_usa_plus1.png",
+          "devicekeys": {
+            "tivo": 185
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "Spike",
+        "listingsrc": {
+          "radiotimes": "-"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "spike.png",
           "devicekeys": {
             "tivo": 154
           },
@@ -1286,7 +1325,7 @@
         "sd": {
           "logo": "drama.png",
           "devicekeys": {
-            "tivo": 190
+            "tivo": 128
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
@@ -1354,6 +1393,22 @@
           },
           "freeview": true,
           "virginmedia_package": ["M+", "L", "XL"]
+        },
+        "hd": {}
+      },
+      {
+        "name": "TruTV",
+        "listingsrc": {
+          "radiotimes": "-"
+        },
+        "type": "tv",
+        "sd": {
+          "logo": "tru_tv.png",
+          "devicekeys": {
+            "tivo": 212
+          },
+          "freeview": true,
+          "virginmedia_package": ["M", "More", "M+", "L", "XL"]
         },
         "hd": {}
       }
@@ -2530,7 +2585,7 @@
         "sd": {
           "logo": "really.png",
           "devicekeys": {
-            "tivo": 283
+            "tivo": 129
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
