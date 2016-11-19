@@ -1,8 +1,8 @@
 import base64
 import socket
 
+from src.bundles.devices.device import Device
 from src.cfg import my_ip
-from src.devices.device import Device
 from src.log.console_messages import print_command
 
 

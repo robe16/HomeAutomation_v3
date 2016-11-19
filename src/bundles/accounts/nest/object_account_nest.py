@@ -6,7 +6,7 @@ from urllib import urlopen
 
 import requests as requests
 
-from src.accounts.account import Account
+from src.bundles.accounts import Account
 from src.config.devices.config_devices import get_cfg_account_detail, set_cfg_account_detail
 from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
 from src.log.console_messages import print_error, print_msg

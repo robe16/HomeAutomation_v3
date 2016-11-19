@@ -1,10 +1,11 @@
 import threading
 
-from src.accounts.nest.object_account_nest import object_nest_account
+from src.devices.tivo.object_device_tivo import object_tivo
+
+from src.bundles.accounts import object_nest_account
+from src.bundles.devices.tv_lg_netcast import object_tv_lg_netcast
 from src.config.devices.config_devices import get_cfg_device_type, get_cfg_account_type
 from src.config.devices.config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
-from src.devices.tivo.object_device_tivo import object_tivo
-from src.devices.tv_lg_netcast.object_device_tv_lg_netcast import object_tv_lg_netcast
 from src.log.console_messages import print_msg
 
 

@@ -6,8 +6,8 @@ import xml.etree.ElementTree as ET
 import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+from src.bundles.devices.device import Device
 from src.config.devices.config_devices import get_cfg_device_detail
-from src.devices.device import Device
 from src.log.console_messages import print_command, print_msg
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)

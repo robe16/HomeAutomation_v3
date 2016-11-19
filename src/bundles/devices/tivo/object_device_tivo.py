@@ -7,8 +7,8 @@ import xml.etree.ElementTree as ET
 import requests as requests
 from requests.auth import HTTPDigestAuth
 
+from src.bundles.devices.device import Device
 from src.config.devices.config_devices import get_cfg_device_detail
-from src.devices.device import Device
 from src.lists.channels.list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
 from src.log.console_messages import print_command, print_error, print_msg
 from src.web.web_tvchannels import html_channels_user_and_all
