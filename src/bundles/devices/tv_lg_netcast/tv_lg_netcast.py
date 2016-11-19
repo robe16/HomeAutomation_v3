@@ -13,7 +13,7 @@ from src.log.console_messages import print_command, print_msg
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
-class object_tv_lg_netcast(Device):
+class device_tv_lg_netcast(Device):
 
     STRtv_PATHpair = "/udap/api/pairing"
     STRtv_PATHcommand = "/udap/api/command"

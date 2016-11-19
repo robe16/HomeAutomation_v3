@@ -6,7 +6,7 @@ from urllib import urlopen
 
 import requests as requests
 
-from src.bundles.accounts import Account
+from src.bundles.accounts.account import Account
 from src.config.devices.config_devices import get_cfg_account_detail, set_cfg_account_detail
 from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
 from src.log.console_messages import print_error, print_msg
@@ -14,7 +14,7 @@ from src.log.console_messages import print_error, print_msg
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
 
-class object_nest_account(Account):
+class account_nest(Account):
 
     # Static variable used as part of using Nest's APIs
     nesturl_api = 'https://developer-api.nest.com'

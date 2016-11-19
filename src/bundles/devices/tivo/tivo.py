@@ -14,7 +14,7 @@ from src.log.console_messages import print_command, print_error, print_msg
 from src.web.web_tvchannels import html_channels_user_and_all
 
 
-class object_tivo(Device):
+class device_tivo(Device):
 
     def __init__(self, room_id, device_id, q_dvc, queues):
         #

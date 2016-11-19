@@ -1,9 +1,8 @@
 import threading
 
-from src.devices.tivo.object_device_tivo import object_tivo
-
-from src.bundles.accounts import object_nest_account
-from src.bundles.devices.tv_lg_netcast import object_tv_lg_netcast
+from src.bundles.accounts.nest.nest import account_nest
+from src.bundles.devices.tivo.tivo import device_tivo
+from src.bundles.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
 from src.config.devices.config_devices import get_cfg_device_type, get_cfg_account_type
 from src.config.devices.config_devices import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
 from src.log.console_messages import print_msg
@@ -64,12 +63,12 @@ def _create_device(room_id, device_id, q_dvc, queues):
     device_type = get_cfg_device_type(room_id, device_id)
     #
     if device_type=="tv_lg_netcast":
-        object_tv_lg_netcast(room_id=room_id,
+        device_tv_lg_netcast(room_id=room_id,
                              device_id=device_id,
                              q_dvc=q_dvc,
                              queues=queues)
     elif device_type=="tivo":
-        object_tivo(room_id=room_id,
+        device_tivo(room_id=room_id,
                     device_id=device_id,
                     q_dvc=q_dvc,
                     queues=queues)
@@ -79,6 +78,6 @@ def _create_account(account_id, q_acc, queues):
     device_type = get_cfg_account_type(account_id)
     #
     if device_type=="nest_account":
-        object_nest_account(account_id=account_id,
-                            q_acc=q_acc,
-                            queues=queues)
+        account_nest(account_id=account_id,
+                     q_acc=q_acc,
+                     queues=queues)
