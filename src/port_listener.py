@@ -12,12 +12,12 @@ from src.config.devices.config_devices import get_cfg_room_name, get_cfg_device_
 from src.config.devices.config_devices_compiler_for_client import compile_config
 from src.config.users.config_users import check_user, update_user_channels
 from src.web.web_create_error import create_error
-from web.web_create_pages import create_login, create_home, create_about, create_tvguide, create_device
+from web.web_create_pages import create_login, create_home, create_about, create_tvguide, create_weather, create_device
 from web.web_create_preferences import create_preference_tvguide
 
-# from web_devices import refresh_tvguide
-
 from src.tvlistings.tvlisting_getfromqueue import _check_tvlistingsqueue
+
+# from web_devices import refresh_tvguide
 
 
 ################################################################################################
@@ -94,25 +94,30 @@ def web_about():
     return HTTPResponse(body=create_about(user), status=200)
 
 
-@get('/web/tvguide')
-def web_tvguide():
+@get('/web/info/<service>')
+def web_tvguide(service=False):
     # Get and check user
     user = _check_user(request.get_cookie('user'))
     if not user:
         redirect('/web/login')
     #
-    # Retrieve tvlistings from queue
-    tvlistings = _check_tvlistingsqueue(q_dict[cfg.key_q_tvlistings])
-    #
-    # if bool(request.query.group) and bool(request.query.device):
-    #     return HTTPResponse(body=refresh_tvguide(tvlistings,
-    #                                              device = False, #create_device_object(request.query.group, request.query.device),
-    #                                              group_name = request.query.group,
-    #                                              device_name = request.query.device,
-    #                                              user=user),
-    #                         status=200) if bool(tvlistings) else HTTPResponse(status=400)
-    # else:
-    return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
+    if service == 'tvguide':
+        # Retrieve tvlistings from queue
+        tvlistings = _check_tvlistingsqueue(q_dict[cfg.key_q_tvlistings])
+        #
+        # if bool(request.query.group) and bool(request.query.device):
+        #     return HTTPResponse(body=refresh_tvguide(tvlistings,
+        #                                              device = False, #create_device_object(request.query.group, request.query.device),
+        #                                              group_name = request.query.group,
+        #                                              device_name = request.query.device,
+        #                                              user=user),
+        #                         status=200) if bool(tvlistings) else HTTPResponse(status=400)
+        # else:
+        return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
+    elif service == 'weather':
+        return HTTPResponse(body=create_weather(user), status=200)
+    else:
+        raise HTTPError(404)
 
 
 @get('/web/device/<room_id>/<device_id>')

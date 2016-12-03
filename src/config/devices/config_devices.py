@@ -144,6 +144,10 @@ def get_cfg_structure_postcode():
     #
     return get_cfg_structure_value('structure_postcode')
 
+def get_cfg_structure_town():
+    #
+    return get_cfg_structure_value('structure_town')
+
 ################################################################################################
 # Return name of room, device and account
 ################################################################################################

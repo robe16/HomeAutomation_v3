@@ -26,10 +26,24 @@ def create_about(user):
            urlopen('web/html/body.html').read().encode('utf-8').format(header='About', body=body) +\
            urlopen('web/html/footer.html').read().encode('utf-8')
 
+from src.bundles.info_services.weather_metoffice import metoffice
+
+def create_weather(user):
+    body = ''
+    #
+    # TODO - create object to get html - temporary until create queue for item
+    m = metoffice.info_metoffice()
+    body = m.getHtml(user)
+    #
+    return urlopen('web/html/header.html').read().encode('utf-8').format(title='Weather') +\
+           html_menu(user) +\
+           urlopen('web/html/body.html').read().encode('utf-8').format(header='Weather', body=body) +\
+           urlopen('web/html/footer.html').read().encode('utf-8')
+
 
 def create_tvguide(user, listings):
     body = urlopen('web/html/html_tvguide/tvguide.html').read().encode('utf-8').format(listings=html_listings_user_and_all(listings,
-                                                                                                                      user=user))
+                                                                                                                           user=user))
     return urlopen('web/html/header.html').read().encode('utf-8').format(title='TV Guide') +\
            html_menu(user) +\
            urlopen('web/html/body.html').read().encode('utf-8').format(header='TV Guide', body=body) +\
