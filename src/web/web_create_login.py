@@ -19,7 +19,7 @@ def _useritems():
         x=0
         while x<len(data):
             username = data[x]
-            STRhtml += urlopen('web/login_items.html').read().encode('utf-8').format(name=username)
+            STRhtml += urlopen('web/html/login_items.html').read().encode('utf-8').format(name=username)
             x += 1
         STRhtml += '<button class="btn btn-success btn-block" type="submit">Continue</button>'
         STRhtml += '</form>'

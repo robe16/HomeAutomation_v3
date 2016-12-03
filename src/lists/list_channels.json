@@ -98,7 +98,7 @@
         "hd": {
           "logo": "channel_4_hd.png",
           "devicekeys": {
-            "tivo": 142
+            "tivo": 141
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
@@ -113,7 +113,7 @@
         "sd": {
           "logo": "channel_4_plus1.png",
           "devicekeys": {
-            "tivo": 143
+            "tivo": 142
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
@@ -880,7 +880,7 @@
         "hd": {
           "logo": "more_4_hd.png",
           "devicekeys": {
-            "tivo": 203
+            "tivo": 195
           },
           "freeview": false,
           "virginmedia_package": ["XL"]
@@ -1373,7 +1373,7 @@
         "sd": {
           "logo": "4seven.png",
           "devicekeys": {
-            "tivo": 195
+            "tivo": 203
           },
           "freeview": true,
           "virginmedia_package": ["M", "More", "M+", "L", "XL"]
