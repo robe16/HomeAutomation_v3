@@ -51,6 +51,8 @@ class info_metoffice(InfoService):
         else:
             return ''
 
+################################################################################################################################
+################################################################################################################################
     def getHtml(self, user):
         #
         forecast = self.createForecast()
@@ -64,6 +66,8 @@ class info_metoffice(InfoService):
                 'body_weather_days': html_weather}
         #
         return urlopen('web/html/html_info_services/weather_main.html').read().encode('utf-8').format(**args)
+################################################################################################################################
+################################################################################################################################
 
     def _convertMinsToTime(self, date, mins_from_midnight):
         return datetime.datetime(date.year, date.month, date.day, 0, 0) + datetime.timedelta(minutes=mins_from_midnight)
@@ -103,9 +107,17 @@ class info_metoffice(InfoService):
         units_json['daily'] = units_day_json
         units_json['3hourly'] = units_hour_json
         #
+        location_json = {}
+        location_json['name'] = get_cfg_structure_town()
+        location_json['elevation'] = self.LOCATION_elevation
+        location_json['latitude'] = self.LOCATION_latitude
+        location_json['longitude'] = self.LOCATION_longitude
+        location_json['region'] = self.LOCATION_region
+        location_json['unitaryAuthArea'] = self.LOCATION_unitaryAuthArea
         #
         jsonForecast = {}
         jsonForecast['units'] = units_json
+        jsonForecast['location'] = location_json
         jsonForecast['days'] = {}
         #
         dy_count = 0
@@ -256,7 +268,3 @@ class info_metoffice(InfoService):
             return locations['Locations']['Location']
         else:
             return False
-
-    # def convert_TempToHue(self, temp):
-    #     # temp_colour is the 'h' in hsl based colour
-    #     return 30 + 240 * (30 - int(temp)) / 60

@@ -17,7 +17,7 @@ class Account:
         self._account_id = account_id
         #
         self._queue = q_dvc
-        self._q_response_web = queues[cfg.key_q_response_web_device]
+        self._q_response_web = queues[cfg.key_q_response_data]
         self._q_response_cmd = queues[cfg.key_q_response_command]
         self._q_tvlistings = queues[cfg.key_q_tvlistings]
 
@@ -52,8 +52,8 @@ class Account:
             if bool(qItem):
                 if qItem['response_queue'] == 'stop':
                     self._active = False
-                elif qItem['response_queue'] == cfg.key_q_response_web_device:
-                    self._q_response_web.put(self.getHtml(user=qItem['user']))
+                elif qItem['response_queue'] == cfg.key_q_response_data:
+                    self._q_response_web.put(self.getData(qItem['request']))
                 elif qItem['response_queue'] == cfg.key_q_response_command:
                     self._q_response_cmd.put(self.sendCmd(qItem['request']))
                 else:
@@ -65,7 +65,7 @@ class Account:
         # Mastered in each of the device specific classes
         True
 
-    def getHtml(self, user):
+    def getData(self, request):
         # Mastered in each of the device specific classes
         True
 

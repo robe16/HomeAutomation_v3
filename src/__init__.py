@@ -48,7 +48,7 @@ while a_num < len(a_list):
 ################################
 # Queues for responses back to port_listener
 ################################
-q_response_web_device = Manager().Queue()
+q_response_data = Manager().Queue()
 q_response_comand = Manager().Queue()
 
 ################################
@@ -63,18 +63,17 @@ def server_start():
     ################################
     # Create response queue dict
     ################################
-    queues = {cfg.key_q_response_web_device: q_response_web_device,
+    queues = {cfg.key_q_response_data: q_response_data,
               cfg.key_q_response_command: q_response_comand,
               cfg.key_q_tvlistings: q_listings}
     #
     ################################
     # Process for port_listener
     ################################
-    port = 1600
-    print_msg('Starting process: "bottle" server for port {port}'.format(port=port))
-    process_bottle = Process(target=start_bottle, args=(port, device_queues, account_queues, queues, ))
+    print_msg('Starting process: "bottle" server for port {port}'.format(port=cfg.port_server))
+    process_bottle = Process(target=start_bottle, args=(device_queues, account_queues, queues, ))
     process_bottle.start()
-    print_msg('Process started: "bottle" server for port {port}'.format(port=port))
+    print_msg('Process started: "bottle" server for port {port}'.format(port=cfg.port_server))
     #
     ################################
     # Process for device threads

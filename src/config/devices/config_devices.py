@@ -182,7 +182,7 @@ def get_cfg_account_type(account_id):
     return get_cfg_account_value(account_id, 'account_type')
 
 ################################################################################################
-# Return detail value of device and account
+# Return private detail value of device and account
 ################################################################################################
 
 
@@ -200,7 +200,25 @@ def get_cfg_account_detail(account_id, detail):
     return details[detail]
 
 ################################################################################################
-# Save detail value of device and account
+# Return public detail value of device and account
+################################################################################################
+
+
+def get_cfg_device_detail_public(room_id, device_id, detail):
+    #
+    details = get_cfg_device_value(room_id, device_id, 'details_public')
+    #
+    return details[detail]
+
+
+def get_cfg_account_detail_public(account_id, detail):
+    #
+    details = get_cfg_account_value(account_id, 'details_public')
+    #
+    return details[detail]
+
+################################################################################################
+# Save private detail value of device and account
 ################################################################################################
 
 
@@ -218,6 +236,28 @@ def set_cfg_account_detail(account_id, detail, value):
     data = get_cfg_device_json()
     #
     data['structure']['accounts'][account_id]['details'][detail] = value
+    #
+    return write_config_devices(data)
+
+################################################################################################
+# Save public detail value of device and account
+################################################################################################
+
+
+def set_cfg_device_detail_public(room_id, device_id, detail, value):
+    #
+    data = get_cfg_device_json()
+    #
+    data['structure']['rooms'][room_id]['devices'][device_id]['details_public'][detail] = value
+    #
+    return write_config_devices(data)
+
+
+def set_cfg_device_detail_public(account_id, detail, value):
+    #
+    data = get_cfg_device_json()
+    #
+    data['structure']['accounts'][account_id]['details_public'][detail] = value
     #
     return write_config_devices(data)
 

@@ -8,10 +8,9 @@ import requests as requests
 from requests.auth import HTTPDigestAuth
 
 from src.bundles.devices.device import Device
-from src.config.devices.config_devices import get_cfg_device_detail
-from src.lists.channels.list_channels import get_channel_item_image_from_devicekey, get_channel_name_from_devicekey, get_channel_logo_from_devicekey
+from src.config.devices.config_devices import get_cfg_device_detail, get_cfg_device_detail_public
+from src.lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
 from src.log.console_messages import print_command, print_error, print_msg
-from src.web.web_tvchannels import html_channels_user_and_all
 
 
 class device_tivo(Device):
@@ -20,27 +19,28 @@ class device_tivo(Device):
         #
         Device.__init__(self, "tivo", room_id, device_id, q_dvc, queues)
         #
-        self.recordings_timestamp = False
-        self.recordings_folders = False
-        self.recordings_files = []
+        self.recordings = False
         t = threading.Thread(target=self.get_recordings, args=())
         t.daemon = True
         t.start()
         #
         self.run()
 
-
     def get_recordings(self):
         while self._active:
-            # Reset values
-            self.recordings_timestamp = False
-            self.recordings_folders = False
-            self.recordings_files = []
+            # Reset value
+            self.recordings = False
             #
             try:
-                self.recordings_timestamp = datetime.datetime.now()
-                self.recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-                #self.recordings_files = self._retrieve_recordings('Yes', itemCount='&ItemCount=50').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+                recordings_timestamp = datetime.datetime.now()
+                #
+                ############
+                #
+                folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"', '')
+                folders = ET.fromstring(folders)
+                xml_folders = []
+                for item in folders.iter('Item'):
+                    xml_folders.append(item.find('Details'))
                 #
                 ############
                 #
@@ -49,14 +49,15 @@ class device_tivo(Device):
                 files_repeat = True
                 loop_count = 0
                 itemCount = '&ItemCount={retrieve_items}'.format(retrieve_items=retrieve_items)
+                xml_files = []
                 #
                 while files_repeat:
                     files_count = 0
                     files = self._retrieve_recordings('Yes', itemCount=itemCount).replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-                    xml_files = ET.fromstring(files)
+                    files = ET.fromstring(files)
                     # Run through individual items
-                    for item in xml_files.iter('Item'):
-                        self.recordings_files.append(item.find('Details'))
+                    for item in files.iter('Item'):
+                        xml_files.append(item.find('Details'))
                         files_count += 1
                     #
                     if files_count<50:
@@ -68,10 +69,14 @@ class device_tivo(Device):
                 #
                 ############
                 #
+                self.recordings = self._create_recordings_json(recordings_timestamp, xml_folders, xml_files)
+                #
+                ############
+                #
                 print_msg('TV recording information retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
             except:
                 self.recordings_timestamp = 0
-                self.recordings_folders = ''
+                self.recordings = False
             #
             time.sleep(600) # 600 = 10 minutes
 
@@ -80,14 +85,33 @@ class device_tivo(Device):
         return get_cfg_device_detail(self._room_id, self._device_id, "mak")
 
     def _package(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, "package")
+        return get_cfg_device_detail_public(self._room_id, self._device_id, "package")
 
     def _getChan(self):
         response = self._send_telnet(self._ipaddress(), self._port(), response=True)
+        #
         if not bool(response):
             return False
+        #
         nums = [int(s) for s in response.split() if s.isdigit()]
-        return nums[0] if len(nums) > 0 else False
+        #
+        if len(nums) > 0:
+            chan_no = nums[0]
+            if bool(chan_no):
+                #
+                chan_name = get_channel_name_from_devicekey(self._type, chan_no)
+                #
+                chan_logo = get_channel_logo_from_devicekey(self._type, chan_no)
+                chan_logo = chan_logo if not chan_logo == '-' else 'ic_blank.png'
+                #
+                json_channel = {}
+                json_channel['channel'] = {}
+                json_channel['channel']['number'] = str(chan_no)
+                json_channel['channel']['name'] = chan_name
+                json_channel['channel']['logo'] = chan_logo
+                #
+                return json_channel
+        return False
 
     def sendCmd(self, request):
         #
@@ -95,24 +119,7 @@ class device_tivo(Device):
             code = False
             response = False
             #
-            # if request['command'] == 'getHtml_recordings':
-            #     response = self._getHtml_recordings()
-            # el
-            if request['command'] == 'getchannel':
-                chan_no = self._getChan()
-                if bool(chan_no):
-                    #
-                    chan_name = get_channel_name_from_devicekey(self._type, chan_no)
-                    #
-                    chan_logo = get_channel_logo_from_devicekey(self._type, chan_no)
-                    chan_logo = chan_logo if not chan_logo=='-' else 'ic_blank.png'
-                    #
-                    response = '{"chan_no": ' + str(chan_no) + ', ' + \
-                               '"chan_name": "' + chan_name + '", ' + \
-                               '"chan_logo": "' + chan_logo + '"}'
-                else:
-                    response = False
-            elif request['command'] == 'channel':
+            if request['command'] == 'channel':
                 response = self._send_telnet(ipaddress=self._ipaddress(),
                                              port=self._port(),
                                              data=("SETCH {}\r").format(request['chan']),
@@ -146,171 +153,106 @@ class device_tivo(Device):
                           'ERROR')
             return False
 
-    def getHtml(self, user=False):
-        #
-        #listings = _check_tvlistingsqueue(self._q_tvlistings)
-        #
-        chan_current = self._getChan()
-        #
-        html_channels = html_channels_user_and_all(room_id=self._room_id,
-                                                   device_id=self._device_id,
-                                                   user=user,
-                                                   chan_current=chan_current,
-                                                   package=["virginmedia_package", self._package()])
-        #
-        if self.recordings_timestamp:
-            recordings_datetime = self.recordings_timestamp.strftime('%d/%m/%Y %H:%M:%S')
-        else:
-            recordings_datetime = ''
-        #
-        args = {'room_id': self._room_id,
-                'device_id': self._device_id,
-                'html_recordings': self._getHtml_recordings(),
-                'timestamp_recordings': recordings_datetime,
-                'now_viewing_logo': get_channel_logo_from_devicekey(self._type, chan_current),
-                'now_viewing': get_channel_name_from_devicekey(self._type, chan_current),
-                'html_channels': html_channels}
-        #
-        return self._getHtml_generic(args)
+    def getData(self, request):
+        try:
+            if request['data'] == 'recordings':
+                return self.recordings
+            elif request['data'] == 'channel':
+                return self._getChan()
+        except Exception as e:
+            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                     error=e))
+            return False
 
-    def getHtml_settings(self, room_num, dvc_num):
+    def _create_recordings_json(self, _timestamp, _folders, _files):
         #
-        args = {'img': self._logo(),
-                'name': self._dvc_name(),
-                'ipaddress': self._ipaddress(),
-                'mak': self._accesskey(),
-                'dvc_ref': self.dvc_or_acc_ref()}
-        #
-        return self.getHtml_settings_generic(args)
+        json_recordings = {}
+        json_recordings["recordings"] = {}
+        json_recordings["timestamp"] = _timestamp.strftime('%d/%m/%Y %H:%M:%S')
 
-    def _getHtml_recordings(self):
+        #
+        if len(_folders)==0 or len(_files) == 0:
+            return False
         #
         try:
-            # self.recordings_timestamp = datetime.datetime.now()
-            # self.recordings_folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-            # self.recordings_files = self._retrieve_recordings('Yes').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
             #
-            series = []
-            # Run through items in 'folders' xml and identify group/series names, adding to the series[] variable
-            if self.recordings_folders:
-                xml_folders = ET.fromstring(self.recordings_folders)
-                for item in xml_folders.iter('Item'):
-                    details = item.find('Details')
-                    # details.find('ContentType').text == 'x-tivo-container/folder'
-                    if details.find('Title').text != 'Suggestions' and details.find('Title').text != 'HD Recordings':
-                        series.append(details.find('Title').text)
-            #
-            seriesdrop_html = {}
-            series_count = {}
-            series_type = {}
-            movie_rating = {}
-            #
-            # Build html group containers for adding file html to later.
-            if len(series) > 0:
-                for title in series:
-                    series_count[title] = 0
-                    seriesdrop_html[title] = ''
-                    series_type[title] = ''
-            #
-            # Run through items in 'files' xml and commence building html
-            if len(self.recordings_files)>0:
+            folderCount = 0
+            for itemFolder in _folders:
+                if itemFolder.find('Title').text != 'Suggestions' and itemFolder.find('Title').text != 'HD Recordings':
+                    json_recordings['recordings'][str(folderCount)] = {}
+                    json_recordings['recordings'][str(folderCount)]['folderName'] = itemFolder.find('Title').text
+                    json_recordings['recordings'][str(folderCount)]['type'] = '-'
+                    #
+                    json_recordings['recordings'][str(folderCount)]['items'] = {}
+                    #
+                    # Run through individual items
+                    itemCount = 0
+                    for itemFile in _files:
+                        #
+                        if itemFile.find('Title').text == itemFolder.find('Title').text:
+                            #
+                            json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)] = {}
+                            #
+                            try:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['episodeTitle'] = itemFile.find('EpisodeTitle').text
+                            except Exception as e:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['episodeTitle'] = ''
+                            #
+                            json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel'] = {}
+                            #
+                            try:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel']['image'] = get_channel_logo_from_devicekey(self._type, int(itemFile.find('SourceChannel').text))
+                            except Exception as e:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel']['image'] = '-'
+                                #
+                            try:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel']['name'] = get_channel_name_from_devicekey(self._type, int(itemFile.find('SourceChannel').text))
+                            except Exception as e:
+                                print (int(itemFile.find('SourceChannel').text))
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['channel']['name'] = '-'
+
+                                #
+                            try:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['description'] = itemFile.find('Description').text
+                            except Exception as e:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['description'] = ''
+                            #
+                            try:
+                                date = int(itemFile.find('CaptureDate').text, 0)
+                                date = datetime.datetime.fromtimestamp(date)
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['recordingDate'] = date.strftime('%d-%m-%Y')
+                            except Exception as e:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['recordingDate'] = '-'
+                            #
+                            json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['episodeNumber'] = {}
+                            #
+                            try:
+                                episodenumber = itemFile.find('EpisodeNumber').text
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['episodeNumber']['series'] = episodenumber[:-2]
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['episodeNumber']['episode'] = episodenumber[-2:]
+                            except:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['episodeNumber']['series'] = ''
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['episodeNumber']['episode'] = ''
+                            #
+                            try:
+                                if itemFile.find('ProgramId').text.startswith('EP'):
+                                    json_recordings['recordings'][str(folderCount)]['type'] = 'tv'
+                                    json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['mpaaRating'] = ''
+                                elif itemFile.find('ProgramId').text.startswith('MV'):
+                                    json_recordings['recordings'][str(folderCount)]['type'] = 'movie'
+                                    json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['mpaaRating'] = itemFile.find('MpaaRating').text
+                            except:
+                                json_recordings['recordings'][str(folderCount)]['items'][str(itemCount)]['mpaaRating'] = ''
+                                #
+                            itemCount += 1
                 #
-                # Run through individual items
-                for item in self.recordings_files:
-                    #
-                    # If part of a series (check against list created above) then create 'folder' group
-                    if item.find('Title').text in series:
-                        series_count[item.find('Title').text] += 1
-                        # not always an episode title!!
-                        try:
-                            ep_title = item.find('EpisodeTitle').text
-                        except Exception as e:
-                            ep_title = '-'
-                        #
-                        try:
-                            imgchan = get_channel_item_image_from_devicekey(self._type, int(item.find('SourceChannel').text))
-                            img = '<img style="height: 25px;" src="/img/channel/{imgchan}"/>'.format(imgchan=imgchan)
-                        except Exception as e:
-                            img = False
-                        #
-                        try:
-                            desc = desc=item.find('Description').text
-                        except Exception as e:
-                            desc = ''
-                        #
-                        try:
-                            date = int(item.find('CaptureDate').text, 0)
-                            date = datetime.datetime.fromtimestamp(date)
-                            date = date.strftime('%d-%m-%Y')
-                        except Exception as e:
-                            date = '-'
-                        #
-                        try:
-                            episodenumber = item.find('EpisodeNumber').text
-                            se = episodenumber[:-2]
-                            ep = episodenumber[-2:]
-                            episodenumber = 'Series {se} Episode {ep}'.format(se=se,ep=ep)
-                        except:
-                            episodenumber = ''
-                        #
-                        if item.find('ProgramId').text.startswith('EP'):
-                            series_type[item.find('Title').text] = 'tv'
-                        elif item.find('ProgramId').text.startswith('MV'):
-                            series_type[item.find('Title').text] = 'movie'
-                            movie_rating[item.find('Title').text] = item.find('MpaaRating').text
-                        else:
-                            series_type[item.find('Title').text] = '-'
-                        #
-                        seriesdrop_html[item.find('Title').text] += '<div class="row">'
-                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-9"><h5>{ep_title}</h5></div>'.format(ep_title=ep_title)
-                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-3" style="text-align: right;">{img}</div>'.format(img=img)
-                        seriesdrop_html[item.find('Title').text] += '</div>'
-                        seriesdrop_html[item.find('Title').text] += '<div class="row"><div class="col-xs-12"><p>{desc}</p></div></div>'.format(desc=desc)
-                        seriesdrop_html[item.find('Title').text] += '<div class="row" style="margin-bottom: 20px">'
-                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-6"><p>{episodenumber}</p></div>'.format(episodenumber=episodenumber)
-                        seriesdrop_html[item.find('Title').text] += '<div class="col-xs-6" align="right"><p>{date}</p></div>'.format(date=date)
-                        seriesdrop_html[item.find('Title').text] += '</div>'
-                #
-                # Run through each item in series_html and add to master html_recordings
-                html_recordings = '<div class="row">'
-                html_recordings += '<div class="col-xs-10"><h5>Title</h5></div>'
-                html_recordings += '<div class="col-xs-2" style="text-align: right;"><h5>#</h5></div>'
-                html_recordings += '</div>'
-                count = 0
-                for title in series:
-                    html_recordings += '<div class="row btn-col-grey btn_pointer" style="margin-bottom: 5px;" data-toggle="collapse" data-target="#collapse_series{count}">'.format(count=count)
-                    #
-                    # Based Bootstrap's Scaffolding (12-column grid)
-                    # | (9) Title | (2) Number of episodes | (1) Movie/TV Image |
-                    # | (9) Episode title | (3) Channel logo |
-                    # | (12) Description |
-                    # | (6) Series & Episode number | (6) Recording date |
-                    #
-                    html_recordings += '<div class="col-xs-9"><h5>{title}</h5></div>'.format(title=title)
-                    #
-                    if series_type[title]=='tv':
-                        html_recordings += '<div class="col-xs-2" style="text-align: right;"><h6>{count}</h6></div>'.format(count=series_count[title])
-                    # TODO Movie age rating image removed as uses key as opposed to actual age rating in xml
-                    # elif series_type[title]=='movie':
-                    #     html_recordings += '<div class="col-xs-2" style="text-align: right; padding: 5px;"><img style="height: 25px;" src="/img/movie_rating/BBFC_{rating}.png"/></div>'.format(rating=movie_rating[title])
-                    else:
-                        html_recordings += '<div class="col-xs-2" style="text-align: right;"></div>'
-                    #
-                    if series_type[title]=='tv' or series_type[title]=='movie':
-                        html_recordings += '<div class="col-xs-1" style="text-align: right; padding: 5px;"><img style="height: 25px;" src="/img/icon/ic_{type}.png"/></div>'.format(type=series_type[title])
-                    else:
-                        html_recordings += '<div class="col-xs-1" style="text-align: right;"></div>'
-                    #
-                    html_recordings += '</div>'
-                    html_recordings += '<div class="row collapse out" id="collapse_series{count}"><div class="container-fluid">{drop}</div></div>'.format(count=count, drop=seriesdrop_html[title])
-                    count += 1
-                #
-                return html_recordings
-            else:
-                return '<p>Error</p>'
+                folderCount += 1
+            #
+            return json_recordings
+            #
         except Exception as e:
-            print_error('Attempted to create recordings html - {error}'.format(error=e))
-            return '<p>Error</p>'
+            print_error('Attempted to create recordings json - {error}'.format(error=e))
+            return False
 
     def _retrieve_recordings(self, recurse, itemCount=''):
         try:

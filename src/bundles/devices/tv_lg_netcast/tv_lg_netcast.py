@@ -2,13 +2,12 @@ import datetime
 import threading
 import time
 import xml.etree.ElementTree as ET
-
 import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from src.bundles.devices.device import Device
 from src.config.devices.config_devices import get_cfg_device_detail
-from src.log.console_messages import print_command, print_msg
+from src.log.console_messages import print_command, print_msg, print_error
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -28,8 +27,7 @@ class device_tv_lg_netcast(Device):
         self._pairDevice()
         #
         self.apps_timestamp = False
-        self.apps_xml = False
-        self.apps_list = []
+        self.apps_json = False
         t = threading.Thread(target=self.get_apps, args=())
         t.daemon = True
         t.start()
@@ -123,92 +121,23 @@ class device_tv_lg_netcast(Device):
         #
         return r_pass
 
-    def getHtml(self, user):
+    def _app_check(self, attempt=1):
         #
-        args = {'room_id': self._room_id,
-                'device_id': self._device_id,
-                'apps': self._html_apps()}
-        #
-        return self._getHtml_generic(args)
-
-    def getHtml_settings(self, room_num, dvc_num):
-        #
-        args = {'img': self._logo(),
-                'name': self._dvc_name(),
-                'ipaddress': self._ipaddress(),
-                'pairingkey': self._pairingkey(),
-                'dvc_ref': self.dvc_or_acc_ref()}
-        #
-        return self.getHtml_settings_generic(args)
-
-    def _html_app_check(self, attempt=1):
-        #
-        if not bool(self.apps_xml):
+        if not bool(self.apps_json):
             self._get_apps()
         #
-        if bool(self.apps_xml):
+        if bool(self.apps_json):
             return
-        elif not bool(self.apps_xml) and attempt<3:
+        elif not bool(self.apps_json) and attempt<3:
             attempt += 1
-            self._html_app_check(attempt)
+            self._app_check(attempt)
         else:
             raise Exception
-
-    def _html_apps(self):
-        #
-        try:
-            self._html_app_check()
-        except:
-            return '<p style="text-align:center">App list could not be retrieved from the device.</p>' +\
-                   '<p style="text-align:center">Please check the TV is turned on and then try again.</p>'
-        #
-        applist = self.apps_xml
-        #
-        if not applist:
-            return '<p style="text-align:center">App list could has not been retrieved from the device.</p>' +\
-                   '<p style="text-align:center">Please check the TV is turned on and then try again.</p>'
-        else:
-            #
-            html = '<table style="width:100%">' +\
-                   '<tr style="height:80px; padding-bottom:2px; padding-top:2px">'
-            #
-            xml = ET.fromstring(applist)
-            #
-            count = 1
-            for data in xml[0]:
-                try:
-                    auid = data.find('auid').text
-                    name = data.find('name').text
-                    type = data.find('type').text
-                    cpid = data.find('cpid').text
-                    adult = data.find('adult').text
-                    icon_name = data.find('icon_name').text
-                    #
-
-                    html += ('<td class="grid_item" style="width: 20%; cursor: pointer; vertical-align: top;" align="center" onclick="sendHttp(\'/command/{room_id}/{device_id}?command=app&auid={auid}&name={app_name}\', null, \'GET\', false, true)">' +
-                             '<img src="/command/device/{room_id}/{device_id}?command=image&auid={auid}&name={app_name}" style="height:50px;"/>' +
-                             '<p style="text-align:center; font-size: 13px;">{name}</p>' +
-                             '</td>').format(room_id=self._room_id,
-                                             device_id=self._device_id,
-                                             auid = auid,
-                                             app_name = name.replace(' ', '%20'),
-                                             name = name)
-                    #
-                    if count % 4 == 0:
-                        html += '</tr><tr style="height:35px; padding-bottom:2px; padding-top:2px">'
-                    count += 1
-                    #
-                except Exception as e:
-                    html += ''
-                #
-            #
-            html += '</table></div>'
-            return html
 
     def _get_apps(self):
         # Reset values
         self.apps_timestamp = datetime.datetime.now()
-        self.apps_xml = self._getApplist()
+        self.apps_json = self._getApplist()
 
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         try:
@@ -242,7 +171,23 @@ class device_tv_lg_netcast(Device):
                               r.status_code)
             #
             if r.status_code == requests.codes.ok:
-                return r.content
+                #
+                xml = ET.fromstring(r.content)
+                json_apps = {}
+                #
+                for data in xml[0]:
+                    try:
+                        json_a = {}
+                        json_a['auid'] = data.find('auid').text
+                        json_a['name'] = data.find('name').text
+                        json_a['type'] = data.find('type').text
+                        json_a['cpid'] = data.find('cpid').text
+                        json_a['adult'] = data.find('adult').text
+                        json_a['icon_name'] = data.find('icon_name').text
+                        json_apps[data.find('auid').text] = json_a
+                    except:
+                        True
+                return json_apps
             else:
                 return False
         except:
@@ -312,6 +257,16 @@ class device_tv_lg_netcast(Device):
     def getChan(self):
         # sendHTTP(self._STRipaddress+":"+str(self._INTport)+str(self.STRtv_PATHquery)+"?target=cur_channel", "close")
         return False
+
+    def getData(self, request):
+        try:
+            if request['data'] == 'applist':
+                self._app_check()
+                return self.apps_json
+        except Exception as e:
+            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                     error=e))
+            return False
 
     def sendCmd(self, request):
         #

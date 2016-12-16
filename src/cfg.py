@@ -3,11 +3,12 @@ max_devices = 5
 
 request_timeout = 10
 
-key_q_response_web_device = 'web_device'
+key_q_response_data = 'data'
 key_q_response_command = 'command'
 
 key_q_tvlistings = 'tvlistings'
 
+port_server = 1600
 
 # Code below used to determine and return server information (e.g. ip address on network, mac address, etc)
 

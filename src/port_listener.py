@@ -1,6 +1,7 @@
 import datetime
 import os
 import time
+import ast
 
 from bottle import error, HTTPError
 from bottle import get, post
@@ -8,21 +9,13 @@ from bottle import request, run, static_file, HTTPResponse, redirect, response
 
 import cfg
 from src.config.devices.config_devices import get_cfg_room_index, get_cfg_device_index, get_cfg_account_index
-from src.config.devices.config_devices import get_cfg_room_name, get_cfg_device_name, get_cfg_account_name
-from src.config.devices.config_devices_compiler_for_client import compile_config
 from src.config.users.config_users import check_user, update_user_channels
-from src.web.web_create_error import create_error
-from web.web_create_pages import create_login, create_home, create_about, create_tvguide, create_weather, create_device
-from web.web_create_preferences import create_preference_tvguide
-
 from src.tvlistings.tvlisting_getfromqueue import _check_tvlistingsqueue
-
-# from web_devices import refresh_tvguide
 
 
 ################################################################################################
 
-def start_bottle(port, q_dvcs, q_accs, queues):
+def start_bottle(q_dvcs, q_accs, queues):
     # '0.0.0.0' - all interfaces including the external one
     # 'localhost' - internal interfaces only
     global q_devices
@@ -31,105 +24,86 @@ def start_bottle(port, q_dvcs, q_accs, queues):
     q_devices = q_dvcs
     q_accounts = q_accs
     q_dict = queues
-    run_bottle(port)
+    run_bottle()
 
 ################################################################################################
 # Provision of server config for clients
 ################################################################################################
 
-# TODO
-# Same as config json with the removal of 'details'
-# Consider adding 'structure_name_alt', 'account_name_alt', 'room_name_alt' and 'device_name_alt'
+from src.client_caches.setup import compile_setup
+from src.client_caches.users import compile_users
+from src.client_caches.weather import compile_weather
+from src.client_caches.tvchannels import compile_tvchannels
 
-@get('/cfg/structure')
-def cfg_structure():
+@get('/cache/setup')
+def cache_setup():
     try:
-        return compile_config()
+        return HTTPResponse(body=compile_setup(), status=200)
     except:
-        return HTTPError(404)
+        return HTTPResponse(status=404)
+
+
+@get('/cache/users')
+def cache_users():
+    try:
+        return HTTPResponse(body=compile_users(), status=200)
+    except:
+        return HTTPResponse(status=404)
+
+
+@get('/cache/weather')
+def cache_weather():
+    try:
+        return HTTPResponse(body=compile_weather(), status=200)
+    except:
+        return HTTPResponse(status=404)
+
+
+@get('/cache/tvchannels')
+def cache_tvchannels():
+    try:
+        return HTTPResponse(body=compile_tvchannels(), status=200)
+    except:
+        return HTTPResponse(status=404)
+
+from src.client_caches.tvlistings import compile_tvlistings
+
+@get('/cache/tvlistings')
+def cache_tvlistings():
+    # try:
+    #     return compile_tvlistings()
+    # except:
+    #     return HTTPError(404)
+    return HTTPResponse(status=404)
+
 
 ################################################################################################
-# Web UI
+# User based operations
 ################################################################################################
 
-@get('/')
-def web_redirect():
-    redirect('/web/')
+from src.config.users.config_users import check_pin
 
-
-@get('/web/login')
-def web_login():
-    user = request.query.user
-    if not user:
-        return HTTPResponse(body=create_login(), status=200)
+@post('/user/pin')
+def user_checkpin():
+    check = check_pin(request.json['user'],
+                      request.json['pin'])
+    if check:
+        return HTTPResponse(status=200)
     else:
-        response.set_cookie('user', user, path='/', secret=None)
-        return redirect('/web/')
+        return HTTPResponse(status=401)
 
 
-@get('/web/logout')
-def web_logout():
-    response.delete_cookie('user')
-    return redirect('/web/login')
+################################################################################################
+# Handle requests for resource data
+################################################################################################
 
-
-@get('/web/')
-@get('/web/home/')
-def web_home():
-    # Get and check user
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
+@get('/data/device/<room_id>/<device_id>/<resource_requested>')
+def get_data_device(room_id=False, device_id=False, resource_requested=False):
     #
-    return HTTPResponse(body=create_home(user), status=200)
-
-
-@get('/web/about/')
-def web_about():
-    # Get and check user
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
-    #
-    return HTTPResponse(body=create_about(user), status=200)
-
-
-@get('/web/info/<service>')
-def web_tvguide(service=False):
-    # Get and check user
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
-    #
-    if service == 'tvguide':
-        # Retrieve tvlistings from queue
-        tvlistings = _check_tvlistingsqueue(q_dict[cfg.key_q_tvlistings])
-        #
-        # if bool(request.query.group) and bool(request.query.device):
-        #     return HTTPResponse(body=refresh_tvguide(tvlistings,
-        #                                              device = False, #create_device_object(request.query.group, request.query.device),
-        #                                              group_name = request.query.group,
-        #                                              device_name = request.query.device,
-        #                                              user=user),
-        #                         status=200) if bool(tvlistings) else HTTPResponse(status=400)
-        # else:
-        return HTTPResponse(body=create_tvguide(user, tvlistings), status=200)
-    elif service == 'weather':
-        return HTTPResponse(body=create_weather(user), status=200)
-    else:
-        raise HTTPError(404)
-
-
-@get('/web/device/<room_id>/<device_id>')
-def web_devices(room_id=False, device_id=False):
-    #
-    if (not room_id) or (not device_id):
+    if (not room_id) or (not device_id) or (not resource_requested):
         raise HTTPError(404)
     #
-    # Get and check user
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
+    timestamp = datetime.datetime.now()
     #
     room_num = get_cfg_room_index(room_id)
     device_num = get_cfg_device_index(room_id, device_id)
@@ -137,108 +111,72 @@ def web_devices(room_id=False, device_id=False):
     if room_id == -1 or device_id == -1:
         raise HTTPError(404)
     #
-    timestamp = datetime.datetime.now()
+    data_dict = {'data': resource_requested}
+    #
     queue_item = {'timestamp': timestamp,
-                  'response_queue': cfg.key_q_response_web_device,
+                  'response_queue': cfg.key_q_response_data,
                   'room_num': room_num,
                   'device_num': device_num,
-                  'user': request.get_cookie('user')}
+                  'request': data_dict}
     #
     q_devices[room_num][device_num].put(queue_item)
     #
     time.sleep(0.1)
     #
     while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
-        if not q_dict[cfg.key_q_response_web_device].empty():
-            return create_device(user,
-                                 q_dict[cfg.key_q_response_web_device].get(),
-                                 '{room_name}: {device_name}'.format(room_name=get_cfg_room_name(room_id),
-                                                                     device_name=get_cfg_device_name(room_id, device_id)),
-                                 '{room_name}: {device_name}'.format(room_name=get_cfg_room_name(room_id),
-                                                                     device_name=get_cfg_device_name(room_id, device_id)))
-    #
+        if not q_dict[cfg.key_q_response_data].empty():
+            #
+            rsp = q_dict[cfg.key_q_response_data].get()
+            #
+            if isinstance(rsp, bool):
+                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+            else:
+                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+            #
     raise HTTPError(500)
 
 
-@get('/web/account/<account_id>')
-def web_accounts(account_id=False):
+@get('/data/account/<account_id>/<resource_requested>')
+def get_data_account(account_id=False, resource_requested=False):
     #
-    if not account_id:
+    if (not account_id) or (not resource_requested):
         raise HTTPError(404)
     #
-    # Get and check user
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
+    timestamp = datetime.datetime.now()
     #
     account_num = get_cfg_account_index(account_id)
     #
     if account_id == -1:
         raise HTTPError(404)
     #
-    timestamp = datetime.datetime.now()
+    data_dict = {'data': resource_requested}
+    #
     queue_item = {'timestamp': timestamp,
-                  'response_queue': cfg.key_q_response_web_device,
+                  'response_queue': cfg.key_q_response_data,
                   'account_num': account_num,
-                  'user': request.get_cookie('user')}
+                  'request': data_dict}
     #
     q_accounts[account_num].put(queue_item)
     #
     time.sleep(0.1)
     #
     while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
-        if not q_dict[cfg.key_q_response_web_device].empty():
-            return create_device(user,
-                                 q_dict[cfg.key_q_response_web_device].get(),
-                                 '{account_name}'.format(account_name=get_cfg_account_name(account_id)),
-                                 '{account_name}'.format(account_name=get_cfg_account_name(account_id)))
-    #
+        if not q_dict[cfg.key_q_response_data].empty():
+            #
+            rsp = q_dict[cfg.key_q_response_data].get()
+            #
+            if isinstance(rsp, bool):
+                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+            else:
+                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+            #
     raise HTTPError(500)
-
-
-# @get('/web/settings/<page>')
-# def web_settings(page=''):
-#     user = _check_user(request.get_cookie('user'))
-#     if not user:
-#         redirect('/web/login')
-#     if get_userrole(user) != 'admin':
-#         return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
-#                                  'Please consult your administrator for further information.', status=400)
-#     if page == 'devices':
-#         return HTTPResponse(body=create_settings_devices(user), status=200)
-#     elif page == 'tvguide':
-#         return HTTPResponse(body=create_settings_tvguide(user), status=200)
-#     else:
-#         raise HTTPError(404)
-
-
-# @get('/web/settings')
-# def web():
-#     return HTTPResponse(body=settings_devices_requests(request), status=200)
-
-
-@get('/web/preferences/<page>')
-def web_preferences(page=''):
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
-    if page == 'tvguide':
-        return HTTPResponse(body=create_preference_tvguide(user), status=200)
-    else:
-        raise HTTPError(404)
-
-
-@get('/web/static/<folder>/<filename>')
-def get_resource(folder, filename):
-    return static_file(filename, root=os.path.join(os.path.dirname(__file__), ('web/html/static/{folder}'.format(folder=folder))))
 
 
 ################################################################################################
 # Handle commands
 ################################################################################################
 
-
-@get('/command/device/<room_id>/<device_id>')
 @post('/command/device/<room_id>/<device_id>')
 def send_command_device(room_id=False, device_id=False):
     #
@@ -253,7 +191,7 @@ def send_command_device(room_id=False, device_id=False):
     if room_id == -1 or device_id == -1:
         raise HTTPError(404)
     #
-    cmd_dict = dict(request.query)
+    cmd_dict = request.json
     #
     queue_item = {'timestamp': timestamp,
                   'response_queue': cfg.key_q_response_command,
@@ -278,7 +216,6 @@ def send_command_device(room_id=False, device_id=False):
     raise HTTPError(500)
 
 
-@get('/command/account/<account_id>')
 @post('/command/account/<account_id>')
 def send_command_account(account_id=False):
     #
@@ -292,14 +229,14 @@ def send_command_account(account_id=False):
     if account_id == -1:
         raise HTTPError(404)
     #
-    cmd_dict = dict(request.query)
+    cmd_dict = request.json()
     #
     queue_item = {'timestamp': timestamp,
                   'response_queue': cfg.key_q_response_command,
                   'account_num': account_num,
                   'request': cmd_dict}
     #
-    q_devices[account_num].put(queue_item)
+    q_accounts[account_num].put(queue_item)
     #
     time.sleep(0.1)
     #
@@ -351,14 +288,12 @@ def send_command_account(account_id=False):
 
 @post('/preferences/<category>')
 def save_preferences(category='-'):
-    if _check_user(request.get_cookie('user')):
-        if category == 'tvguide':
-            user = request.get_cookie('user')
-            data = request.body
-            if update_user_channels(user, data):
-                return HTTPResponse(status=200)
-    else:
-        raise HTTPError(404)
+    if category == 'tvguide':
+        user = request.get_cookie('user')
+        data = request.body
+        if update_user_channels(user, data):
+            return HTTPResponse(status=200)
+    raise HTTPError(404)
 
 
 ################################################################################################
@@ -371,30 +306,11 @@ def send_favicon():
     return static_file('favicon.ico', root=root)
 
 
-@get('/img/<category>/<filename:re:.*\.png>')
+@get('/img/<category>/<filename>')
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), '..', 'img/{img_cat}'.format(img_cat=category))
-    return static_file(filename, root=root, mimetype='image/png')
-
-
-################################################################################################
-# Error pages/responses
-################################################################################################
-
-@error(404)
-def error404(error):
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
-    return HTTPResponse(body=create_error(user, 404), status=404)
-
-
-@error(500)
-def error500(error):
-    user = _check_user(request.get_cookie('user'))
-    if not user:
-        redirect('/web/login')
-    return HTTPResponse(body=create_error(user, 500), status=500)
+    mimetype = filename.split('.')[1]
+    return static_file(filename, root=root, mimetype='image/{mimetype}'.format(mimetype=mimetype))
 
 
 ################################################################################################
@@ -412,14 +328,14 @@ def error500(error):
 ################################################################################################
 
 
-def _check_user(user_cookie):
-    if not user_cookie:
-        return False
-    else:
-        if check_user(user_cookie):
-            return user_cookie
-        else:
-            return 'Guest'
+# def _check_user(user_cookie):
+#     if not user_cookie:
+#         return False
+#     else:
+#         if check_user(user_cookie):
+#             return user_cookie
+#         else:
+#             return 'Guest'
 
-def run_bottle(port):
-    run(host='0.0.0.0', port=port, debug=True)
+def run_bottle():
+    run(host='0.0.0.0', port=cfg.port_server, debug=True)

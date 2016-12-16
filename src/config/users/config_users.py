@@ -20,11 +20,10 @@ def update_user_channels(user, channels):
             data = json.load(data_file)
             data_file.close()
         if data != None:
-            x=0
-            while x<len(data['users']):
-                if data['users'][x]['name'] == user:
+            for id in data['users']:
+                if data['users'][id]['name'] == user:
                     channels = json.load(channels)
-                    data['users'][x]['tvlistings'] = channels
+                    data['users'][id]['tvlistings'] = channels
                     with open(os.path.join('config', 'config_users.json'), 'w+') as output_file:
                         output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
                         output_file.close()
@@ -38,11 +37,21 @@ def update_user_channels(user, channels):
 def check_user(user):
     data = read_config_users()
     if data != None:
-        x=0
-        while x<len(data['users']):
-            if data['users'][x]['name']==user:
+        for id in data['users']:
+            if data['users'][id]['name']==user:
                 return True
-            x+=1
+    return False
+
+
+def check_pin(user, pin):
+    data = read_config_users()
+    if data != None:
+        for id in data['users']:
+            if data['users'][id]['name']==user:
+                if data['users'][id]['pin'] == pin:
+                    return True
+                else:
+                    return False
     return False
 
 
@@ -50,54 +59,35 @@ def get_usernames():
     data = read_config_users()
     if data != None:
         LSTnames = []
-        x = 0
-        while x < len(data["users"]):
-            LSTnames.append(data["users"][x]["name"])
-            x += 1
+        for id in data['users']:
+            LSTnames.append(data["users"][id]["name"])
         return LSTnames
     return None
-
-
-def get_usertheme(user):
-    data = read_config_users()
-    if data != None:
-        x=0
-        while x<len(data['users']):
-            if data['users'][x]['name']==user:
-                return data['users'][x]['theme']
-            x+=1
-    return "light"
 
 
 def get_userchannels(user):
     data = read_config_users()
     if data != None:
-        x=0
-        while x<len(data['users']):
-            if data['users'][x]['name']==user:
-                return data['users'][x]['tvlistings']
-            x+=1
+        for id in data['users']:
+            if data['users'][id]['name']==user:
+                return data['users'][id]['tvlistings']
     return None
 
 
 def get_userrole(user):
     data = read_config_users()
     if data != None:
-        x=0
-        while x<len(data['users']):
-            if data['users'][x]['name']==user:
-                return data['users'][x]['role']
-            x+=1
+        for id in data['users']:
+            if data['users'][id]['name']==user:
+                return data['users'][id]['role']
     return None
 
 
 def get_userimage(user):
     data = read_config_users()
     if data != None:
-        x=0
-        while x<len(data['users']):
-            if data['users'][x]['name']==user:
-                if data['users'][x]['image'] != "":
-                    return data['users'][x]['image']
-            x+=1
+        for id in data['users']:
+            if data['users'][id]['name']==user:
+                if data['users'][id]['image'] != "":
+                    return data['users'][id]['image']
     return "default.png"
