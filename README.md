@@ -22,12 +22,22 @@ Elements planned for development in future:
 - Lights and sockets (possibly with LightwaveRF)
 - ...and anything else I can think of!!
 
+<hr>
+
+<h3>API Guide</h3>
+
 <p>
 <code>POST/GET</code> <code>/command/device/{room_id}/{device_id}</code>
 <br>Submit commands to the server for relaying to the particular device as requested by the {room_id} and {device_id} variables. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
 </p><br><p>
 <code>POST/GET</code> <code>/command/account/{account_id}</code>
 <br>Submit commands to the server for relaying to the particular account as requested by the {account_id} variable. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
+</p><br><p>
+<code>GET</code> <code>/data/device/{room_id}/{device_id}/{resource_requested}</code>
+<br>Request data for/from a particular device as requested by the {room_id} and {device_id} variables. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.
+</p><br><p>
+<code>GET</code> <code>/data/account/{account_id}/{resource_requested}</code>
+<br>Request data for/from a particular account as requested by the {account_id} variable. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.
 </p><br><p>
 <code>GET</code> <code>/img/{category}/{filename:re:.*\.png}</code>
 <br>Returns image as defined by pre-set HTML pages.
