@@ -7,7 +7,7 @@ from urllib import urlopen
 import requests as requests
 
 from src.bundles.accounts.account import Account
-from src.config.devices.config_devices import get_cfg_account_detail, set_cfg_account_detail
+from src.config.bundles.config_bundles import get_cfg_account_detail, set_cfg_account_detail
 from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
 from src.log.console_messages import print_error, print_msg
 
@@ -27,9 +27,9 @@ class account_nest(Account):
     _dateformat = '%d/%m/%Y %H:%M:%S'
     _temp_unit = 'c'
 
-    def __init__ (self, account_id, q_acc, queues):
+    def __init__ (self, account_id):
         #
-        Account.__init__(self, "nest_account", account_id, q_acc, queues)
+        Account.__init__(self, 'nest_account', account_id)
         #
         self._token = ''
         self._tokenexpiry = ''
@@ -40,9 +40,6 @@ class account_nest(Account):
         self._tokencheck()
         #
         self._redirect_url = ''
-        #
-        self._active = True
-        self.run()
 
     def _dvc_name(self):
         return 'Nest'
@@ -52,7 +49,7 @@ class account_nest(Account):
         return get_device_name(self._type)
 
     def _pincode(self):
-        return get_cfg_account_detail(self._account_id, "pincode")
+        return get_cfg_account_detail(self._account_id, 'pincode')
 
     def _clientid(self):
         return get_device_detail(self._type, 'client_id')
@@ -60,7 +57,7 @@ class account_nest(Account):
     def _clientsecret(self):
         return get_device_detail(self._type, 'client_secret')
 
-    def sendData(self, request):
+    def getData(self, request):
         #
         try:
             #
@@ -92,7 +89,7 @@ class account_nest(Account):
             if nest_device == 'thermostats':
                 #
                 if command == 'temp':
-                    #json_cmd = {'devices': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
+                    #json_cmd = {'bundles': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
                     json_cmd = {'target_temperature_' + self._temp_unit : float(value)}
                     if self._send_nest_json(json_cmd, nest_model, nest_device, nest_device_id):
                         return True
@@ -181,7 +178,7 @@ class account_nest(Account):
             device_url = '/{device}/{device_id}'.format(device=device, device_id=device_id)
         else:
             device_url = ''
-        return self._read_nest_json(model='/devices'+device_url)
+        return self._read_nest_json(model='/bundles'+device_url)
 
     def _read_json_structures(self):
         return self._read_nest_json(model='/structures')

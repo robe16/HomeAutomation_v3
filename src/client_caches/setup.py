@@ -1,11 +1,11 @@
 import ast
-from src.config.devices.config_devices import get_cfg_device_json
+from src.config.bundles.config_bundles import get_cfg_bundles_json
 from src.lists.devices.list_devices import get_device_logo
 
 
 def compile_setup():
     #
-    data = get_cfg_device_json()
+    data = get_cfg_bundles_json()
     #
     for a in data['structure']['accounts']:
         del data['structure']['accounts'][a]['details']

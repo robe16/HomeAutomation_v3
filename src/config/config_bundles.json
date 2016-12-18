@@ -1,0 +1,52 @@
+{
+    "structure": {
+        "structure_id": "home",
+        "structure_name": "Home",
+        "structure_postcode": "HD6 2BL",
+        "structure_town": "Brighouse",
+        "accounts": {
+            "nest": {
+                "account_type": "nest_account",
+                "account_name": "Nest",
+                "account_id": "nest",
+                "details": {
+                    "tokenexpiry": "06/11/2016 15:39:02",
+                    "token": "c.ilIiIENVkpue20N2CzeNRe0zhA9sA4NKZbLgB0b9GFDHazkb1AotAtZJZxwOkLWj1C29LROCpUXGgl9ioUCbHhC8WfNxucMhY1NC8aBfgEFF3PTrRkXSFbqqZEtYYawd5kd6T9OWJ5beAXJS",
+                    "state": "pdda173lkc",
+                    "pincode": "RTRPU4TB"
+                },
+                "details_public": {}
+            }
+        },
+        "rooms": {
+            "lounge": {
+                "room_name": "Lounge",
+                "room_id": "lounge",
+                "devices": {
+                    "tv": {
+                        "device_name": "LG TV",
+                        "details": {
+                            "pairingkey": "397905",
+                            "ipaddress": "192.168.0.110"
+                        },
+                        "details_public": {},
+                        "device_type": "tv_lg_netcast",
+                        "device_id": "tv"
+                    },
+                    "virgin": {
+                        "device_name": "Virgin Media",
+                        "details": {
+                            "mak": "8985982662",
+                            "ipaddress": "192.168.0.111"
+                        },
+                        "details_public": {
+                            "package": ["XL", "movies_sky"]
+                        },
+                        "device_type": "tivo",
+                        "device_id": "virgin"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,8 +1,7 @@
 from src.bundles.info_services.info_service import InfoService
-from src.config.devices.config_devices import get_cfg_structure_town
-from src.bundles.info_services.weather_metoffice.create_html import create_html
+from src.config.bundles.config_bundles import get_cfg_structure_town
 from src.bundles.info_services.weather_metoffice.index_lists import *
-from urllib import urlopen
+from src.log.console_messages import print_error
 import datetime
 import requests
 
@@ -26,15 +25,11 @@ class info_metoffice(InfoService):
     LOCATION_unitaryAuthArea = ''
     REGION_id = ''
 
-    # def __init__(self, q_dvc, queues):
     def __init__ (self):
         #
-        # InfoService.__init__(self, "metoffice", q_dvc, queues)
-        InfoService.__init__(self, "metoffice")
+        InfoService.__init__(self, 'metoffice')
         #
         self.getLocation()
-        #
-        # self.run()
 
     def getParam_unit(self, params, name):
         for param in params:
@@ -51,26 +46,17 @@ class info_metoffice(InfoService):
         else:
             return ''
 
-################################################################################################################################
-################################################################################################################################
-    def getHtml(self, user):
-        #
-        forecast = self.createForecast()
-        timestamp = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-        #
-        html_weather = create_html(forecast)
-        #
-        args = {'timestamp': timestamp,
-                'town': get_cfg_structure_town(),
-                'county': self.LOCATION_unitaryAuthArea,
-                'body_weather_days': html_weather}
-        #
-        return urlopen('web/html/html_info_services/weather_main.html').read().encode('utf-8').format(**args)
-################################################################################################################################
-################################################################################################################################
-
     def _convertMinsToTime(self, date, mins_from_midnight):
         return datetime.datetime(date.year, date.month, date.day, 0, 0) + datetime.timedelta(minutes=mins_from_midnight)
+
+    def getData(self, request):
+        try:
+            if request['data'] == 'forecast':
+                return self.createForecast()
+        except Exception as e:
+            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                     error=e))
+            return False
 
     def createForecast(self):
         #

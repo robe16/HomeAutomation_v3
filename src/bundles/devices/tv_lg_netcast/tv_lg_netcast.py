@@ -1,12 +1,10 @@
 import datetime
-import threading
-import time
 import xml.etree.ElementTree as ET
 import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from src.bundles.devices.device import Device
-from src.config.devices.config_devices import get_cfg_device_detail
+from src.config.bundles.config_bundles import get_cfg_device_detail
 from src.log.console_messages import print_command, print_msg, print_error
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -14,37 +12,22 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class device_tv_lg_netcast(Device):
 
-    STRtv_PATHpair = "/udap/api/pairing"
-    STRtv_PATHcommand = "/udap/api/command"
-    STRtv_PATHevent = "/udap/api/event"
-    STRtv_PATHquery = "/udap/api/data"
+    STRtv_PATHpair = '/udap/api/pairing'
+    STRtv_PATHcommand = '/udap/api/command'
+    STRtv_PATHevent = '/udap/api/event'
+    STRtv_PATHquery = '/udap/api/data'
 
-    def __init__ (self, room_id, device_id, q_dvc, queues):
+    def __init__ (self, room_id, device_id):
         #
-        Device.__init__(self, "tv_lg_netcast", room_id, device_id, q_dvc, queues)
+        Device.__init__(self, 'tv_lg_netcast', room_id, device_id)
         #
         self.is_paired = False
         self._pairDevice()
         #
         self.apps_timestamp = False
         self.apps_json = False
-        t = threading.Thread(target=self.get_apps, args=())
-        t.daemon = True
-        t.start()
-        #
-        self.run()
-
-    def get_apps(self):
-        while self._active:
-            # Reset values
-            self._get_apps()
-            #
-            ############
-            # Potential to convert xml into array/list here instead of within HTML creation def
-            ############
-            #
-            print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
-            time.sleep(600) # 600 = 10 minutes
+        self._get_apps()
+        print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
 
     def _pairingkey(self):
         return get_cfg_device_detail(self._room_id, self._device_id, "pairingkey")
@@ -103,7 +86,7 @@ class device_tv_lg_netcast(Device):
 
     def showPairingkey(self):
         #
-        STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>showKey</name></api></envelope>"
+        STRxml = '<?xml version="1.0" encoding="utf-8"?><envelope><api type="pairing"><name>showKey</name></api></envelope>'
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
                    'content-type': 'text/xml; charset=utf-8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=str(self.STRtv_PATHpair))
@@ -123,7 +106,7 @@ class device_tv_lg_netcast(Device):
 
     def _app_check(self, attempt=1):
         #
-        if not bool(self.apps_json):
+        if not bool(self.apps_json) or self.apps_timestamp > (datetime.datetime.now() + datetime.timedelta(minutes = 10)):
             self._get_apps()
         #
         if bool(self.apps_json):
@@ -145,7 +128,7 @@ class device_tv_lg_netcast(Device):
             if not self._check_paired(pair_reason='getApplist'):
                 return False
             #
-            uri = "/udap/api/data?target=applist_get&type={type}&index={index}&number={number}".format(type=str(APPtype),
+            uri = '/udap/api/data?target=applist_get&type={type}&index={index}&number={number}'.format(type=str(APPtype),
                                                                                                        index=str(APPindex),
                                                                                                        number=str(APPnumber))
             headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
@@ -186,7 +169,7 @@ class device_tv_lg_netcast(Device):
                         json_a['icon_name'] = data.find('icon_name').text
                         json_apps[data.find('auid').text] = json_a
                     except:
-                        True
+                        pass
                 return json_apps
             else:
                 return False
@@ -226,7 +209,7 @@ class device_tv_lg_netcast(Device):
         #
         # auid = This is the unique ID of the app, expressed as an 8-byte-long hexadecimal string.
         # name = App name
-        uri = "/udap/api/data?target=appicon_get&auid={auid}&appname={appname}".format(auid = auid,
+        uri = '/udap/api/data?target=appicon_get&auid={auid}&appname={appname}'.format(auid = auid,
                                                                                        appname = name)
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=uri)

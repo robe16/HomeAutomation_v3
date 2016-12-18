@@ -1,29 +1,29 @@
-import datetime
 import os
-import time
-import ast
-
 from bottle import error, HTTPError
 from bottle import get, post
 from bottle import request, run, static_file, HTTPResponse, redirect, response
-
 import cfg
-from src.config.devices.config_devices import get_cfg_room_index, get_cfg_device_index, get_cfg_account_index
+from src.log.console_messages import print_error
 from src.config.users.config_users import check_user, update_user_channels
-from src.tvlistings.tvlisting_getfromqueue import _check_tvlistingsqueue
 
 
 ################################################################################################
 
-def start_bottle(q_dvcs, q_accs, queues):
-    # '0.0.0.0' - all interfaces including the external one
-    # 'localhost' - internal interfaces only
-    global q_devices
-    global q_accounts
-    global q_dict
-    q_devices = q_dvcs
-    q_accounts = q_accs
-    q_dict = queues
+devices = {}
+accounts = {}
+infoservices = {}
+
+################################################################################################
+
+def start_bottle(_devices, _accounts, _infoservices):
+    #
+    global devices
+    global accounts
+    global infoservices
+    devices = _devices
+    accounts = _accounts
+    infoservices = _infoservices
+    #
     run_bottle()
 
 ################################################################################################
@@ -32,7 +32,6 @@ def start_bottle(q_dvcs, q_accs, queues):
 
 from src.client_caches.setup import compile_setup
 from src.client_caches.users import compile_users
-from src.client_caches.weather import compile_weather
 from src.client_caches.tvchannels import compile_tvchannels
 
 @get('/cache/setup')
@@ -51,14 +50,6 @@ def cache_users():
         return HTTPResponse(status=404)
 
 
-@get('/cache/weather')
-def cache_weather():
-    try:
-        return HTTPResponse(body=compile_weather(), status=200)
-    except:
-        return HTTPResponse(status=404)
-
-
 @get('/cache/tvchannels')
 def cache_tvchannels():
     try:
@@ -68,13 +59,13 @@ def cache_tvchannels():
 
 from src.client_caches.tvlistings import compile_tvlistings
 
-@get('/cache/tvlistings')
-def cache_tvlistings():
-    # try:
-    #     return compile_tvlistings()
-    # except:
-    #     return HTTPError(404)
-    return HTTPResponse(status=404)
+# @get('/cache/tvlistings')
+# def cache_tvlistings():
+#     # try:
+#     #     return compile_tvlistings()
+#     # except:
+#     #     return HTTPError(500)
+#     return HTTPResponse(status=404)
 
 
 ################################################################################################
@@ -97,80 +88,76 @@ def user_checkpin():
 # Handle requests for resource data
 ################################################################################################
 
+@get('/data/info/<service>/<resource_requested>')
+def get_data_infoservice(service=False, resource_requested=False):
+    #
+    global infoservices
+    #
+    try:
+        #
+        if (not service) or (not resource_requested):
+            raise HTTPError(404)
+        #
+        data_dict = {'data': resource_requested}
+        #
+        rsp = infoservices[service].getData(data_dict)
+        #
+        if isinstance(rsp, bool):
+            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+        else:
+            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+        #
+    except Exception as e:
+        print_error('{error}'.format(error=e))
+        raise HTTPError(500)
+
+
 @get('/data/device/<room_id>/<device_id>/<resource_requested>')
 def get_data_device(room_id=False, device_id=False, resource_requested=False):
     #
-    if (not room_id) or (not device_id) or (not resource_requested):
-        raise HTTPError(404)
+    global devices
     #
-    timestamp = datetime.datetime.now()
-    #
-    room_num = get_cfg_room_index(room_id)
-    device_num = get_cfg_device_index(room_id, device_id)
-    #
-    if room_id == -1 or device_id == -1:
-        raise HTTPError(404)
-    #
-    data_dict = {'data': resource_requested}
-    #
-    queue_item = {'timestamp': timestamp,
-                  'response_queue': cfg.key_q_response_data,
-                  'room_num': room_num,
-                  'device_num': device_num,
-                  'request': data_dict}
-    #
-    q_devices[room_num][device_num].put(queue_item)
-    #
-    time.sleep(0.1)
-    #
-    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
-        if not q_dict[cfg.key_q_response_data].empty():
-            #
-            rsp = q_dict[cfg.key_q_response_data].get()
-            #
-            if isinstance(rsp, bool):
-                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
-            else:
-                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
-            #
-    raise HTTPError(500)
+    try:
+        #
+        if (not room_id) or (not device_id) or (not resource_requested):
+            raise HTTPError(404)
+        #
+        data_dict = {'data': resource_requested}
+        #
+        rsp = devices[room_id][device_id].getData(data_dict)
+        #
+        if isinstance(rsp, bool):
+            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+        else:
+            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+        #
+    except Exception as e:
+        print_error('{error}'.format(error=e))
+        raise HTTPError(500)
 
 
 @get('/data/account/<account_id>/<resource_requested>')
 def get_data_account(account_id=False, resource_requested=False):
     #
-    if (not account_id) or (not resource_requested):
-        raise HTTPError(404)
+    global accounts
     #
-    timestamp = datetime.datetime.now()
-    #
-    account_num = get_cfg_account_index(account_id)
-    #
-    if account_id == -1:
-        raise HTTPError(404)
-    #
-    data_dict = {'data': resource_requested}
-    #
-    queue_item = {'timestamp': timestamp,
-                  'response_queue': cfg.key_q_response_data,
-                  'account_num': account_num,
-                  'request': data_dict}
-    #
-    q_accounts[account_num].put(queue_item)
-    #
-    time.sleep(0.1)
-    #
-    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
-        if not q_dict[cfg.key_q_response_data].empty():
-            #
-            rsp = q_dict[cfg.key_q_response_data].get()
-            #
-            if isinstance(rsp, bool):
-                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
-            else:
-                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
-            #
-    raise HTTPError(500)
+    try:
+        #
+        if (not account_id) or (not resource_requested):
+            raise HTTPError(404)
+        #
+        data_dict = {'data': resource_requested}
+        #
+        rsp = accounts[account_id].getData(data_dict)
+        #
+        if isinstance(rsp, bool):
+            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+        else:
+            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+        #
+    except Exception as e:
+        print_error('{error}'.format(error=e))
+        raise HTTPError(500)
 
 
 ################################################################################################
@@ -180,77 +167,49 @@ def get_data_account(account_id=False, resource_requested=False):
 @post('/command/device/<room_id>/<device_id>')
 def send_command_device(room_id=False, device_id=False):
     #
-    if (not room_id) or (not device_id):
-        raise HTTPError(404)
+    global devices
     #
-    timestamp = datetime.datetime.now()
-    #
-    room_num = get_cfg_room_index(room_id)
-    device_num = get_cfg_device_index(room_id, device_id)
-    #
-    if room_id == -1 or device_id == -1:
-        raise HTTPError(404)
-    #
-    cmd_dict = request.json
-    #
-    queue_item = {'timestamp': timestamp,
-                  'response_queue': cfg.key_q_response_command,
-                  'room_num': room_num,
-                  'device_num': device_num,
-                  'request': cmd_dict}
-    #
-    q_devices[room_num][device_num].put(queue_item)
-    #
-    time.sleep(0.1)
-    #
-    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
-        if not q_dict[cfg.key_q_response_command].empty():
-            #
-            rsp = q_dict[cfg.key_q_response_command].get()
-            #
-            if isinstance(rsp, bool):
-                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
-            else:
-                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
-            #
-    raise HTTPError(500)
+    try:
+        #
+        if (not room_id) or (not device_id):
+            raise HTTPError(404)
+        #
+        cmd_dict = request.json
+        #
+        rsp = devices[room_id][device_id].sendCmd(cmd_dict)
+        #
+        if isinstance(rsp, bool):
+            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+        else:
+            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+        #
+    except Exception as e:
+        print_error('{error}'.format(error=e))
+        raise HTTPError(500)
 
 
 @post('/command/account/<account_id>')
 def send_command_account(account_id=False):
     #
-    if not account_id:
-        raise HTTPError(404)
+    global accounts
     #
-    timestamp = datetime.datetime.now()
-    #
-    account_num = get_cfg_account_index(account_id)
-    #
-    if account_id == -1:
-        raise HTTPError(404)
-    #
-    cmd_dict = request.json()
-    #
-    queue_item = {'timestamp': timestamp,
-                  'response_queue': cfg.key_q_response_command,
-                  'account_num': account_num,
-                  'request': cmd_dict}
-    #
-    q_accounts[account_num].put(queue_item)
-    #
-    time.sleep(0.1)
-    #
-    while datetime.datetime.now() < (timestamp + datetime.timedelta(seconds=cfg.request_timeout)):
-        if not q_dict[cfg.key_q_response_command].empty():
-            #
-            rsp = q_dict[cfg.key_q_response_command].get()
-            #
-            if isinstance(rsp, bool):
-                return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
-            else:
-                return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
-            #
-    raise HTTPError(500)
+    try:
+        #
+        if not account_id:
+            raise HTTPError(404)
+        #
+        cmd_dict = request.json()
+        #
+        rsp = accounts[account_id].sendCmd(cmd_dict)
+        #
+        if isinstance(rsp, bool):
+            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+        else:
+            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+        #
+    except Exception as e:
+        print_error('{error}'.format(error=e))
+        raise HTTPError(500)
 
 
 ################################################################################################
@@ -272,10 +231,10 @@ def send_command_account(account_id=False):
 #             #TODO
 #             # if update_channellist(data):
 #                 return HTTPResponse(status=400)
-#     elif category == 'devices':
+#     elif category == 'bundles':
 #         data = request.body.read()
 #         if data:
-#             if write_config_devices(data):
+#             if write_config_bundles(data):
 #                 return HTTPResponse(status=200)
 #         # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
 #     else:

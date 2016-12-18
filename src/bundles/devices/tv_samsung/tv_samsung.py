@@ -21,26 +21,9 @@ class object_tv_samsung(Device):
     DENIED_BYTES = [chr(0x64), chr(0x00), chr(0x00), chr(0x00)]
     TIMEOUT_BYTES = [chr(0x65), chr(0x00)]
 
-    def __init__ (self, room_id, device_id, q_dvc, queues):
+    def __init__ (self, room_id, device_id):
         #
-        Device.__init__(self, "tv_samsung", room_id, device_id, q_dvc, queues)
-        #
-        self.run()
-
-
-    # TODO
-    def getHtml(self, user=False):
-        #
-        args = {'room_id': self._room_id,
-                'device_id': self._device_id}
-        #
-        return self._getHtml_generic(args)
-
-
-    #TODO - the following is still to be worked on. Code is based on http://deneb.homedns.org/things/?p=232
-    # http://sc0ty.pl/2012/02/samsung-tv-network-remote-control-protocol/
-    # SAMSUNG OS/Platform - ORSAY
-    # (new OS is Tizen)
+        Device.__init__(self, "tv_samsung", room_id, device_id)
 
     def sendCmd(self, request):
         #

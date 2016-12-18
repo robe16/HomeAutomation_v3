@@ -1,6 +1,5 @@
 import datetime
 import telnetlib
-import threading
 import time
 import xml.etree.ElementTree as ET
 
@@ -8,78 +7,84 @@ import requests as requests
 from requests.auth import HTTPDigestAuth
 
 from src.bundles.devices.device import Device
-from src.config.devices.config_devices import get_cfg_device_detail, get_cfg_device_detail_public
+from src.config.bundles.config_bundles import get_cfg_device_detail, get_cfg_device_detail_public
 from src.lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
 from src.log.console_messages import print_command, print_error, print_msg
 
 
 class device_tivo(Device):
 
-    def __init__(self, room_id, device_id, q_dvc, queues):
+    def __init__(self, room_id, device_id):
         #
-        Device.__init__(self, "tivo", room_id, device_id, q_dvc, queues)
+        Device.__init__(self, "tivo", room_id, device_id)
         #
+        self.recordings_timestamp = 0
         self.recordings = False
-        t = threading.Thread(target=self.get_recordings, args=())
-        t.daemon = True
-        t.start()
-        #
-        self.run()
+        self.get_recordings()
+
+    def _check_recordings(self, loop=0):
+        if loop > 1:
+            return
+        if self.recordings_timestamp == 0 or self.recordings_timestamp > (datetime.datetime.now() + datetime.timedelta(minutes = 10)):
+            self.get_recordings()
+            loop += 1
+            self._check_recordings(loop=loop)
+        else:
+            return
 
     def get_recordings(self):
-        while self._active:
-            # Reset value
+        # Reset value
+        self.recordings = False
+        #
+        try:
+            #
+            ############
+            #
+            folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"', '')
+            folders = ET.fromstring(folders)
+            xml_folders = []
+            for item in folders.iter('Item'):
+                xml_folders.append(item.find('Details'))
+            #
+            ############
+            #
+            retrieve_items = 50
+            #
+            files_repeat = True
+            loop_count = 0
+            itemCount = '&ItemCount={retrieve_items}'.format(retrieve_items=retrieve_items)
+            xml_files = []
+            #
+            while files_repeat:
+                files_count = 0
+                files = self._retrieve_recordings('Yes', itemCount=itemCount).replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
+                files = ET.fromstring(files)
+                # Run through individual items
+                for item in files.iter('Item'):
+                    xml_files.append(item.find('Details'))
+                    files_count += 1
+                #
+                if files_count<50:
+                    files_repeat = False
+                else:
+                    loop_count += 1
+                    itemCount = '&ItemCount={retrieve_items}&AnchorOffset={AnchorOffset}'.format(retrieve_items=retrieve_items,
+                                                                                                 AnchorOffset=(retrieve_items*loop_count))
+            #
+            ############
+            #
+            self.recordings_timestamp = datetime.datetime.now()
+            self.recordings = self._create_recordings_json(self.recordings_timestamp, xml_folders, xml_files)
+            #
+            ############
+            #
+            print_msg('TV recording information retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
+            #
+        except Exception as e:
+            print_error('Error retrieving TV recording information: {type} - {error}'.format(type=self._type, error=e),
+                        dvc_or_acc_id=self.dvc_or_acc_id())
+            self.recordings_timestamp = 0
             self.recordings = False
-            #
-            try:
-                recordings_timestamp = datetime.datetime.now()
-                #
-                ############
-                #
-                folders = self._retrieve_recordings('No').replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"', '')
-                folders = ET.fromstring(folders)
-                xml_folders = []
-                for item in folders.iter('Item'):
-                    xml_folders.append(item.find('Details'))
-                #
-                ############
-                #
-                retrieve_items = 50
-                #
-                files_repeat = True
-                loop_count = 0
-                itemCount = '&ItemCount={retrieve_items}'.format(retrieve_items=retrieve_items)
-                xml_files = []
-                #
-                while files_repeat:
-                    files_count = 0
-                    files = self._retrieve_recordings('Yes', itemCount=itemCount).replace(' xmlns="http://www.tivo.com/developer/calypso-protocol-1.6/"','')
-                    files = ET.fromstring(files)
-                    # Run through individual items
-                    for item in files.iter('Item'):
-                        xml_files.append(item.find('Details'))
-                        files_count += 1
-                    #
-                    if files_count<50:
-                        files_repeat = False
-                    else:
-                        loop_count += 1
-                        itemCount = '&ItemCount={retrieve_items}&AnchorOffset={AnchorOffset}'.format(retrieve_items=retrieve_items,
-                                                                                                     AnchorOffset=(retrieve_items*loop_count))
-                #
-                ############
-                #
-                self.recordings = self._create_recordings_json(recordings_timestamp, xml_folders, xml_files)
-                #
-                ############
-                #
-                print_msg('TV recording information retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
-            except:
-                self.recordings_timestamp = 0
-                self.recordings = False
-            #
-            time.sleep(600) # 600 = 10 minutes
-
 
     def _accesskey(self):
         return get_cfg_device_detail(self._room_id, self._device_id, "mak")
@@ -156,6 +161,7 @@ class device_tivo(Device):
     def getData(self, request):
         try:
             if request['data'] == 'recordings':
+                self._check_recordings()
                 return self.recordings
             elif request['data'] == 'channel':
                 return self._getChan()
