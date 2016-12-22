@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 
-import tvlisting_radiotimes
+import data_source_radiotimes
 from src.channels.object_channel import object_channel
 from src.log.console_messages import print_channelbuild, print_msg
 
@@ -58,7 +58,7 @@ def build_channel_array():
 def getlisting(src, value):
     if value != '':
         if src == 'radiotimes':
-            return tvlisting_radiotimes.getlisting(value)
+            return data_source_radiotimes.getlisting(value)
         else:
             print_msg('No known listing source available')
     else:
@@ -68,7 +68,7 @@ def getlisting(src, value):
 
 def returnnownext(src, data):
     if src == 'radiotimes':
-        return tvlisting_radiotimes.nownext(data)
+        return data_source_radiotimes.nownext(data)
     return None
 
 
