@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 import requests as requests
 import time
+import cfg
 
 
 def get(channel_id):
@@ -68,11 +69,8 @@ def check_enabled(data):
 
 def getlisting(channel_id):
     #
-    app_name = 'robe16_HomeControl'
-    email = 'abc@test.com'
-    #
-    headers = {'User-Agent': 'TV::Fetch::XML, {app_name} - {email}'.format(app_name=app_name,
-                                                                           email=email),
+    headers = {'User-Agent': 'TV::Fetch::XML, {app_name} - {email}'.format(app_name=cfg.app_name,
+                                                                           email=cfg.developer_email),
                'Connection': 'close',
                'content-type': 'text/xml; charset=utf-8'}
     #

@@ -10,6 +10,9 @@ key_q_tvlistings = 'tvlistings'
 
 port_server = 1600
 
+developer_email = 'robe16@hotmail.co.uk'
+app_name = 'robe16_HomeControl'
+
 # Code below used to determine and return server information (e.g. ip address on network, mac address, etc)
 
 import socket
