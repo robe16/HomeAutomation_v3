@@ -59,6 +59,17 @@ def get_channel_item_type(category, channel):
         return False
 
 
+def get_channel_item_listingsrc_all(category, channel):
+    try:
+        item = get_channel_item(category, channel)
+        if bool(item):
+            return item['listingsrc']
+        return False
+    except Exception as e:
+        print('ERROR - ' + str(e))
+        return False
+
+
 def get_channel_item_listingsrc(category, channel, src):
     try:
         item = get_channel_item(category, channel)
