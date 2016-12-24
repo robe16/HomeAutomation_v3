@@ -34,6 +34,7 @@ def create_bundles(_devices, _accounts, _infoservices):
     #
     _infoservices['weather'] = info_metoffice()
     print_msg('Infoservice object created: {type}'.format(type='weather'))
+    #
     _infoservices['tvlistings'] = info_tvlistings()
     print_msg('Infoservice object created: {type}'.format(type='tvlistings'))
     #

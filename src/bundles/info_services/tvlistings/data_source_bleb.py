@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import requests as requests
 import time
 import cfg
+from src.log.console_messages import print_error
 
 
 def get(channel_id):
@@ -10,14 +11,10 @@ def get(channel_id):
     str_listing = getlisting(channel_id, 0)
     xml_listing = ET.fromstring(str_listing)
     #
-    dict_listing = {}
     if check_enabled(xml_listing):
-        dict_listing['enabled'] = True
-        dict_listing['listings'] = convert_to_dict(xml_listing)
+        return convert_to_dict(xml_listing)
     else:
-        dict_listing['enabled'] = False
-    #
-    return dict_listing
+        return {}
 
 
 def convert_to_dict(data):
@@ -36,23 +33,26 @@ def convert_to_dict(data):
             nextday_start = 1
         lastitem = 'am' if t_start.hour < 12 else 'pm'
         d_start = d + timedelta(days=nextday_start)
-        json_programme['start'] = datetime.combine(d_start, t_start)
+        start = datetime.combine(d_start, t_start)
         #
         t_end = datetime.strptime(programme.find('end').text, '%H%M').time()
         if nextday_start == 1 or t_end.hour < t_start.hour:
             nextday_end = 1
         d_end = d + timedelta(days=nextday_end)
-        json_programme['end'] = datetime.combine(d_end, t_end)
+        end = datetime.combine(d_end, t_end)
         #
-        json_programme['title'] = programme.find('title').text
-        try:
-            json_programme['subtitle'] = programme.find('subtitle').text
-        except:
-            json_programme['subtitle'] = ''
-        json_programme['desc'] = programme.find('desc').text
-        #
-        id = json_programme['start'].isoformat(' ')
-        json_channel[id] = json_programme
+        if start > datetime.now() or end > datetime.now():
+            json_programme['start'] = start.isoformat(' ')
+            json_programme['end'] = end.isoformat(' ')
+            json_programme['title'] = programme.find('title').text
+            try:
+                json_programme['subtitle'] = programme.find('subtitle').text
+            except:
+                json_programme['subtitle'] = ''
+            json_programme['desc'] = programme.find('desc').text
+            #
+            id = json_programme['start']
+            json_channel[id] = json_programme
         #
     return json_channel
 
@@ -81,4 +81,5 @@ def getlisting(channel_id, day):
     if r.status_code == requests.codes.ok:
         return r.content
     else:
+        print_error('Request to bleb.org failed - {status}'.format(status=r.status_code))
         return None
