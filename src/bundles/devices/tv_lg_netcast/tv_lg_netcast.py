@@ -101,7 +101,8 @@ class device_tv_lg_netcast(Device):
         #
         r = requests.post(url,
                           STRxml,
-                          headers=headers)
+                          headers=headers,
+                          timeout=2)
         print_command('showPairingkey',
                       self.dvc_or_acc_id(),
                       self._type,
@@ -142,7 +143,7 @@ class device_tv_lg_netcast(Device):
             headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
             url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=uri)
             #
-            r = requests.get(url, headers=headers)
+            r = requests.get(url, headers=headers, timeout=2)
             #
             print_command('getApplist',
                           self.dvc_or_acc_id(),
@@ -154,7 +155,7 @@ class device_tv_lg_netcast(Device):
                 self.is_paired = False
                 if not self._check_paired(pair_reason='getApplist'):
                     return False
-                r = requests.post(url, headers=headers)
+                r = requests.post(url, headers=headers, timeout=2)
                 print_command('getApplist',
                               self.dvc_or_acc_id(),
                               self._type,
@@ -222,7 +223,7 @@ class device_tv_lg_netcast(Device):
         headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=uri)
         #
-        r = requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers, timeout=2)
         print_command('getAppicon',
                       self.dvc_or_acc_id(),
                       self._type,
@@ -233,7 +234,7 @@ class device_tv_lg_netcast(Device):
             self.is_paired = False
             if not self._check_paired(pair_reason='getAppicon'):
                 return False
-            r = requests.post(url, headers=headers)
+            r = requests.post(url, headers=headers, timeout=2)
             print_command('getAppicon',
                           self.dvc_or_acc_id(),
                           self._type,
@@ -303,7 +304,8 @@ class device_tv_lg_netcast(Device):
                                                               uri=str(self.STRtv_PATHcommand))
                 r = requests.post(url,
                                   STRxml,
-                                  headers=headers)
+                                  headers=headers,
+                                  timeout=2)
                 print_command('command',
                               self.dvc_or_acc_id(),
                               self._type,
@@ -316,7 +318,8 @@ class device_tv_lg_netcast(Device):
                         return False
                     r = requests.post(url,
                                       STRxml,
-                                      headers=headers)
+                                      headers=headers,
+                                      timeout=2)
                     print_command('command',
                                   self.dvc_or_acc_id(),
                                   self._type,
