@@ -59,12 +59,10 @@ def get_channel_item_type(category, channel):
         return False
 
 
-def get_channel_item_listingsrc_all(category, channel):
+def get_channel_item_listingsrc_all(category_id, channel_id):
     try:
-        item = get_channel_item(category, channel)
-        if bool(item):
-            return item['listingsrc']
-        return False
+        data = read_list_channels()
+        return data['channels'][category_id]['channels'][channel_id]['listingsrc']
     except Exception as e:
         print('ERROR - ' + str(e))
         return False

@@ -2,6 +2,7 @@ from src.bundles.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
 from src.bundles.devices.tivo.tivo import device_tivo
 from src.bundles.accounts.nest.nest import account_nest
 from src.bundles.info_services.weather_metoffice.metoffice import info_metoffice
+from src.bundles.info_services.tvlistings.tvlistings import info_tvlistings
 
 from src.config.bundles.config_bundles import get_cfg_bundles_json
 from src.config.bundles.config_bundles import get_cfg_device_type, get_cfg_account_type
@@ -33,6 +34,8 @@ def create_bundles(_devices, _accounts, _infoservices):
     #
     _infoservices['weather'] = info_metoffice()
     print_msg('Infoservice object created: {type}'.format(type='weather'))
+    _infoservices['tvlistings'] = info_tvlistings()
+    print_msg('Infoservice object created: {type}'.format(type='tvlistings'))
     #
     print_msg('All devices, accounts and infoservice instances created')
 

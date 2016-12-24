@@ -7,10 +7,7 @@ import cfg
 
 def get(channel_id):
     #
-    # Use of bleb.org data requires API calls to be 2 seconds apart
-    time.sleep(2)
-    #
-    str_listing = getlisting(channel_id)
+    str_listing = getlisting(channel_id, 0)
     xml_listing = ET.fromstring(str_listing)
     #
     dict_listing = {}
@@ -67,14 +64,17 @@ def check_enabled(data):
         return True
 
 
-def getlisting(channel_id):
+def getlisting(channel_id, day):
+    #
+    # Use of bleb.org data requires API calls to be 2 seconds apart
+    time.sleep(2)
     #
     headers = {'User-Agent': 'TV::Fetch::XML, {app_name} - {email}'.format(app_name=cfg.app_name,
                                                                            email=cfg.developer_email),
                'Connection': 'close',
                'content-type': 'text/xml; charset=utf-8'}
     #
-    r = requests.get('http://www.bleb.org/tv/data/listings/{day}/{channel_id}.xml'.format(day=0,
+    r = requests.get('http://www.bleb.org/tv/data/listings/{day}/{channel_id}.xml'.format(day=day,
                                                                                           channel_id=channel_id),
                      headers=headers)
     #
