@@ -2,6 +2,7 @@ import datetime
 import xml.etree.ElementTree as ET
 import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+from multiprocessing import Manager, Process
 
 from src.bundles.devices.device import Device
 from src.config.bundles.config_bundles import get_cfg_device_detail
@@ -17,17 +18,23 @@ class device_tv_lg_netcast(Device):
     STRtv_PATHevent = '/udap/api/event'
     STRtv_PATHquery = '/udap/api/data'
 
+    apps_dict = Manager().dict()
+
     def __init__ (self, room_id, device_id):
         #
         Device.__init__(self, 'tv_lg_netcast', room_id, device_id)
         #
         self.is_paired = False
-        self._pairDevice()
+        # self._pairDevice()
         #
         self.apps_timestamp = False
-        self.apps_json = False
+        # self.apps_json = False
+        # self._get_apps()
+        Process(target=self._start_instance).start()
+
+    def _start_instance(self):
+        self._pairDevice()
         self._get_apps()
-        print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
 
     def _pairingkey(self):
         return get_cfg_device_detail(self._room_id, self._device_id, "pairingkey")
@@ -45,8 +52,9 @@ class device_tv_lg_netcast(Device):
         #
         try:
             r = requests.post(url,
-                          STRxml,
-                          headers=headers)
+                              STRxml,
+                              headers=headers,
+                              timeout=2)
             print_command(command,
                           self.dvc_or_acc_id(),
                           self._type,
@@ -106,21 +114,21 @@ class device_tv_lg_netcast(Device):
 
     def _app_check(self, attempt=1):
         #
-        if not bool(self.apps_json) or self.apps_timestamp > (datetime.datetime.now() + datetime.timedelta(minutes = 10)):
+        if len(self.apps_dict) == 0 or self.apps_timestamp > (datetime.datetime.now() + datetime.timedelta(minutes = 10)):
             self._get_apps()
         #
-        if bool(self.apps_json):
+        if len(self.apps_dict) > 0:
             return
-        elif not bool(self.apps_json) and attempt<3:
+        elif len(self.apps_dict) == 0 and attempt < 3:
             attempt += 1
             self._app_check(attempt)
         else:
             raise Exception
 
     def _get_apps(self):
-        # Reset values
         self.apps_timestamp = datetime.datetime.now()
-        self.apps_json = self._getApplist()
+        self.apps_dict = self._getApplist()
+        print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
 
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         try:
@@ -245,7 +253,7 @@ class device_tv_lg_netcast(Device):
         try:
             if request['data'] == 'applist':
                 self._app_check()
-                return self.apps_json
+                return self.apps_dict
         except Exception as e:
             print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
                                                                                      error=e))
