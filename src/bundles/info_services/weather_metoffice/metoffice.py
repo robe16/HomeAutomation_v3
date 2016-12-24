@@ -31,6 +31,15 @@ class info_metoffice(InfoService):
         #
         self.getLocation()
 
+    def getData(self, request):
+        try:
+            if request['data'] == 'forecast':
+                return self.createForecast()
+        except Exception as e:
+            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                     error=e))
+            return False
+
     def getParam_unit(self, params, name):
         for param in params:
             if param['name']==name:
@@ -48,15 +57,6 @@ class info_metoffice(InfoService):
 
     def _convertMinsToTime(self, date, mins_from_midnight):
         return datetime.datetime(date.year, date.month, date.day, 0, 0) + datetime.timedelta(minutes=mins_from_midnight)
-
-    def getData(self, request):
-        try:
-            if request['data'] == 'forecast':
-                return self.createForecast()
-        except Exception as e:
-            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
-                                                                                     error=e))
-            return False
 
     def createForecast(self):
         #
