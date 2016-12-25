@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 import requests as requests
 import time
-import cfg
+import src.cfg as cfg
 from src.log.console_messages import print_error
 
 
