@@ -1,5 +1,5 @@
 import ast
-from src.config.users.config_users import read_config_users
+from config.users.config_users import read_config_users
 
 
 def compile_users():

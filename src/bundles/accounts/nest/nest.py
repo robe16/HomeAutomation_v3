@@ -6,10 +6,10 @@ from urllib import urlopen
 
 import requests as requests
 
-from src.bundles.accounts.account import Account
-from src.config.bundles.config_bundles import get_cfg_account_detail, set_cfg_account_detail
-from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
-from src.log.console_messages import print_error, print_msg
+from bundles.accounts.account import Account
+from config.bundles.config_bundles import get_cfg_account_detail, set_cfg_account_detail
+from lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
+from log.console_messages import print_error, print_msg
 
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference

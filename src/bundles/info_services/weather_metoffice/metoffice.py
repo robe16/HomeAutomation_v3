@@ -1,7 +1,7 @@
-from src.bundles.info_services.info_service import InfoService
-from src.config.bundles.config_bundles import get_cfg_structure_town
-from src.bundles.info_services.weather_metoffice.index_lists import *
-from src.log.console_messages import print_error
+from bundles.info_services.info_service import InfoService
+from config.bundles.config_bundles import get_cfg_structure_town
+from bundles.info_services.weather_metoffice.index_lists import *
+from log.console_messages import print_error
 import datetime
 import requests
 

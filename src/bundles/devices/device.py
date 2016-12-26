@@ -1,5 +1,5 @@
-from src.config.bundles.config_bundles import get_cfg_device_detail
-from src.lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo
+from config.bundles.config_bundles import get_cfg_device_detail
+from lists.devices.list_devices import get_device_detail, get_device_name, get_device_logo
 
 
 class Device:

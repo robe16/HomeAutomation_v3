@@ -6,10 +6,10 @@ import xml.etree.ElementTree as ET
 import requests as requests
 from requests.auth import HTTPDigestAuth
 
-from src.bundles.devices.device import Device
-from src.config.bundles.config_bundles import get_cfg_device_detail, get_cfg_device_detail_public
-from src.lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
-from src.log.console_messages import print_command, print_error, print_msg
+from bundles.devices.device import Device
+from config.bundles.config_bundles import get_cfg_device_detail, get_cfg_device_detail_public
+from lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
+from log.console_messages import print_command, print_error, print_msg
 
 
 class device_tivo(Device):

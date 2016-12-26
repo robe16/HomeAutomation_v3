@@ -3,8 +3,8 @@ from bottle import error, HTTPError
 from bottle import get, post
 from bottle import request, run, static_file, HTTPResponse, redirect, response
 import cfg
-from src.log.console_messages import print_error
-from src.config.users.config_users import check_user, update_user_channels
+from log.console_messages import print_error
+from config.users.config_users import check_user, update_user_channels
 
 
 ################################################################################################
@@ -30,9 +30,9 @@ def start_bottle(_devices, _accounts, _infoservices):
 # Provision of server config for clients
 ################################################################################################
 
-from src.client_caches.setup import compile_setup
-from src.client_caches.users import compile_users
-from src.client_caches.tvchannels import compile_tvchannels
+from client_caches.setup import compile_setup
+from client_caches.users import compile_users
+from client_caches.tvchannels import compile_tvchannels
 
 @get('/cache/setup')
 def cache_setup():
@@ -57,7 +57,7 @@ def cache_tvchannels():
     except:
         return HTTPResponse(status=404)
 
-from src.client_caches.tvlistings import compile_tvlistings
+from client_caches.tvlistings import compile_tvlistings
 
 # @get('/cache/tvlistings')
 # def cache_tvlistings():
@@ -72,7 +72,7 @@ from src.client_caches.tvlistings import compile_tvlistings
 # User based operations
 ################################################################################################
 
-from src.config.users.config_users import check_pin
+from config.users.config_users import check_pin
 
 @post('/user/pin')
 def user_checkpin():

@@ -1,12 +1,12 @@
-from src.bundles.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
-from src.bundles.devices.tivo.tivo import device_tivo
-from src.bundles.accounts.nest.nest import account_nest
-from src.bundles.info_services.weather_metoffice.metoffice import info_metoffice
-from src.bundles.info_services.tvlistings.tvlistings import info_tvlistings
+from bundles.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
+from bundles.devices.tivo.tivo import device_tivo
+from bundles.accounts.nest.nest import account_nest
+from bundles.info_services.weather_metoffice.metoffice import info_metoffice
+from bundles.info_services.tvlistings.tvlistings import info_tvlistings
 
-from src.config.bundles.config_bundles import get_cfg_bundles_json
-from src.config.bundles.config_bundles import get_cfg_device_type, get_cfg_account_type
-from src.log.console_messages import print_msg
+from config.bundles.config_bundles import get_cfg_bundles_json
+from config.bundles.config_bundles import get_cfg_device_type, get_cfg_account_type
+from log.console_messages import print_msg
 
 
 def create_bundles(_devices, _accounts, _infoservices):

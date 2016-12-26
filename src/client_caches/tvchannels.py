@@ -1,5 +1,5 @@
 import ast
-from src.lists.channels.list_channels import read_list_channels
+from lists.channels.list_channels import read_list_channels
 
 
 def compile_tvchannels():

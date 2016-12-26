@@ -2,10 +2,10 @@ from multiprocessing import Process, Manager
 
 import cfg
 from port_listener import start_bottle
-from src.config.bundles.config_bundles import get_cfg_bundles_json
-from src.config.bundles.config_bundles import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
-from src.config.bundles.config_bundles_create import create_bundles
-from src.log.console_messages import print_msg
+from config.bundles.config_bundles import get_cfg_bundles_json
+from config.bundles.config_bundles import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
+from config.bundles.config_bundles_create import create_bundles
+from log.console_messages import print_msg
 
 ################################
 # Process for object creation

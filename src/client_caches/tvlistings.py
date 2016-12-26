@@ -1,5 +1,5 @@
 import ast
-# from src.config.users.config_users import get_usernames
+# from config.users.config_users import get_usernames
 
 
 def compile_tvlistings():
