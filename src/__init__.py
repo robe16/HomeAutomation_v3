@@ -28,6 +28,6 @@ process_bottle.start()
 print_msg('Process started: "bottle" server for port {port}'.format(port=cfg.port_server))
 #
 ################################
-while True:
-    pass
+process_object.join()
+process_bottle.join()
 ################################
