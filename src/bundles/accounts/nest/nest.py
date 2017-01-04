@@ -1,9 +1,5 @@
 import datetime
 import json
-import random
-import string
-from urllib import urlopen
-
 import requests as requests
 
 from bundles.accounts.account import Account

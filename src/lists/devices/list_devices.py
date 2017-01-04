@@ -5,7 +5,7 @@ from log.console_messages import print_error
 
 
 def read_list_devices():
-    with open(os.path.join('lists', 'list_device_types.json'), 'r') as data_file:
+    with open(os.path.join(os.path.dirname(__file__), os.pardir, 'list_device_types.json'), 'r') as data_file:
         data = json.load(data_file)
         data_file.close()
     if isinstance(data, dict):

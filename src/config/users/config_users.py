@@ -3,7 +3,7 @@ import os
 
 
 def read_config_users():
-    with open(os.path.join('config', 'config_users.json'), 'r') as data_file:
+    with open(os.path.join(os.path.dirname(__file__), os.pardir, 'config_users.json'), 'r') as data_file:
         data = json.load(data_file)
         data_file.close()
     if not isinstance(data, dict):
@@ -16,7 +16,7 @@ def read_config_users():
 
 def update_user_channels(user, channels):
     try:
-        with open(os.path.join('config', 'config_users.json'), 'r') as data_file:
+        with open(os.path.join(os.path.dirname(__file__), os.pardir, 'config_users.json'), 'r') as data_file:
             data = json.load(data_file)
             data_file.close()
         if data != None:
@@ -24,7 +24,7 @@ def update_user_channels(user, channels):
                 if data['users'][id]['name'] == user:
                     channels = json.load(channels)
                     data['users'][id]['tvlistings'] = channels
-                    with open(os.path.join('config', 'config_users.json'), 'w+') as output_file:
+                    with open(os.path.join(os.path.dirname(__file__), os.pardir, 'config_users.json'), 'w+') as output_file:
                         output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
                         output_file.close()
                     return True
