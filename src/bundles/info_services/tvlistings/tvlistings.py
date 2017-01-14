@@ -21,7 +21,7 @@ class info_tvlistings(InfoService):
     def getData(self, request):
         try:
             if request['data'] == 'alllistings':
-                return json.dumps(self._listings))
+                return json.dumps(self._listings)
         except Exception as e:
             print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
                                                                                      error=e))
