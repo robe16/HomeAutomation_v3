@@ -5,6 +5,7 @@ from log.console_messages import print_msg, print_error
 from multiprocessing import Process, Manager
 from datetime import datetime, timedelta
 from time import sleep
+import json
 
 
 class info_tvlistings(InfoService):
@@ -20,7 +21,7 @@ class info_tvlistings(InfoService):
     def getData(self, request):
         try:
             if request['data'] == 'alllistings':
-                return str(self._listings)
+                return json.dumps(self._listings))
         except Exception as e:
             print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
                                                                                      error=e))

@@ -4,6 +4,7 @@ from index_lists import *
 from log.console_messages import print_error
 import datetime
 import requests
+import json
 
 
 class info_metoffice(InfoService):
@@ -34,7 +35,7 @@ class info_metoffice(InfoService):
     def getData(self, request):
         try:
             if request['data'] == 'forecast':
-                return self.createForecast()
+                return json.dumps(self.createForecast())
         except Exception as e:
             print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
                                                                                      error=e))
