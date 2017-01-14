@@ -1,6 +1,6 @@
 import os
+from bottle import Bottle, get, post, hook
 from bottle import error, HTTPError
-from bottle import get, post
 from bottle import request, run, static_file, HTTPResponse, redirect, response
 import cfg
 from log.console_messages import print_error
@@ -25,6 +25,20 @@ def start_bottle(_devices, _accounts, _infoservices):
     infoservices = _infoservices
     #
     run_bottle()
+
+################################################################################################
+# Enable cross domain scripting
+################################################################################################
+
+def enable_cors(response):
+    #
+    # Don't use the wildcard '*' for Access-Control-Allow-Origin in production.
+    #
+    response.headers['Access-Control-Allow-Origin'] = 'localhost'
+    response.headers['Access-Control-Allow-Methods'] = 'GET'
+    # response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+    #
+    return response
 
 ################################################################################################
 # Provision of server config for clients
@@ -102,10 +116,22 @@ def get_data_infoservice(service=False, resource_requested=False):
         #
         rsp = infoservices[service].getData(data_dict)
         #
+        response = HTTPResponse()
+        enable_cors(response)
+        #
         if isinstance(rsp, bool):
-            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+            if rsp:
+                response.status = 200
+            else:
+                response.status=400
         else:
-            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+            if bool(rsp):
+                response.body=str(rsp)
+                response.status=200
+            else:
+                response.status=400
+        #
+        return response
         #
     except Exception as e:
         print_error('{error}'.format(error=e))
