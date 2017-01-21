@@ -6,7 +6,7 @@ from config.bundles.config_bundles import get_cfg_bundles_json
 from config.bundles.config_bundles import get_cfg_idlist_rooms, get_cfg_idlist_devices, get_cfg_idlist_accounts
 from config.bundles.config_bundles_create import create_bundles
 from log.console_messages import print_msg
-
+import setup
 
 ################################
 # Startup option
@@ -19,22 +19,25 @@ run = True
 #
 while run:
     #
-    input_var = 'r' #default
     print("r - Run the server\n" +
           "s - Setup the server\n" +
           "e - Exit\n")
-    input_var = str(raw_input("Type the required option number followed by the return key: "))
-    # TODO: set a timeout on keyboard entry so that defaults to 'r' when auto-runs when Pi is switched on
+    #
+    input_var = raw_input("Type the required option number followed by the return key: ")
+    print("\n****************************************************************\n")
+    #
+    # if input_var==None:
+    #     print("\nOperation timed out: default option ('r') selected")
+    #     input_var="r"
+    # else:
+    #     input_var=str(input_var)
     #
     if input_var=='s':
         #
-        print("\n****************************************************************\n")
-        # TODO
-        print("\n****************************************************************\n")
+        setup.console_setup()
         #
     elif input_var=='r':
         #
-        print("\n****************************************************************\n")
         ################################
         # Process for object creation
         ################################
@@ -64,12 +67,10 @@ while run:
     elif input_var=='e':
         #
         run = False
-        print("\n****************************************************************\n")
-        print_msg('HomeControl-server exitting')
+        print_msg('HomeControl-server exiting')
         print("\n****************************************************************\n")
         #
     else:
         #
-        print("\n****************************************************************\n")
         print_msg("Invalid entry, please try again!!")
         print("\n****************************************************************\n")
