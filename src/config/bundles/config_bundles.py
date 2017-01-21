@@ -253,7 +253,7 @@ def set_cfg_device_detail_public(room_id, device_id, detail, value):
     return write_config_bundles(data)
 
 
-def set_cfg_device_detail_public(account_id, detail, value):
+def set_cfg_account_detail_public(account_id, detail, value):
     #
     data = get_cfg_bundles_json()
     #
