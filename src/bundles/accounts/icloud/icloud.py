@@ -8,12 +8,9 @@ from log.console_messages import print_error, print_msg
 
 class account_icloud(Account):
 
-    def __init__ (self, account_id, userid, password):
+    def __init__ (self, account_id):
         #
         Account.__init__(self, 'icloud_account', account_id)
-        #
-        self._token = userid
-        self._tokenexpiry = password
         #
 
     def _dvc_name(self):
@@ -22,8 +19,8 @@ class account_icloud(Account):
     def _type_name(self):
         return get_device_name(self._type)
 
-    def _userid(self):
-        return get_cfg_account_detail(self._account_id, 'userid')
+    def _username(self):
+        return get_cfg_account_detail(self._account_id, 'username')
 
     def _password(self):
         return get_cfg_account_detail(self._type, 'password')
