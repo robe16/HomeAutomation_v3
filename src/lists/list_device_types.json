@@ -5,7 +5,6 @@
             "ipaddress": "",
             "name": ""
         },
-        "html_settings": "settings_devices_tivo.html",
         "name": "Virgin Media",
         "name_alt": ["tivo", "virgin", "virgin media", "set top", "cable"],
         "html_command": "object_device_tivo.html",
@@ -19,7 +18,6 @@
             "ipaddress": "",
             "name": ""
         },
-        "html_settings": "settings_devices_tv_lg_netcast.html",
         "name": "TV",
         "name_alt": ["tv", "television"],
         "html_command": "object_device_tv_lg_netcast.html",
@@ -32,7 +30,6 @@
             "ipaddress": "",
             "name": ""
         },
-        "html_settings": "",
         "name": "TV",
         "name_alt": ["tv", "television"],
         "html_command": "object_device_tv_samsung.html",
@@ -44,7 +41,6 @@
         "settings_dict": {
             "pincode": ""
         },
-        "html_settings": "settings_devices_nest.html",
         "name": "Nest Account",
         "name_alt": [],
         "html_command": "object_account_nest.html",
@@ -56,5 +52,15 @@
         "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI",
         "logo": "logo_nest_blue.png",
         "type": "nest_account"
+    },
+    "icloud_account": {
+        "settings_dict": {
+            "username": "",
+            "password": ""
+        },
+        "name": "iCloud Account",
+        "name_alt": [],
+        "logo": "logo_apple.png",
+        "type": "icloud_account"
     }
 }
