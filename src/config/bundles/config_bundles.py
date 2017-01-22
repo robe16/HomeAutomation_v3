@@ -36,21 +36,21 @@ def get_cfg_count_rooms():
     #
     data = get_cfg_bundles_json()
     #
-    return len(data['structure']['rooms'])
+    return len(data['rooms'])
 
 
 def get_cfg_count_devices(room_id):
     #
     data = get_cfg_bundles_json()
     #
-    return len(data['structure']['rooms'][room_id]['devices'])
+    return len(data['rooms'][room_id]['devices'])
 
 
 def get_cfg_count_accounts():
     #
     data = get_cfg_bundles_json()
     #
-    return len(data['structure']['accounts'])
+    return len(data['accounts'])
 
 ################################################################################################
 # Return list of room, device and account ids
@@ -63,7 +63,7 @@ def get_cfg_idlist_rooms():
     #
     r_list = []
     #
-    for key, value in data['structure']['rooms'].iteritems():
+    for key, value in data['rooms'].iteritems():
         r_list.append(key)
     #
     return r_list
@@ -75,7 +75,7 @@ def get_cfg_idlist_devices(room_id):
     #
     d_list = []
     #
-    for key, value in data['structure']['rooms'][room_id]['devices'].iteritems():
+    for key, value in data['rooms'][room_id]['devices'].iteritems():
         d_list.append(key)
     #
     return d_list
@@ -87,7 +87,7 @@ def get_cfg_idlist_accounts():
     #
     a_list = []
     #
-    for key, value in data['structure']['accounts'].iteritems():
+    for key, value in data['accounts'].iteritems():
         a_list.append(key)
     #
     return a_list
@@ -102,7 +102,7 @@ def get_cfg_room_index(room_id):
     data = get_cfg_bundles_json()
     count = 0
     #
-    for key, value in data['structure']['rooms'].iteritems():
+    for key, value in data['rooms'].iteritems():
         if key == room_id:
             return count
         count += 1
@@ -115,7 +115,7 @@ def get_cfg_device_index(room_id, device_id):
     data = get_cfg_bundles_json()
     count = 0
     #
-    for key, value in data['structure']['rooms'][room_id]['devices'].iteritems():
+    for key, value in data['rooms'][room_id]['devices'].iteritems():
         if key == device_id:
             return count
         count += 1
@@ -128,7 +128,7 @@ def get_cfg_account_index(account_id):
     data = get_cfg_bundles_json()
     count = 0
     #
-    for key, value in data['structure']['accounts'].iteritems():
+    for key, value in data['accounts'].iteritems():
         if key == account_id:
             return count
         count += 1
@@ -226,7 +226,7 @@ def set_cfg_device_detail(room_id, device_id, detail, value):
     #
     data = get_cfg_bundles_json()
     #
-    data['structure']['rooms'][room_id]['devices'][device_id]['details'][detail] = value
+    data['rooms'][room_id]['devices'][device_id]['details'][detail] = value
     #
     return write_config_bundles(data)
 
@@ -235,7 +235,7 @@ def set_cfg_account_detail(account_id, detail, value):
     #
     data = get_cfg_bundles_json()
     #
-    data['structure']['accounts'][account_id]['details'][detail] = value
+    data['accounts'][account_id]['details'][detail] = value
     #
     return write_config_bundles(data)
 
@@ -248,7 +248,7 @@ def set_cfg_device_detail_public(room_id, device_id, detail, value):
     #
     data = get_cfg_bundles_json()
     #
-    data['structure']['rooms'][room_id]['devices'][device_id]['details_public'][detail] = value
+    data['rooms'][room_id]['devices'][device_id]['details_public'][detail] = value
     #
     return write_config_bundles(data)
 
@@ -257,7 +257,7 @@ def set_cfg_account_detail_public(account_id, detail, value):
     #
     data = get_cfg_bundles_json()
     #
-    data['structure']['accounts'][account_id]['details_public'][detail] = value
+    data['accounts'][account_id]['details_public'][detail] = value
     #
     return write_config_bundles(data)
 
@@ -278,21 +278,21 @@ def get_cfg_room_value(room_id, key):
     #
     data = get_cfg_bundles_json()
     #
-    return data['structure']['rooms'][room_id][key]
+    return data['rooms'][room_id][key]
 
 
 def get_cfg_device_value(room_id, device_id, key):
     #
     data = get_cfg_bundles_json()
     #
-    return data['structure']['rooms'][room_id]['devices'][device_id][key]
+    return data['rooms'][room_id]['devices'][device_id][key]
 
 
 def get_cfg_account_value(account_id, key):
     #
     data = get_cfg_bundles_json()
     #
-    return data['structure']['accounts'][account_id][key]
+    return data['accounts'][account_id][key]
 
 ################################################################################################
 ################################################################################################

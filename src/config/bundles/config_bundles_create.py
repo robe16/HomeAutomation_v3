@@ -13,12 +13,12 @@ def create_bundles(_devices, _accounts, _infoservices):
     #
     data = get_cfg_bundles_json()
     #
-    for room_id in data['structure']['rooms']:
+    for room_id in data['rooms']:
         #
         _devices[room_id] = {}
         room_devices = {}
         #
-        for device_id in data['structure']['rooms'][room_id]['devices']:
+        for device_id in data['rooms'][room_id]['devices']:
             #
             room_devices[device_id] = _create_device(room_id, device_id)
             print_msg('Device object created: {type}: {room}:{device}'.format(type=get_cfg_device_type(room_id, device_id),
@@ -26,7 +26,7 @@ def create_bundles(_devices, _accounts, _infoservices):
                                                                               device=device_id))
         _devices[room_id] = room_devices
     #
-    for account_id in data['structure']['accounts']:
+    for account_id in data['accounts']:
         #
         _accounts[account_id] = _create_account(account_id)
         print_msg('Account object created: {type}: {account}'.format(type=get_cfg_account_type(account_id),

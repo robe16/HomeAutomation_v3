@@ -1,25 +1,89 @@
 from config.bundles.config_bundles import get_cfg_bundles_json, write_config_bundles
+from bundles.accounts.setup import add_account
 
 def console_setup():
     while True:
-        print("1 - Print current setup summary\n" +
+        print("1 - Display current setup summary\n" +
               "2 - Amend structure details\n" +
-              "x - x\n" +
-              "x - x\n" +
-              "x - x\n" +
+              "3 - Amend accounts\n" +
+              "4 - Amend rooms and devices\n" +
               "e - Exit to main menu\n")
         #
         input_var = raw_input("Type the required option number followed by the return key: ")
         print("\n****************************************************************\n")
         #
-        if input_var=='1':
-            print_current_setup()
-            print("\n****************************************************************\n")
-        if input_var=='2':
-            structure_menu()
-            print("\n****************************************************************\n")
-        elif input_var=='e':
+        if input_var == 'e':
+            #
             return
+            #
+        if input_var == '1' or input_var == '2' or input_var == '3' or input_var == '4':
+            #
+            if input_var=='1':
+                print_current_setup()
+            elif input_var=='2':
+                structure_menu()
+            elif input_var=='3':
+                account_menu()
+            elif input_var=='4':
+                pass
+            #
+            print("\n****************************************************************\n")
+            #
+        else:
+            #
+            print("Invalid entry, please try again!!")
+            print("\n****************************************************************\n")
+
+
+def account_menu():
+    while True:
+        #
+        keys = "abcdefghijklmnopqrstuvwxyz"
+        #
+        data = get_cfg_bundles_json()
+        #
+        print("Accounts:")
+        key_count = 0
+        for a_key, a_value in data['accounts'].iteritems():
+            print("{key} - {account_name} ({account_type})".format(key=keys[key_count],
+                                                                   account_name=data['accounts'][a_key]['account_name'],
+                                                                   account_type=data['accounts'][a_key]['account_type']))
+        print('')
+        #
+        print("1 - Add account\n" +
+              "2 - Amend account\n" +
+              "3 - Delete account\n" +
+              "e - Exit to previous menu\n")
+        #
+        input_var = raw_input("Type the required option number followed by the return key: ")
+        print("\n****************************************************************\n")
+        #
+        if input_var == 'e':
+            return
+        elif input_var == '1' or input_var == '2' or input_var == '3':
+            #
+            if input_var == '1':
+                # Add account
+                new_data = add_account(data)
+                #
+            elif input_var == '2':
+                # Amend account
+                # TODO
+                pass
+            elif input_var == '3':
+                # Delete account
+                # TODO
+                pass
+            #
+            if new_data:
+                write_config_bundles(data)
+                print("\nThe changes have been saved to the configuration file")
+                print("\n****************************************************************\n")
+            #
+        else:
+            #
+            print("Invalid entry, please try again!!")
+            print("\n****************************************************************\n")
 
 
 def structure_menu():
@@ -39,6 +103,7 @@ def structure_menu():
               "e - Exit to previous menu\n")
         #
         input_var = raw_input("Type the required option number followed by the return key: ")
+        print("\n****************************************************************\n")
         #
         if input_var == 'e':
             return
@@ -57,7 +122,7 @@ def structure_menu():
                 data['structure']['structure_town'] = new_val
             #
             write_config_bundles(data)
-            print("\nAmendment has been saved to the configuration file")
+            print("\nThe amendment has been saved to the configuration file")
             print("\n****************************************************************\n")
             #
         else:
@@ -76,13 +141,13 @@ def print_current_setup():
                                                    postcode=data['structure']['structure_postcode']))
     #
     print('Accounts:')
-    for a_key, a_value in data['structure']['accounts'].iteritems():
-        print('\_ {account_name} ({account_type})'.format(account_name=data['structure']['accounts'][a_key]['account_name'],
-                                                          account_type=data['structure']['accounts'][a_key]['account_type']))
+    for a_key, a_value in data['accounts'].iteritems():
+        print('\_ {account_name} ({account_type})'.format(account_name=data['accounts'][a_key]['account_name'],
+                                                          account_type=data['accounts'][a_key]['account_type']))
     #
     print('Rooms & devices:')
-    for r_key, r_value in data['structure']['rooms'].iteritems():
-        print('\_ {room_name}:'.format(room_name=data['structure']['rooms'][r_key]['room_name']))
-        for d_key, d_value in data['structure']['rooms'][r_key]['devices'].iteritems():
-            print('  \_ {device_name} ({device_type})'.format(device_name=data['structure']['rooms'][r_key]['devices'][d_key]['device_name'],
-                                                              device_type=data['structure']['rooms'][r_key]['devices'][d_key]['device_type']))
+    for r_key, r_value in data['rooms'].iteritems():
+        print('\_ {room_name}:'.format(room_name=data['rooms'][r_key]['room_name']))
+        for d_key, d_value in data['rooms'][r_key]['devices'].iteritems():
+            print('  \_ {device_name} ({device_type})'.format(device_name=data['rooms'][r_key]['devices'][d_key]['device_name'],
+                                                              device_type=data['rooms'][r_key]['devices'][d_key]['device_type']))
