@@ -6,7 +6,8 @@ from bundles.accounts.account import Account
 from config.bundles.config_bundles import get_cfg_account_detail, set_cfg_account_detail
 from lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
 from log.console_messages import print_error, print_msg
-
+from auth import get_accesstoken
+from cfg import date_format
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
 
@@ -14,13 +15,7 @@ class account_nest(Account):
 
     # Static variable used as part of using Nest's APIs
     nesturl_api = 'https://developer-api.nest.com'
-    nesturl_tokenexchange = ('https://api.home.nest.com/oauth2/access_token?' +
-                             'code={authcode}&' +
-                             'client_id={clientid}&' +
-                             'client_secret={clientsecret}&' +
-                             'grant_type=authorization_code')
     #
-    _dateformat = '%d/%m/%Y %H:%M:%S'
     _temp_unit = 'c'
 
     def __init__ (self, account_id):
@@ -98,68 +93,39 @@ class account_nest(Account):
 
     def _tokencheck(self):
         print_msg('Checking Auth Token', dvc_or_acc_id=self.dvc_or_acc_id())
-        if bool(self._pincode):
-            if self._checkToken():
-                return True
-            else:
-                return self._getNewToken()
+        if self._checkToken():
+            return True
         else:
-            return False
+            return self._getNewToken()
 
     def _checkToken(self):
         return datetime.datetime.now() < self._tokenexpiry if bool(self._tokenexpiry) else False
 
     def _getNewToken(self):
         #
-        url = 'https://api.home.nest.com/oauth2/access_token?code={PIN_CODE}&client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&grant_type=authorization_code'.format(PIN_CODE=self._pincode,
-                                                                                                                                                                       CLIENT_ID=self._clientid(),
-                                                                                                                                                                       CLIENT_SECRET=self._clientsecret())
-        #
-        headers = {'Connection': 'close',
-                   'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
-        #
-        r = requests.post(url,
-                          headers=headers)
-        #
-        if r.status_code != requests.codes.ok:
-            print_error('Auth code not received by Nest server', dvc_or_acc_id=self.dvc_or_acc_id())
-            return False
-        #
         try:
-            response = r.content
-        except Exception as e:
-            print_error('Auth code not received by Nest server - ' + str(e), dvc_or_acc_id=self.dvc_or_acc_id())
-            return False
-        #
-        if response:
-            try:
-                data = json.loads(response)
-            except Exception as e:
-                print_error('Auth code not processed into json object - ' + str(e), dvc_or_acc_id=self.dvc_or_acc_id())
-                return False
             #
-            exp = datetime.datetime.now() + datetime.timedelta(milliseconds=data['expires_in'])
-            #
-            set_cfg_account_detail(self._account_id, 'token', data['access_token'])
-            set_cfg_account_detail(self._account_id, 'tokenexpiry', exp.strftime(self._dateformat))
-            #
-            self._token = data['access_token']
-            self._tokenexpiry = exp
+            token_response = get_accesstoken(self._clientid(),
+                                             self._clientsecret(),
+                                             self._pincode)
             #
             print_msg('Success retrieving new Access Token', dvc_or_acc_id=self.dvc_or_acc_id())
             #
+            set_cfg_account_detail(self._account_id, 'token', token_response['token'])
+            set_cfg_account_detail(self._account_id, 'tokenexpiry', token_response['tokenexpiry'])
+            #
             return True
-        else:
+            #
+        except:
             return False
 
     def _getConfig(self):
         self._token = get_cfg_account_detail(self._account_id, "token")
-        self._pincode = get_cfg_account_detail(self._account_id, "pincode")
         self._state = get_cfg_account_detail(self._account_id, "state")
         #
         token_exp = get_cfg_account_detail(self._account_id, "tokenexpiry")
         if bool(token_exp):
-            self._tokenexpiry = datetime.datetime.strptime(token_exp, self._dateformat)
+            self._tokenexpiry = datetime.datetime.strptime(token_exp, date_format)
         else:
             self._tokenexpiry = False
 
