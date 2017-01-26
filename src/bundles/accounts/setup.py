@@ -6,16 +6,12 @@ from bundles.accounts.icloud.setup import setup_icloud
 def account_menu():
     while True:
         #
-        keys = "abcdefghijklmnopqrstuvwxyz"
-        #
         data = get_cfg_bundles_json()
         #
         print("Accounts:")
-        key_count = 0
         for a_key, a_value in data['accounts'].iteritems():
-            print("{key} - {account_name} ({account_type})".format(key=keys[key_count],
-                                                                   account_name=data['accounts'][a_key]['account_name'],
-                                                                   account_type=data['accounts'][a_key]['account_type']))
+            print("\_ {account_name} ({account_type})".format(account_name=data['accounts'][a_key]['account_name'],
+                                                              account_type=data['accounts'][a_key]['account_type']))
         print('')
         #
         print("1 - Add account\n" +
@@ -63,6 +59,49 @@ def add_account(data):
               "1 - Nest\n" +
               "2 - iCloud\n" +
               "e - Exit to previous menu\n")
+        #
+        input_acc = raw_input("Type the required option number followed by the return key: ")
+        print("\n****************************************************************\n")
+        #
+        if input_acc == 'e':
+            #
+            return
+            #
+        elif input_acc == '1' or input_acc == '2':
+            #
+            new_acc = None
+            #
+            if input_acc == '1':
+                new_acc = setup_nest()
+            elif input_acc == '2':
+                new_acc = setup_icloud()
+            #
+            if new_acc:
+                data['accounts'][new_acc['account_id']] = new_acc
+                #
+                print("\n****************************************************************\n")
+                return data
+            #
+        else:
+            #
+            print("Invalid entry, please try again!!")
+            print("\n****************************************************************\n")
+            return data
+
+
+#TODO
+def amend_account(data):
+    while True:
+        #
+        data = get_cfg_bundles_json()
+        #
+        print("Accounts:")
+        key_count = 0
+        for a_key, a_value in data['accounts'].iteritems():
+            print("{key} - {account_name} ({account_type})".format(key=str(key_count),
+                                                                   account_name=data['accounts'][a_key]['account_name'],
+                                                                   account_type=data['accounts'][a_key]['account_type']))
+        print('')
         #
         input_acc = raw_input("Type the required option number followed by the return key: ")
         print("\n****************************************************************\n")

@@ -22,15 +22,7 @@ class account_nest(Account):
         #
         Account.__init__(self, 'nest_account', account_id)
         #
-        self._token = ''
-        self._tokenexpiry = ''
-        self._pincode = ''
-        self._state = ''
-        self._getConfig()
-        #
         self._tokencheck()
-        #
-        self._redirect_url = ''
 
     def _dvc_name(self):
         return 'Nest'
@@ -39,8 +31,29 @@ class account_nest(Account):
     def _type_name(self):
         return get_device_name(self._type)
 
+    def _state(self):
+        return get_cfg_account_detail(self._account_id, 'state')
+
+    def _token(self):
+        return get_cfg_account_detail(self._account_id, 'token')
+
+    def _set_token(self, token):
+        return set_cfg_account_detail(self._account_id, 'token', token)
+
+    def _tokenexpiry(self):
+        return get_cfg_account_detail(self._account_id, 'tokenexpiry')
+
+    def _set_tokenexpiry(self, tokenexpiry):
+        return set_cfg_account_detail(self._account_id, 'tokenexpiry', tokenexpiry)
+
     def _pincode(self):
         return get_cfg_account_detail(self._account_id, 'pincode')
+
+    def _redirect_url(self):
+        return get_cfg_account_detail(self._account_id, 'redirect_url')
+
+    def _set_redirect_url(self, redirect_url):
+        return set_cfg_account_detail(self._account_id, 'redirect_url', redirect_url)
 
     def _clientid(self):
         return get_device_detail(self._type, 'client_id')
@@ -53,7 +66,7 @@ class account_nest(Account):
         try:
             #
             if request['data'] == 'data':
-                return self._read_nest_json()
+                return self._read_json_all()
             else:
                 return False
             #
@@ -99,7 +112,7 @@ class account_nest(Account):
             return self._getNewToken()
 
     def _checkToken(self):
-        return datetime.datetime.now() < self._tokenexpiry if bool(self._tokenexpiry) else False
+        return datetime.datetime.now() < datetime.datetime.strptime(self._tokenexpiry(), date_format) if bool(self._tokenexpiry()) else False
 
     def _getNewToken(self):
         #
@@ -107,27 +120,17 @@ class account_nest(Account):
             #
             token_response = get_accesstoken(self._clientid(),
                                              self._clientsecret(),
-                                             self._pincode)
+                                             self._pincode())
             #
             print_msg('Success retrieving new Access Token', dvc_or_acc_id=self.dvc_or_acc_id())
             #
-            set_cfg_account_detail(self._account_id, 'token', token_response['token'])
-            set_cfg_account_detail(self._account_id, 'tokenexpiry', token_response['tokenexpiry'])
+            self._set_token(token_response['token'])
+            self._set_tokenexpiry(token_response['tokenexpiry'])
             #
             return True
             #
         except:
             return False
-
-    def _getConfig(self):
-        self._token = get_cfg_account_detail(self._account_id, "token")
-        self._state = get_cfg_account_detail(self._account_id, "state")
-        #
-        token_exp = get_cfg_account_detail(self._account_id, "tokenexpiry")
-        if bool(token_exp):
-            self._tokenexpiry = datetime.datetime.strptime(token_exp, date_format)
-        else:
-            self._tokenexpiry = False
 
     def _read_json_all(self):
         return self._read_nest_json()
@@ -149,16 +152,21 @@ class account_nest(Account):
         #
         headers = {'Authorization': self._header_token(),
                    'Connection': 'close',
-                   'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
+                   'content-type': 'application/json'}
         #
-        r = requests.put(self._get_url() + model,
+        r = requests.get(self._get_url() + model,
                          data='',
                          headers=headers)
         #
+        print('********************************' + str(r.status_code) + '********************************')
+        print('********************************' + str(r.content) + '********************************')
+        #
+        if len(r.history) > 0:
+            if r.history[0].is_redirect:
+                self._set_redirect_url(r.url)
+        #
         if str(r.status_code).startswith('4'):
             return False
-        elif str(r.status_code).startswith('3'):
-            self._redirect_url = r.url
         #
         return json.load(r.content)
 
@@ -171,26 +179,27 @@ class account_nest(Account):
         #
         headers = {'Authorization': self._header_token(),
                    'Connection': 'close',
-                   'content-type': 'application/json',
-                   'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
+                   'content-type': 'application/json'}
         #
         r = requests.put(self._get_url() + url2,
                          data=json.dumps(json_cmd),
                          headers=headers)
         #
+        if len(r.history) > 0:
+            if r.history[0].is_redirect:
+                self._set_redirect_url(r.url)
+        #
         if str(r.status_code).startswith('4'):
             return False
-        elif str(r.status_code).startswith('3'):
-            self._redirect_url = r.url
         #
         return json.load(r.content)
 
     def _get_url(self):
         #
-        if self._redirect_url != '':
-            return self._redirect_url
+        if self._redirect_url() != '':
+            return self._redirect_url()
         else:
             return self.nesturl_api
 
     def _header_token(self):
-        return 'Bearer {authcode}'.format(authcode=self._token)
+        return 'Bearer {authcode}'.format(authcode=self._token())

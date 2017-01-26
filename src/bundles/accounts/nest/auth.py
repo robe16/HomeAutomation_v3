@@ -32,7 +32,7 @@ def get_accesstoken(client_id, client_secret, pincode):
         raise Exception()
     #
     token = response['access_token']
-    tokenexpiry = (datetime.datetime.now() + datetime.timedelta(milliseconds=response['expires_in'])).strftime(date_format)
+    tokenexpiry = (datetime.datetime.now() + datetime.timedelta(seconds=response['expires_in'])).strftime(date_format)
     #
     return {'token': token,
             'tokenexpiry': tokenexpiry}
