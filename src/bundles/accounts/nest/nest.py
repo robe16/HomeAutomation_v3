@@ -66,7 +66,9 @@ class account_nest(Account):
         try:
             #
             if request['data'] == 'data':
-                return self._read_json_all()
+                nest_data = self._read_json_all()
+                nest_data.pop('metadata')
+                return nest_data
             else:
                 return False
             #
@@ -158,9 +160,6 @@ class account_nest(Account):
                          data='',
                          headers=headers)
         #
-        print('********************************' + str(r.status_code) + '********************************')
-        print('********************************' + str(r.content) + '********************************')
-        #
         if len(r.history) > 0:
             if r.history[0].is_redirect:
                 self._set_redirect_url(r.url)
@@ -168,7 +167,7 @@ class account_nest(Account):
         if str(r.status_code).startswith('4'):
             return False
         #
-        return json.load(r.content)
+        return r.json()
 
     def _send_nest_json (self, json_cmd, model, device, id, retry=0):
         #

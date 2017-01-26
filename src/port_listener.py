@@ -177,9 +177,18 @@ def get_data_account(account_id=False, resource_requested=False):
         rsp = accounts[account_id].getData(data_dict)
         #
         if isinstance(rsp, bool):
-            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
+            if rsp:
+                response.status = 200
+            else:
+                response.status=400
         else:
-            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
+            if bool(rsp):
+                response.body=str(rsp)
+                response.status=200
+            else:
+                response.status=400
+        #
+        return response
         #
     except Exception as e:
         print_error('{error}'.format(error=e))
