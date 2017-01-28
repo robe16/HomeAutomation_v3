@@ -5,12 +5,15 @@ Written in a server-client format with the intention to have the server side bei
 Where possible, all commands are sent over the internal network. Some devices (eg Nest) are controlled using APIs that are only accessible over the internet. Commands are received over the network using the bottle python package.
 
 <h5>Bundles that have been developed:</h5>
-Devices
+
+<p>Devices</p>
 - LG TV control
 - Virgin Media TiVo control
-Accounts
+
+<p>Accounts</p>
 - Nest (thermostat & smoke detectors)
-Info Services
+
+<p>Info Services</p>
 - Weather forecast (metoffice.gov.uk)
 - TV Listings (bleb.org)
 
