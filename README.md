@@ -26,29 +26,20 @@ Where possible, all commands are sent over the internal network. Some devices (e
 <h3>API Guide</h3>
 
 <h5>Data requests</h5>
-<p>
-<code>GET</code> <code>/data/device/{room_id}/{device_id}/{resource_requested}</code>
-<br>Request data for/from a particular device as requested by the {room_id} and {device_id} variables. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.
-</p><br><p>
-<code>GET</code> <code>/data/account/{account_id}/{resource_requested}</code>
-<br>Request data for/from a particular account as requested by the {account_id} variable. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.
-</p><br><p>
-<code>GET</code> <code>/data/info/{service}/{resource_requested}</code>
-<br>Request data for/from a particular information service as requested by the {service} variable. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.
-</p><br>
+<p><code>GET</code> <code>/data/device/{room_id}/{device_id}/{resource_requested}</code></p>
+<p>Request data for/from a particular device as requested by the {room_id} and {device_id} variables. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.</p>
+<p><code>GET</code> <code>/data/account/{account_id}/{resource_requested}</code></p>
+<p>Request data for/from a particular account as requested by the {account_id} variable. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.</p>
+<p><code>GET</code> <code>/data/info/{service}/{resource_requested}</code></p>
+<p>Request data for/from a particular information service as requested by the {service} variable. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.</p>
 <h5>Handle commands</h5>
-<p>
-<code>POST</code> <code>/command/device/{room_id}/{device_id}</code>
-<br>Submit commands to the server for relaying to the particular device as requested by the {room_id} and {device_id} variables. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
-</p><br><p>
-<code>POST</code> <code>/command/account/{account_id}</code>
-<br>Submit commands to the server for relaying to the particular account as requested by the {account_id} variable. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
-</p><br>
+<p><code>POST</code> <code>/command/device/{room_id}/{device_id}</code></p>
+<p>Submit commands to the server for relaying to the particular device as requested by the {room_id} and {device_id} variables. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.</p>
+<p><code>POST</code> <code>/command/account/{account_id}</code></p>
+<p>Submit commands to the server for relaying to the particular account as requested by the {account_id} variable. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.</p>
 <h5>Image requests</h5>
-<p>
-<code>GET</code> <code>/img/{category}/{filename:re:.*\.png}</code>
-<br>Returns image as defined by pre-set HTML pages.
-</p><br>
+<p><code>GET</code> <code>/img/{category}/{filename:re:.*\.png}</code></p>
+<p>Returns image as defined by pre-set HTML pages.</p>
 
 <hr>
 
@@ -58,6 +49,6 @@ Where possible, all commands are sent over the internal network. Some devices (e
 bottle: <code>http://bottlepy.org/docs/dev/index.html</code>
 <br>
 requests: <code>http://docs.python-requests.org/en/master/</code>
-</p>
+<br>
 pyicloud: <code>https://pypi.python.org/pypi/pyicloud</code>
 </p>
