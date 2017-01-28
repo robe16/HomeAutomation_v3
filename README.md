@@ -4,7 +4,7 @@ Written in a server-client format with the intention to have the server side bei
 
 Where possible, all commands are sent over the internal network. Some devices (eg Nest) are controlled using APIs that are only accessible over the internet. Commands are received over the network using the bottle python package.
 
-<h5>Bundles that have been developed:</h5>
+<h4>Bundles that have been developed:</h4>
 
 <p>Devices</p>
 - LG TV control
@@ -17,7 +17,8 @@ Where possible, all commands are sent over the internal network. Some devices (e
 - Weather forecast (metoffice.gov.uk)
 - TV Listings (bleb.org)
 
-Bundles currently under developed:
+<br>
+<h4>Bundles currently under developed:</h4>
 - iCloud
 
 <hr>
@@ -36,7 +37,7 @@ Bundles currently under developed:
 <br>Request data for/from a particular information service as requested by the {service} variable. {resource_requested} indicates the resource requested from the device. Further documentation to be produced for this.
 </p><br>
 <h5>Handle commands</h5>
-<br><p>
+<p>
 <code>POST</code> <code>/command/device/{room_id}/{device_id}</code>
 <br>Submit commands to the server for relaying to the particular device as requested by the {room_id} and {device_id} variables. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
 </p><br><p>
@@ -44,7 +45,7 @@ Bundles currently under developed:
 <br>Submit commands to the server for relaying to the particular account as requested by the {account_id} variable. Query parameters identify the command to be sent (<code>command</code>) and others that are device or command specific. Further documentation to be produced for this.
 </p><br>
 <h5>Image requests</h5>
-<br><p>
+<p>
 <code>GET</code> <code>/img/{category}/{filename:re:.*\.png}</code>
 <br>Returns image as defined by pre-set HTML pages.
 </p><br>
@@ -57,4 +58,6 @@ Bundles currently under developed:
 bottle: <code>http://bottlepy.org/docs/dev/index.html</code>
 <br>
 requests: <code>http://docs.python-requests.org/en/master/</code>
+</p>
+pyicloud: <code>https://pypi.python.org/pypi/pyicloud</code>
 </p>
