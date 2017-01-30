@@ -4,6 +4,9 @@ Written in a server-client format with the intention to have the server side bei
 
 Where possible, all commands are sent over the internal network. Some devices (eg Nest) are controlled using APIs that are only accessible over the internet. Commands are received over the network using the bottle python package.
 
+<img src="https://github.com/robe16/HomeControl-documentation/blob/master/img_e2e_high-level-design.jpg">
+<h5>Figure: High level end to end design of HomeControl project</h5>
+
 <h4>Bundles that have been developed:</h4>
 
 <p>Devices</p>
@@ -20,6 +23,9 @@ Where possible, all commands are sent over the internal network. Some devices (e
 <br>
 <h4>Bundles currently under developed:</h4>
 - iCloud
+
+<img src="https://github.com/robe16/HomeControl-documentation/blob/master/img_interfaces_server-devices.jpg">
+<h5>Figure: Interfaces between server and devices/accounts/info sources</h5>
 
 <hr>
 
