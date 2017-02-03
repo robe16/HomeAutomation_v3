@@ -17,26 +17,15 @@ print("****************************************************************\n")
 #
 run = True
 #
+input_var = "r"
+#
 while run:
     #
-    print("r - Run the server\n" +
-          "s - Setup the server\n" +
-          "e - Exit\n")
-    #
-    input_var = raw_input("Type the required option number followed by the return key: ")
-    print("\n****************************************************************\n")
-    #
-    # if input_var==None:
-    #     print("\nOperation timed out: default option ('r') selected")
-    #     input_var="r"
-    # else:
-    #     input_var=str(input_var)
-    #
-    if input_var=='s':
+    if input_var == 's':
         #
         setup.console_setup()
         #
-    elif input_var=='r':
+    elif input_var == 'r':
         #
         ################################
         # Process for object creation
@@ -64,7 +53,7 @@ while run:
         ################################
         print("\n****************************************************************\n")
         #
-    elif input_var=='e':
+    elif input_var == 'e':
         #
         run = False
         print_msg('HomeControl-server exiting')
@@ -74,3 +63,11 @@ while run:
         #
         print_msg("Invalid entry, please try again!!")
         print("\n****************************************************************\n")
+    #
+    #
+    print("r - Run the server\n" +
+          "s - Setup the server\n" +
+          "e - Exit\n")
+    #
+    input_var = raw_input("Type the required option number followed by the return key: ")
+    print("\n****************************************************************\n")
