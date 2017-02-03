@@ -248,37 +248,10 @@ def send_command_account(account_id=False):
 
 
 ################################################################################################
-# Update settings/server config
-################################################################################################
-
-# @post('/settings/<category>')
-# def save_settings(category=''):
-#     user = _check_user(request.get_cookie('user'))
-#     if not user:
-#         redirect('/web/login')
-#     if get_userrole(user) != 'admin':
-#         return HTTPResponse(body='You do not have user permissions to amend settings on the server.' +
-#                                  'Please consult your administrator for further information.', status=400)
-#     #
-#     if category == 'tvguide':
-#         data = request.body.read()
-#         if data:
-#             #TODO
-#             # if update_channellist(data):
-#                 return HTTPResponse(status=400)
-#     elif category == 'bundles':
-#         data = request.body.read()
-#         if data:
-#             if write_config_bundles(data):
-#                 return HTTPResponse(status=200)
-#         # TODO - put a timestamp in the config file so that users can check their command corresponds to latest configuration (query or json payload?)
-#     else:
-#         raise HTTPError(404)
-
-
-################################################################################################
 # Update user preferences
 ################################################################################################
+
+# TODO
 
 @post('/preferences/<category>')
 def save_preferences(category='-'):
@@ -306,30 +279,7 @@ def get_image(category, filename):
     mimetype = filename.split('.')[1]
     return static_file(filename, root=root, mimetype='image/{mimetype}'.format(mimetype=mimetype))
 
-
 ################################################################################################
-# This will allow for non-web UI to call for listings as XML payload.
-# Put on hold for now as focus of current development scope on web-server access
-################################################################################################
-# @route('/tvlistings')
-# def get_tvlistings():
-#     listings = _check_tvlistingsqueue()
-#     if not listings:
-#         HTTPResponse(status=400)
-#     channel = request.query.id or None
-#     x = returnnonext_xml_all(listings, channel)
-#     return HTTPResponse(body=x, status=200) if bool(x) else HTTPResponse(status=400)
-################################################################################################
-
-
-# def _check_user(user_cookie):
-#     if not user_cookie:
-#         return False
-#     else:
-#         if check_user(user_cookie):
-#             return user_cookie
-#         else:
-#             return 'Guest'
 
 def run_bottle():
     run(host='0.0.0.0', port=cfg.port_server, debug=True)
