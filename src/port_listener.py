@@ -233,7 +233,7 @@ def send_command_account(account_id=False):
         if not account_id:
             raise HTTPError(404)
         #
-        cmd_dict = request.json()
+        cmd_dict = request.json
         #
         rsp = accounts[account_id].sendCmd(cmd_dict)
         #

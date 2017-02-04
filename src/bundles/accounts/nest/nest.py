@@ -14,7 +14,7 @@ from cfg import date_format
 class account_nest(Account):
 
     # Static variable used as part of using Nest's APIs
-    nesturl_api = 'https://developer-api.nest.com'
+    nesturl_api = 'https://developer-api.nest.com/'
     #
     _temp_unit = 'c'
 
@@ -138,17 +138,17 @@ class account_nest(Account):
         return self._read_nest_json()
 
     def _read_json_metadata(self):
-        return self._read_nest_json(model='/metadata')
+        return self._read_nest_json(model='metadata')
 
     def _read_json_devices(self, device=False, device_id=False):
         if bool(device) and bool(device_id):
-            device_url = '/{device}/{device_id}'.format(device=device, device_id=device_id)
+            device_url = '{device}/{device_id}'.format(device=device, device_id=device_id)
         else:
             device_url = ''
-        return self._read_nest_json(model='/bundles'+device_url)
+        return self._read_nest_json(model='bundles'+device_url)
 
     def _read_json_structures(self):
-        return self._read_nest_json(model='/structures')
+        return self._read_nest_json(model='structures')
 
     def _read_nest_json(self, model=''):
         #
@@ -174,7 +174,7 @@ class account_nest(Account):
         if retry >= 2:
             return False
         #
-        url2 = '/{model}/{device}/{id}'.format(model=model, device=device, id=id)
+        url2 = '{model}/{device}/{id}'.format(model=model, device=device, id=id)
         #
         headers = {'Authorization': self._header_token(),
                    'Connection': 'close',
@@ -191,7 +191,7 @@ class account_nest(Account):
         if str(r.status_code).startswith('4'):
             return False
         #
-        return json.load(r.content)
+        return r.json()
 
     def _get_url(self):
         #
