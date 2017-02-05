@@ -20,9 +20,9 @@ class device_tv_lg_netcast(Device):
 
     apps_dict = Manager().dict()
 
-    def __init__ (self, room_id, device_id):
+    def __init__ (self, group_id, device_id):
         #
-        Device.__init__(self, 'tv_lg_netcast', room_id, device_id)
+        Device.__init__(self, 'tv_lg_netcast', group_id, device_id)
         #
         self.is_paired = False
         # self._pairDevice()
@@ -37,7 +37,7 @@ class device_tv_lg_netcast(Device):
         self._get_apps()
 
     def _pairingkey(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, "pairingkey")
+        return get_cfg_device_detail(self._group_id, self._device_id, "pairingkey")
 
     def _pairDevice(self, pair_reason=''):
         #
@@ -56,7 +56,7 @@ class device_tv_lg_netcast(Device):
                               headers=headers,
                               timeout=2)
             print_command(command,
-                          self.dvc_or_acc_id(),
+                          self.dvc_id(),
                           self._type,
                           url,
                           r.status_code)
@@ -67,14 +67,14 @@ class device_tv_lg_netcast(Device):
             return r_pass
         except requests.exceptions.ConnectionError as e:
             print_command(command,
-                          self.dvc_or_acc_id(),
+                          self.dvc_id(),
                           self._type,
                           self._ipaddress(),
                           'ERROR: connection error')
             return False
         except Exception as e:
             print_command(command,
-                          self.dvc_or_acc_id(),
+                          self.dvc_id(),
                           self._type,
                           self._ipaddress(),
                           'ERROR: {error}'.format(error=e))
@@ -104,7 +104,7 @@ class device_tv_lg_netcast(Device):
                           headers=headers,
                           timeout=2)
         print_command('showPairingkey',
-                      self.dvc_or_acc_id(),
+                      self.dvc_id(),
                       self._type,
                       url,
                       r.status_code)
@@ -129,7 +129,7 @@ class device_tv_lg_netcast(Device):
     def _get_apps(self):
         self.apps_timestamp = datetime.datetime.now()
         self.apps_dict = self._getApplist()
-        print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
+        print_msg('TV Apps list retrieved: {type}'.format(type=self._type), dvc_id=self.dvc_id())
 
     def _getApplist(self, APPtype=3, APPindex=0, APPnumber=0):
         try:
@@ -146,7 +146,7 @@ class device_tv_lg_netcast(Device):
             r = requests.get(url, headers=headers, timeout=2)
             #
             print_command('getApplist',
-                          self.dvc_or_acc_id(),
+                          self.dvc_id(),
                           self._type,
                           self._ipaddress(),
                           r.status_code)
@@ -157,7 +157,7 @@ class device_tv_lg_netcast(Device):
                     return False
                 r = requests.post(url, headers=headers, timeout=2)
                 print_command('getApplist',
-                              self.dvc_or_acc_id(),
+                              self.dvc_id(),
                               self._type,
                               self._ipaddress(),
                               r.status_code)
@@ -225,7 +225,7 @@ class device_tv_lg_netcast(Device):
         #
         r = requests.get(url, headers=headers, timeout=2)
         print_command('getAppicon',
-                      self.dvc_or_acc_id(),
+                      self.dvc_id(),
                       self._type,
                       self._ipaddress(),
                       r.status_code)
@@ -236,7 +236,7 @@ class device_tv_lg_netcast(Device):
                 return False
             r = requests.post(url, headers=headers, timeout=2)
             print_command('getAppicon',
-                          self.dvc_or_acc_id(),
+                          self.dvc_id(),
                           self._type,
                           self._ipaddress(),
                           r.status_code)
@@ -307,7 +307,7 @@ class device_tv_lg_netcast(Device):
                                   headers=headers,
                                   timeout=2)
                 print_command('command',
-                              self.dvc_or_acc_id(),
+                              self.dvc_id(),
                               self._type,
                               url,
                               r.status_code)
@@ -321,14 +321,14 @@ class device_tv_lg_netcast(Device):
                                       headers=headers,
                                       timeout=2)
                     print_command('command',
-                                  self.dvc_or_acc_id(),
+                                  self.dvc_id(),
                                   self._type,
                                   url,
                                   r.status_code)
                 #
                 response = (r.status_code == requests.codes.ok)
                 print_command (cmd,
-                               self.dvc_or_acc_id(),
+                               self.dvc_id(),
                                self._type,
                                url,
                                response)
@@ -336,7 +336,7 @@ class device_tv_lg_netcast(Device):
                 #
         except:
             print_command (request['command'],
-                           self.dvc_or_acc_id(),
+                           self.dvc_id(),
                            self._type,
                            self._ipaddress(),
                            'ERROR: Exception encountered')

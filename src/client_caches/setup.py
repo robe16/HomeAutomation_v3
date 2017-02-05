@@ -7,14 +7,10 @@ def compile_setup():
     #
     data = get_cfg_bundles_json()
     #
-    for a in data['accounts']:
-        del data['accounts'][a]['details']
-        data['accounts'][a]['logo'] = get_device_logo(data['accounts'][a]['account_type'])
-        #
-    for r in data['rooms']:
-        for d in data['rooms'][r]['devices']:
-            del data['rooms'][r]['devices'][d]['details']
-            data['rooms'][r]['devices'][d]['logo'] = get_device_logo(data['rooms'][r]['devices'][d]['device_type'])
+    for r in data['groups']:
+        for d in data['groups'][r]['devices']:
+            del data['groups'][r]['devices'][d]['details']
+            data['groups'][r]['devices'][d]['logo'] = get_device_logo(data['groups'][r]['devices'][d]['device_type'])
             #
     #
     try:

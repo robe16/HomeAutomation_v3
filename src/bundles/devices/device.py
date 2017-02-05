@@ -4,19 +4,16 @@ from lists.devices.list_devices import get_device_detail, get_device_name, get_d
 
 class Device:
 
-    def __init__(self, type, room_id, device_id):
-        self._room_id = room_id
+    def __init__(self, type, group_id, device_id):
+        self._group_id = group_id
         self._device_id = device_id
         self._type = type
 
-    def dvc_or_acc_id(self):
-        return self._room_id + ':' + self._device_id
-
-    def dvc_or_acc_ref(self):
-        return self._room_id + '_' + self._device_id
+    def dvc_id(self):
+        return self._group_id + ':' + self._device_id
 
     def _ipaddress(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, 'ipaddress')
+        return get_cfg_device_detail(self._group_id, self._device_id, 'ipaddress')
 
     def _port(self):
         return get_device_detail(self._type, 'port')
@@ -25,7 +22,7 @@ class Device:
         return get_device_logo(self._type)
 
     def _dvc_name(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, 'name')
+        return get_cfg_device_detail(self._group_id, self._device_id, 'name')
 
     def _type_name(self):
         return get_device_name(self._type)

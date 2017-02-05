@@ -1,12 +1,11 @@
 from config.bundles.config_bundles import get_cfg_bundles_json, write_config_bundles
-from bundles.accounts.setup import account_menu
+
 
 def console_setup():
     while True:
         print("1 - Display current setup summary\n" +
               "2 - Amend structure details\n" +
-              "3 - Amend accounts\n" +
-              "4 - Amend rooms and devices\n" +
+              "3 - Amend groups and devices\n" +
               "e - Exit to main menu\n")
         #
         input_var = raw_input("Type the required option number followed by the return key: ")
@@ -16,15 +15,13 @@ def console_setup():
             #
             return
             #
-        if input_var == '1' or input_var == '2' or input_var == '3' or input_var == '4':
+        if input_var == '1' or input_var == '2' or input_var == '3':
             #
             if input_var=='1':
                 print_current_setup()
             elif input_var=='2':
                 structure_menu()
             elif input_var=='3':
-                account_menu()
-            elif input_var=='4':
                 pass
             #
             print("\n****************************************************************\n")
@@ -89,14 +86,9 @@ def print_current_setup():
     print(' + Location: {town}, {postcode}'.format(town=data['structure']['structure_town'],
                                                    postcode=data['structure']['structure_postcode']))
     #
-    print('Accounts:')
-    for a_key, a_value in data['accounts'].iteritems():
-        print('\_ {account_name} ({account_type})'.format(account_name=data['accounts'][a_key]['account_name'],
-                                                          account_type=data['accounts'][a_key]['account_type']))
-    #
-    print('Rooms & devices:')
-    for r_key, r_value in data['rooms'].iteritems():
-        print('\_ {room_name}:'.format(room_name=data['rooms'][r_key]['room_name']))
-        for d_key, d_value in data['rooms'][r_key]['devices'].iteritems():
-            print('  \_ {device_name} ({device_type})'.format(device_name=data['rooms'][r_key]['devices'][d_key]['device_name'],
-                                                              device_type=data['rooms'][r_key]['devices'][d_key]['device_type']))
+    print('Groups & devices:')
+    for r_key, r_value in data['groups'].iteritems():
+        print('\_ {room_name}:'.format(room_name=data['groups'][r_key]['room_name']))
+        for d_key, d_value in data['groups'][r_key]['devices'].iteritems():
+            print('  \_ {device_name} ({device_type})'.format(device_name=data['groups'][r_key]['devices'][d_key]['device_name'],
+                                                              device_type=data['groups'][r_key]['devices'][d_key]['device_type']))

@@ -2,8 +2,8 @@ import datetime
 import json
 import requests as requests
 
-from bundles.accounts.account import Account
-from config.bundles.config_bundles import get_cfg_account_detail, set_cfg_account_detail
+from bundles.devices.device import Device
+from config.bundles.config_bundles import get_cfg_device_detail, set_cfg_device_detail
 from lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
 from log.console_messages import print_error, print_msg
 from auth import get_accesstoken
@@ -11,16 +11,16 @@ from cfg import date_format
 
 # Nest API Documentation: https://developer.nest.com/documentation/api-reference
 
-class account_nest(Account):
+class account_nest(Device):
 
     # Static variable used as part of using Nest's APIs
     nesturl_api = 'https://developer-api.nest.com/'
     #
     _temp_unit = 'c'
 
-    def __init__ (self, account_id):
+    def __init__ (self, group_id, device_id):
         #
-        Account.__init__(self, 'nest_account', account_id)
+        Device.__init__(self, 'nest_account', group_id, device_id)
         #
         self._tokencheck()
 
@@ -32,28 +32,28 @@ class account_nest(Account):
         return get_device_name(self._type)
 
     def _state(self):
-        return get_cfg_account_detail(self._account_id, 'state')
+        return get_cfg_device_detail(self._group_id, self._device_id, 'state')
 
     def _token(self):
-        return get_cfg_account_detail(self._account_id, 'token')
+        return get_cfg_device_detail(self._group_id, self._device_id, 'token')
 
     def _set_token(self, token):
-        return set_cfg_account_detail(self._account_id, 'token', token)
+        return get_cfg_device_detail(self._group_id, self._device_id, 'token', token)
 
     def _tokenexpiry(self):
-        return get_cfg_account_detail(self._account_id, 'tokenexpiry')
+        return get_cfg_device_detail(self._group_id, self._device_id, 'tokenexpiry')
 
     def _set_tokenexpiry(self, tokenexpiry):
-        return set_cfg_account_detail(self._account_id, 'tokenexpiry', tokenexpiry)
+        return get_cfg_device_detail(self._group_id, self._device_id, 'tokenexpiry', tokenexpiry)
 
     def _pincode(self):
-        return get_cfg_account_detail(self._account_id, 'pincode')
+        return get_cfg_device_detail(self._group_id, self._device_id, 'pincode')
 
     def _redirect_url(self):
-        return get_cfg_account_detail(self._account_id, 'redirect_url')
+        return get_cfg_device_detail(self._group_id, self._device_id, 'redirect_url')
 
     def _set_redirect_url(self, redirect_url):
-        return set_cfg_account_detail(self._account_id, 'redirect_url', redirect_url)
+        return get_cfg_device_detail(self._group_id, self._device_id, 'redirect_url', redirect_url)
 
     def _clientid(self):
         return get_device_detail(self._type, 'client_id')
@@ -84,7 +84,7 @@ class account_nest(Account):
         try:
             #
             if not self._tokencheck():
-                print_error('Nest command could not be sent - error encountered with retrieving new authorisation code', dvc_or_acc_id=self.dvc_or_acc_id())
+                print_error('Nest command could not be sent - error encountered with retrieving new authorisation code', dvc_id=self.dvc_id())
                 return False
             #
             nest_model = request['nest_model']
@@ -103,11 +103,11 @@ class account_nest(Account):
             return False
             #
         except Exception as e:
-            print_error('Exception encountered sending ' + command + ' - ' + str(e), dvc_or_acc_id=self.dvc_or_acc_id())
+            print_error('Exception encountered sending ' + command + ' - ' + str(e), dvc_id=self.dvc_id())
             return False
 
     def _tokencheck(self):
-        print_msg('Checking Auth Token', dvc_or_acc_id=self.dvc_or_acc_id())
+        print_msg('Checking Auth Token', dvc_id=self.dvc_id())
         if self._checkToken():
             return True
         else:
@@ -124,7 +124,7 @@ class account_nest(Account):
                                              self._clientsecret(),
                                              self._pincode())
             #
-            print_msg('Success retrieving new Access Token', dvc_or_acc_id=self.dvc_or_acc_id())
+            print_msg('Success retrieving new Access Token', dvc_id=self.dvc_id())
             #
             self._set_token(token_response['token'])
             self._set_tokenexpiry(token_response['tokenexpiry'])

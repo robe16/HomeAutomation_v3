@@ -1,6 +1,6 @@
 from config.bundles.config_bundles import get_cfg_bundles_json, write_config_bundles
-from bundles.accounts.nest.setup import setup_nest
-from bundles.accounts.icloud.setup import setup_icloud
+from bundles.devices.nest.setup import setup_nest
+from bundles.devices.icloud.setup import setup_icloud
 
 
 def account_menu():

@@ -14,9 +14,9 @@ from log.console_messages import print_command, print_error, print_msg
 
 class device_tivo(Device):
 
-    def __init__(self, room_id, device_id):
+    def __init__(self, group_id, device_id):
         #
-        Device.__init__(self, "tivo", room_id, device_id)
+        Device.__init__(self, "tivo", group_id, device_id)
         #
         self.recordings_timestamp = 0
         self.recordings = False
@@ -78,19 +78,19 @@ class device_tivo(Device):
             #
             ############
             #
-            print_msg('TV recording information retrieved: {type}'.format(type=self._type), dvc_or_acc_id=self.dvc_or_acc_id())
+            print_msg('TV recording information retrieved: {type}'.format(type=self._type), dvc_id=self.dvc_id())
             #
         except Exception as e:
             print_error('Error retrieving TV recording information: {type} - {error}'.format(type=self._type, error=e),
-                        dvc_or_acc_id=self.dvc_or_acc_id())
+                        dvc_id=self.dvc_id())
             self.recordings_timestamp = 0
             self.recordings = False
 
     def _accesskey(self):
-        return get_cfg_device_detail(self._room_id, self._device_id, "mak")
+        return get_cfg_device_detail(self._group_id, self._device_id, "mak")
 
     def _package(self):
-        return get_cfg_device_detail_public(self._room_id, self._device_id, "package")
+        return get_cfg_device_detail_public(self._group_id, self._device_id, "package")
 
     def _getChan(self):
         response = self._send_telnet(self._ipaddress(), self._port(), response=True)
@@ -131,7 +131,7 @@ class device_tivo(Device):
                                              response=True)
                 if response.startswith('CH_FAILED'):
                     print_command('channel',
-                                  self.dvc_or_acc_id(),
+                                  self.dvc_id(),
                                   self._type,
                                   self._ipaddress(),
                                   response)
@@ -145,14 +145,14 @@ class device_tivo(Device):
             #
             x = request['code'] if code else request['command']
             print_command (x,
-                           self.dvc_or_acc_id(),
+                           self.dvc_id(),
                            self._type,
                            self._ipaddress(),
                            response)
             return response
         except:
             print_command(request['command'],
-                          self.dvc_or_acc_id(),
+                          self.dvc_id(),
                           self._type,
                           self._ipaddress(),
                           'ERROR')
@@ -266,7 +266,7 @@ class device_tivo(Device):
                              auth=HTTPDigestAuth('tivo', self._accesskey()),
                              verify=False)
             print_command('retrieve listings (recurse={recurse})'.format(recurse=recurse),
-                          self.dvc_or_acc_id(),
+                          self.dvc_id(),
                           self._type,
                           self._ipaddress(),
                           r.status_code)

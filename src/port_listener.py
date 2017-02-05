@@ -10,18 +10,15 @@ from config.users.config_users import check_user, update_user_channels
 ################################################################################################
 
 devices = {}
-accounts = {}
 infoservices = {}
 
 ################################################################################################
 
-def start_bottle(_devices, _accounts, _infoservices):
+def start_bottle(_devices, _infoservices):
     #
     global devices
-    global accounts
     global infoservices
     devices = _devices
-    accounts = _accounts
     infoservices = _infoservices
     #
     run_bottle()
@@ -138,57 +135,24 @@ def get_data_infoservice(service=False, resource_requested=False):
         raise HTTPError(500)
 
 
-@get('/data/device/<room_id>/<device_id>/<resource_requested>')
-def get_data_device(room_id=False, device_id=False, resource_requested=False):
+@get('/data/device/<group_id>/<device_id>/<resource_requested>')
+def get_data_device(group_id=False, device_id=False, resource_requested=False):
     #
     global devices
     #
     try:
         #
-        if (not room_id) or (not device_id) or (not resource_requested):
+        if (not group_id) or (not device_id) or (not resource_requested):
             raise HTTPError(404)
         #
         data_dict = {'data': resource_requested}
         #
-        rsp = devices[room_id][device_id].getData(data_dict)
+        rsp = devices[group_id][device_id].getData(data_dict)
         #
         if isinstance(rsp, bool):
             return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
         else:
             return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
-        #
-    except Exception as e:
-        print_error('{error}'.format(error=e))
-        raise HTTPError(500)
-
-
-@get('/data/account/<account_id>/<resource_requested>')
-def get_data_account(account_id=False, resource_requested=False):
-    #
-    global accounts
-    #
-    try:
-        #
-        if (not account_id) or (not resource_requested):
-            raise HTTPError(404)
-        #
-        data_dict = {'data': resource_requested}
-        #
-        rsp = accounts[account_id].getData(data_dict)
-        #
-        if isinstance(rsp, bool):
-            if rsp:
-                response.status = 200
-            else:
-                response.status=400
-        else:
-            if bool(rsp):
-                response.body=str(rsp)
-                response.status=200
-            else:
-                response.status=400
-        #
-        return response
         #
     except Exception as e:
         print_error('{error}'.format(error=e))
@@ -199,43 +163,19 @@ def get_data_account(account_id=False, resource_requested=False):
 # Handle commands
 ################################################################################################
 
-@post('/command/device/<room_id>/<device_id>')
-def send_command_device(room_id=False, device_id=False):
+@post('/command/device/<group_id>/<device_id>')
+def send_command_device(group_id=False, device_id=False):
     #
     global devices
     #
     try:
         #
-        if (not room_id) or (not device_id):
+        if (not group_id) or (not device_id):
             raise HTTPError(404)
         #
         cmd_dict = request.json
         #
-        rsp = devices[room_id][device_id].sendCmd(cmd_dict)
-        #
-        if isinstance(rsp, bool):
-            return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
-        else:
-            return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
-        #
-    except Exception as e:
-        print_error('{error}'.format(error=e))
-        raise HTTPError(500)
-
-
-@post('/command/account/<account_id>')
-def send_command_account(account_id=False):
-    #
-    global accounts
-    #
-    try:
-        #
-        if not account_id:
-            raise HTTPError(404)
-        #
-        cmd_dict = request.json
-        #
-        rsp = accounts[account_id].sendCmd(cmd_dict)
+        rsp = devices[group_id][device_id].sendCmd(cmd_dict)
         #
         if isinstance(rsp, bool):
             return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
