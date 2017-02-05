@@ -43,7 +43,6 @@ def setup_nest():
     new_acc['details'] = {'tokenexpiry': token_response['tokenexpiry'],
                           'token': token_response['token'],
                           'state': state,
-                          'pincode': pincode,
                           'redirect_url': ''}
     new_acc['details_public'] = {}
     #
