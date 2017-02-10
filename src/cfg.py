@@ -3,10 +3,12 @@ max_devices = 5
 
 request_timeout = 10
 
+#TODO: check key_q_... still required
 key_q_response_data = 'data'
 key_q_response_command = 'command'
-
 key_q_tvlistings = 'tvlistings'
+
+
 
 port_server = 1600
 
