@@ -1,7 +1,7 @@
 from bundles.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
 from bundles.devices.tivo.tivo import device_tivo
 from bundles.devices.nest.nest import account_nest
-from bundles.info_services.weather_metoffice.metoffice import info_metoffice
+from bundles.info_services.weather.weather import info_metoffice
 from bundles.info_services.tvlistings.tvlistings import info_tvlistings
 
 from config.bundles.config_bundles import get_cfg_bundles_json
