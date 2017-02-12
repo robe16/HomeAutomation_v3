@@ -5,7 +5,7 @@ from log.console_messages import print_error
 
 
 def read_list_bundles():
-    with open(os.path.join(os.path.dirname(__file__), os.pardir, 'list_bundles.json'), 'r') as data_file:
+    with open(os.path.join(os.path.dirname(__file__), 'list_bundles.json'), 'r') as data_file:
         data = json.load(data_file)
         data_file.close()
     if isinstance(data, dict):
@@ -59,12 +59,12 @@ def get_bundle_detail(type, key):
 
 def set_bundle_detail(type, key, value):
     #
-    data = json.load(open(os.path.join('lists', 'list_bundles.json'), 'r'))
+    data = json.load(open(os.path.join(os.path.dirname(__file__), 'list_bundles.json'), 'r'))
     #
     data[type][key] = value
     try:
         #
-        with open(os.path.join('lists', 'list_bundles.json'), 'w+') as output_file:
+        with open(os.path.join(os.path.dirname(__file__), 'list_bundles.json'), 'w+') as output_file:
             output_file.write(json.dumps(data, indent=4, separators=(',', ': ')))
             output_file.close()
         #

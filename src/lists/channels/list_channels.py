@@ -3,7 +3,7 @@ import os
 
 
 def read_list_channels():
-    with open(os.path.join(os.path.dirname(__file__), os.pardir, 'list_channels.json'), 'r') as data_file:
+    with open(os.path.join(os.path.dirname(__file__), 'list_channels.json'), 'r') as data_file:
         data = json.load(data_file)
         data_file.close()
     if isinstance(data, dict):
