@@ -68,16 +68,6 @@ def cache_tvchannels():
     except:
         return HTTPResponse(status=404)
 
-from client_caches.tvlistings import compile_tvlistings
-
-# @get('/cache/tvlistings')
-# def cache_tvlistings():
-#     # try:
-#     #     return compile_tvlistings()
-#     # except:
-#     #     return HTTPError(500)
-#     return HTTPResponse(status=404)
-
 
 ################################################################################################
 # User based operations
