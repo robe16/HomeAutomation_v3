@@ -28,5 +28,9 @@
         "name": "iCloud Account",
         "logo": "logo_apple.png",
         "type": "icloud_account"
+    },
+    "metoffice": {
+        "type": "metoffice",
+        "app_key": "186ae211-9495-4a9b-8a15-6b8d6140dfa6"
     }
 }

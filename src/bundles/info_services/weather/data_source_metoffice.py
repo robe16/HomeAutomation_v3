@@ -1,4 +1,5 @@
 from config.bundles.config_bundles import get_cfg_structure_town
+from lists.bundles.list_bundles import get_bundle_detail
 from index_lists import *
 import datetime
 import requests
@@ -7,7 +8,6 @@ import requests
 # http://datapoint.metoffice.gov.uk/public/data/
 # https://erikflowers.github.io/weather-icons/
 
-APP_KEY = '186ae211-9495-4a9b-8a15-6b8d6140dfa6'
 BASE_URL = 'http://datapoint.metoffice.gov.uk/public/data/'
 URI_LIST_SITE = 'val/wxfcs/all/{datatype}/sitelist'
 URI_LIST_REGION = 'txt/wxfcs/regionalforecast/{datatype}/sitelist'
@@ -193,7 +193,7 @@ def getForcast(frequency):
                                                         uri=URI_FORECAST_SITE.format(datatype='json',
                                                                                           locationId=LOCATION_id),
                                                         frequency=frequency,
-                                                        key=APP_KEY)
+                                                        key=get_bundle_detail('metoffice', 'app_key'))
     r = requests.get(url)
     #
     if r.status_code == requests.codes.ok:
@@ -225,7 +225,7 @@ def getLocation():
 def getLocations_list():
     url = '{url}{uri}?key={key}'.format(url=BASE_URL,
                                         uri=URI_LIST_SITE.format(datatype='json'),
-                                        key=APP_KEY)
+                                        key=get_bundle_detail('metoffice', 'app_key'))
     r = requests.get(url)
     #
     if r.status_code == requests.codes.ok:
@@ -247,7 +247,7 @@ def getRegion():
 def getRegions_list():
     url = '{url}{uri}?key={key}'.format(url=BASE_URL,
                                         uri=URI_LIST_REGION.format(datatype='json'),
-                                        key=APP_KEY)
+                                        key=get_bundle_detail('metoffice', 'app_key'))
     r = requests.get(url)
     #
     if r.status_code == requests.codes.ok:
