@@ -4,7 +4,7 @@ import requests as requests
 
 from bundles.devices.device import Device
 from config.bundles.config_bundles import get_cfg_device_detail, set_cfg_device_detail
-from lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
+from lists.bundles.list_bundles import get_bundle_detail, get_bundle_name, get_bundle_html_settings
 from log.console_messages import print_error, print_msg
 from auth import get_accesstoken
 from cfg import date_format
@@ -29,7 +29,7 @@ class account_nest(Device):
         #return get_device_config_detail(self._grp_num, self._dvc_num, "name")
 
     def _type_name(self):
-        return get_device_name(self._type)
+        return get_bundle_name(self._type)
 
     def _state(self):
         return get_cfg_device_detail(self._group_id, self._device_id, 'state')
@@ -56,10 +56,10 @@ class account_nest(Device):
         return get_cfg_device_detail(self._group_id, self._device_id, 'redirect_url', redirect_url)
 
     def _clientid(self):
-        return get_device_detail(self._type, 'client_id')
+        return get_bundle_detail(self._type, 'client_id')
 
     def _clientsecret(self):
-        return get_device_detail(self._type, 'client_secret')
+        return get_bundle_detail(self._type, 'client_secret')
 
     def getData(self, request):
         #

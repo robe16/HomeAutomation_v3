@@ -1,0 +1,32 @@
+{
+    "tivo": {
+        "name": "Virgin Media",
+        "logo": "logo_virgin.png",
+        "type": "tivo",
+        "port": 31339
+    },
+    "tv_lg_netcast": {
+        "name": "TV",
+        "logo": "logo_lg.png",
+        "type": "tv_lg_netcast",
+        "port": 8080
+    },
+    "tv_samsung": {
+        "name": "TV",
+        "logo": "logo_samsung.png",
+        "type": "tv_samsung",
+        "port": 55000
+    },
+    "nest_account": {
+        "name": "Nest Account",
+        "client_id": "170016da-432a-4ca0-aa37-426a2117d7a2",
+        "client_secret": "6NqNFOfF1BAHByR8T6dn0OLTI",
+        "logo": "logo_nest_blue.png",
+        "type": "nest_account"
+    },
+    "icloud_account": {
+        "name": "iCloud Account",
+        "logo": "logo_apple.png",
+        "type": "icloud_account"
+    }
+}

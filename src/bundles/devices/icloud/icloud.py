@@ -2,7 +2,7 @@ from pyicloud import PyiCloudService
 
 from bundles.devices.device import Device
 from config.bundles.config_bundles import get_cfg_device_detail
-from lists.devices.list_devices import get_device_detail, get_device_name, get_device_html_settings
+from lists.bundles.list_bundles import get_bundle_detail, get_bundle_name, get_bundle_html_settings
 from log.console_messages import print_error, print_msg
 
 
@@ -17,7 +17,7 @@ class account_icloud(Device):
         return 'iCloud'
 
     def _type_name(self):
-        return get_device_name(self._type)
+        return get_bundle_name(self._type)
 
     def _username(self):
         return get_cfg_device_detail(self._group_id, self._device_id, 'username')
