@@ -32,5 +32,9 @@
     "metoffice": {
         "type": "metoffice",
         "app_key": "186ae211-9495-4a9b-8a15-6b8d6140dfa6"
+    },
+    "newsapi": {
+        "type": "newsapi",
+        "app_key": "38f6deea58cc46559d17624b9495c6e6"
     }
 }
