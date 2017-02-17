@@ -9,7 +9,7 @@ class info_metoffice(InfoService):
 
     def __init__ (self):
         #
-        InfoService.__init__(self, 'metoffice')
+        InfoService.__init__(self, 'weather')
 
     def getData(self, request):
         try:
