@@ -1,0 +1,997 @@
+/*
+Country codes: ISO 3166-1
+Adapted from: https://github.com/mledoze/countries/blob/master/countries.json
+*/
+{
+    "bb": {
+        "name": "Barbados",
+        "nativeName": "Barbados"
+    },
+    "zm": {
+        "name": "Zambia",
+        "nativeName": "Zambia"
+    },
+    "at": {
+        "name": "Austria",
+        "nativeName": "\u00d6sterreich"
+    },
+    "ro": {
+        "name": "Romania",
+        "nativeName": "Rom\u00e2nia"
+    },
+    "ca": {
+        "name": "Canada",
+        "nativeName": "Canada"
+    },
+    "uz": {
+        "name": "Uzbekistan",
+        "nativeName": "O\u2018zbekiston"
+    },
+    "sg": {
+        "name": "Singapore",
+        "nativeName": "\u0b9a\u0bbf\u0b99\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0bc2\u0bb0\u0bcd"
+    },
+    "ae": {
+        "name": "United Arab Emirates",
+        "nativeName": "\u062f\u0648\u0644\u0629 \u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062a \u0627\u0644\u0639\u0631\u0628\u064a\u0629 \u0627\u0644\u0645\u062a\u062d\u062f\u0629"
+    },
+    "bv": {
+        "name": "Bouvet Island",
+        "nativeName": "Bouvet\u00f8ya"
+    },
+    "vg": {
+        "name": "British Virgin Islands",
+        "nativeName": "British Virgin Islands"
+    },
+    "td": {
+        "name": "Chad",
+        "nativeName": "\u062a\u0634\u0627\u062f\u200e"
+    },
+    "gr": {
+        "name": "Greece",
+        "nativeName": "\u0395\u03bb\u03bb\u03ac\u03b4\u03b1"
+    },
+    "gp": {
+        "name": "Guadeloupe",
+        "nativeName": "Guadeloupe"
+    },
+    "lt": {
+        "name": "Lithuania",
+        "nativeName": "Lietuva"
+    },
+    "je": {
+        "name": "Jersey",
+        "nativeName": "Jersey"
+    },
+    "la": {
+        "name": "Laos",
+        "nativeName": "\u0eaa\u0e9b\u0e9b\u0ea5\u0eb2\u0ea7"
+    },
+    "bo": {
+        "name": "Bolivia",
+        "nativeName": "Bolivia"
+    },
+    "bj": {
+        "name": "Benin",
+        "nativeName": "B\u00e9nin"
+    },
+    "ms": {
+        "name": "Montserrat",
+        "nativeName": "Montserrat"
+    },
+    "bh": {
+        "name": "Bahrain",
+        "nativeName": "\u200f\u0627\u0644\u0628\u062d\u0631\u064a\u0646"
+    },
+    "rw": {
+        "name": "Rwanda",
+        "nativeName": "Rwanda"
+    },
+    "ws": {
+        "name": "Samoa",
+        "nativeName": "S\u0101moa"
+    },
+    "id": {
+        "name": "Indonesia",
+        "nativeName": "Indonesia"
+    },
+    "eg": {
+        "name": "Egypt",
+        "nativeName": "\u0645\u0635\u0631"
+    },
+    "sj": {
+        "name": "Svalbard and Jan Mayen",
+        "nativeName": "Svalbard og Jan Mayen"
+    },
+    "om": {
+        "name": "Oman",
+        "nativeName": "\u0639\u0645\u0627\u0646"
+    },
+    "dz": {
+        "name": "Algeria",
+        "nativeName": "\u0627\u0644\u062c\u0632\u0627\u0626\u0631"
+    },
+    "lr": {
+        "name": "Liberia",
+        "nativeName": "Liberia"
+    },
+    "kw": {
+        "name": "Kuwait",
+        "nativeName": "\u0627\u0644\u0643\u0648\u064a\u062a"
+    },
+    "pr": {
+        "name": "Puerto Rico",
+        "nativeName": "Puerto Rico"
+    },
+    "fj": {
+        "name": "Fiji",
+        "nativeName": "\u092b\u093f\u091c\u0940"
+    },
+    "ba": {
+        "name": "Bosnia and Herzegovina",
+        "nativeName": "Bosna i Hercegovina"
+    },
+    "ng": {
+        "name": "Nigeria",
+        "nativeName": "Nigeria"
+    },
+    "fo": {
+        "name": "Faroe Islands",
+        "nativeName": "F\u00f8royar"
+    },
+    "ke": {
+        "name": "Kenya",
+        "nativeName": "Kenya"
+    },
+    "tj": {
+        "name": "Tajikistan",
+        "nativeName": "\u0422\u043e\u04b7\u0438\u043a\u0438\u0441\u0442\u043e\u043d"
+    },
+    "fr": {
+        "name": "France",
+        "nativeName": "France"
+    },
+    "tl": {
+        "name": "Timor-Leste",
+        "nativeName": "Tim\u00f3r-Leste"
+    },
+    "gg": {
+        "name": "Guernsey",
+        "nativeName": "Guernesey"
+    },
+    "no": {
+        "name": "Norway",
+        "nativeName": "Noreg"
+    },
+    "gf": {
+        "name": "French Guiana",
+        "nativeName": "Guyane fran\u00e7aise"
+    },
+    "de": {
+        "name": "Germany",
+        "nativeName": "Deutschland"
+    },
+    "mz": {
+        "name": "Mozambique",
+        "nativeName": "Mo\u00e7ambique"
+    },
+    "re": {
+        "name": "R\u00e9union",
+        "nativeName": "La R\u00e9union"
+    },
+    "pl": {
+        "name": "Poland",
+        "nativeName": "Polska"
+    },
+    "ly": {
+        "name": "Libya",
+        "nativeName": "\u200f\u0644\u064a\u0628\u064a\u0627"
+    },
+    "md": {
+        "name": "Moldova",
+        "nativeName": "Moldova"
+    },
+    "dm": {
+        "name": "Dominica",
+        "nativeName": "Dominica"
+    },
+    "ec": {
+        "name": "Ecuador",
+        "nativeName": "Ecuador"
+    },
+    "nr": {
+        "name": "Nauru",
+        "nativeName": "Nauru"
+    },
+    "mc": {
+        "name": "Monaco",
+        "nativeName": "Monaco"
+    },
+    "cc": {
+        "name": "Cocos (Keeling) Islands",
+        "nativeName": "Cocos (Keeling) Islands"
+    },
+    "ao": {
+        "name": "Angola",
+        "nativeName": "Angola"
+    },
+    "fm": {
+        "name": "Micronesia",
+        "nativeName": "Micronesia"
+    },
+    "mg": {
+        "name": "Madagascar",
+        "nativeName": "Madagascar"
+    },
+    "bg": {
+        "name": "Bulgaria",
+        "nativeName": "\u0411\u044a\u043b\u0433\u0430\u0440\u0438\u044f"
+    },
+    "cw": {
+        "name": "Cura\u00e7ao",
+        "nativeName": "Cura\u00e7ao"
+    },
+    "jp": {
+        "name": "Japan",
+        "nativeName": "\u65e5\u672c"
+    },
+    "fk": {
+        "name": "Falkland Islands",
+        "nativeName": "Falkland Islands"
+    },
+    "hu": {
+        "name": "Hungary",
+        "nativeName": "Magyarorsz\u00e1g"
+    },
+    "zw": {
+        "name": "Zimbabwe",
+        "nativeName": "Zimbabwe"
+    },
+    "et": {
+        "name": "Ethiopia",
+        "nativeName": "\u12a2\u1275\u12ee\u1335\u12eb"
+    },
+    "aq": {
+        "name": "Antarctica"
+    },
+    "mo": {
+        "name": "Macau",
+        "nativeName": "\u6fb3\u95e8"
+    },
+    "ir": {
+        "name": "Iran",
+        "nativeName": "\u0627\u06cc\u0631\u0627\u0646"
+    },
+    "nu": {
+        "name": "Niue",
+        "nativeName": "Niu\u0113"
+    },
+    "is": {
+        "name": "Iceland",
+        "nativeName": "\u00cdsland"
+    },
+    "ug": {
+        "name": "Uganda",
+        "nativeName": "Uganda"
+    },
+    "mh": {
+        "name": "Marshall Islands",
+        "nativeName": "M\u0327aje\u013c"
+    },
+    "cn": {
+        "name": "China",
+        "nativeName": "\u4e2d\u56fd"
+    },
+    "gb": {
+        "name": "United Kingdom",
+        "nativeName": "United Kingdom"
+    },
+    "gw": {
+        "name": "Guinea-Bissau",
+        "nativeName": "Guin\u00e9-Bissau"
+    },
+    "ni": {
+        "name": "Nicaragua",
+        "nativeName": "Nicaragua"
+    },
+    "na": {
+        "name": "Namibia",
+        "nativeName": "Namibia"
+    },
+    "ps": {
+        "name": "Palestine",
+        "nativeName": "\u0641\u0644\u0633\u0637\u064a\u0646"
+    },
+    "dk": {
+        "name": "Denmark",
+        "nativeName": "Danmark"
+    },
+    "ru": {
+        "name": "Russia",
+        "nativeName": "\u0420\u043e\u0441\u0441\u0438\u044f"
+    },
+    "cu": {
+        "name": "Cuba",
+        "nativeName": "Cuba"
+    },
+    "tn": {
+        "name": "Tunisia",
+        "nativeName": "\u062a\u0648\u0646\u0633"
+    },
+    "mw": {
+        "name": "Malawi",
+        "nativeName": "Malawi"
+    },
+    "sd": {
+        "name": "Sudan",
+        "nativeName": "\u0627\u0644\u0633\u0648\u062f\u0627\u0646"
+    },
+    "pt": {
+        "name": "Portugal",
+        "nativeName": "Portugal"
+    },
+    "ge": {
+        "name": "Georgia",
+        "nativeName": "\u10e1\u10d0\u10e5\u10d0\u10e0\u10d7\u10d5\u10d4\u10da\u10dd"
+    },
+    "jm": {
+        "name": "Jamaica",
+        "nativeName": "Jamaica"
+    },
+    "nf": {
+        "name": "Norfolk Island",
+        "nativeName": "Norfolk Island"
+    },
+    "gs": {
+        "name": "South Georgia",
+        "nativeName": "South Georgia"
+    },
+    "pg": {
+        "name": "Papua New Guinea",
+        "nativeName": "Papua Niugini"
+    },
+    "km": {
+        "name": "Comoros",
+        "nativeName": "\u0627\u0644\u0642\u0645\u0631\u200e"
+    },
+    "mt": {
+        "name": "Malta",
+        "nativeName": "Malta"
+    },
+    "us": {
+        "name": "United States",
+        "nativeName": "United States"
+    },
+    "me": {
+        "name": "Montenegro",
+        "nativeName": "\u0426\u0440\u043d\u0430 \u0413\u043e\u0440\u0430"
+    },
+    "sz": {
+        "name": "Swaziland",
+        "nativeName": "Swaziland"
+    },
+    "to": {
+        "name": "Tonga",
+        "nativeName": "Tonga"
+    },
+    "pk": {
+        "name": "Pakistan",
+        "nativeName": "Pakistan"
+    },
+    "lb": {
+        "name": "Lebanon",
+        "nativeName": "\u0644\u0628\u0646\u0627\u0646"
+    },
+    "cx": {
+        "name": "Christmas Island",
+        "nativeName": "Christmas Island"
+    },
+    "gt": {
+        "name": "Guatemala",
+        "nativeName": "Guatemala"
+    },
+    "gq": {
+        "name": "Equatorial Guinea",
+        "nativeName": "Guinea Ecuatorial"
+    },
+    "gy": {
+        "name": "Guyana",
+        "nativeName": "Guyana"
+    },
+    "sm": {
+        "name": "San Marino",
+        "nativeName": "San Marino"
+    },
+    "ml": {
+        "name": "Mali",
+        "nativeName": "Mali"
+    },
+    "bm": {
+        "name": "Bermuda",
+        "nativeName": "Bermuda"
+    },
+    "nc": {
+        "name": "New Caledonia",
+        "nativeName": "Nouvelle-Cal\u00e9donie"
+    },
+    "pa": {
+        "name": "Panama",
+        "nativeName": "Panam\u00e1"
+    },
+    "mf": {
+        "name": "Saint Martin",
+        "nativeName": "Saint-Martin"
+    },
+    "cr": {
+        "name": "Costa Rica",
+        "nativeName": "Costa Rica"
+    },
+    "lu": {
+        "name": "Luxembourg",
+        "nativeName": "Luxemburg"
+    },
+    "cv": {
+        "name": "Cape Verde",
+        "nativeName": "Cabo Verde"
+    },
+    "fi": {
+        "name": "Finland",
+        "nativeName": "Finland"
+    },
+    "vc": {
+        "name": "Saint Vincent and the Grenadines",
+        "nativeName": "Saint Vincent and the Grenadines"
+    },
+    "ua": {
+        "name": "Ukraine",
+        "nativeName": "\u0423\u043a\u0440\u0430\u0457\u043d\u0430"
+    },
+    "cf": {
+        "name": "Central African Republic",
+        "nativeName": "R\u00e9publique centrafricaine"
+    },
+    "az": {
+        "name": "Azerbaijan",
+        "nativeName": "Az\u0259rbaycan"
+    },
+    "kh": {
+        "name": "Cambodia",
+        "nativeName": "K\u00e2mp\u016dch\u00e9a"
+    },
+    "au": {
+        "name": "Australia",
+        "nativeName": "Australia"
+    },
+    "si": {
+        "name": "Slovenia",
+        "nativeName": "Slovenija"
+    },
+    "nl": {
+        "name": "Netherlands",
+        "nativeName": "Nederland"
+    },
+    "pf": {
+        "name": "French Polynesia",
+        "nativeName": "Polyn\u00e9sie fran\u00e7aise"
+    },
+    "mp": {
+        "name": "Northern Mariana Islands",
+        "nativeName": "Northern Mariana Islands"
+    },
+    "ag": {
+        "name": "Antigua and Barbuda",
+        "nativeName": "Antigua and Barbuda"
+    },
+    "lk": {
+        "name": "Sri Lanka",
+        "nativeName": "\u0dc1\u0dca\u200d\u0dbb\u0dd3 \u0dbd\u0d82\u0d9a\u0dcf\u0dc0"
+    },
+    "mm": {
+        "name": "Myanmar",
+        "nativeName": "\u1019\u103c\u1014\u103a\u1019\u102c"
+    },
+    "nz": {
+        "name": "New Zealand",
+        "nativeName": "New Zealand"
+    },
+    "bf": {
+        "name": "Burkina Faso",
+        "nativeName": "Burkina Faso"
+    },
+    "so": {
+        "name": "Somalia",
+        "nativeName": "\u0627\u0644\u0635\u0648\u0645\u0627\u0644\u200e\u200e"
+    },
+    "ax": {
+        "name": "\u00c5land Islands",
+        "nativeName": "\u00c5land"
+    },
+    "gi": {
+        "name": "Gibraltar",
+        "nativeName": "Gibraltar"
+    },
+    "vn": {
+        "name": "Vietnam",
+        "nativeName": "Vi\u1ec7t Nam"
+    },
+    "se": {
+        "name": "Sweden",
+        "nativeName": "Sverige"
+    },
+    "bw": {
+        "name": "Botswana",
+        "nativeName": "Botswana"
+    },
+    "mv": {
+        "name": "Maldives",
+        "nativeName": "\u078b\u07a8\u0788\u07ac\u0780\u07a8\u0783\u07a7\u0787\u07b0\u0796\u07ad\u078e\u07ac"
+    },
+    "pn": {
+        "name": "Pitcairn Islands",
+        "nativeName": "Pitcairn Islands"
+    },
+    "sv": {
+        "name": "El Salvador",
+        "nativeName": "El Salvador"
+    },
+    "ee": {
+        "name": "Estonia",
+        "nativeName": "Eesti"
+    },
+    "pm": {
+        "name": "Saint Pierre and Miquelon",
+        "nativeName": "Saint-Pierre-et-Miquelon"
+    },
+    "il": {
+        "name": "Israel",
+        "nativeName": "\u0625\u0633\u0631\u0627\u0626\u064a\u0644"
+    },
+    "ls": {
+        "name": "Lesotho",
+        "nativeName": "Lesotho"
+    },
+    "mn": {
+        "name": "Mongolia",
+        "nativeName": "\u041c\u043e\u043d\u0433\u043e\u043b \u0443\u043b\u0441"
+    },
+    "mk": {
+        "name": "Macedonia",
+        "nativeName": "\u041c\u0430\u043a\u0435\u0434\u043e\u043d\u0438\u0458\u0430"
+    },
+    "tk": {
+        "name": "Tokelau",
+        "nativeName": "Tokelau"
+    },
+    "do": {
+        "name": "Dominican Republic",
+        "nativeName": "Rep\u00fablica Dominicana"
+    },
+    "za": {
+        "name": "South Africa",
+        "nativeName": "Afrika Borwa"
+    },
+    "my": {
+        "name": "Malaysia",
+        "nativeName": "Malaysia"
+    },
+    "th": {
+        "name": "Thailand",
+        "nativeName": "\u0e1b\u0e23\u0e30\u0e40\u0e17\u0e28\u0e44\u0e17\u0e22"
+    },
+    "kn": {
+        "name": "Saint Kitts and Nevis",
+        "nativeName": "Saint Kitts and Nevis"
+    },
+    "sr": {
+        "name": "Suriname",
+        "nativeName": "Suriname"
+    },
+    "ph": {
+        "name": "Philippines",
+        "nativeName": "Philippines"
+    },
+    "iq": {
+        "name": "Iraq",
+        "nativeName": "\u0627\u0644\u0639\u0631\u0627\u0642"
+    },
+    "tm": {
+        "name": "Turkmenistan",
+        "nativeName": "T\u00fcrkmenistan"
+    },
+    "sa": {
+        "name": "Saudi Arabia",
+        "nativeName": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629 \u0627\u0644\u0633\u0639\u0648\u062f\u064a\u0629"
+    },
+    "sc": {
+        "name": "Seychelles",
+        "nativeName": "Seychelles"
+    },
+    "be": {
+        "name": "Belgium",
+        "nativeName": "Belgien"
+    },
+    "ne": {
+        "name": "Niger",
+        "nativeName": "Niger"
+    },
+    "er": {
+        "name": "Eritrea",
+        "nativeName": "\u0625\u0631\u062a\u0631\u064a\u0627\u200e"
+    },
+    "tf": {
+        "name": "French Southern and Antarctic Lands",
+        "nativeName": "Terres australes et antarctiques fran\u00e7aises"
+    },
+    "lc": {
+        "name": "Saint Lucia",
+        "nativeName": "Saint Lucia"
+    },
+    "tz": {
+        "name": "Tanzania",
+        "nativeName": "Tanzania"
+    },
+    "as": {
+        "name": "American Samoa",
+        "nativeName": "S\u0101moa Amelika"
+    },
+    "mx": {
+        "name": "Mexico",
+        "nativeName": "M\u00e9xico"
+    },
+    "mu": {
+        "name": "Mauritius",
+        "nativeName": "Maurice"
+    },
+    "gn": {
+        "name": "Guinea",
+        "nativeName": "Guin\u00e9e"
+    },
+    "pe": {
+        "name": "Peru",
+        "nativeName": "Per\u00fa"
+    },
+    "lv": {
+        "name": "Latvia",
+        "nativeName": "Latvija"
+    },
+    "ve": {
+        "name": "Venezuela",
+        "nativeName": "Venezuela"
+    },
+    "ht": {
+        "name": "Haiti",
+        "nativeName": "Ha\u00efti"
+    },
+    "by": {
+        "name": "Belarus",
+        "nativeName": "\u0411\u0435\u043b\u0430\u0440\u0443\u0301\u0441\u044c"
+    },
+    "li": {
+        "name": "Liechtenstein",
+        "nativeName": "Liechtenstein"
+    },
+    "gd": {
+        "name": "Grenada",
+        "nativeName": "Grenada"
+    },
+    "gh": {
+        "name": "Ghana",
+        "nativeName": "Ghana"
+    },
+    "hn": {
+        "name": "Honduras",
+        "nativeName": "Honduras"
+    },
+    "am": {
+        "name": "Armenia",
+        "nativeName": "\u0540\u0561\u0575\u0561\u057d\u057f\u0561\u0576"
+    },
+    "br": {
+        "name": "Brazil",
+        "nativeName": "Brasil"
+    },
+    "kp": {
+        "name": "North Korea",
+        "nativeName": "\ubd81\ud55c"
+    },
+    "bn": {
+        "name": "Brunei",
+        "nativeName": "Negara Brunei Darussalam"
+    },
+    "uy": {
+        "name": "Uruguay",
+        "nativeName": "Uruguay"
+    },
+    "sx": {
+        "name": "Sint Maarten",
+        "nativeName": "Saint-Martin"
+    },
+    "ad": {
+        "name": "Andorra",
+        "nativeName": "Andorra"
+    },
+    "sn": {
+        "name": "Senegal",
+        "nativeName": "S\u00e9n\u00e9gal"
+    },
+    "ss": {
+        "name": "South Sudan",
+        "nativeName": "South Sudan"
+    },
+    "bz": {
+        "name": "Belize",
+        "nativeName": "Belice"
+    },
+    "va": {
+        "name": "Vatican City",
+        "nativeName": "Vatican\u00e6"
+    },
+    "gm": {
+        "name": "Gambia",
+        "nativeName": "Gambia"
+    },
+    "bd": {
+        "name": "Bangladesh",
+        "nativeName": "\u09ac\u09be\u0982\u09b2\u09be\u09a6\u09c7\u09b6"
+    },
+    "pw": {
+        "name": "Palau",
+        "nativeName": "Palau"
+    },
+    "co": {
+        "name": "Colombia",
+        "nativeName": "Colombia"
+    },
+    "sy": {
+        "name": "Syria",
+        "nativeName": "\u0633\u0648\u0631\u064a\u0627"
+    },
+    "io": {
+        "name": "British Indian Ocean Territory",
+        "nativeName": "British Indian Ocean Territory"
+    },
+    "mq": {
+        "name": "Martinique",
+        "nativeName": "Martinique"
+    },
+    "st": {
+        "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+        "nativeName": "S\u00e3o Tom\u00e9 e Pr\u00edncipe"
+    },
+    "vu": {
+        "name": "Vanuatu",
+        "nativeName": "Vanuatu"
+    },
+    "ar": {
+        "name": "Argentina",
+        "nativeName": "Argentina"
+    },
+    "al": {
+        "name": "Albania",
+        "nativeName": "Shqip\u00ebria"
+    },
+    "sb": {
+        "name": "Solomon Islands",
+        "nativeName": "Solomon Islands"
+    },
+    "jo": {
+        "name": "Jordan",
+        "nativeName": "\u0627\u0644\u0623\u0631\u062f\u0646"
+    },
+    "kr": {
+        "name": "South Korea",
+        "nativeName": "\ub300\ud55c\ubbfc\uad6d"
+    },
+    "cm": {
+        "name": "Cameroon",
+        "nativeName": "Cameroun"
+    },
+    "tc": {
+        "name": "Turks and Caicos Islands",
+        "nativeName": "Turks and Caicos Islands"
+    },
+    "af": {
+        "name": "Afghanistan",
+        "nativeName": "\u0627\u0641\u063a\u0627\u0646\u0633\u062a\u0627\u0646"
+    },
+    "dj": {
+        "name": "Djibouti",
+        "nativeName": "\u062c\u064a\u0628\u0648\u062a\u064a\u200e"
+    },
+    "cl": {
+        "name": "Chile",
+        "nativeName": "Chile"
+    },
+    "cg": {
+        "name": "Republic of the Congo",
+        "nativeName": "R\u00e9publique du Congo"
+    },
+    "hk": {
+        "name": "Hong Kong",
+        "nativeName": "\u9999\u6e2f"
+    },
+    "sk": {
+        "name": "Slovakia",
+        "nativeName": "Slovensko"
+    },
+    "hm": {
+        "name": "Heard Island and McDonald Islands",
+        "nativeName": "Heard Island and McDonald Islands"
+    },
+    "hr": {
+        "name": "Croatia",
+        "nativeName": "Hrvatska"
+    },
+    "tv": {
+        "name": "Tuvalu",
+        "nativeName": "Tuvalu"
+    },
+    "gl": {
+        "name": "Greenland",
+        "nativeName": "Kalaallit Nunaat"
+    },
+    "tg": {
+        "name": "Togo",
+        "nativeName": "Togo"
+    },
+    "ky": {
+        "name": "Cayman Islands",
+        "nativeName": "Cayman Islands"
+    },
+    "ci": {
+        "name": "Ivory Coast",
+        "nativeName": "C\u00f4te d'Ivoire"
+    },
+    "aw": {
+        "name": "Aruba",
+        "nativeName": "Aruba"
+    },
+    "sl": {
+        "name": "Sierra Leone",
+        "nativeName": "Sierra Leone"
+    },
+    "cd": {
+        "name": "DR Congo",
+        "nativeName": "RD Congo"
+    },
+    "ie": {
+        "name": "Ireland",
+        "nativeName": "\u00c9ire"
+    },
+    "ma": {
+        "name": "Morocco",
+        "nativeName": "\u0627\u0644\u0645\u063a\u0631\u0628"
+    },
+    "um": {
+        "name": "United States Minor Outlying Islands",
+        "nativeName": "United States Minor Outlying Islands"
+    },
+    "mr": {
+        "name": "Mauritania",
+        "nativeName": "\u0645\u0648\u0631\u064a\u062a\u0627\u0646\u064a\u0627"
+    },
+    "ck": {
+        "name": "Cook Islands",
+        "nativeName": "K\u016bki '\u0100irani"
+    },
+    "np": {
+        "name": "Nepal",
+        "nativeName": "\u0928\u0947\u092a\u093e\u0932"
+    },
+    "tt": {
+        "name": "Trinidad and Tobago",
+        "nativeName": "Trinidad and Tobago"
+    },
+    "eh": {
+        "name": "Western Sahara",
+        "nativeName": "Sahara Occidental"
+    },
+    "yt": {
+        "name": "Mayotte",
+        "nativeName": "Mayotte"
+    },
+    "kz": {
+        "name": "Kazakhstan",
+        "nativeName": "\u049a\u0430\u0437\u0430\u049b\u0441\u0442\u0430\u043d"
+    },
+    "cy": {
+        "name": "Cyprus",
+        "nativeName": "\u039a\u03cd\u03c0\u03c1\u03bf\u03c2"
+    },
+    "wf": {
+        "name": "Wallis and Futuna",
+        "nativeName": "Wallis et Futuna"
+    },
+    "xk": {
+        "name": "Kosovo",
+        "nativeName": "Kosova"
+    },
+    "bs": {
+        "name": "Bahamas",
+        "nativeName": "Bahamas"
+    },
+    "ai": {
+        "name": "Anguilla",
+        "nativeName": "Anguilla"
+    },
+    "rs": {
+        "name": "Serbia",
+        "nativeName": "\u0421\u0440\u0431\u0438\u0458\u0430"
+    },
+    "bi": {
+        "name": "Burundi",
+        "nativeName": "Burundi"
+    },
+    "ch": {
+        "name": "Switzerland",
+        "nativeName": "Suisse"
+    },
+    "gu": {
+        "name": "Guam",
+        "nativeName": "Guam"
+    },
+    "tr": {
+        "name": "Turkey",
+        "nativeName": "T\u00fcrkiye"
+    },
+    "es": {
+        "name": "Spain",
+        "nativeName": "Espainia"
+    },
+    "cz": {
+        "name": "Czechia",
+        "nativeName": "\u010cesko"
+    },
+    "tw": {
+        "name": "Taiwan",
+        "nativeName": "\u81fa\u7063"
+    },
+    "in": {
+        "name": "India",
+        "nativeName": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe"
+    },
+    "kg": {
+        "name": "Kyrgyzstan",
+        "nativeName": "\u041a\u044b\u0440\u0433\u044b\u0437\u0441\u0442\u0430\u043d"
+    },
+    "ki": {
+        "name": "Kiribati",
+        "nativeName": "Kiribati"
+    },
+    "bt": {
+        "name": "Bhutan",
+        "nativeName": "\u0f60\u0f56\u0fb2\u0f74\u0f42\u0f0b\u0f61\u0f74\u0f63\u0f0b"
+    },
+    "py": {
+        "name": "Paraguay",
+        "nativeName": "Paraguay"
+    },
+    "ye": {
+        "name": "Yemen",
+        "nativeName": "\u0627\u0644\u064a\u064e\u0645\u064e\u0646"
+    },
+    "vi": {
+        "name": "United States Virgin Islands",
+        "nativeName": "United States Virgin Islands"
+    },
+    "ga": {
+        "name": "Gabon",
+        "nativeName": "Gabon"
+    },
+    "it": {
+        "name": "Italy",
+        "nativeName": "Italia"
+    },
+    "qa": {
+        "name": "Qatar",
+        "nativeName": "\u0642\u0637\u0631"
+    },
+    "bl": {
+        "name": "Saint Barth\u00e9lemy",
+        "nativeName": "Saint-Barth\u00e9lemy"
+    },
+    "im": {
+        "name": "Isle of Man",
+        "nativeName": "Isle of Man"
+    }
+}
