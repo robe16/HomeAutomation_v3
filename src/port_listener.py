@@ -101,6 +101,10 @@ def get_data_infoservice(service=False, resource_requested=False):
         #
         data_dict = {'data': resource_requested}
         #
+        if len(request.query.decode()) > 0:
+            data_dict.update(request.query.decode())
+        #
+        #
         rsp = infoservices[service].getData(data_dict)
         #
         response = HTTPResponse()

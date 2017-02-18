@@ -73,6 +73,15 @@ def get_userchannels(user):
     return None
 
 
+def get_usernews(user):
+    data = read_config_users()
+    if data != None:
+        for id in data['users']:
+            if data['users'][id]['name']==user:
+                return data['users'][id]['news_sources']
+    return None
+
+
 def get_userrole(user):
     data = read_config_users()
     if data != None:

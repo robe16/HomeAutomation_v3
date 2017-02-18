@@ -1,6 +1,7 @@
 from bundles.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
 from bundles.devices.tivo.tivo import device_tivo
 from bundles.devices.nest.nest import account_nest
+from bundles.info_services.news.news import info_news
 from bundles.info_services.weather.weather import info_metoffice
 from bundles.info_services.tvlistings.tvlistings import info_tvlistings
 
@@ -32,7 +33,10 @@ def create_bundles(_devices, _infoservices):
     _infoservices['tvlistings'] = info_tvlistings()
     print_msg('Infoservice object created: {type}'.format(type='tvlistings'))
     #
-    print_msg('All devices, accounts and infoservice instances created')
+    _infoservices['news'] = info_news()
+    print_msg('Infoservice object created: {type}'.format(type='news'))
+    #
+    print_msg('All devices and infoservice instances created')
 
 
 def _create_device(group_id, device_id):
