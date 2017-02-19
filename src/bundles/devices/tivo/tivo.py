@@ -89,6 +89,9 @@ class device_tivo(Device):
     def _accesskey(self):
         return get_cfg_device_detail(self._group_id, self._device_id, "mak")
 
+    def _pin(self):
+        return get_cfg_device_detail(self._group_id, self._device_id, "pin")
+
     def _package(self):
         return get_cfg_device_detail_public(self._group_id, self._device_id, "package")
 
@@ -124,7 +127,18 @@ class device_tivo(Device):
             code = False
             response = False
             #
-            if request['command'] == 'channel':
+            if request['command'] == 'enterpin':
+                try:
+                    rsp = []
+                    for num in self.pin():
+                        code = self.commands[num]
+                        rsp.append(self._send_telnet(self._ipaddress(), self._port(), data=code))
+                    code = self.commands['select']
+                    rsp.append(self._send_telnet(self._ipaddress(), self._port(), data=code))
+                    response = not(False in rsp)
+                except:
+                    response = False
+            elif request['command'] == 'channel':
                 response = self._send_telnet(ipaddress=self._ipaddress(),
                                              port=self._port(),
                                              data=("SETCH {}\r").format(request['chan']),
