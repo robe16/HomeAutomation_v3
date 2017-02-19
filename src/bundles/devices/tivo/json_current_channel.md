@@ -1,6 +1,0 @@
-{"channel":
-    {"name": "",
-    "number": "",
-    "logo": ""
-    }
-}
