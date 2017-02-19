@@ -133,8 +133,11 @@ class device_tivo(Device):
                     for num in self.pin():
                         code = self.commands[num]
                         rsp.append(self._send_telnet(self._ipaddress(), self._port(), data=code))
-                    code = self.commands['select']
-                    rsp.append(self._send_telnet(self._ipaddress(), self._port(), data=code))
+                        print_command (code,
+                                       self.dvc_id(),
+                                       self._type,
+                                       self._ipaddress(),
+                                       response)
                     response = not(False in rsp)
                 except:
                     response = False
