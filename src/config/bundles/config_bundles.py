@@ -36,14 +36,14 @@ def get_cfg_count_groups():
     #
     data = get_cfg_bundles_json()
     #
-    return len(data['groups'])
+    return len(data['bundles']['devices']['groups'])
 
 
 def get_cfg_count_devices(group_id):
     #
     data = get_cfg_bundles_json()
     #
-    return len(data['groups'][group_id]['devices'])
+    return len(data['bundles']['devices']['groups'][group_id]['devices'])
 
 ################################################################################################
 # Return list of group and device ids
@@ -56,7 +56,7 @@ def get_cfg_idlist_groups():
     #
     r_list = []
     #
-    for key, value in data['groups'].iteritems():
+    for key, value in data['bundles']['devices']['groups'].iteritems():
         r_list.append(key)
     #
     return r_list
@@ -68,7 +68,7 @@ def get_cfg_idlist_devices(group_id):
     #
     d_list = []
     #
-    for key, value in data['groups'][group_id]['devices'].iteritems():
+    for key, value in data['bundles']['devices']['groups'][group_id]['devices'].iteritems():
         d_list.append(key)
     #
     return d_list
@@ -83,7 +83,7 @@ def get_cfg_group_index(group_id):
     data = get_cfg_bundles_json()
     count = 0
     #
-    for key, value in data['groups'].iteritems():
+    for key, value in data['bundles']['devices']['groups'].iteritems():
         if key == group_id:
             return count
         count += 1
@@ -96,7 +96,7 @@ def get_cfg_device_index(group_id, device_id):
     data = get_cfg_bundles_json()
     count = 0
     #
-    for key, value in data['groups'][group_id]['devices'].iteritems():
+    for key, value in data['bundles']['devices']['groups'][group_id]['devices'].iteritems():
         if key == device_id:
             return count
         count += 1
@@ -170,7 +170,38 @@ def set_cfg_device_detail(group_id, device_id, detail, value):
     #
     data = get_cfg_bundles_json()
     #
-    data['groups'][group_id]['devices'][device_id]['details'][detail] = value
+    data['bundles']['devices']['groups'][group_id]['devices'][device_id]['details'][detail] = value
+    #
+    return write_config_bundles(data)
+
+################################################################################################
+# Return enabled status and other details of info_service
+################################################################################################
+
+
+def get_cfg_info_enabled(info_type):
+    #
+    enabled = get_cfg_info_value(info_type, 'enabled')
+    #
+    return enabled
+
+
+def get_cfg_info_detail(info_type, key):
+    #
+    enabled = get_cfg_info_value(info_type, key)
+    #
+    return enabled
+
+################################################################################################
+# Save detail value of info_service
+################################################################################################
+
+
+def set_cfg_info_detail(info_type, detail, value):
+    #
+    data = get_cfg_bundles_json()
+    #
+    data['info_services'][info_type][detail] = value
     #
     return write_config_bundles(data)
 
@@ -183,7 +214,7 @@ def set_cfg_device_detail_public(group_id, device_id, detail, value):
     #
     data = get_cfg_bundles_json()
     #
-    data['groups'][group_id]['devices'][device_id]['details_public'][detail] = value
+    data['bundles']['devices']['groups'][group_id]['devices'][device_id]['details_public'][detail] = value
     #
     return write_config_bundles(data)
 
@@ -204,14 +235,21 @@ def get_cfg_group_value(group_id, key):
     #
     data = get_cfg_bundles_json()
     #
-    return data['groups'][group_id][key]
+    return data['bundles']['devices']['groups'][group_id][key]
 
 
 def get_cfg_device_value(group_id, device_id, key):
     #
     data = get_cfg_bundles_json()
     #
-    return data['groups'][group_id]['devices'][device_id][key]
+    return data['bundles']['devices']['groups'][group_id]['devices'][device_id][key]
+
+
+def get_cfg_info_value(info_type, key):
+    #
+    data = get_cfg_bundles_json()
+    #
+    return data['bundles']['info_services'][info_type][key]
 
 ################################################################################################
 ################################################################################################

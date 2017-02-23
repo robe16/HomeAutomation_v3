@@ -14,12 +14,12 @@ def create_bundles(_devices, _infoservices):
     #
     data = get_cfg_bundles_json()
     #
-    for group_id in data['groups']:
+    for group_id in data['bundles']['devices']['groups']:
         #
         _devices[group_id] = {}
         group_devices = {}
         #
-        for device_id in data['groups'][group_id]['devices']:
+        for device_id in data['bundles']['devices']['groups'][group_id]['devices']:
             #
             group_devices[device_id] = _create_device(group_id, device_id)
             print_msg('Device object created: {type}: {group}:{device}'.format(type=get_cfg_device_type(group_id, device_id),
