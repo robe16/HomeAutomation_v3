@@ -124,13 +124,15 @@ class device_tivo(Device):
     def sendCmd(self, request):
         #
         try:
+            msg_command = ''
             code = False
             response = False
             #
             if request['command'] == 'enterpin':
+                msg_command = 'enterpin'
                 try:
                     rsp = []
-                    for num in self.pin():
+                    for num in self._pin():
                         code = self.commands[num]
                         rsp.append(self._send_telnet(self._ipaddress(), self._port(), data=code))
                         print_command (code,
@@ -139,9 +141,10 @@ class device_tivo(Device):
                                        self._ipaddress(),
                                        response)
                     response = not(False in rsp)
-                except:
+                except Exception as e:
                     response = False
             elif request['command'] == 'channel':
+                msg_command = request['chan']
                 response = self._send_telnet(ipaddress=self._ipaddress(),
                                              port=self._port(),
                                              data=("SETCH {}\r").format(request['chan']),
@@ -154,20 +157,20 @@ class device_tivo(Device):
                                   response)
                     return False
             elif request['command'] == 'command':
+                msg_command = request['code']
                 code = self.commands[request['code']]
                 try:
                     response = self._send_telnet(self._ipaddress(), self._port(), data=code)
                 except:
                     response = False
             #
-            x = request['code'] if code else request['command']
-            print_command (x,
+            print_command (msg_command,
                            self.dvc_id(),
                            self._type,
                            self._ipaddress(),
                            response)
             return response
-        except:
+        except Exception as e:
             print_command(request['command'],
                           self.dvc_id(),
                           self._type,
