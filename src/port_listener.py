@@ -69,6 +69,22 @@ def cache_tvchannels():
         return HTTPResponse(status=404)
 
 
+# TODO: details of cache update subscription caught here - now to set so any update to respective jsons will inform client
+@post('/cache/subscribe')
+def cache_subscribe():
+    try:
+        #
+        r = request
+        #
+        categories = request.json['categories']
+        ipaddress = request.json['ipaddress']
+        port = request.json['port']
+        #
+        return HTTPResponse(status=200)
+    except:
+        return HTTPResponse(status=404)
+
+
 ################################################################################################
 # User based operations
 ################################################################################################
