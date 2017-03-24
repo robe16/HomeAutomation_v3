@@ -1,4 +1,4 @@
-from bundles.info_services.info_service import InfoService
+from bindings.info_services.info_service import InfoService
 import data_source_bleb
 from lists.channels.list_channels import read_list_channels, get_channel_item_listingsrc_all
 from log.console_messages import print_msg, print_error

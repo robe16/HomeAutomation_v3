@@ -1,7 +1,7 @@
 import base64
 import socket
 
-from bundles.devices.device import Device
+from bindings.devices.device import Device
 from cfg import my_ip
 from log.console_messages import print_command
 

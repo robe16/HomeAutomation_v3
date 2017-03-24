@@ -1,25 +1,25 @@
-from bundles.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
-from bundles.devices.tivo.tivo import device_tivo
-from bundles.devices.nest.nest import account_nest
-from bundles.info_services.news.news import info_news
-from bundles.info_services.weather.weather import info_metoffice
-from bundles.info_services.tvlistings.tvlistings import info_tvlistings
+from bindings.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
+from bindings.devices.tivo.tivo import device_tivo
+from bindings.devices.nest.nest import account_nest
+from bindings.info_services.news.news import info_news
+from bindings.info_services.weather.weather import info_metoffice
+from bindings.info_services.tvlistings.tvlistings import info_tvlistings
 
-from config.bundles.config_bundles import get_cfg_bundles_json
-from config.bundles.config_bundles import get_cfg_device_type
+from config.bindings.config_bindings import get_cfg_bindings_json
+from config.bindings.config_bindings import get_cfg_device_type
 from log.console_messages import print_msg
 
 
-def create_bundles(_devices, _infoservices):
+def create_bindings(_devices, _infoservices):
     #
-    data = get_cfg_bundles_json()
+    data = get_cfg_bindings_json()
     #
-    for group_id in data['bundles']['devices']['groups']:
+    for group_id in data['bindings']['devices']['groups']:
         #
         _devices[group_id] = {}
         group_devices = {}
         #
-        for device_id in data['bundles']['devices']['groups'][group_id]['devices']:
+        for device_id in data['bindings']['devices']['groups'][group_id]['devices']:
             #
             group_devices[device_id] = _create_device(group_id, device_id)
             print_msg('Device object created: {type}: {group}:{device}'.format(type=get_cfg_device_type(group_id, device_id),

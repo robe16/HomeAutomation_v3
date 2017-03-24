@@ -1,4 +1,4 @@
-from config.bundles.config_bundles import get_cfg_bundles_json, write_config_bundles
+from config.bindings.config_bindings import get_cfg_bindings_json, write_config_bindings
 
 
 def console_setup():
@@ -35,7 +35,7 @@ def console_setup():
 def structure_menu():
     while True:
         #
-        data = get_cfg_bundles_json()
+        data = get_cfg_bindings_json()
         #
         print('Current structure details:')
         print(' + Name: {name}'.format(name=data['structure']['structure_name']))
@@ -67,7 +67,7 @@ def structure_menu():
                 raw_input("Enter new value for Structure Town")
                 data['structure']['structure_town'] = new_val
             #
-            write_config_bundles(data)
+            write_config_bindings(data)
             print("\nThe amendment has been saved to the configuration file")
             print("\n****************************************************************\n")
             #
@@ -79,7 +79,7 @@ def structure_menu():
 
 def print_current_setup():
     #
-    data = get_cfg_bundles_json()
+    data = get_cfg_bindings_json()
     #
     print('Structure')
     print(' + Name: {name}'.format(name=data['structure']['structure_name']))

@@ -1,4 +1,4 @@
-from bundles.info_services.info_service import InfoService
+from bindings.info_services.info_service import InfoService
 from log.console_messages import print_error
 import json
 from data_source_newsapi_org import get_articles, get_sources

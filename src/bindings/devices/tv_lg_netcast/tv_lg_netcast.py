@@ -4,8 +4,8 @@ import requests as requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from multiprocessing import Manager, Process
 
-from bundles.devices.device import Device
-from config.bundles.config_bundles import get_cfg_device_detail
+from bindings.devices.device import Device
+from config.bindings.config_bindings import get_cfg_device_detail
 from log.console_messages import print_command, print_msg, print_error
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)

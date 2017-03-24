@@ -1,5 +1,5 @@
-from config.bundles.config_bundles import get_cfg_structure_town
-from lists.bundles.list_bundles import get_bundle_detail
+from config.bindings.config_bindings import get_cfg_structure_town
+from lists.bindings.list_bindings import get_binding_detail
 from index_lists import *
 import datetime
 import requests

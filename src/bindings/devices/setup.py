@@ -1,12 +1,12 @@
-from config.bundles.config_bundles import get_cfg_bundles_json, write_config_bundles
-from bundles.devices.nest.setup import setup_nest
-from bundles.devices.icloud.setup import setup_icloud
+from config.bindings.config_bindings import get_cfg_bindings_json, write_config_bindings
+from bindings.devices.nest.setup import setup_nest
+from bindings.devices.icloud.setup import setup_icloud
 
 
 def account_menu():
     while True:
         #
-        data = get_cfg_bundles_json()
+        data = get_cfg_bindings_json()
         #
         print("Accounts:")
         for a_key, a_value in data['accounts'].iteritems():
@@ -42,7 +42,7 @@ def account_menu():
                 pass
             #
             if new_data:
-                write_config_bundles(data)
+                write_config_bindings(data)
                 print("\nThe changes have been saved to the configuration file")
                 print("\n****************************************************************\n")
             #
@@ -93,7 +93,7 @@ def add_account(data):
 def amend_account(data):
     while True:
         #
-        data = get_cfg_bundles_json()
+        data = get_cfg_bindings_json()
         #
         print("Accounts:")
         key_count = 0

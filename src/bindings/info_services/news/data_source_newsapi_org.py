@@ -1,4 +1,4 @@
-from lists.bundles.list_bundles import get_bundle_detail
+from lists.bindings.list_bindings import get_binding_detail
 import requests
 
 
@@ -26,7 +26,7 @@ def get_articles(source='', sortby=''):
     if sortby not in LIST_SORTBY:
         raise Exception
     #
-    query = QUERY_ARTICLES_APIKEY.format(api_key=get_bundle_detail('newsapi', 'app_key'))
+    query = QUERY_ARTICLES_APIKEY.format(api_key=get_binding_detail('newsapi', 'app_key'))
     query += '&' + QUERY_ARTICLES_SOURCE.format(source=source)
     if not sortby=='':
         query += '&' + QUERY_ARTICLES_SORTBY.format(sortby=sortby)

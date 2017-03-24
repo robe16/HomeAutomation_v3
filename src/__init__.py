@@ -2,9 +2,9 @@ from multiprocessing import Process, Manager
 
 import cfg
 from port_listener import start_bottle
-from config.bundles.config_bundles import get_cfg_bundles_json
-from config.bundles.config_bundles import get_cfg_idlist_groups, get_cfg_idlist_devices
-from config.bundles.config_bundles_create import create_bundles
+from config.bindings.config_bindings import get_cfg_bindings_json
+from config.bindings.config_bindings import get_cfg_idlist_groups, get_cfg_idlist_devices
+from config.bindings.config_bindings_create import create_bindings
 from log.console_messages import print_msg
 import setup
 
@@ -34,7 +34,7 @@ while run:
         _infoservices = Manager().dict()
         #
         print_msg('Starting process: Device, account and infoservice object creation')
-        process_object = Process(target=create_bundles, args=(_devices, _infoservices, ))
+        process_object = Process(target=create_bindings, args=(_devices, _infoservices, ))
         process_object.start()
         print_msg('Process started: Device, account and infoservice object creation')
         #

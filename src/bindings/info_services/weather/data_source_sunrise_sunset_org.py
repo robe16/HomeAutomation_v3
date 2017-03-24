@@ -1,4 +1,4 @@
-from config.bundles.config_bundles import get_cfg_structure_town
+from config.bindings.config_bindings import get_cfg_structure_town
 from index_lists import *
 import datetime
 import requests

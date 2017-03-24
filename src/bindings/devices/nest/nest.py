@@ -2,9 +2,9 @@ import datetime
 import json
 import requests as requests
 
-from bundles.devices.device import Device
-from config.bundles.config_bundles import get_cfg_device_detail, set_cfg_device_detail
-from lists.bundles.list_bundles import get_bundle_detail, get_bundle_name, get_bundle_html_settings
+from bindings.devices.device import Device
+from config.bindings.config_bindings import get_cfg_device_detail, set_cfg_device_detail
+from lists.bindings.list_bindings import get_binding_detail, get_binding_name, get_binding_html_settings
 from log.console_messages import print_error, print_msg
 from auth import get_accesstoken
 from cfg import date_format
@@ -29,7 +29,7 @@ class account_nest(Device):
         #return get_device_config_detail(self._grp_num, self._dvc_num, "name")
 
     def _type_name(self):
-        return get_bundle_name(self._type)
+        return get_binding_name(self._type)
 
     def _state(self):
         return get_cfg_device_detail(self._group_id, self._device_id, 'state')
@@ -56,10 +56,10 @@ class account_nest(Device):
         return get_cfg_device_detail(self._group_id, self._device_id, 'redirect_url', redirect_url)
 
     def _clientid(self):
-        return get_bundle_detail(self._type, 'client_id')
+        return get_binding_detail(self._type, 'client_id')
 
     def _clientsecret(self):
-        return get_bundle_detail(self._type, 'client_secret')
+        return get_binding_detail(self._type, 'client_secret')
 
     def getData(self, request):
         #
@@ -95,7 +95,7 @@ class account_nest(Device):
             if nest_device == 'thermostats':
                 #
                 if command == 'temp':
-                    #json_cmd = {'bundles': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
+                    #json_cmd = {'bindings': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
                     json_cmd = {'target_temperature_' + self._temp_unit : float(value)}
                     if self._send_nest_json(json_cmd, nest_model, nest_device, nest_device_id):
                         return True
@@ -145,7 +145,7 @@ class account_nest(Device):
             device_url = '{device}/{device_id}'.format(device=device, device_id=device_id)
         else:
             device_url = ''
-        return self._read_nest_json(model='bundles'+device_url)
+        return self._read_nest_json(model='bindings'+device_url)
 
     def _read_json_structures(self):
         return self._read_nest_json(model='structures')
