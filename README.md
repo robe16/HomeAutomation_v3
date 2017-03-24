@@ -10,7 +10,7 @@ Where possible, all commands are sent over the internal network. Some devices (e
 <img src="https://github.com/robe16/HomeControl-documentation/blob/master/images/interfaces/img_e2e_high-level-design.jpg">
 <h5>Figure: High level end to end design of HomeControl project</h5>
 
-<h4>Bundles that have been developed:</h4>
+<h4>Bindings that have been developed:</h4>
 
 <p>Devices</p>
 - LG TV control
