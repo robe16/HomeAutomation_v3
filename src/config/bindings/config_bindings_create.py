@@ -14,12 +14,12 @@ def create_bindings(_devices, _infoservices):
     #
     data = get_cfg_bindings_json()
     #
-    for group_id in data['bindings']['devices']['groups']:
+    for group_id in data['bindings']['groups']:
         #
         _devices[group_id] = {}
         group_devices = {}
         #
-        for device_id in data['bindings']['devices']['groups'][group_id]['devices']:
+        for device_id in data['bindings']['groups'][group_id]['devices']:
             #
             group_devices[device_id] = _create_device(group_id, device_id)
             print_msg('Device object created: {type}: {group}:{device}'.format(type=get_cfg_device_type(group_id, device_id),

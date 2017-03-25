@@ -36,14 +36,14 @@ def get_cfg_count_groups():
     #
     data = get_cfg_bindings_json()
     #
-    return len(data['bindings']['devices']['groups'])
+    return len(data['bindings']['groups'])
 
 
 def get_cfg_count_devices(group_id):
     #
     data = get_cfg_bindings_json()
     #
-    return len(data['bindings']['devices']['groups'][group_id]['devices'])
+    return len(data['bindings']['groups'][group_id]['devices'])
 
 ################################################################################################
 # Return list of group and device ids
@@ -56,7 +56,7 @@ def get_cfg_idlist_groups():
     #
     r_list = []
     #
-    for key, value in data['bindings']['devices']['groups'].iteritems():
+    for key, value in data['bindings']['groups'].iteritems():
         r_list.append(key)
     #
     return r_list
@@ -68,7 +68,7 @@ def get_cfg_idlist_devices(group_id):
     #
     d_list = []
     #
-    for key, value in data['bindings']['devices']['groups'][group_id]['devices'].iteritems():
+    for key, value in data['bindings']['groups'][group_id]['devices'].iteritems():
         d_list.append(key)
     #
     return d_list
@@ -83,7 +83,7 @@ def get_cfg_group_index(group_id):
     data = get_cfg_bindings_json()
     count = 0
     #
-    for key, value in data['bindings']['devices']['groups'].iteritems():
+    for key, value in data['bindings']['groups'].iteritems():
         if key == group_id:
             return count
         count += 1
@@ -96,7 +96,7 @@ def get_cfg_device_index(group_id, device_id):
     data = get_cfg_bindings_json()
     count = 0
     #
-    for key, value in data['bindings']['devices']['groups'][group_id]['devices'].iteritems():
+    for key, value in data['bindings']['groups'][group_id]['devices'].iteritems():
         if key == device_id:
             return count
         count += 1
@@ -170,7 +170,7 @@ def set_cfg_device_detail(group_id, device_id, detail, value):
     #
     data = get_cfg_bindings_json()
     #
-    data['bindings']['devices']['groups'][group_id]['devices'][device_id]['details'][detail] = value
+    data['bindings']['groups'][group_id]['devices'][device_id]['details'][detail] = value
     #
     return write_config_bindings(data)
 
@@ -214,7 +214,7 @@ def set_cfg_device_detail_public(group_id, device_id, detail, value):
     #
     data = get_cfg_bindings_json()
     #
-    data['bindings']['devices']['groups'][group_id]['devices'][device_id]['details_public'][detail] = value
+    data['bindings']['groups'][group_id]['devices'][device_id]['details_public'][detail] = value
     #
     return write_config_bindings(data)
 
@@ -235,14 +235,14 @@ def get_cfg_group_value(group_id, key):
     #
     data = get_cfg_bindings_json()
     #
-    return data['bindings']['devices']['groups'][group_id][key]
+    return data['bindings']['groups'][group_id][key]
 
 
 def get_cfg_device_value(group_id, device_id, key):
     #
     data = get_cfg_bindings_json()
     #
-    return data['bindings']['devices']['groups'][group_id]['devices'][device_id][key]
+    return data['bindings']['groups'][group_id]['devices'][device_id][key]
 
 
 def get_cfg_info_value(info_type, key):
