@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import requests as requests
 from requests.auth import HTTPDigestAuth
 
-from bindings.devices.device import Device
+from bindings.device import Device
 from config.bindings.config_bindings import get_cfg_device_detail, get_cfg_device_detail_public
 from lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
 from log.console_messages import print_command, print_error, print_msg

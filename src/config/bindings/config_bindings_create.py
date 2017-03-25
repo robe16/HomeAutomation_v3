@@ -1,9 +1,9 @@
-from bindings.devices.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
-from bindings.devices.tivo.tivo import device_tivo
-from bindings.devices.nest.nest import account_nest
-from bindings.info_services.news.news import info_news
-from bindings.info_services.weather.weather import info_metoffice
-from bindings.info_services.tvlistings.tvlistings import info_tvlistings
+from bindings.tv_lg_netcast.tv_lg_netcast import device_tv_lg_netcast
+from bindings.tivo.tivo import device_tivo
+from bindings.nest.nest import account_nest
+from bindings.news.news import info_news
+from bindings.weather.weather import info_metoffice
+from bindings.tvlistings.tvlistings import info_tvlistings
 
 from config.bindings.config_bindings import get_cfg_bindings_json
 from config.bindings.config_bindings import get_cfg_device_type

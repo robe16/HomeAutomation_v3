@@ -1,6 +1,6 @@
 from pyicloud import PyiCloudService
 
-from bindings.devices.device import Device
+from bindings.device import Device
 from config.bindings.config_bindings import get_cfg_device_detail
 from lists.bindings.list_bindings import get_binding_detail, get_binding_name, get_binding_html_settings
 from log.console_messages import print_error, print_msg

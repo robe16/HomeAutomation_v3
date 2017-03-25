@@ -1,11 +1,13 @@
-from bindings.info_services.info_service import InfoService
-import data_source_bleb
-from lists.channels.list_channels import read_list_channels, get_channel_item_listingsrc_all
-from log.console_messages import print_msg, print_error
-from multiprocessing import Process, Manager
-from datetime import datetime, timedelta
-from time import sleep
 import json
+from datetime import datetime, timedelta
+from multiprocessing import Process, Manager
+from time import sleep
+
+from bindings.info_service import InfoService
+from lists.channels.list_channels import read_list_channels
+from log.console_messages import print_msg, print_error
+
+import data_source_bleb
 
 
 class info_tvlistings(InfoService):

@@ -1,6 +1,6 @@
 from config.bindings.config_bindings import get_cfg_bindings_json, write_config_bindings
-from bindings.devices.nest.setup import setup_nest
-from bindings.devices.icloud.setup import setup_icloud
+from bindings.nest.setup import setup_nest
+from bindings.icloud.setup import setup_icloud
 
 
 def account_menu():
