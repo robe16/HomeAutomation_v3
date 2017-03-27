@@ -10,16 +10,13 @@ from config.users.config_users import check_user, update_user_channels
 ################################################################################################
 
 devices = {}
-infoservices = {}
 
 ################################################################################################
 
-def start_bottle(_devices, _infoservices):
+def start_bottle(_devices):
     #
     global devices
-    global infoservices
     devices = _devices
-    infoservices = _infoservices
     #
     run_bottle()
 
@@ -105,47 +102,47 @@ def user_checkpin():
 # Handle requests for resource data
 ################################################################################################
 
-@get('/data/info/<service>/<resource_requested>')
-def get_data_infoservice(service=False, resource_requested=False):
-    #
-    global infoservices
-    #
-    try:
-        #
-        if (not service) or (not resource_requested):
-            raise HTTPError(404)
-        #
-        data_dict = {'data': resource_requested}
-        #
-        if len(request.query.decode()) > 0:
-            data_dict.update(request.query.decode())
-        #
-        #
-        rsp = infoservices[service].getData(data_dict)
-        #
-        response = HTTPResponse()
-        enable_cors(response)
-        #
-        if isinstance(rsp, bool):
-            if rsp:
-                response.status = 200
-            else:
-                response.status=400
-        else:
-            if bool(rsp):
-                response.body=str(rsp)
-                response.status=200
-            else:
-                response.status=400
-        #
-        return response
-        #
-    except Exception as e:
-        print_error('{error}'.format(error=e))
-        raise HTTPError(500)
+# @get('/data/info/<service>/<resource_requested>')
+# def get_data_infoservice(service=False, resource_requested=False):
+#     #
+#     global infoservices
+#     #
+#     try:
+#         #
+#         if (not service) or (not resource_requested):
+#             raise HTTPError(404)
+#         #
+#         data_dict = {'data': resource_requested}
+#         #
+#         if len(request.query.decode()) > 0:
+#             data_dict.update(request.query.decode())
+#         #
+#         #
+#         rsp = infoservices[service].getData(data_dict)
+#         #
+#         response = HTTPResponse()
+#         enable_cors(response)
+#         #
+#         if isinstance(rsp, bool):
+#             if rsp:
+#                 response.status = 200
+#             else:
+#                 response.status=400
+#         else:
+#             if bool(rsp):
+#                 response.body=str(rsp)
+#                 response.status=200
+#             else:
+#                 response.status=400
+#         #
+#         return response
+#         #
+#     except Exception as e:
+#         print_error('{error}'.format(error=e))
+#         raise HTTPError(500)
 
 
-@get('/data/device/<group_id>/<device_id>/<resource_requested>')
+@get('/data/<group_id>/<device_id>/<resource_requested>')
 def get_data_device(group_id=False, device_id=False, resource_requested=False):
     #
     global devices
@@ -173,7 +170,7 @@ def get_data_device(group_id=False, device_id=False, resource_requested=False):
 # Handle commands
 ################################################################################################
 
-@post('/command/device/<group_id>/<device_id>')
+@post('/command/<group_id>/<device_id>')
 def send_command_device(group_id=False, device_id=False):
     #
     global devices

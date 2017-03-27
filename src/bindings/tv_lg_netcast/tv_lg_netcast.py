@@ -5,7 +5,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from multiprocessing import Manager, Process
 
 from bindings.device import Device
-from config.bindings.config_bindings import get_cfg_device_detail
+from config.bindings.config_bindings import get_cfg_thing_detail_private
 from log.console_messages import print_command, print_msg, print_error
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -20,9 +20,9 @@ class device_tv_lg_netcast(Device):
 
     apps_dict = Manager().dict()
 
-    def __init__ (self, group_id, device_id):
+    def __init__ (self, group_seq, device_seq):
         #
-        Device.__init__(self, 'tv_lg_netcast', group_id, device_id)
+        Device.__init__(self, 'tv_lg_netcast', group_seq, device_seq)
         #
         self.is_paired = False
         # self._pairDevice()
@@ -37,7 +37,7 @@ class device_tv_lg_netcast(Device):
         self._get_apps()
 
     def _pairingkey(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, "pairingkey")
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, "pairingkey")
 
     def _pairDevice(self, pair_reason=''):
         #

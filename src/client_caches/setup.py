@@ -7,11 +7,10 @@ def compile_setup():
     #
     data = get_cfg_bindings_json()
     #
-    for r in data['bindings']['devices']['groups']:
-        for d in data['bindings']['devices']['groups'][r]['devices']:
-            del data['bindings']['devices']['groups'][r]['devices'][d]['details']
-            data['bindings']['devices']['groups'][r]['devices'][d]['logo'] = get_binding_logo(data['bindings']['devices']['groups'][r]['devices'][d]['device_type'])
-            #
+    for group in data['bindings']['groups']:
+        for thing in group['things']:
+            del thing['details_private']
+            thing['logo'] = get_binding_logo(thing['device_type'])
     #
     try:
         return ast.literal_eval(data)

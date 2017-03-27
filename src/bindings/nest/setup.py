@@ -3,7 +3,7 @@ import json
 import webbrowser
 import requests
 from time import sleep
-from lists.devices.list_devices import get_device_detail
+from lists.bindings.list_bindings import get_binding_detail
 from auth import get_accesstoken
 
 
@@ -17,8 +17,8 @@ def setup_nest():
         print('Please sign in and grant permissions for the HomeControl-server to interact with the Nest account.')
         sleep(5)
         #
-        client_id = get_device_detail('nest_account', 'client_id')
-        client_secret = get_device_detail('nest_account', 'client_secret')
+        client_id = get_binding_detail('nest_account', 'client_id')
+        client_secret = get_binding_detail('nest_account', 'client_secret')
         state = 'STATE'
         #
         url_auth = 'https://home.nest.com/login/oauth2?client_id={client_id}&state={state}'.format(client_id=client_id,
@@ -37,13 +37,12 @@ def setup_nest():
         return
     #
     new_acc = {}
-    new_acc['account_type'] = 'nest_account'
-    new_acc['account_name'] = name
-    new_acc['account_id'] = name.lower().replace(' ', '_').replace('\'', '')
-    new_acc['details'] = {'tokenexpiry': token_response['tokenexpiry'],
-                          'token': token_response['token'],
-                          'state': state,
-                          'redirect_url': ''}
+    new_acc['type'] = 'nest_account'
+    new_acc['name'] = name
+    new_acc['details_private'] = {'tokenexpiry': token_response['tokenexpiry'],
+                                  'token': token_response['token'],
+                                  'state': state,
+                                  'redirect_url': ''}
     new_acc['details_public'] = {}
     #
     return new_acc

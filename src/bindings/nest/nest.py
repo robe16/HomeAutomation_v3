@@ -3,7 +3,7 @@ import json
 import requests as requests
 
 from bindings.device import Device
-from config.bindings.config_bindings import get_cfg_device_detail, set_cfg_device_detail
+from config.bindings.config_bindings import get_cfg_thing_detail_private, set_cfg_thing_detail
 from lists.bindings.list_bindings import get_binding_detail, get_binding_name, get_binding_html_settings
 from log.console_messages import print_error, print_msg
 from auth import get_accesstoken
@@ -18,9 +18,9 @@ class account_nest(Device):
     #
     _temp_unit = 'c'
 
-    def __init__ (self, group_id, device_id):
+    def __init__ (self, group_seq, device_seq):
         #
-        Device.__init__(self, 'nest_account', group_id, device_id)
+        Device.__init__(self, 'nest_account', group_seq, device_seq)
         #
         self._tokencheck()
 
@@ -32,28 +32,28 @@ class account_nest(Device):
         return get_binding_name(self._type)
 
     def _state(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'state')
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, 'state')
 
     def _token(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'token')
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, 'token')
 
     def _set_token(self, token):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'token', token)
+        return set_cfg_thing_detail(self._group_seq, self._device_seq, 'token', token)
 
     def _tokenexpiry(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'tokenexpiry')
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, 'tokenexpiry')
 
     def _set_tokenexpiry(self, tokenexpiry):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'tokenexpiry', tokenexpiry)
+        return set_cfg_thing_detail(self._group_seq, self._device_seq, 'tokenexpiry', tokenexpiry)
 
     def _pincode(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'pincode')
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, 'pincode')
 
     def _redirect_url(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'redirect_url')
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, 'redirect_url')
 
     def _set_redirect_url(self, redirect_url):
-        return get_cfg_device_detail(self._group_id, self._device_id, 'redirect_url', redirect_url)
+        return set_cfg_thing_detail(self._group_seq, self._device_seq, 'redirect_url', redirect_url)
 
     def _clientid(self):
         return get_binding_detail(self._type, 'client_id')
@@ -95,7 +95,6 @@ class account_nest(Device):
             if nest_device == 'thermostats':
                 #
                 if command == 'temp':
-                    #json_cmd = {'bindings': {'thermostats': {nest_device_id: {'target_temperature_c': value}}}}
                     json_cmd = {'target_temperature_' + self._temp_unit : float(value)}
                     if self._send_nest_json(json_cmd, nest_model, nest_device, nest_device_id):
                         return True

@@ -7,16 +7,16 @@ import requests as requests
 from requests.auth import HTTPDigestAuth
 
 from bindings.device import Device
-from config.bindings.config_bindings import get_cfg_device_detail, get_cfg_device_detail_public
+from config.bindings.config_bindings import get_cfg_thing_detail_private, get_cfg_thing_detail_public
 from lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
 from log.console_messages import print_command, print_error, print_msg
 
 
 class device_tivo(Device):
 
-    def __init__(self, group_id, device_id):
+    def __init__(self, group_seq, device_seq):
         #
-        Device.__init__(self, "tivo", group_id, device_id)
+        Device.__init__(self, "tivo", group_seq, device_seq)
         #
         self.recordings_timestamp = 0
         self.recordings = False
@@ -87,13 +87,13 @@ class device_tivo(Device):
             self.recordings = False
 
     def _accesskey(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, "mak")
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, "mak")
 
     def _pin(self):
-        return get_cfg_device_detail(self._group_id, self._device_id, "pin")
+        return get_cfg_thing_detail_private(self._group_seq, self._device_seq, "pin")
 
     def _package(self):
-        return get_cfg_device_detail_public(self._group_id, self._device_id, "package")
+        return get_cfg_thing_detail_public(self._group_seq, self._device_seq, "package")
 
     def _getChan(self):
         response = self._send_telnet(self._ipaddress(), self._port(), response=True)

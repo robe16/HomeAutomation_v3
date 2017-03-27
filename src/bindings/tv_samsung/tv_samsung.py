@@ -21,9 +21,9 @@ class object_tv_samsung(Device):
     DENIED_BYTES = [chr(0x64), chr(0x00), chr(0x00), chr(0x00)]
     TIMEOUT_BYTES = [chr(0x65), chr(0x00)]
 
-    def __init__ (self, group_id, device_id):
+    def __init__ (self, group_seq, device_seq):
         #
-        Device.__init__(self, "tv_samsung", group_id, device_id)
+        Device.__init__(self, "tv_samsung", group_seq, device_seq)
 
     def sendCmd(self, request):
         #

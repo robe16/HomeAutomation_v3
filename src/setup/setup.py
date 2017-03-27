@@ -1,11 +1,12 @@
 from config.bindings.config_bindings import get_cfg_bindings_json, write_config_bindings
+from setup_bindings import thing_menu
 
 
 def console_setup():
     while True:
         print("1 - Display current setup summary\n" +
               "2 - Amend structure details\n" +
-              "3 - Amend groups and devices\n" +
+              "3 - Amend groups and Things\n" +
               "e - Exit to main menu\n")
         #
         input_var = raw_input("Type the required option number followed by the return key: ")
@@ -22,7 +23,7 @@ def console_setup():
             elif input_var=='2':
                 structure_menu()
             elif input_var=='3':
-                pass
+                thing_menu()
             #
             print("\n****************************************************************\n")
             #
