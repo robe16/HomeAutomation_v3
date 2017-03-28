@@ -23,7 +23,9 @@
             "sequence": 2,
             "type": "weather",
             "name": "",
-            "details_private": {},
+            "details_private": {
+              "town": "Brighouse"
+            },
             "details_public": {}
           }
         ]

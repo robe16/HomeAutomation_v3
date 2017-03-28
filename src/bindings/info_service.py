@@ -1,7 +1,8 @@
 class InfoService:
 
-    def __init__(self, type):
-        self._active = True
+    def __init__(self, type, group_seq, device_seq):
+        self._group_seq = group_seq
+        self._device_seq = device_seq
         self._type = type
 
     def getData(self, request):

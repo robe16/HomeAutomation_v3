@@ -1,5 +1,6 @@
 from bindings.info_service import InfoService
 from log.console_messages import print_error
+from config.bindings.config_bindings import get_cfg_thing_detail_private
 import json
 from data_source_metoffice import createForecast
 from data_source_sunrise_sunset_org import createSunriseSet
@@ -7,9 +8,9 @@ from data_source_sunrise_sunset_org import createSunriseSet
 
 class info_metoffice(InfoService):
 
-    def __init__ (self):
+    def __init__ (self, group_seq, device_seq):
         #
-        InfoService.__init__(self, 'weather')
+        InfoService.__init__(self, 'weather', group_seq, device_seq)
 
     def getData(self, request):
         try:
@@ -22,7 +23,8 @@ class info_metoffice(InfoService):
 
     def getForecast(self):
         #
-        forecast = createForecast()
+        town = get_cfg_thing_detail_private(self._group_seq, self._thing_seq, 'town')
+        forecast = createForecast(town)
         #
         lat = forecast['location']['latitude']
         lng = forecast['location']['longitude']

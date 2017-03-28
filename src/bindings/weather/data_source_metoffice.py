@@ -14,6 +14,7 @@ URI_LIST_REGION = 'txt/wxfcs/regionalforecast/{datatype}/sitelist'
 URI_FORECAST_SITE = 'val/wxfcs/all/{datatype}/{locationId}'
 
 LOCATION_id = ''
+LOCATION_town = ''
 LOCATION_elevation = ''
 LOCATION_latitude = ''
 LOCATION_longitude = ''
@@ -43,9 +44,9 @@ def _convertMinsToTime(date, mins_from_midnight):
     return datetime.datetime(date.year, date.month, date.day, 0, 0) + datetime.timedelta(minutes=mins_from_midnight)
 
 
-def createForecast():
+def createForecast(town):
     #
-    getLocation()
+    getLocation(town)
     #
     forecast_daily = getForcast_daily()
     forecast_3hourly = getForcast_3hourly()
@@ -81,7 +82,7 @@ def createForecast():
     units_json['3hourly'] = units_hour_json
     #
     location_json = {}
-    location_json['name'] = get_cfg_structure_town()
+    location_json['name'] = LOCATION_town
     location_json['elevation'] = LOCATION_elevation
     location_json['latitude'] = LOCATION_latitude
     location_json['longitude'] = LOCATION_longitude
@@ -193,7 +194,7 @@ def getForcast(frequency):
                                                         uri=URI_FORECAST_SITE.format(datatype='json',
                                                                                           locationId=LOCATION_id),
                                                         frequency=frequency,
-                                                        key=get_bundle_detail('metoffice', 'app_key'))
+                                                        key=get_binding_detail('metoffice', 'app_key'))
     r = requests.get(url)
     #
     if r.status_code == requests.codes.ok:
@@ -202,12 +203,13 @@ def getForcast(frequency):
         return False
 
 
-def getLocation():
+def getLocation(town):
     locations = getLocations_list()
-    config_town = get_cfg_structure_town()
     #
     for location in locations:
-        if location['name'] == config_town:
+        if location['name'] == town:
+            global LOCATION_town
+            LOCATION_town = town
             global LOCATION_id
             LOCATION_id = location['id']
             global LOCATION_elevation
@@ -225,7 +227,7 @@ def getLocation():
 def getLocations_list():
     url = '{url}{uri}?key={key}'.format(url=BASE_URL,
                                         uri=URI_LIST_SITE.format(datatype='json'),
-                                        key=get_bundle_detail('metoffice', 'app_key'))
+                                        key=get_binding_detail('metoffice', 'app_key'))
     r = requests.get(url)
     #
     if r.status_code == requests.codes.ok:
@@ -247,7 +249,7 @@ def getRegion():
 def getRegions_list():
     url = '{url}{uri}?key={key}'.format(url=BASE_URL,
                                         uri=URI_LIST_REGION.format(datatype='json'),
-                                        key=get_bundle_detail('metoffice', 'app_key'))
+                                        key=get_binding_detail('metoffice', 'app_key'))
     r = requests.get(url)
     #
     if r.status_code == requests.codes.ok:

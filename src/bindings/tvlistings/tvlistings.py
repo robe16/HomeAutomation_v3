@@ -14,9 +14,9 @@ class info_tvlistings(InfoService):
 
     _listings = Manager().dict()
 
-    def __init__ (self):
+    def __init__ (self, group_seq, device_seq):
         #
-        InfoService.__init__(self, 'tvlistings')
+        InfoService.__init__(self, 'tvlistings', group_seq, device_seq)
         #
         Process(target=self._listings_process).start()
 

@@ -45,16 +45,16 @@ def create_bindings(_things):
 def _create_thing(thing_type, group_seq, thing_seq):
     #
     if thing_type=='tv_lg_netcast':
-        return device_tv_lg_netcast(group_seq=group_seq, device_seq=thing_seq)
+        return device_tv_lg_netcast(group_seq, thing_seq)
     elif thing_type=='tivo':
-        return device_tivo(group_seq=group_seq, device_seq=thing_seq)
+        return device_tivo(group_seq, thing_seq)
     elif thing_type=='nest_account':
-        return account_nest(group_seq=group_seq, device_seq=thing_seq)
+        return account_nest(group_seq, thing_seq)
     elif thing_type=='weather':
-        return info_metoffice()
+        return info_metoffice(group_seq, thing_seq)
     elif thing_type=='tvlistings':
-        return info_tvlistings()
+        return info_tvlistings(group_seq, thing_seq)
     elif thing_type=='news':
-        return info_news()
+        return info_news(group_seq, thing_seq)
     else:
         return False
