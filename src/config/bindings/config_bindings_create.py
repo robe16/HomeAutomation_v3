@@ -6,25 +6,22 @@ from bindings.weather.weather import info_metoffice
 from bindings.tvlistings.tvlistings import info_tvlistings
 
 from config.bindings.config_bindings import get_cfg_bindings_json
-from config.bindings.config_bindings import get_cfg_thing_type
 from log.console_messages import print_msg, print_error
 
 
-def create_bindings(_things):
+def create_bindings(_things, _infoservices):
     #
     data = get_cfg_bindings_json()
     #
-    group_seq = 0
     for group in data['bindings']['groups']:
         #
-        _things[group_seq] = {}
+        _things[group['sequence']] = {}
         group_things = {}
         #
-        thing_seq = 0
         for thing in group['things']:
             #
             try:
-                group_things[thing_seq] = _create_thing(thing['type'], group_seq, thing_seq)
+                group_things[thing['sequence']] = _create_thing(thing['type'], group['sequence'], thing['sequence'])
                 print_msg('Thing created: {type}: {group}:{thing}'.format(type=thing['type'],
                                                                            group=group['name'],
                                                                            thing=thing['name']))
@@ -33,13 +30,22 @@ def create_bindings(_things):
                                                                                     group=group['name'],
                                                                                     thing=thing['name']))
             #
-            thing_seq += 1
         #
-        _things[group_seq] = group_things
+        _things[group['sequence']] = group_things
         #
-        group_seq += 1
     #
-    print_msg('All devices and infoservice instances created')
+    for info in data['bindings']['info_services']:
+        #
+        try:
+            _infoservices[info['sequence']] = _create_info(info['type'], info['sequence'])
+            print_msg('Info_service created: {type}: {info}'.format(type=info['type'],
+                                                                    info=info['name']))
+        except Exception as e:
+            print_error('Coud not create Info_service: {type}: {info}'.format(type=info['type'],
+                                                                              info=info['name']))
+        #
+    #
+    print_msg('All instances of Things and Info_services created')
 
 
 def _create_thing(thing_type, group_seq, thing_seq):
@@ -50,11 +56,17 @@ def _create_thing(thing_type, group_seq, thing_seq):
         return device_tivo(group_seq, thing_seq)
     elif thing_type=='nest_account':
         return account_nest(group_seq, thing_seq)
-    elif thing_type=='weather':
-        return info_metoffice(group_seq, thing_seq)
+    else:
+        return False
+
+
+def _create_info(thing_type, info_seq):
+    #
+    if thing_type=='weather':
+        return info_metoffice(info_seq)
     elif thing_type=='tvlistings':
-        return info_tvlistings(group_seq, thing_seq)
+        return info_tvlistings(info_seq)
     elif thing_type=='news':
-        return info_news(group_seq, thing_seq)
+        return info_news(info_seq)
     else:
         return False

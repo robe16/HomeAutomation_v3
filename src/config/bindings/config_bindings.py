@@ -49,64 +49,21 @@ def get_cfg_count_things(group_seq):
     #
     return False
 
-# ################################################################################################
-# # Return list of group and device ids
-# ################################################################################################
-#
-#
-# def get_cfg_idlist_groups():
-#     #
-#     data = get_cfg_bindings_json()
-#     #
-#     r_list = []
-#     #
-#     for key, value in data['bindings']['groups'].iteritems():
-#         r_list.append(key)
-#     #
-#     return r_list
-#
-#
-# def get_cfg_idlist_devices(group_id):
-#     #
-#     data = get_cfg_bindings_json()
-#     #
-#     d_list = []
-#     #
-#     for key, value in data['bindings']['groups'][group_id]['devices'].iteritems():
-#         d_list.append(key)
-#     #
-#     return d_list
 
-# ################################################################################################
-# # Return number/index for group and device
-# ################################################################################################
-#
-# #TODO
-# def get_cfg_group_seq(group_name):
-#     #
-#     data = get_cfg_bindings_json()
-#     count = 0
-#     #
-#     for key, value in data['bindings']['groups'].iteritems():
-#         if key == group_id:
-#             return count
-#         count += 1
-#     #
-#     return -1
-#
-#
-# #TODO
-# def get_cfg_thing_seq(group_name, thing_name):
-#     #
-#     data = get_cfg_bindings_json()
-#     count = 0
-#     #
-#     for key, value in data['bindings']['groups'][group_id]['devices'].iteritems():
-#         if key == device_id:
-#             return count
-#         count += 1
-#     #
-#     return -1
+def get_cfg_count_info():
+    #
+    data = get_cfg_bindings_json()
+    #
+    return len(data['bindings']['info_services'])
+
+
+
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# STRUCTURE
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+
 
 ################################################################################################
 # Return structure properties
@@ -120,6 +77,43 @@ def get_cfg_structure_postcode():
 def get_cfg_structure_town():
     #
     return get_cfg_structure_value('structure_town')
+
+
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# THINGS
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+
+
+################################################################################################
+# Return sequence for group and Thing from name
+################################################################################################
+
+
+def get_cfg_group_seq(group_name):
+    #
+    data = get_cfg_bindings_json()
+    #
+    for group in data['bindings']['groups']:
+        if group['name'] == group_name:
+            return group['sequence']
+    #
+    raise Exception
+
+
+def get_cfg_thing_seq(group_name, thing_name):
+    #
+    data = get_cfg_bindings_json()
+    #
+    for group in data['bindings']['groups']:
+        if group['name'] == group_name:
+            for thing in group['things']:
+                if thing['name'] == thing_name:
+                    return thing['sequence']
+    #
+    raise Exception
+
 
 ################################################################################################
 # Return name of group and Thing
@@ -137,12 +131,11 @@ def get_cfg_thing_name(group_seq, thing_seq):
 # Return type of Thing
 ################################################################################################
 
-
 def get_cfg_thing_type(group_seq, thing_seq):
     return get_cfg_thing_value(group_seq, thing_seq, 'type')
 
 ################################################################################################
-# Return private/public detail value of device
+# Return private/public detail value of Thing
 ################################################################################################
 
 
@@ -177,23 +170,105 @@ def set_cfg_thing_detail(group_seq, thing_seq, privpub, detail, value):
     #
     data = get_cfg_bindings_json()
     #
-    g = 0
     for group in data['bindings']['groups']:
         if group['sequence'] == group_seq:
             #
-            t = 0
             for thing in group['things']:
                 if thing['sequence'] == thing_seq:
                     #
-                    data['bindings']['groups'][g]['devices'][t][privpub][detail] = value
+                    thing[privpub][detail] = value
                     return write_config_bindings(data)
-                t += 1
-        g += 1
     #
     raise Exception('Requested thing not found in config file')
 
+
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# INFO_SERVICE
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+
+
 ################################################################################################
-# Return value for structure, group and Thing
+# Return sequence for info_service from name
+################################################################################################
+
+
+def get_cfg_info_seq(info_name):
+    #
+    data = get_cfg_bindings_json()
+    #
+    for info in data['bindings']['info_services']:
+        if info['name'] == info_name:
+            return info['sequence']
+    #
+    raise Exception
+
+
+################################################################################################
+# Return name and type of info_service
+################################################################################################
+
+
+def get_cfg_info_name(info_seq):
+    return get_cfg_info_value(info_seq, 'name')
+
+def get_cfg_info_type(info_seq):
+    return get_cfg_info_value(info_seq, 'type')
+
+################################################################################################
+# Return private/public detail info_service of info_service
+################################################################################################
+
+
+def get_cfg_info_detail_private(info_seq, detail):
+    return get_cfg_info_detail(info_seq, 'details_private', detail)
+
+
+def get_cfg_info_detail_public(info_seq, detail):
+    return get_cfg_info_detail(info_seq, 'details_public', detail)
+
+
+def get_cfg_info_detail(info_seq, privpub, detail):
+    #
+    details = get_cfg_info_value(info_seq, privpub)
+    #
+    return details[detail]
+
+################################################################################################
+# Save private/public detail value of info_service
+################################################################################################
+
+
+def set_cfg_info_detail_private(info_seq, detail, value):
+    return set_cfg_info_detail(info_seq, 'details_private', detail, value)
+
+
+def set_cfg_info_detail_public(info_seq, detail, value):
+    return set_cfg_info_detail(info_seq, 'details_public', detail, value)
+
+
+def set_cfg_info_detail(info_seq, privpub, detail, value):
+    #
+    data = get_cfg_bindings_json()
+    #
+    for info in data['bindings']['info_services']:
+        if info['sequence'] == info_seq:
+            #
+            info[privpub][detail] = value
+            return write_config_bindings(data)
+    #
+    raise Exception('Requested thing not found in config file')
+
+
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------
+
+
+################################################################################################
+# Return value for structure, group, Thing and info_service
 # (used as 'master' code for returning name, type, details etc. in above defs)
 ################################################################################################
 
@@ -227,6 +302,17 @@ def get_cfg_thing_value(group_seq, thing_seq, key):
                     return thing[key]
     #
     raise Exception('Requested thing not found in config file')
+
+
+def get_cfg_info_value(info_seq, key):
+    #
+    data = get_cfg_bindings_json()
+    #
+    for info in data['bindings']['info_services']:
+        if info['sequence'] == info_seq:
+            return info[key]
+    #
+    raise Exception('Requested info_service not found in config file')
 
 ################################################################################################
 ################################################################################################

@@ -3,28 +3,18 @@
     "groups": [
       {
         "sequence": 0,
-        "name": "Info Services",
+        "name": "Nest",
         "things": [
           {
             "sequence": 0,
-            "type": "news",
-            "name": "",
-            "details_private": {},
-            "details_public": {}
-          },
-          {
-            "sequence": 1,
-            "type": "tvlistings",
-            "name": "",
-            "details_private": {},
-            "details_public": {}
-          },
-          {
-            "sequence": 2,
-            "type": "weather",
-            "name": "",
+            "type": "nest_account",
+            "name": "Nest",
             "details_private": {
-              "town": "Brighouse"
+              "tokenexpiry": "24/01/2027 22:21:19",
+              "token": "c.f7lcKL6sDT7QWI2wrG1TQpF0mw3x1nksDXZBEgCcyxSnUdJG01eSxx9Y55fsRTo3kk0rjX7rZ5FGQXAQ07YGnp4w8r2A31RDvDQpvWYErbwFWnI3LpgLRR79hw2OYHj4yvvKorWYmgr7m0NA",
+              "state": "STATE",
+              "redirect_url": "https://firebase-apiserver13-tah01-iad01.dapi.production.nest.com:9553/",
+              "pincode": "7YW6WH42"
             },
             "details_public": {}
           }
@@ -61,25 +51,32 @@
             }
           }
         ]
+      }
+    ],
+    "info_services":
+    [
+      {
+        "sequence": 0,
+        "type": "news",
+        "name": "News",
+        "details_private": {},
+        "details_public": {}
+      },
+      {
+        "sequence": 1,
+        "type": "tvlistings",
+        "name": "TV Listings",
+        "details_private": {},
+        "details_public": {}
       },
       {
         "sequence": 2,
-        "name": "Nest",
-        "things": [
-          {
-            "sequence": 0,
-            "type": "nest_account",
-            "name": "Nest",
-            "details_private": {
-              "tokenexpiry": "24/01/2027 22:21:19",
-              "token": "c.f7lcKL6sDT7QWI2wrG1TQpF0mw3x1nksDXZBEgCcyxSnUdJG01eSxx9Y55fsRTo3kk0rjX7rZ5FGQXAQ07YGnp4w8r2A31RDvDQpvWYErbwFWnI3LpgLRR79hw2OYHj4yvvKorWYmgr7m0NA",
-              "state": "STATE",
-              "redirect_url": "https://firebase-apiserver13-tah01-iad01.dapi.production.nest.com:9553/",
-              "pincode": "7YW6WH42"
-            },
-            "details_public": {}
-          }
-        ]
+        "type": "weather",
+        "name": "Weather",
+        "details_private": {},
+        "details_public": {
+          "town": "Brighouse"
+        }
       }
     ]
   },

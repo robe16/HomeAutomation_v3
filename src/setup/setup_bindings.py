@@ -215,13 +215,14 @@ def add_thing(data, group_seq):
         for group in data['bindings']['groups']:
             if group['sequence'] == group_seq:
                 #
-                options = {"1": "[Info Service] News",
-                           "2": "[Info Service] Weather",
-                           "3": "[Info Service] TV Listings",
-                           "4": "[Device] LG TV (Netcast)",
-                           "5": "[Device] Virgin Media (TiVo)",
-                           "6": "[Account] iCloud",
-                           "7": "[Account] Nest"}
+                # "1": "[Info Service] News",
+                # "2": "[Info Service] Weather",
+                # "3": "[Info Service] TV Listings",
+                #
+                options = {"1": "[Device] LG TV (Netcast)",
+                           "2": "[Device] Virgin Media (TiVo)",
+                           "3": "[Account] iCloud",
+                           "4": "[Account] Nest"}
                 #
                 for k,v in options:
                     print("{key} - {desc}".format(key=k, desc=v))
@@ -245,14 +246,8 @@ def add_thing(data, group_seq):
                         elif input_var == 2:
                             pass
                         elif input_var == 3:
-                            pass
-                        elif input_var == 4:
-                            pass
-                        elif input_var == 5:
-                            pass
-                        elif input_var == 6:
                             new_acc = setup_icloud()
-                        elif input_var == 7:
+                        elif input_var == 4:
                             new_acc = setup_nest()
                         #
                         if new_acc:
@@ -299,8 +294,8 @@ def delete_thing(data, group_seq):
                     if thing['sequence'] == thing_seq:
                         #
                         print("  \_ {seq}: {name} ({type})".format(seq=thing['sequence'],
-                                                                  name=thing['name'],
-                                                                  type=thing['type']))
+                                                                   name=thing['name'],
+                                                                   type=thing['type']))
                         #
                         input_response = raw_input("Are you sure you want to delete this Thing (this action cannot be undone): (y/n) ")
                         print("\n****************************************************************\n")
@@ -400,4 +395,13 @@ def _print_groups(data):
 
 def _print_things(group):
     for thing in group['things']:
-        print("  \_ {seq}: {name}".format(seq=thing['sequence'], name=thing['name']))
+        print("  \_ {seq}: {name} ({type})".format(seq=thing['sequence'],
+                                                   name=thing['name'],
+                                                   type=thing['type']))
+
+
+def _print_infoservices(data):
+    for info in data['bindings']['info_services']:
+        print("\_ {seq}: {name} ({type})".format(seq=info['sequence'],
+                                                 name=info['name'],
+                                                 type=info['type']))

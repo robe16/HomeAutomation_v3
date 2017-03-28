@@ -7,9 +7,9 @@ CONFIG_LIST_SOURCES = []
 
 class info_news(InfoService):
 
-    def __init__ (self, group_seq, device_seq):
+    def __init__ (self, info_seq):
         #
-        InfoService.__init__(self, 'news', group_seq, device_seq)
+        InfoService.__init__(self, 'news', info_seq)
 
     def getData(self, request):
         try:

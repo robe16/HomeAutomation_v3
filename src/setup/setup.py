@@ -4,30 +4,42 @@ from setup_bindings import thing_menu
 
 def console_setup():
     while True:
-        print("1 - Display current setup summary\n" +
-              "2 - Amend structure details\n" +
-              "3 - Amend groups and Things\n" +
-              "e - Exit to main menu\n")
+        #
+        options = {"1": "Display current setup summary",
+                   "2": "Amend structure details",
+                   "3": "Amend groups and Things",
+                   "4": "Amend Info Services"}
+        #
+        for k,v in options:
+            print("{key} - {desc}".format(key=k, desc=v))
+        print("e - Exit to previous menu\n")
         #
         input_var = raw_input("Type the required option number followed by the return key: ")
         print("\n****************************************************************\n")
         #
         if input_var == 'e':
-            #
             return
+        #
+        try:
+            input_var = int(input_var)
             #
-        if input_var == '1' or input_var == '2' or input_var == '3':
+            if 0 < input_var <= len(options):
+                #
+                if input_var == 1:
+                    print_current_setup()
+                elif input_var == 2:
+                    structure_menu()
+                elif input_var == 3:
+                    thing_menu()
+                elif input_var == 4:
+                    pass
+                #
+                print("\n****************************************************************\n")
+                #
+            else:
+                raise Exception
             #
-            if input_var=='1':
-                print_current_setup()
-            elif input_var=='2':
-                structure_menu()
-            elif input_var=='3':
-                thing_menu()
-            #
-            print("\n****************************************************************\n")
-            #
-        else:
+        except Exception as e:
             #
             print("Invalid entry, please try again!!")
             print("\n****************************************************************\n")
@@ -44,35 +56,44 @@ def structure_menu():
         print(' + Town: {town}'.format(town=data['structure']['structure_town']))
         print('')
         #
-        print("1 - Amend name\n" +
-              "2 - Amend postcode\n" +
-              "3 - Amend town (must be as per metoffice town names)\n" +
-              "e - Exit to previous menu\n")
+        options = {"1": "Amend name",
+                   "2": "Amend postcode",
+                   "3": "Amend town"}
+        #
+        for k,v in options:
+            print("{key} - {desc}".format(key=k, desc=v))
+        print("e - Exit to previous menu\n")
         #
         input_var = raw_input("Type the required option number followed by the return key: ")
         print("\n****************************************************************\n")
         #
         if input_var == 'e':
             return
-        elif input_var == '1' or input_var == '2' or input_var == '3':
+        #
+        try:
+            input_var = int(input_var)
             #
-            if input_var == '1':
-                new_val = raw_input("Enter new value for Structure Name")
-                data['structure']['structure_name'] = new_val
-                data['structure']['structure_id'] = new_val.lower().replace(' ', '')
-            elif input_var == '2':
-                raw_input("Enter new value for Structure Postcode")
-                data['structure']['structure_postcode'] = new_val
-            elif input_var == '3':
-                #TODO: get list of towns from metoffice and display as numbered list to select from
-                raw_input("Enter new value for Structure Town")
-                data['structure']['structure_town'] = new_val
+            if 0 < input_var <= len(options):
+                #
+                if input_var == 1:
+                    new_val = raw_input("Enter new value for Structure Name")
+                    data['structure']['structure_name'] = new_val
+                    data['structure']['structure_id'] = new_val.lower().replace(' ', '')
+                elif input_var == 2:
+                    new_val = raw_input("Enter new value for Structure Postcode")
+                    data['structure']['structure_postcode'] = new_val
+                elif input_var == 3:
+                    new_val = raw_input("Enter new value for Structure Town")
+                    data['structure']['structure_town'] = new_val
+                #
+                write_config_bindings(data)
+                print("\nThe amendment has been saved to the configuration file")
+                print("\n****************************************************************\n")
+                #
+            else:
+                raise Exception
             #
-            write_config_bindings(data)
-            print("\nThe amendment has been saved to the configuration file")
-            print("\n****************************************************************\n")
-            #
-        else:
+        except Exception as e:
             #
             print("Invalid entry, please try again!!")
             print("\n****************************************************************\n")
@@ -87,9 +108,18 @@ def print_current_setup():
     print(' + Location: {town}, {postcode}'.format(town=data['structure']['structure_town'],
                                                    postcode=data['structure']['structure_postcode']))
     #
-    print('Groups & devices:')
-    for r_key, r_value in data['groups'].iteritems():
-        print('\_ {room_name}:'.format(room_name=data['groups'][r_key]['room_name']))
-        for d_key, d_value in data['groups'][r_key]['devices'].iteritems():
-            print('  \_ {device_name} ({device_type})'.format(device_name=data['groups'][r_key]['devices'][d_key]['device_name'],
-                                                              device_type=data['groups'][r_key]['devices'][d_key]['device_type']))
+    print('Groups & Things:')
+    for group in data['bindings']['groups']:
+        print("\_ {seq}: {name}".format(seq=group['sequence'], name=group['name']))
+        for thing in group['things']:
+            print("  \_ {seq}: {name} ({type})".format(seq=thing['sequence'],
+                                                       name=thing['name'],
+                                                       type=thing['type']))
+    #
+    print('Info_Services:')
+    for info in data['bindings']['groups']:
+        print("\_ {seq}: {name} ({type})".format(seq=info['sequence'],
+                                                 name=info['name'],
+                                                 type=info['type']))
+    #
+    print("\n****************************************************************\n")

@@ -5,18 +5,23 @@ from bottle import request, run, static_file, HTTPResponse, redirect, response
 import cfg
 from log.console_messages import print_error
 from config.users.config_users import check_user, update_user_channels
+from config.bindings.config_bindings import get_cfg_group_seq, get_cfg_thing_seq, get_cfg_info_seq
 
 
 ################################################################################################
 
 devices = {}
+infoservices = {}
+
 
 ################################################################################################
 
-def start_bottle(_devices):
+def start_bottle(_devices, _infoservices):
     #
     global devices
     devices = _devices
+    global infoservices
+    infoservices= _infoservices
     #
     run_bottle()
 
@@ -102,59 +107,70 @@ def user_checkpin():
 # Handle requests for resource data
 ################################################################################################
 
-# @get('/data/info/<service>/<resource_requested>')
-# def get_data_infoservice(service=False, resource_requested=False):
-#     #
-#     global infoservices
-#     #
-#     try:
-#         #
-#         if (not service) or (not resource_requested):
-#             raise HTTPError(404)
-#         #
-#         data_dict = {'data': resource_requested}
-#         #
-#         if len(request.query.decode()) > 0:
-#             data_dict.update(request.query.decode())
-#         #
-#         #
-#         rsp = infoservices[service].getData(data_dict)
-#         #
-#         response = HTTPResponse()
-#         enable_cors(response)
-#         #
-#         if isinstance(rsp, bool):
-#             if rsp:
-#                 response.status = 200
-#             else:
-#                 response.status=400
-#         else:
-#             if bool(rsp):
-#                 response.body=str(rsp)
-#                 response.status=200
-#             else:
-#                 response.status=400
-#         #
-#         return response
-#         #
-#     except Exception as e:
-#         print_error('{error}'.format(error=e))
-#         raise HTTPError(500)
+@get('/data/info/<service>/<resource_requested>')
+def get_data_infoservice(service=False, resource_requested=False):
+    #
+    global infoservices
+    #
+    try:
+        #
+        if (not service) or (not resource_requested):
+            raise HTTPError(404)
+        #
+        try:
+            info_seq = get_cfg_info_seq(service)
+        except Exception as e:
+            raise HTTPError(404)
+        #
+        data_dict = {'data': resource_requested}
+        #
+        if len(request.query.decode()) > 0:
+            data_dict.update(request.query.decode())
+        #
+        #
+        rsp = infoservices[info_seq].getData(data_dict)
+        #
+        response = HTTPResponse()
+        enable_cors(response)
+        #
+        if isinstance(rsp, bool):
+            if rsp:
+                response.status = 200
+            else:
+                response.status=400
+        else:
+            if bool(rsp):
+                response.body=str(rsp)
+                response.status=200
+            else:
+                response.status=400
+        #
+        return response
+        #
+    except Exception as e:
+        print_error('{error}'.format(error=e))
+        raise HTTPError(500)
 
 
-@get('/data/<group_id>/<device_id>/<resource_requested>')
-def get_data_device(group_id=False, device_id=False, resource_requested=False):
+@get('/data/<group>/<thing>/<resource_requested>')
+def get_data_device(group=False, thing=False, resource_requested=False):
     #
     global devices
     #
     try:
         #
-        if (not group_id) or (not device_id) or (not resource_requested):
+        if (not group) or (not thing) or (not resource_requested):
+            raise HTTPError(404)
+        #
+        try:
+            group_seq = get_cfg_group_seq(group)
+            thing_seq = get_cfg_thing_seq(group, thing)
+        except Exception as e:
             raise HTTPError(404)
         #
         data_dict = {'data': resource_requested}
         #
-        rsp = devices[group_id][device_id].getData(data_dict)
+        rsp = devices[group_seq][thing_seq].getData(data_dict)
         #
         if isinstance(rsp, bool):
             return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
@@ -170,19 +186,25 @@ def get_data_device(group_id=False, device_id=False, resource_requested=False):
 # Handle commands
 ################################################################################################
 
-@post('/command/<group_id>/<device_id>')
-def send_command_device(group_id=False, device_id=False):
+@post('/command/<group>/<device>')
+def send_command_device(group=False, device=False):
     #
     global devices
     #
     try:
         #
-        if (not group_id) or (not device_id):
+        if (not group) or (not device):
+            raise HTTPError(404)
+        #
+        try:
+            group_seq = get_cfg_group_seq(group)
+            thing_seq = get_cfg_thing_seq(group, device)
+        except Exception as e:
             raise HTTPError(404)
         #
         cmd_dict = request.json
         #
-        rsp = devices[group_id][device_id].sendCmd(cmd_dict)
+        rsp = devices[group_seq][thing_seq].sendCmd(cmd_dict)
         #
         if isinstance(rsp, bool):
             return HTTPResponse(status=200) if rsp else HTTPResponse(status=400)
@@ -200,14 +222,14 @@ def send_command_device(group_id=False, device_id=False):
 
 # TODO
 
-@post('/preferences/<category>')
-def save_preferences(category='-'):
-    if category == 'tvguide':
-        user = request.get_cookie('user')
-        data = request.body
-        if update_user_channels(user, data):
-            return HTTPResponse(status=200)
-    raise HTTPError(404)
+# @post('/preferences/<category>')
+# def save_preferences(category='-'):
+#     if category == 'tvguide':
+#         user = request.get_cookie('user')
+#         data = request.body
+#         if update_user_channels(user, data):
+#             return HTTPResponse(status=200)
+#     raise HTTPError(404)
 
 
 ################################################################################################
