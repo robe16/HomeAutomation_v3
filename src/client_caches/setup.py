@@ -10,7 +10,11 @@ def compile_setup():
     for group in data['bindings']['groups']:
         for thing in group['things']:
             del thing['details_private']
-            thing['logo'] = get_binding_logo(thing['device_type'])
+            thing['logo'] = get_binding_logo(thing['type'])
+    #
+    for info in data['bindings']['info_services']:
+        del info['details_private']
+        info['logo'] = get_binding_logo(info['type'])
     #
     try:
         return ast.literal_eval(data)

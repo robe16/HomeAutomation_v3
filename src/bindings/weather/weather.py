@@ -1,6 +1,6 @@
 from bindings.info_service import InfoService
 from log.console_messages import print_error
-from config.bindings.config_bindings import get_cfg_info_detail_private
+from config.bindings.config_bindings import get_cfg_info_detail_public
 import json
 from data_source_metoffice import createForecast
 from data_source_sunrise_sunset_org import createSunriseSet
@@ -23,7 +23,7 @@ class info_metoffice(InfoService):
 
     def getForecast(self):
         #
-        town = get_cfg_info_detail_private(self._info_seq, 'town')
+        town = get_cfg_info_detail_public(self._info_seq, 'town')
         forecast = createForecast(town)
         #
         lat = forecast['location']['latitude']

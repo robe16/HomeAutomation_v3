@@ -186,19 +186,19 @@ def get_data_device(group=False, thing=False, resource_requested=False):
 # Handle commands
 ################################################################################################
 
-@post('/command/<group>/<device>')
-def send_command_device(group=False, device=False):
+@post('/command/<group>/<thing>')
+def send_command_device(group=False, thing=False):
     #
     global devices
     #
     try:
         #
-        if (not group) or (not device):
+        if (not group) or (not thing):
             raise HTTPError(404)
         #
         try:
             group_seq = get_cfg_group_seq(group)
-            thing_seq = get_cfg_thing_seq(group, device)
+            thing_seq = get_cfg_thing_seq(group, thing)
         except Exception as e:
             raise HTTPError(404)
         #

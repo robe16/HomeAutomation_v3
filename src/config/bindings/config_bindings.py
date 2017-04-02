@@ -28,7 +28,7 @@ def get_cfg_bindings_json():
         return json.load(data_file)
 
 ################################################################################################
-# Return count of groups and devices
+# Return count of groups, Things and info_services
 ################################################################################################
 
 
@@ -96,7 +96,7 @@ def get_cfg_group_seq(group_name):
     data = get_cfg_bindings_json()
     #
     for group in data['bindings']['groups']:
-        if group['name'] == group_name:
+        if group['name'].lower() == group_name.lower():
             return group['sequence']
     #
     raise Exception
@@ -107,9 +107,9 @@ def get_cfg_thing_seq(group_name, thing_name):
     data = get_cfg_bindings_json()
     #
     for group in data['bindings']['groups']:
-        if group['name'] == group_name:
+        if group['name'].lower() == group_name.lower():
             for thing in group['things']:
-                if thing['name'] == thing_name:
+                if thing['name'].lower() == thing_name.lower():
                     return thing['sequence']
     #
     raise Exception
@@ -199,7 +199,7 @@ def get_cfg_info_seq(info_name):
     data = get_cfg_bindings_json()
     #
     for info in data['bindings']['info_services']:
-        if info['name'] == info_name:
+        if info['name'].lower() == info_name.lower():
             return info['sequence']
     #
     raise Exception

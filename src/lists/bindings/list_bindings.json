@@ -36,5 +36,20 @@
     "newsapi": {
         "type": "newsapi",
         "app_key": "38f6deea58cc46559d17624b9495c6e6"
+    },
+    "news": {
+        "name": "News",
+        "logo": "infoservice_news.png",
+        "type": "news"
+    },
+    "tvlistings": {
+        "name": "TV Guide",
+        "logo": "infoservice_tvguide.png",
+        "type": "tvguide"
+    },
+    "weather": {
+        "name": "Weather",
+        "logo": "infoservice_weather.png",
+        "type": "weather"
     }
 }
