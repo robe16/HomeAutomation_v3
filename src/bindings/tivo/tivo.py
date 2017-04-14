@@ -25,7 +25,7 @@ class device_tivo(Device):
     def _check_recordings(self, loop=0):
         if loop > 1:
             return
-        if self.recordings_timestamp == 0 or self.recordings_timestamp > (datetime.datetime.now() + datetime.timedelta(minutes = 10)):
+        if self.recordings_timestamp == 0 or datetime.datetime.now() > (self.recordings_timestamp + datetime.timedelta(minutes=10)):
             self.get_recordings()
             loop += 1
             self._check_recordings(loop=loop)
