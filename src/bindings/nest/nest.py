@@ -13,7 +13,8 @@ from cfg import date_format
 
 class account_nest(Device):
 
-    # Static variable used as part of using Nest's APIs
+    nestSession = requests.Session()
+
     nesturl_api = 'https://developer-api.nest.com/'
     #
     _temp_unit = 'c'
@@ -23,6 +24,14 @@ class account_nest(Device):
         Device.__init__(self, 'nest_account', group_seq, device_seq)
         #
         self._tokencheck()
+        self.createSession()
+
+    def createSession(self):
+        with requests.Session() as s:
+            s.headers.update({'Authorization': self._header_token(),
+                              'Connection': 'close',
+                              'content-type': 'application/json'})
+        self.nestSession = s
 
     def _dvc_name(self):
         return 'Nest'
@@ -151,13 +160,7 @@ class account_nest(Device):
 
     def _read_nest_json(self, model=''):
         #
-        headers = {'Authorization': self._header_token(),
-                   'Connection': 'close',
-                   'content-type': 'application/json'}
-        #
-        r = requests.get(self._get_url() + model,
-                         data='',
-                         headers=headers)
+        r = self.nestSession.get(self._get_url() + model)
         #
         if len(r.history) > 0:
             if r.history[0].is_redirect:
@@ -175,13 +178,8 @@ class account_nest(Device):
         #
         url2 = '{model}/{device}/{id}'.format(model=model, device=device, id=id)
         #
-        headers = {'Authorization': self._header_token(),
-                   'Connection': 'close',
-                   'content-type': 'application/json'}
-        #
-        r = requests.put(self._get_url() + url2,
-                         data=json.dumps(json_cmd),
-                         headers=headers)
+        r = self.nestSession.put(self._get_url() + url2,
+                         data=json.dumps(json_cmd))
         #
         if len(r.history) > 0:
             if r.history[0].is_redirect:
