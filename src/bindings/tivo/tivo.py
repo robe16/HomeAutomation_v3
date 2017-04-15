@@ -14,13 +14,23 @@ from log.console_messages import print_command, print_error, print_msg
 
 class device_tivo(Device):
 
+    tivoSession = requests.Session()
+
     def __init__(self, group_seq, device_seq):
         #
         Device.__init__(self, "tivo", group_seq, device_seq)
         #
+        self.createSession()
+        #
         self.recordings_timestamp = 0
         self.recordings = False
         self.get_recordings()
+
+    def createSession(self):
+        with requests.Session() as s:
+            s.auth = HTTPDigestAuth('tivo', self._accesskey())
+            s.verify = False
+        self.tivoSession = s
 
     def _check_recordings(self, loop=0):
         if loop > 1:
@@ -282,9 +292,7 @@ class device_tivo(Device):
 
     def _retrieve_recordings(self, recurse, itemCount=''):
         try:
-            r = requests.get('https://{ipaddress}/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse={recurse}{itemCount}'.format(ipaddress=self._ipaddress(), recurse=recurse, itemCount=itemCount),
-                             auth=HTTPDigestAuth('tivo', self._accesskey()),
-                             verify=False)
+            r = self.tivoSession.get('https://{ipaddress}/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse={recurse}{itemCount}'.format(ipaddress=self._ipaddress(), recurse=recurse, itemCount=itemCount))
             print_command('retrieve listings (recurse={recurse})'.format(recurse=recurse),
                           self.dvc_id(),
                           self._type,
