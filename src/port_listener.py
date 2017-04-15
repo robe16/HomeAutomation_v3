@@ -4,7 +4,6 @@ from bottle import error, HTTPError
 from bottle import request, run, static_file, HTTPResponse, redirect, response
 import cfg
 from log.console_messages import print_error
-from config.users.config_users import check_user, update_user_channels
 from config.bindings.config_bindings import get_cfg_group_seq, get_cfg_thing_seq, get_cfg_info_seq
 
 
@@ -12,7 +11,6 @@ from config.bindings.config_bindings import get_cfg_group_seq, get_cfg_thing_seq
 
 devices = {}
 infoservices = {}
-
 
 ################################################################################################
 
@@ -220,7 +218,7 @@ def send_command_device(group=False, thing=False):
 # Update user preferences
 ################################################################################################
 
-# TODO
+# TODO - to allow submission of user's preferences for things like TV channel favourites
 
 # @post('/preferences/<category>')
 # def save_preferences(category='-'):
