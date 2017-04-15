@@ -13,6 +13,8 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class device_tv_lg_netcast(Device):
 
+    lgtvSession = requests.Session()
+
     STRtv_PATHpair = '/udap/api/pairing'
     STRtv_PATHcommand = '/udap/api/command'
     STRtv_PATHevent = '/udap/api/event'
@@ -24,17 +26,21 @@ class device_tv_lg_netcast(Device):
         #
         Device.__init__(self, 'tv_lg_netcast', group_seq, device_seq)
         #
-        self.is_paired = False
-        # self._pairDevice()
+        self.createSession()
         #
+        self.is_paired = False
         self.apps_timestamp = False
-        # self.apps_json = False
-        # self._get_apps()
         Process(target=self._start_instance).start()
 
     def _start_instance(self):
         self._pairDevice()
         self._get_apps()
+
+    def createSession(self):
+        with requests.Session() as s:
+            s.headers.update({'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
+                              'content-type': 'text/xml; charset=utf-8'})
+        self.lgtvSession = s
 
     def _pairingkey(self):
         return get_cfg_thing_detail_private(self._group_seq, self._device_seq, "pairingkey")
@@ -46,15 +52,10 @@ class device_tv_lg_netcast(Device):
             command += '\' - \'{pair_reason}'.format(pair_reason=pair_reason)
         #
         STRxml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><envelope><api type=\"pairing\"><name>hello</name><value>{}</value><port>{}</port></api></envelope>".format(self._pairingkey(), str(self._port()))
-        headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
-                   'content-type': 'text/xml; charset=utf-8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=str(self.STRtv_PATHpair))
         #
         try:
-            r = requests.post(url,
-                              STRxml,
-                              headers=headers,
-                              timeout=2)
+            r = self.lgtvSession.post(url, STRxml, timeout=2)
             print_command(command,
                           self.dvc_id(),
                           self._type,
@@ -95,14 +96,9 @@ class device_tv_lg_netcast(Device):
     def showPairingkey(self):
         #
         STRxml = '<?xml version="1.0" encoding="utf-8"?><envelope><api type="pairing"><name>showKey</name></api></envelope>'
-        headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
-                   'content-type': 'text/xml; charset=utf-8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=str(self.STRtv_PATHpair))
         #
-        r = requests.post(url,
-                          STRxml,
-                          headers=headers,
-                          timeout=2)
+        r = self.lgtvSession.post(url, STRxml, timeout=2)
         print_command('showPairingkey',
                       self.dvc_id(),
                       self._type,
@@ -140,10 +136,9 @@ class device_tv_lg_netcast(Device):
             uri = '/udap/api/data?target=applist_get&type={type}&index={index}&number={number}'.format(type=str(APPtype),
                                                                                                        index=str(APPindex),
                                                                                                        number=str(APPnumber))
-            headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
             url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=uri)
             #
-            r = requests.get(url, headers=headers, timeout=2)
+            r = self.lgtvSession.get(url, timeout=2)
             #
             print_command('getApplist',
                           self.dvc_id(),
@@ -155,7 +150,7 @@ class device_tv_lg_netcast(Device):
                 self.is_paired = False
                 if not self._check_paired(pair_reason='getApplist'):
                     return False
-                r = requests.post(url, headers=headers, timeout=2)
+                r = self.lgtvSession.post(url, timeout=2)
                 print_command('getApplist',
                               self.dvc_id(),
                               self._type,
@@ -220,10 +215,9 @@ class device_tv_lg_netcast(Device):
         # name = App name
         uri = '/udap/api/data?target=appicon_get&auid={auid}&appname={appname}'.format(auid = auid,
                                                                                        appname = name)
-        headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8'}
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=uri)
         #
-        r = requests.get(url, headers=headers, timeout=2)
+        r = self.lgtvSession.get(url, timeout=2)
         print_command('getAppicon',
                       self.dvc_id(),
                       self._type,
@@ -234,7 +228,7 @@ class device_tv_lg_netcast(Device):
             self.is_paired = False
             if not self._check_paired(pair_reason='getAppicon'):
                 return False
-            r = requests.post(url, headers=headers, timeout=2)
+            r = self.lgtvSession.post(url, timeout=2)
             print_command('getAppicon',
                           self.dvc_id(),
                           self._type,
@@ -283,8 +277,6 @@ class device_tv_lg_netcast(Device):
                               '</api>' +
                               '</envelope>').format(auid = request['auid'],
                                                     app_name = request['name'].replace(' ','%20'))
-                    headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
-                               'content-type': 'text/xml; charset=utf-8'}
                     cmd = request['command']
                 else:
                     code = self.commands[request['command']]
@@ -295,17 +287,12 @@ class device_tv_lg_netcast(Device):
                               '<value>{value}</value>' +
                               '</api>' +
                               '</envelope>').format(value=code)
-                    headers = {'User-Agent': 'Linux/2.6.18 UDAP/2.0 CentOS/5.8',
-                               'content-type': 'text/xml; charset=utf-8'}
                     cmd = request['command']
                 #
                 url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(),
                                                               port=str(self._port()),
                                                               uri=str(self.STRtv_PATHcommand))
-                r = requests.post(url,
-                                  STRxml,
-                                  headers=headers,
-                                  timeout=2)
+                r = self.lgtvSession.post(url, STRxml, timeout=2)
                 print_command('command',
                               self.dvc_id(),
                               self._type,
@@ -316,10 +303,7 @@ class device_tv_lg_netcast(Device):
                     self.is_paired = False
                     if not self._check_paired(pair_reason='command'):
                         return False
-                    r = requests.post(url,
-                                      STRxml,
-                                      headers=headers,
-                                      timeout=2)
+                    r = self.lgtvSession.post(url, STRxml, timeout=2)
                     print_command('command',
                                   self.dvc_id(),
                                   self._type,
