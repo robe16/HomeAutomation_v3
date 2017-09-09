@@ -1,8 +1,7 @@
 import os
-from bottle import Bottle, get, post, hook
-from bottle import error, HTTPError
-from bottle import request, run, static_file, HTTPResponse, redirect, response
-import cfg
+from bottle import get, post
+from bottle import HTTPError
+from bottle import request, run, static_file, HTTPResponse
 from log.console_messages import print_error
 from config.bindings.config_bindings import get_cfg_group_seq, get_cfg_thing_seq, get_cfg_info_seq
 
@@ -14,14 +13,14 @@ infoservices = {}
 
 ################################################################################################
 
-def start_bottle(_devices, _infoservices):
+def start_bottle(_devices, _infoservices, self_port):
     #
     global devices
     devices = _devices
     global infoservices
     infoservices= _infoservices
     #
-    run_bottle()
+    run_bottle(self_port)
 
 ################################################################################################
 # Enable cross domain scripting
@@ -248,5 +247,5 @@ def get_image(category, filename):
 
 ################################################################################################
 
-def run_bottle():
-    run(host='0.0.0.0', port=cfg.port_server, debug=True)
+def run_bottle(self_port):
+    run(host='0.0.0.0', port=self_port, debug=True)

@@ -1,5 +1,3 @@
-port_server = 1600
-
 developer_email = 'robe16@hotmail.co.uk'
 app_name = 'robe16_HomeControl'
 
