@@ -6,8 +6,6 @@ String deployLogin
 String docker_img_name
 def docker_img
 
-// TODO - add config files (users and bindings) to image OR link out to central location that these will be stored
-
 node {
 
     deleteDir()
@@ -20,8 +18,13 @@ node {
         string(defaultValue: '*', description: 'Username for the server the Docker container will be deployed to (used for ssh/scp)', name: 'deploymentUsername')
         string(defaultValue: '1600', description: 'Port number for python application running within container', name: 'portApplication')
         string(defaultValue: '1600', description: 'Port number to map portApplication to', name: 'portMapped')
+        string(defaultValue: '/config/homecontrol/config_bindings.json', description: 'Location of bindings config file on host device', name: 'fileConfigBindings')
+        string(defaultValue: '/config/homecontrol/config_users.json', description: 'Location of user config file on host device', name: 'fileConfigUsers')
         //
         build_args = ["--build-arg portApplication=${params.portApplication}"].join(" ")
+        //
+        docker_volumes = ["-v ${params.fileConfigBindings}:/src/config/bindings/config_bindings.json",
+                          "-v ${params.fileConfigUsers}:/src/config/bindings/config_users.json"].join(" ")
         //
         deployLogin = "${params.deploymentUsername}@${params.deploymentServer}"
         //
@@ -64,7 +67,7 @@ node {
 
         stage("start container"){
             sh "ssh ${deployLogin} \"docker rm -f ${params.appName} && echo \"container ${params.appName} removed\" || echo \"container ${params.appName} does not exist\"\""
-            sh "ssh ${deployLogin} \"docker run -d -p ${params.portMapped}:${params.portApplication} --name ${params.appName} ${docker_img_name_latest}\""
+            sh "ssh ${deployLogin} \"docker run -d ${docker_volumes} -p ${params.portMapped}:${params.portApplication} --name ${params.appName} ${docker_img_name_latest}\""
         }
 
     } else {
