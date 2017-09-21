@@ -18,13 +18,13 @@ node {
         string(defaultValue: '*', description: 'Username for the server the Docker container will be deployed to (used for ssh/scp)', name: 'deploymentUsername')
         string(defaultValue: '1600', description: 'Port number for python application running within container', name: 'portApplication')
         string(defaultValue: '1600', description: 'Port number to map portApplication to', name: 'portMapped')
-        string(defaultValue: '/config/homecontrol/config_bindings.json', description: 'Location of bindings config file on host device', name: 'fileConfigBindings')
-        string(defaultValue: '/config/homecontrol/config_users.json', description: 'Location of user config file on host device', name: 'fileConfigUsers')
+        string(defaultValue: '~/config/homecontrol/config_bindings.json', description: 'Location of bindings config file on host device', name: 'fileConfigBindings')
+        string(defaultValue: '~/config/homecontrol/config_users.json', description: 'Location of user config file on host device', name: 'fileConfigUsers')
         //
         build_args = ["--build-arg portApplication=${params.portApplication}"].join(" ")
         //
-        docker_volumes = ["-v ${params.fileConfigBindings}:/config/bindings/config_bindings.json",
-                          "-v ${params.fileConfigUsers}:/config/bindings/config_users.json"].join(" ")
+        docker_volumes = ["-v ${params.fileConfigBindings}:/HomeControl/server/config/bindings/config_bindings.json",
+                          "-v ${params.fileConfigUsers}:/HomeControl/server/config/bindings/config_users.json"].join(" ")
         //
         deployLogin = "${params.deploymentUsername}@${params.deploymentServer}"
         //
