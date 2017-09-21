@@ -23,8 +23,8 @@ node {
         //
         build_args = ["--build-arg portApplication=${params.portApplication}"].join(" ")
         //
-        docker_volumes = ["-v ${params.fileConfigBindings}:/src/config/bindings/config_bindings.json",
-                          "-v ${params.fileConfigUsers}:/src/config/bindings/config_users.json"].join(" ")
+        docker_volumes = ["-v ${params.fileConfigBindings}:/config/bindings/config_bindings.json",
+                          "-v ${params.fileConfigUsers}:/config/bindings/config_users.json"].join(" ")
         //
         deployLogin = "${params.deploymentUsername}@${params.deploymentServer}"
         //
