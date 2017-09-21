@@ -20,4 +20,4 @@ RUN pip install -r requirements.txt
 
 # Expose the application port and run application
 EXPOSE ${portApplication}
-CMD python src/start.py ${portApplication}
+CMD python /src/start.py ${portApplication}
