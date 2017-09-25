@@ -24,7 +24,7 @@ node {
         build_args = ["--build-arg portApplication=${params.portApplication}"].join(" ")
         //
         docker_volumes = ["-v ${params.fileConfigBindings}:/HomeControl/server/config/bindings/config_bindings.json",
-                          "-v ${params.fileConfigUsers}:/HomeControl/server/config/bindings/config_users.json"].join(" ")
+                          "-v ${params.fileConfigUsers}:/HomeControl/server/config/users/config_users.json"].join(" ")
         //
         deployLogin = "${params.deploymentUsername}@${params.deploymentServer}"
         //
