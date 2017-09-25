@@ -48,7 +48,8 @@ from client_caches.tvchannels import compile_tvchannels
 def cache_setup():
     try:
         return HTTPResponse(body=compile_setup(), status=200)
-    except:
+    except Exception as e:
+        print_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
@@ -56,7 +57,8 @@ def cache_setup():
 def cache_users():
     try:
         return HTTPResponse(body=compile_users(), status=200)
-    except:
+    except Exception as e:
+        print_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
@@ -64,7 +66,8 @@ def cache_users():
 def cache_tvchannels():
     try:
         return HTTPResponse(body=compile_tvchannels(), status=200)
-    except:
+    except Exception as e:
+        print_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
@@ -80,7 +83,8 @@ def cache_subscribe():
         port = request.json['port']
         #
         return HTTPResponse(status=200)
-    except:
+    except Exception as e:
+        print_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
