@@ -239,13 +239,13 @@ def send_command_device(group=False, thing=False):
 
 @get('/favicon.ico')
 def send_favicon():
-    root = os.path.join(os.path.dirname(__file__), '..', 'img/logo')
+    root = os.path.join(os.path.dirname(__file__), 'imgs/logo')
     return static_file('favicon.ico', root=root)
 
 
 @get('/img/<category>/<filename>')
 def get_image(category, filename):
-    root = os.path.join(os.path.dirname(__file__), '..', 'img/{img_cat}'.format(img_cat=category))
+    root = os.path.join(os.path.dirname(__file__), 'imgs/{img_cat}'.format(img_cat=category))
     mimetype = filename.split('.')[1]
     return static_file(filename, root=root, mimetype='image/{mimetype}'.format(mimetype=mimetype))
 
