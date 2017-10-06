@@ -6,7 +6,7 @@ from bindings.weather.weather import info_metoffice
 from bindings.tvlistings.tvlistings import info_tvlistings
 
 from config.bindings.config_bindings import get_cfg_bindings_json
-from log.console_messages import print_msg, print_error
+from log.log import log_error, log_general
 
 
 def create_bindings(_things, _infoservices):
@@ -22,13 +22,13 @@ def create_bindings(_things, _infoservices):
             #
             try:
                 group_things[thing['sequence']] = _create_thing(thing['type'], group['sequence'], thing['sequence'])
-                print_msg('Thing created: {type}: {group}:{thing}'.format(type=thing['type'],
-                                                                           group=group['name'],
-                                                                           thing=thing['name']))
+                log_general('Thing created: {type}: {group}:{thing}'.format(type=thing['type'],
+                                                                            group=group['name'],
+                                                                            thing=thing['name']))
             except Exception as e:
-                print_error('Coud not create Thing: {type}: {group}:{thing}'.format(type=thing['type'],
-                                                                                    group=group['name'],
-                                                                                    thing=thing['name']))
+                log_error('Coud not create Thing: {type}: {group}:{thing}'.format(type=thing['type'],
+                                                                                  group=group['name'],
+                                                                                  thing=thing['name']))
             #
         #
         _things[group['sequence']] = group_things
@@ -38,14 +38,14 @@ def create_bindings(_things, _infoservices):
         #
         try:
             _infoservices[info['sequence']] = _create_info(info['type'], info['sequence'])
-            print_msg('Info_service created: {type}: {info}'.format(type=info['type'],
-                                                                    info=info['name']))
+            log_general('Info_service created: {type}: {info}'.format(type=info['type'],
+                                                                      info=info['name']))
         except Exception as e:
-            print_error('Coud not create Info_service: {type}: {info}'.format(type=info['type'],
-                                                                              info=info['name']))
+            log_error('Coud not create Info_service: {type}: {info}'.format(type=info['type'],
+                                                                            info=info['name']))
         #
     #
-    print_msg('All instances of Things and Info_services created')
+    log_general('All instances of Things and Info_services created')
 
 
 def _create_thing(thing_type, group_seq, thing_seq):

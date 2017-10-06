@@ -9,7 +9,7 @@ from requests.auth import HTTPDigestAuth
 from bindings.device import Device
 from config.bindings.config_bindings import get_cfg_thing_detail_private, get_cfg_thing_detail_public
 from lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
-from log.console_messages import print_command, print_error, print_msg
+from log.log import log_command, log_error, log_general
 
 
 class device_tivo(Device):
@@ -88,11 +88,11 @@ class device_tivo(Device):
             #
             ############
             #
-            print_msg('TV recording information retrieved: {type}'.format(type=self._type), dvc_id=self.dvc_id())
+            log_general('TV recording information retrieved: {type}'.format(type=self._type), dvc_id=self.dvc_id())
             #
         except Exception as e:
-            print_error('Error retrieving TV recording information: {type} - {error}'.format(type=self._type, error=e),
-                        dvc_id=self.dvc_id())
+            log_error('Error retrieving TV recording information: {type} - {error}'.format(type=self._type, error=e),
+                      dvc_id=self.dvc_id())
             self.recordings_timestamp = 0
             self.recordings = False
 
@@ -145,11 +145,11 @@ class device_tivo(Device):
                     for num in self._pin():
                         code = self.commands[num]
                         rsp.append(self._send_telnet(self._ipaddress(), self._port(), data=code))
-                        print_command (code,
-                                       self.dvc_id(),
-                                       self._type,
-                                       self._ipaddress(),
-                                       response)
+                        log_command (code,
+                                     self.dvc_id(),
+                                     self._type,
+                                     self._ipaddress(),
+                                     response)
                     response = not(False in rsp)
                 except Exception as e:
                     response = False
@@ -160,11 +160,11 @@ class device_tivo(Device):
                                              data=("SETCH {}\r").format(request['chan']),
                                              response=True)
                 if response.startswith('CH_FAILED'):
-                    print_command('channel',
-                                  self.dvc_id(),
-                                  self._type,
-                                  self._ipaddress(),
-                                  response)
+                    log_command('channel',
+                                self.dvc_id(),
+                                self._type,
+                                self._ipaddress(),
+                                response)
                     return False
             elif request['command'] == 'command':
                 msg_command = request['code']
@@ -174,18 +174,18 @@ class device_tivo(Device):
                 except:
                     response = False
             #
-            print_command (msg_command,
-                           self.dvc_id(),
-                           self._type,
-                           self._ipaddress(),
-                           response)
+            log_command (msg_command,
+                         self.dvc_id(),
+                         self._type,
+                         self._ipaddress(),
+                         response)
             return response
         except Exception as e:
-            print_command(request['command'],
-                          self.dvc_id(),
-                          self._type,
-                          self._ipaddress(),
-                          'ERROR')
+            log_command(request['command'],
+                        self.dvc_id(),
+                        self._type,
+                        self._ipaddress(),
+                        'ERROR')
             return False
 
     def getData(self, request):
@@ -196,8 +196,8 @@ class device_tivo(Device):
             elif request['data'] == 'channel':
                 return self._getChan()
         except Exception as e:
-            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
-                                                                                     error=e))
+            log_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                   error=e))
             return False
 
     def _create_recordings_json(self, _timestamp, _folders, _files):
@@ -287,17 +287,17 @@ class device_tivo(Device):
             return json_recordings
             #
         except Exception as e:
-            print_error('Attempted to create recordings json - {error}'.format(error=e))
+            log_error('Attempted to create recordings json - {error}'.format(error=e))
             return False
 
     def _retrieve_recordings(self, recurse, itemCount=''):
         try:
             r = self.tivoSession.get('https://{ipaddress}/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse={recurse}{itemCount}'.format(ipaddress=self._ipaddress(), recurse=recurse, itemCount=itemCount))
-            print_command('retrieve listings (recurse={recurse})'.format(recurse=recurse),
-                          self.dvc_id(),
-                          self._type,
-                          self._ipaddress(),
-                          r.status_code)
+            log_command('retrieve listings (recurse={recurse})'.format(recurse=recurse),
+                        self.dvc_id(),
+                        self._type,
+                        self._ipaddress(),
+                        r.status_code)
             if r.status_code == requests.codes.ok:
                 return r.content
             else:

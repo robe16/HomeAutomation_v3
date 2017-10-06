@@ -1,5 +1,5 @@
 from bindings.info_service import InfoService
-from log.console_messages import print_error
+from log.log import log_error
 from config.bindings.config_bindings import get_cfg_info_detail_public
 import json
 from data_source_metoffice import createForecast
@@ -17,8 +17,8 @@ class info_metoffice(InfoService):
             if request['data'] == 'forecast':
                 return json.dumps(self.getForecast())
         except Exception as e:
-            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
-                                                                                     error=e))
+            log_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                   error=e))
             return False
 
     def getForecast(self):

@@ -2,7 +2,7 @@ from multiprocessing import Process, Manager
 import sys
 from port_listener import start_bottle
 from config.bindings.config_bindings_create import create_bindings
-from log.console_messages import print_msg
+from log.log import log_general
 
 ################################
 # Receive sys arguments
@@ -20,18 +20,18 @@ except:
 _things = Manager().dict()
 _infoservices = Manager().dict()
 #
-print_msg('Starting process: Device, account and infoservice object creation')
+log_general('Starting process: Device, account and infoservice object creation')
 process_object = Process(target=create_bindings, args=(_things, _infoservices, ))
 process_object.start()
-print_msg('Process started: Device, account and infoservice object creation')
+log_general('Process started: Device, account and infoservice object creation')
 #
 ################################
 # Process for port_listener
 ################################
-print_msg('Starting process: "bottle" server for port {port}'.format(port=self_port))
+log_general('Starting process: "bottle" server for port {port}'.format(port=self_port))
 process_bottle = Process(target=start_bottle, args=(_things, _infoservices, self_port, ))
 process_bottle.start()
-print_msg('Process started: "bottle" server for port {port}'.format(port=self_port))
+log_general('Process started: "bottle" server for port {port}'.format(port=self_port))
 #
 ################################
 process_object.join()
@@ -39,5 +39,5 @@ process_bottle.join()
 ################################
 print("\n****************************************************************\n")
 #
-print_msg('HomeControl-server exiting')
+log_general('HomeControl-server exiting')
 print("\n****************************************************************\n")

@@ -5,7 +5,7 @@ import requests as requests
 from bindings.device import Device
 from config.bindings.config_bindings import get_cfg_thing_detail_private, set_cfg_thing_detail
 from lists.bindings.list_bindings import get_binding_detail, get_binding_name, get_binding_html_settings
-from log.console_messages import print_error, print_msg
+from log.log import log_error, log_general
 from auth import get_accesstoken
 from cfg import date_format
 
@@ -82,8 +82,8 @@ class account_nest(Device):
                 return False
             #
         except Exception as e:
-            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
-                                                                                     error=e))
+            log_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                   error=e))
             return False
 
     def sendCmd(self, request):
@@ -93,7 +93,7 @@ class account_nest(Device):
         try:
             #
             if not self._tokencheck():
-                print_error('Nest command could not be sent - error encountered with retrieving new authorisation code', dvc_id=self.dvc_id())
+                log_error('Nest command could not be sent - error encountered with retrieving new authorisation code', dvc_id=self.dvc_id())
                 return False
             #
             nest_model = request['nest_model']
@@ -111,11 +111,11 @@ class account_nest(Device):
             return False
             #
         except Exception as e:
-            print_error('Exception encountered sending ' + command + ' - ' + str(e), dvc_id=self.dvc_id())
+            log_error('Exception encountered sending ' + command + ' - ' + str(e), dvc_id=self.dvc_id())
             return False
 
     def _tokencheck(self):
-        print_msg('Checking Auth Token', dvc_id=self.dvc_id())
+        log_general('Checking Auth Token', dvc_id=self.dvc_id())
         if self._checkToken():
             return True
         else:
@@ -132,7 +132,7 @@ class account_nest(Device):
                                              self._clientsecret(),
                                              self._pincode())
             #
-            print_msg('Success retrieving new Access Token', dvc_id=self.dvc_id())
+            log_general('Success retrieving new Access Token', dvc_id=self.dvc_id())
             #
             self._set_token(token_response['token'])
             self._set_tokenexpiry(token_response['tokenexpiry'])

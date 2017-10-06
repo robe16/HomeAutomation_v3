@@ -2,7 +2,7 @@ import os
 from bottle import get, post
 from bottle import HTTPError
 from bottle import request, run, static_file, HTTPResponse
-from log.console_messages import print_error
+from log.log import log_error
 from config.bindings.config_bindings import get_cfg_group_seq, get_cfg_thing_seq, get_cfg_info_seq
 
 
@@ -49,7 +49,7 @@ def cache_setup():
     try:
         return HTTPResponse(body=compile_setup(), status=200)
     except Exception as e:
-        print_error('{error}'.format(error=e))
+        log_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
@@ -58,7 +58,7 @@ def cache_users():
     try:
         return HTTPResponse(body=compile_users(), status=200)
     except Exception as e:
-        print_error('{error}'.format(error=e))
+        log_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
@@ -67,7 +67,7 @@ def cache_tvchannels():
     try:
         return HTTPResponse(body=compile_tvchannels(), status=200)
     except Exception as e:
-        print_error('{error}'.format(error=e))
+        log_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
@@ -84,7 +84,7 @@ def cache_subscribe():
         #
         return HTTPResponse(status=200)
     except Exception as e:
-        print_error('{error}'.format(error=e))
+        log_error('{error}'.format(error=e))
         return HTTPResponse(status=404)
 
 
@@ -149,7 +149,7 @@ def get_data_infoservice(service=False, resource_requested=False):
         return response
         #
     except Exception as e:
-        print_error('{error}'.format(error=e))
+        log_error('{error}'.format(error=e))
         raise HTTPError(500)
 
 
@@ -179,7 +179,7 @@ def get_data_device(group=False, thing=False, resource_requested=False):
             return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
         #
     except Exception as e:
-        print_error('{error}'.format(error=e))
+        log_error('{error}'.format(error=e))
         raise HTTPError(500)
 
 
@@ -213,7 +213,7 @@ def send_command_device(group=False, thing=False):
             return HTTPResponse(body=str(rsp), status=200) if bool(rsp) else HTTPResponse(status=400)
         #
     except Exception as e:
-        print_error('{error}'.format(error=e))
+        log_error('{error}'.format(error=e))
         raise HTTPError(500)
 
 

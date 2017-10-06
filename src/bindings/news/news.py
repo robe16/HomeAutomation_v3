@@ -1,5 +1,5 @@
 from bindings.info_service import InfoService
-from log.console_messages import print_error
+from log.log import log_error
 import json
 from data_source_newsapi_org import get_articles, get_sources
 
@@ -16,7 +16,7 @@ class info_news(InfoService):
             if request['data'] == 'articles':
                 return json.dumps(self.getNews(request['sources'].split(' '), request['sortby']))
         except Exception as e:
-            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+            log_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
                                                                                      error=e))
             return False
 
@@ -70,7 +70,7 @@ class info_news(InfoService):
                     news['news_articles'][request_src]['source_details'] = src_details
                     news['news_articles'][request_src]['articles'] = tmp_articles['articles']
             except Exception as e:
-                print_error('Unable to retrieve news articles from newsapi.org - {source}:{sortby}'.format(source=request_src,
+                log_error('Unable to retrieve news articles from newsapi.org - {source}:{sortby}'.format(source=request_src,
                                                                                                            sortby=sortby))
             #
         #

@@ -1,7 +1,7 @@
 import json
 import os
 
-from log.console_messages import print_error
+from log.log import log_error
 
 
 def read_list_bindings():
@@ -70,5 +70,5 @@ def set_binding_detail(type, key, value):
         #
         return True
     except Exception as e:
-        print_error('Could not update "list_bindings.json" with new value - ' + str(e))
+        log_error('Could not update "list_bindings.json" with new value - ' + str(e))
         return False

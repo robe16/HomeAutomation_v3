@@ -2,7 +2,7 @@ import requests
 import json
 import datetime
 from cfg import date_format
-from log.console_messages import print_error
+from log.log import log_error
 
 
 def get_accesstoken(client_id, client_secret, pincode):
@@ -22,13 +22,13 @@ def get_accesstoken(client_id, client_secret, pincode):
                       data=payload)
     #
     if r.status_code != requests.codes.ok:
-        print_error('Access Token not returned by Nest server')
+        log_error('Access Token not returned by Nest server')
         raise Exception()
     #
     try:
         response = json.loads(r.text)
     except Exception as e:
-        print_error('Access Token not returned by Nest server .')
+        log_error('Access Token not returned by Nest server .')
         raise Exception()
     #
     token = response['access_token']

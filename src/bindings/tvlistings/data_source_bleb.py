@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import requests as requests
 import time
 import cfg as cfg
-from log.console_messages import print_error
+from log.log import log_error
 
 
 def get(channel_id):
@@ -81,5 +81,5 @@ def getlisting(channel_id, day):
     if r.status_code == requests.codes.ok:
         return r.content
     else:
-        print_error('Request to bleb.org failed - {status}'.format(status=r.status_code))
+        log_error('Request to bleb.org failed - {status}'.format(status=r.status_code))
         return None

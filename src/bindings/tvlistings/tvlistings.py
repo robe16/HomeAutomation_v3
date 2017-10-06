@@ -5,7 +5,7 @@ from time import sleep
 
 from bindings.info_service import InfoService
 from lists.channels.list_channels import read_list_channels
-from log.console_messages import print_msg, print_error
+from log.log import log_error, log_general
 
 import data_source_bleb
 
@@ -25,8 +25,8 @@ class info_tvlistings(InfoService):
             if request['data'] == 'alllistings':
                 return json.dumps(self._listings.copy())
         except Exception as e:
-            print_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
-                                                                                     error=e))
+            log_error('Failed to return requested data {request} - {error}'.format(request=request['data'],
+                                                                                   error=e))
             return False
 
     def _listings_process(self):
@@ -46,8 +46,8 @@ class info_tvlistings(InfoService):
                 try:
                     _temp_chan[str(chan)] = self._getlisting(data['channels'][cat]['channels'][chan])
                 except Exception as e:
-                    print_error('Could not retrieve listings for {channel} - {error}'.format(channel=data['channels'][cat]['channels'][chan]['name'],
-                                                                                             error=e))
+                    log_error('Could not retrieve listings for {channel} - {error}'.format(channel=data['channels'][cat]['channels'][chan]['name'],
+                                                                                           error=e))
                 self._listings[str(cat)] = _temp_chan
 
     def _getlisting(self, data):
@@ -55,20 +55,20 @@ class info_tvlistings(InfoService):
         listing_srcs = data['listingsrc']
         #
         if not listing_srcs:
-            print_msg('No sources available to retrieve listings for {channel}'.format(channel=data['name']))
+            log_general('No sources available to retrieve listings for {channel}'.format(channel=data['name']))
             return {}
         #
         if len(listing_srcs)>0:
             for src, code in listing_srcs.items():
                 try:
                     if src == 'bleb':
-                        print_msg('TV listing for {channel} being retrieved from {src}'.format(channel=data['name'],
+                        log_general('TV listing for {channel} being retrieved from {src}'.format(channel=data['name'],
                                                                                                   src=src))
                         return data_source_bleb.get(code)
                 except Exception as e:
-                    print_error('TV listing for {channel} failed to be retrieved from {src} - {error}'.format(channel=data['name'],
-                                                                                                              src=src,
-                                                                                                              error=e))
+                    log_error('TV listing for {channel} failed to be retrieved from {src} - {error}'.format(channel=data['name'],
+                                                                                                            src=src,
+                                                                                                            error=e))
         return {}
 
     def _sleep_duration(self):

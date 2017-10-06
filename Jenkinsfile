@@ -20,11 +20,13 @@ node {
         string(defaultValue: '1600', description: 'Port number to map portApplication to', name: 'portMapped')
         string(defaultValue: '~/config/homecontrol/config_bindings.json', description: 'Location of bindings config file on host device', name: 'fileConfigBindings')
         string(defaultValue: '~/config/homecontrol/config_users.json', description: 'Location of user config file on host device', name: 'fileConfigUsers')
+        string(defaultValue: '~/logs/server.log', description: 'Location of log file on host device', name: 'fileLog')
         //
         build_args = ["--build-arg portApplication=${params.portApplication}"].join(" ")
         //
         docker_volumes = ["-v ${params.fileConfigBindings}:/HomeControl/server/config/bindings/config_bindings.json",
-                          "-v ${params.fileConfigUsers}:/HomeControl/server/config/users/config_users.json"].join(" ")
+                          "-v ${params.fileConfigUsers}:/HomeControl/server/config/users/config_users.json",
+                          "-v ${params.fileLog}:/HomeControl/server/log/server.log"].join(" ")
         //
         deployLogin = "${params.deploymentUsername}@${params.deploymentServer}"
         //
