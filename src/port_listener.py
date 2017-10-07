@@ -1,10 +1,12 @@
 import os
-from bottle import get, post
-from bottle import HTTPError
-from bottle import request, run, static_file, HTTPResponse
-from log.log import log_error
-from config.bindings.config_bindings import get_cfg_group_seq, get_cfg_thing_seq, get_cfg_info_seq
 
+from bottle import HTTPError
+from bottle import get, post
+from bottle import request, run, static_file, HTTPResponse
+
+from config.bindings.config_bindings import get_cfg_group_seq, get_cfg_thing_seq, get_cfg_info_seq
+from lists.resources.english import *
+from log.log import log_error
 
 ################################################################################################
 
@@ -44,7 +46,7 @@ from client_caches.setup import compile_setup
 from client_caches.users import compile_users
 from client_caches.tvchannels import compile_tvchannels
 
-@get('/cache/setup')
+@get(uri_cache_setup)
 def cache_setup():
     try:
         return HTTPResponse(body=compile_setup(), status=200)
@@ -53,7 +55,7 @@ def cache_setup():
         return HTTPResponse(status=404)
 
 
-@get('/cache/users')
+@get(uri_cache_users)
 def cache_users():
     try:
         return HTTPResponse(body=compile_users(), status=200)
@@ -62,7 +64,7 @@ def cache_users():
         return HTTPResponse(status=404)
 
 
-@get('/cache/tvchannels')
+@get(uri_cache_tvchannels)
 def cache_tvchannels():
     try:
         return HTTPResponse(body=compile_tvchannels(), status=200)
@@ -72,7 +74,7 @@ def cache_tvchannels():
 
 
 # TODO: details of cache update subscription caught here - now to set so any update to respective jsons will inform client
-@post('/cache/subscribe')
+@post(uri_cache_subscribe)
 def cache_subscribe():
     try:
         #
@@ -94,7 +96,7 @@ def cache_subscribe():
 
 from config.users.config_users import check_pin
 
-@post('/user/pin')
+@post(uri_user_pin)
 def user_checkpin():
     check = check_pin(request.json['user'],
                       request.json['pin'])
@@ -108,7 +110,7 @@ def user_checkpin():
 # Handle requests for resource data
 ################################################################################################
 
-@get('/data/info/<service>/<resource_requested>')
+@get(uri_data_infoservice)
 def get_data_infoservice(service=False, resource_requested=False):
     #
     global infoservices
@@ -153,7 +155,7 @@ def get_data_infoservice(service=False, resource_requested=False):
         raise HTTPError(500)
 
 
-@get('/data/<group>/<thing>/<resource_requested>')
+@get(uri_data_device)
 def get_data_device(group=False, thing=False, resource_requested=False):
     #
     global devices
@@ -187,7 +189,7 @@ def get_data_device(group=False, thing=False, resource_requested=False):
 # Handle commands
 ################################################################################################
 
-@post('/command/<group>/<thing>')
+@post(uri_command_device)
 def send_command_device(group=False, thing=False):
     #
     global devices
@@ -237,13 +239,13 @@ def send_command_device(group=False, thing=False):
 # Image files
 ################################################################################################
 
-@get('/favicon.ico')
+@get(uri_favicon)
 def send_favicon():
     root = os.path.join(os.path.dirname(__file__), 'imgs/logo')
     return static_file('favicon.ico', root=root)
 
 
-@get('/img/<category>/<filename>')
+@get(uri_image)
 def get_image(category, filename):
     root = os.path.join(os.path.dirname(__file__), 'imgs/{img_cat}'.format(img_cat=category))
     mimetype = filename.split('.')[1]
