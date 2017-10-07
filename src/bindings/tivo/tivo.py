@@ -9,7 +9,7 @@ from requests.auth import HTTPDigestAuth
 from bindings.device import Device
 from config.bindings.config_bindings import get_cfg_thing_detail_private, get_cfg_thing_detail_public
 from lists.channels.list_channels import get_channel_logo_from_devicekey, get_channel_name_from_devicekey
-from log.log import log_command, log_error, log_general
+from log.log import log_error, log_general, create_device_log_message
 
 
 class device_tivo(Device):
@@ -145,11 +145,11 @@ class device_tivo(Device):
                     for num in self._pin():
                         code = self.commands[num]
                         rsp.append(self._send_telnet(self._ipaddress(), self._port(), data=code))
-                        log_command (code,
-                                     self.dvc_id(),
-                                     self._type,
-                                     self._ipaddress(),
-                                     response)
+                        log_msg = create_device_log_message(code,
+                                                            self._type,
+                                                            self._ipaddress(),
+                                                            response)
+                        log_general(log_msg, dvc_id=self.dvc_id())
                     response = not(False in rsp)
                 except Exception as e:
                     response = False
@@ -160,11 +160,11 @@ class device_tivo(Device):
                                              data=("SETCH {}\r").format(request['chan']),
                                              response=True)
                 if response.startswith('CH_FAILED'):
-                    log_command('channel',
-                                self.dvc_id(),
-                                self._type,
-                                self._ipaddress(),
-                                response)
+                    log_msg = create_device_log_message('channel',
+                                                        self._type,
+                                                        self._ipaddress(),
+                                                        response)
+                    log_general(log_msg, dvc_id=self.dvc_id())
                     return False
             elif request['command'] == 'command':
                 msg_command = request['code']
@@ -174,18 +174,18 @@ class device_tivo(Device):
                 except:
                     response = False
             #
-            log_command (msg_command,
-                         self.dvc_id(),
-                         self._type,
-                         self._ipaddress(),
-                         response)
+            log_msg = create_device_log_message(msg_command,
+                                                self._type,
+                                                self._ipaddress(),
+                                                response)
+            log_general(log_msg, dvc_id=self.dvc_id())
             return response
         except Exception as e:
-            log_command(request['command'],
-                        self.dvc_id(),
-                        self._type,
-                        self._ipaddress(),
-                        'ERROR')
+            log_msg = create_device_log_message(request['command'],
+                                                self._type,
+                                                self._ipaddress(),
+                                                e)
+            log_error(log_msg, dvc_id=self.dvc_id())
             return False
 
     def getData(self, request):
@@ -293,11 +293,11 @@ class device_tivo(Device):
     def _retrieve_recordings(self, recurse, itemCount=''):
         try:
             r = self.tivoSession.get('https://{ipaddress}/TiVoConnect?Command=QueryContainer&Container=%2FNowPlaying&Recurse={recurse}{itemCount}'.format(ipaddress=self._ipaddress(), recurse=recurse, itemCount=itemCount))
-            log_command('retrieve listings (recurse={recurse})'.format(recurse=recurse),
-                        self.dvc_id(),
-                        self._type,
-                        self._ipaddress(),
-                        r.status_code)
+            log_msg = create_device_log_message('retrieve listings (recurse={recurse})'.format(recurse=recurse),
+                                                self._type,
+                                                self._ipaddress(),
+                                                r.status_code)
+            log_general(log_msg, dvc_id=self.dvc_id())
             if r.status_code == requests.codes.ok:
                 return r.content
             else:

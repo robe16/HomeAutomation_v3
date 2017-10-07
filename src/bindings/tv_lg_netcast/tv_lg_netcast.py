@@ -6,7 +6,7 @@ from multiprocessing import Manager, Process
 
 from bindings.device import Device
 from config.bindings.config_bindings import get_cfg_thing_detail_private
-from log.log import log_command, log_general, log_error
+from log.log import log_general, log_error, create_device_log_message
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -56,29 +56,29 @@ class device_tv_lg_netcast(Device):
         #
         try:
             r = self.lgtvSession.post(url, STRxml, timeout=2)
-            log_command(command,
-                        self.dvc_id(),
-                        self._type,
-                        url,
-                        r.status_code)
+            log_msg = create_device_log_message(command,
+                                                self._type,
+                                                url,
+                                                r.status_code)
+            log_general(log_msg, dvc_id=self.dvc_id())
             #
             r_pass = True if r.status_code == requests.codes.ok else False
             self.is_paired = r_pass
             #
             return r_pass
         except requests.exceptions.ConnectionError as e:
-            log_command(command,
-                        self.dvc_id(),
-                        self._type,
-                        self._ipaddress(),
-                        'ERROR: connection error')
+            log_msg = create_device_log_message(command,
+                                                self._type,
+                                                self._ipaddress(),
+                                                'connection error: {e}'.format(e=e))
+            log_error(log_msg, dvc_id=self.dvc_id())
             return False
         except Exception as e:
-            log_command(command,
-                        self.dvc_id(),
-                        self._type,
-                        self._ipaddress(),
-                        'ERROR: {error}'.format(error=e))
+            log_msg = create_device_log_message(command,
+                                                self._type,
+                                                self._ipaddress(),
+                                                e)
+            log_error(log_msg, dvc_id=self.dvc_id())
             return False
 
     def _check_paired(self, pair_reason=''):
@@ -99,11 +99,11 @@ class device_tv_lg_netcast(Device):
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=str(self.STRtv_PATHpair))
         #
         r = self.lgtvSession.post(url, STRxml, timeout=2)
-        log_command('showPairingkey',
-                    self.dvc_id(),
-                    self._type,
-                    url,
-                    r.status_code)
+        log_msg = create_device_log_message('showPairingkey',
+                                            self._type,
+                                            url,
+                                            r.status_code)
+        log_general(log_msg, dvc_id=self.dvc_id())
         #
         r_pass = True if r.status_code == requests.codes.ok else False
         #
@@ -140,22 +140,22 @@ class device_tv_lg_netcast(Device):
             #
             r = self.lgtvSession.get(url, timeout=2)
             #
-            log_command('getApplist',
-                        self.dvc_id(),
-                        self._type,
-                        self._ipaddress(),
-                        r.status_code)
+            log_msg = create_device_log_message('getApplist',
+                                                self._type,
+                                                self._ipaddress(),
+                                                r.status_code)
+            log_general(log_msg, dvc_id=self.dvc_id())
             #
             if not r.status_code == requests.codes.ok:
                 self.is_paired = False
                 if not self._check_paired(pair_reason='getApplist'):
                     return False
                 r = self.lgtvSession.post(url, timeout=2)
-                log_command('getApplist',
-                            self.dvc_id(),
-                            self._type,
-                            self._ipaddress(),
-                            r.status_code)
+                log_msg = create_device_log_message('getApplist',
+                                                    self._type,
+                                                    self._ipaddress(),
+                                                    r.status_code)
+                log_general(log_msg, dvc_id=self.dvc_id())
             #
             if r.status_code == requests.codes.ok:
                 #
@@ -218,22 +218,22 @@ class device_tv_lg_netcast(Device):
         url = 'http://{ipaddress}:{port}{uri}'.format(ipaddress=self._ipaddress(), port=str(self._port()), uri=uri)
         #
         r = self.lgtvSession.get(url, timeout=2)
-        log_command('getAppicon',
-                    self.dvc_id(),
-                    self._type,
-                    self._ipaddress(),
-                    r.status_code)
+        log_msg = create_device_log_message('getAppicon',
+                                            self._type,
+                                            self._ipaddress(),
+                                            r.status_code)
+        log_general(log_msg, dvc_id=self.dvc_id())
         #
         if not r.status_code == requests.codes.ok:
             self.is_paired = False
             if not self._check_paired(pair_reason='getAppicon'):
                 return False
             r = self.lgtvSession.post(url, timeout=2)
-            log_command('getAppicon',
-                        self.dvc_id(),
-                        self._type,
-                        self._ipaddress(),
-                        r.status_code)
+            log_msg = create_device_log_message('getAppicon',
+                                                self._type,
+                                                self._ipaddress(),
+                                                r.status_code)
+            log_general(log_msg, dvc_id=self.dvc_id())
         #
         if r.status_code == requests.codes.ok:
             return r.content
@@ -293,37 +293,38 @@ class device_tv_lg_netcast(Device):
                                                               port=str(self._port()),
                                                               uri=str(self.STRtv_PATHcommand))
                 r = self.lgtvSession.post(url, STRxml, timeout=2)
-                log_command('command',
-                            self.dvc_id(),
-                            self._type,
-                            url,
-                            r.status_code)
+                log_msg = create_device_log_message('command',
+                                                    self._type,
+                                                    url,
+                                                    r.status_code)
+                log_general(log_msg, dvc_id=self.dvc_id())
                 #
                 if not r.status_code == requests.codes.ok:
                     self.is_paired = False
                     if not self._check_paired(pair_reason='command'):
                         return False
                     r = self.lgtvSession.post(url, STRxml, timeout=2)
-                    log_command('command',
-                                self.dvc_id(),
-                                self._type,
-                                url,
-                                r.status_code)
+                    log_msg = create_device_log_message('command',
+                                                        self._type,
+                                                        url,
+                                                        r.status_code)
+                    log_general(log_msg, dvc_id=self.dvc_id())
                 #
                 response = (r.status_code == requests.codes.ok)
-                log_command (cmd,
-                             self.dvc_id(),
-                             self._type,
-                             url,
-                             response)
+                log_msg = create_device_log_message(cmd,
+                                                    self._type,
+                                                    url,
+                                                    response)
+                log_general(log_msg, dvc_id=self.dvc_id())
+                #
                 return response
                 #
-        except:
-            log_command(request['command'],
-                        self.dvc_id(),
-                        self._type,
-                        self._ipaddress(),
-                        'ERROR: Exception encountered')
+        except Exception as e:
+            log_msg = create_device_log_message(request['command'],
+                                                self._type,
+                                                self._ipaddress(),
+                                                e)
+            log_general(log_msg, dvc_id=self.dvc_id())
             return False
 
     commands = {"power": "1",

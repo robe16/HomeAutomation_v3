@@ -16,16 +16,11 @@ logging.basicConfig(filename=logfile, level=20)
 timeformat = '%d/%m/%Y %H:%M:%S.%f'
 
 
-def log_command(command, dvc_id, device_type, dvc_ip, response):
-    log_msg = _add_timestamp("{dvc_id} - \'{command}\' request sent to {device_type}{dvc_ip} - {response}".format(dvc_id=dvc_id,
-                                                                                                                  command=command.replace('/r',''),
-                                                                                                                  device_type=device_type,
-                                                                                                                  dvc_ip=' '+dvc_ip,
-                                                                                                                  response=response))
-    if "ERROR" in log_msg:
-        logging.error(log_msg)
-    else:
-        logging.info(log_msg)
+def create_device_log_message(command, device_type, dvc_ip, response):
+    return _add_timestamp("'{command}' request sent to {device_type}{dvc_ip} - {response}".format(command=command.replace('/r',''),
+                                                                                                  device_type=device_type,
+                                                                                                  dvc_ip=' '+dvc_ip,
+                                                                                                  response=response))
 
 
 def log_error(error_msg, dvc_id=''):
@@ -52,10 +47,9 @@ def _log(log_msg, level=20):
 
 
 def _create_msg(msg, dvc_id=''):
-    if (dvc_id):
-        dvc_id += ' - '
-    return _add_timestamp('{dvc_id}{msg}'.format(dvc_id=dvc_id,
-                                                 msg=msg))
+    if dvc_id:
+        msg += ' - ' + dvc_id
+    return _add_timestamp('{msg}'.format(msg=msg))
 
 
 def _add_timestamp(log_msg):
