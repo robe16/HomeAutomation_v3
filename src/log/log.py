@@ -23,9 +23,9 @@ def log_command(command, dvc_id, device_type, dvc_ip, response):
                                                                                                                   dvc_ip=' '+dvc_ip,
                                                                                                                   response=response))
     if "ERROR" in log_msg:
-        logging.info(log_msg)
-    else:
         logging.error(log_msg)
+    else:
+        logging.info(log_msg)
 
 
 def log_error(error_msg, dvc_id=''):
