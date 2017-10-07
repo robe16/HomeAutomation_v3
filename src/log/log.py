@@ -29,19 +29,33 @@ def log_command(command, dvc_id, device_type, dvc_ip, response):
 
 
 def log_error(error_msg, dvc_id=''):
-    if (dvc_id):
-        dvc_id += ' - '
-    log_msg = _add_timestamp('{dvc_id}ERROR: {error}'.format(dvc_id=dvc_id,
-                                                             error = error_msg))
-    logging.error(log_msg)
+    log_msg = _create_msg(error_msg, dvc_id=dvc_id)
+    _log(log_msg, level=50)
 
 
 def log_general(msg, dvc_id=''):
+    log_msg = _create_msg(msg, dvc_id=dvc_id)
+    _log(log_msg, level=20)
+
+
+def _log(log_msg, level=20):
+    if level == 50:
+        logging.error(log_msg)
+    elif level == 40:
+        logging.error(log_msg)
+    elif level == 30:
+        logging.warning(log_msg)
+    elif level == 20:
+        logging.info(log_msg)
+    else:
+        logging.debug(log_msg)
+
+
+def _create_msg(msg, dvc_id=''):
     if (dvc_id):
         dvc_id += ' - '
-    log_msg = _add_timestamp('{dvc_id}{msg}'.format(dvc_id=dvc_id,
-                                                    msg=msg))
-    logging.info(log_msg)
+    return _add_timestamp('{dvc_id}{msg}'.format(dvc_id=dvc_id,
+                                                 msg=msg))
 
 
 def _add_timestamp(log_msg):
