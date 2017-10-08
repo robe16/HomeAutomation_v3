@@ -70,7 +70,7 @@ def cache_setup():
 
 @get(uri_cache_users)
 def cache_users():
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_cache_users)
     try:
         log_general(log)
         return HTTPResponse(body=compile_users(), status=200)
@@ -81,7 +81,7 @@ def cache_users():
 
 @get(uri_cache_tvchannels)
 def cache_tvchannels():
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_cache_tvchannels)
     try:
         log_general(log)
         return HTTPResponse(body=compile_tvchannels(), status=200)
@@ -93,7 +93,7 @@ def cache_tvchannels():
 # TODO: details of cache update subscription caught here - now to set so any update to respective jsons will inform client
 @post(uri_cache_subscribe)
 def cache_subscribe():
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_cache_subscribe)
     try:
         #
         r = request
@@ -117,7 +117,7 @@ from config.users.config_users import check_pin
 
 @post(uri_user_pin)
 def user_checkpin():
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_user_pin)
     check = check_pin(request.json['user'],
                       request.json['pin'])
     if check:
@@ -137,7 +137,7 @@ def get_data_infoservice(service=False, resource_requested=False):
     #
     global infoservices
     #
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_data_infoservice)
     #
     try:
         #
@@ -187,7 +187,7 @@ def get_data_device(group=False, thing=False, resource_requested=False):
     #
     global devices
     #
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_data_device)
     #
     try:
         #
@@ -227,7 +227,7 @@ def send_command_device(group=False, thing=False):
     #
     global devices
     #
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_command_device)
     #
     try:
         #
@@ -280,7 +280,7 @@ def send_command_device(group=False, thing=False):
 
 @get(uri_favicon)
 def send_favicon():
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_favicon)
     try:
         root = os.path.join(os.path.dirname(__file__), 'imgs/logo')
         log_general(log)
@@ -292,7 +292,7 @@ def send_favicon():
 
 @get(uri_image)
 def get_image(category, filename):
-    log = log_msg(request, uri_cache_setup)
+    log = log_msg(request, uri_image)
     try:
         root = os.path.join(os.path.dirname(__file__), 'imgs/{img_cat}'.format(img_cat=category))
         mimetype = filename.split('.')[1]
