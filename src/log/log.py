@@ -25,7 +25,12 @@ def create_device_log_message(command, device_type, dvc_ip, response):
 
 def log_error(error_msg, dvc_id=''):
     log_msg = _create_msg(error_msg, dvc_id=dvc_id)
-    _log(log_msg, level=50)
+    _log(log_msg, level=40)
+
+
+def log_warning(error_msg, dvc_id=''):
+    log_msg = _create_msg(error_msg, dvc_id=dvc_id)
+    _log(log_msg, level=30)
 
 
 def log_general(msg, dvc_id=''):
@@ -35,7 +40,7 @@ def log_general(msg, dvc_id=''):
 
 def _log(log_msg, level=20):
     if level == 50:
-        logging.error(log_msg)
+        logging.critical(log_msg)
     elif level == 40:
         logging.error(log_msg)
     elif level == 30:

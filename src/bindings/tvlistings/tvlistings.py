@@ -5,7 +5,7 @@ from time import sleep
 
 from bindings.info_service import InfoService
 from lists.channels.list_channels import read_list_channels
-from log.log import log_error, log_general
+from log.log import log_error, log_warning, log_general
 
 import data_source_bleb
 
@@ -55,7 +55,7 @@ class info_tvlistings(InfoService):
         listing_srcs = data['listingsrc']
         #
         if not listing_srcs:
-            log_general('No sources available to retrieve listings for {channel}'.format(channel=data['name']))
+            log_warning('No sources available to retrieve listings for {channel}'.format(channel=data['name']))
             return {}
         #
         if len(listing_srcs)>0:
